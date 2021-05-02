@@ -1,0 +1,74 @@
+﻿<UserControl
+    x:Class="ClipboardCanvas.UserControls.WindowTitleBarControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:ClipboardCanvas.UserControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+
+    <Grid x:Name="CustomTitleBar" Padding="15,0,15,0">
+
+        <Grid.ColumnDefinitions>
+            <!--  Title text  -->
+            <ColumnDefinition />
+            <!--  Compact overlay  -->
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <!--  Title text  -->
+        <Grid
+            x:Name="DraggableTitle"
+            Grid.Column="0"
+            Padding="0,10,0,0">
+            <TextBlock
+                x:Name="DefaultTitleBarText"
+                x:Load="{x:Bind ViewModel.DefaultTitleBarTextLoad, Mode=OneWay}"
+                FontSize="16"
+                FontWeight="SemiLight"
+                Text="Clipboard Canvas" />
+
+            <TextBlock
+                x:Name="CollectionsTitleBarText"
+                x:Load="{x:Bind ViewModel.CollectionsTitleBarTextLoad, Mode=OneWay}"
+                FontSize="16"
+                FontWeight="SemiLight"
+                Text="Canvas Collections" />
+
+            <StackPanel
+                x:Name="CanvasTitleBar"
+                x:Load="{x:Bind ViewModel.CanvasTitleBarTextLoad, Mode=OneWay}"
+                Orientation="Horizontal"
+                Spacing="4">
+                <TextBlock
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    FontWeight="SemiLight"
+                    Text="Current Canvas:" />
+                <TextBlock
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    FontWeight="SemiBold"
+                    Text="{x:Bind ViewModel.CurrentCanvasText, Mode=OneWay}" />
+            </StackPanel>
+        </Grid>
+
+        <!--  Compact overlay button  -->
+        <Button
+            Grid.Column="1"
+            Margin="0,0,144,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Background="Transparent"
+            BorderBrush="Transparent"
+            Command="{x:Bind ViewModel.SwitchApplicationViewCommand}">
+            <Grid>
+                <FontIcon FontFamily="/Assets/Fonts/CalcMDL2.ttf#Calculator MDL2 Assets" Glyph="&#xEE49;" />
+            </Grid>
+        </Button>
+    </Grid>
+</UserControl>

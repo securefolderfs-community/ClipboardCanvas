@@ -1,0 +1,398 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <LangVersion>9.0</LangVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{7E24036E-1FF4-47FE-B045-1A4C845461F1}</ProjectGuid>
+    <OutputType>AppContainerExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ClipboardCanvas</RootNamespace>
+    <AssemblyName>ClipboardCanvas</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
+    <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
+    <OutputPath>bin\ARM\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>ARM64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'">
+    <OutputPath>bin\ARM64\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <Optimize>false</Optimize>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ApplicationSettings\BaseJsonSettingsModel.cs" />
+    <Compile Include="ApplicationSettings\CollectionLocationsSettingsModel.cs" />
+    <Compile Include="ApplicationSettings\Interfaces\ICollectionLocationsSettings.cs" />
+    <Compile Include="ApplicationSettings\Interfaces\IUserSettings.cs" />
+    <Compile Include="ApplicationSettings\SettingsInstance.cs" />
+    <Compile Include="ApplicationSettings\UserSettingsModel.cs" />
+    <Compile Include="AttachedProperties\BaseAttachedProperty.cs" />
+    <Compile Include="AttachedProperties\FrameAttachedProperties.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="DataModels\DisplayFrameNavigationDataModel.cs" />
+    <Compile Include="DataModels\PastedContentDataModels\BasePastedContentTypeDataModel.cs" />
+    <Compile Include="DataModels\PastedContentDataModels\ImageContentType.cs" />
+    <Compile Include="DataModels\PastedContentDataModels\TextContentType.cs" />
+    <Compile Include="DataModels\SettingsFrameNavigationDataModel.cs" />
+    <Compile Include="Enums\SettingsPageType.cs" />
+    <Compile Include="EventArguments\CollectionPreviewItemEventArgs.cs" />
+    <Compile Include="Extensions\ComparingExtensions.cs" />
+    <Compile Include="Extensions\GenericsExtensions.cs" />
+    <Compile Include="Extensions\LinqExtensions.cs" />
+    <Compile Include="Extensions\SafetyExtensions.cs" />
+    <Compile Include="Helpers\CollectionsHelpers.cs" />
+    <Compile Include="Helpers\SafetyHelpers\SafeWrapperRoutines.cs" />
+    <Compile Include="Helpers\XamlHelpers\SystemTypeToXaml.cs" />
+    <Compile Include="Models\IWindowTitleBarControlModel.cs" />
+    <Compile Include="ModelViews\ICollectionPreviewPageView.cs" />
+    <Compile Include="Pages\CollectionPreviewPage.xaml.cs">
+      <DependentUpon>CollectionPreviewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SettingsPages\SettingsAboutPage.xaml.cs">
+      <DependentUpon>SettingsAboutPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SettingsPages\SettingsGeneralPage.xaml.cs">
+      <DependentUpon>SettingsGeneralPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SettingsPages\SettingsPastingPage.xaml.cs">
+      <DependentUpon>SettingsPastingPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UnsafeNative\UnsafeNativeDataModels.cs" />
+    <Compile Include="Enums\DisplayPageType.cs" />
+    <Compile Include="Enums\OperationStatus.cs" />
+    <Compile Include="Enums\PastedContentFileType.cs" />
+    <Compile Include="Enums\PastedContentType.cs" />
+    <Compile Include="EventArguments\CanvasControlEventArgs.cs" />
+    <Compile Include="EventArguments\CollectionControlModelEventArgs.cs" />
+    <Compile Include="EventArguments\CollectionsContainerEventArgs.cs" />
+    <Compile Include="ExtensionInterfaces\ICleanup.cs" />
+    <Compile Include="Extensions\CollectionExtensions.cs" />
+    <Compile Include="Helpers\AdaptiveActionsHelpers.cs" />
+    <Compile Include="Helpers\FileSelectionHelpers.cs" />
+    <Compile Include="Helpers\ImagingHelpers.cs" />
+    <Compile Include="Helpers\SafetyHelpers\SafeWrapperResultDetails.cs" />
+    <Compile Include="Helpers\StreamHelpers.cs" />
+    <Compile Include="Helpers\ClipboardHelpers.cs" />
+    <Compile Include="Helpers\FilesystemHelpers\DangerousStorageFileExtensions.cs" />
+    <Compile Include="Helpers\FilesystemHelpers\StorageItemHelpers.cs" />
+    <Compile Include="Helpers\SafetyHelpers\ExceptionReporters\ClipboardGetDataExceptionReporter.cs" />
+    <Compile Include="Helpers\SafetyHelpers\ExceptionReporters\DefaultSafeWrapperExceptionReporter.cs" />
+    <Compile Include="Helpers\SafetyHelpers\ExceptionReporters\StaticExceptionReporters.cs" />
+    <Compile Include="Helpers\SafetyHelpers\ExceptionReporters\ISafeWrapperExceptionReporter.cs" />
+    <Compile Include="Helpers\SafetyHelpers\SafeWrapper.cs" />
+    <Compile Include="UnsafeNative\UnsafeNativeApis.cs" />
+    <Compile Include="UnsafeNative\UnsafeNativeHelpers.cs" />
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\IAdaptiveOptionsControlModel.cs" />
+    <Compile Include="Models\ICollectionsContainerItemModel.cs" />
+    <Compile Include="Models\ICollectionsContainerModel.cs" />
+    <Compile Include="Models\IDynamicPasteCanvasModel.cs" />
+    <Compile Include="Models\IPasteCanvasEventsModel.cs" />
+    <Compile Include="Models\IPasteCanvasModel.cs" />
+    <Compile Include="Models\IInstanceNotifyModel.cs" />
+    <Compile Include="Models\INavigationControlModel.cs" />
+    <Compile Include="Models\INavigationToolBarControlModel.cs" />
+    <Compile Include="ModelViews\ICanvasPageView.cs" />
+    <Compile Include="ModelViews\IDisplayControlView.cs" />
+    <Compile Include="ModelViews\IDynamicPasteCanvasControlView.cs" />
+    <Compile Include="ModelViews\INavigationToolBarControlView.cs" />
+    <Compile Include="Pages\CanvasPage.xaml.cs">
+      <DependentUpon>CanvasPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\HomePage.xaml.cs">
+      <DependentUpon>HomePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResourceDictionaries\CanvasDictionary.xaml.cs" />
+    <Compile Include="UserControls\AdaptiveOptionsControl.xaml.cs">
+      <DependentUpon>AdaptiveOptionsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\CanvasDisplay\ImageCanvasControl.xaml.cs">
+      <DependentUpon>ImageCanvasControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\CanvasDisplay\TextCanvasControl.xaml.cs">
+      <DependentUpon>TextCanvasControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\CollectionsControl.xaml.cs">
+      <DependentUpon>CollectionsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\DisplayControl.xaml.cs">
+      <DependentUpon>DisplayControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\DynamicCanvasControl.xaml.cs">
+      <DependentUpon>DynamicCanvasControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\NavigationControl.xaml.cs">
+      <DependentUpon>NavigationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\NavigationToolBarControl.xaml.cs">
+      <DependentUpon>NavigationToolBarControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\SettingsPanelControl.xaml.cs">
+      <DependentUpon>SettingsPanelControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\WindowTitleBarControl.xaml.cs">
+      <DependentUpon>WindowTitleBarControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ValueConverters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="ValueConverters\ImplicitDataTemplateConverter.cs" />
+    <Compile Include="ValueConverters\SelectedCollectionsContainerConverter.cs" />
+    <Compile Include="ViewModels\Pages\CanvasPageViewModel.cs" />
+    <Compile Include="ViewModels\Pages\CollectionPreviewPageViewModel.cs" />
+    <Compile Include="ViewModels\Pages\HomePageViewModel.cs" />
+    <Compile Include="ViewModels\Pages\SettingsPages\SettingsGeneralPageViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\AdaptiveOptionsControlItemViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\AdaptiveOptionsControlViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\CanvasDisplay\BasePasteCanvasViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\CanvasDisplay\DynamicCanvasControlViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\CanvasDisplay\ImageCanvasViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\CanvasDisplay\TextCanvasViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\CollectionPreviewItemViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\CollectionsContainerItemModel.cs" />
+    <Compile Include="ViewModels\UserControls\CollectionsContainerViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\CollectionsControlViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\DisplayControlViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\NavigationControlViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\NavigationToolBarControlViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\SettingsPanelControlViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\WindowTitleBarControlViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Properties\Default.rd.xml" />
+    <Content Include="Assets\LockScreenLogo.scale-200.png" />
+    <Content Include="Assets\SplashScreen.scale-200.png" />
+    <Content Include="Assets\Square150x150Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\CanvasPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\CollectionPreviewPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\HomePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SettingsPages\SettingsAboutPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SettingsPages\SettingsGeneralPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SettingsPages\SettingsPastingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ResourceDictionaries\CanvasDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ResourceDictionaries\ColorsDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\AdaptiveOptionsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\CanvasDisplay\ImageCanvasControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\CanvasDisplay\TextCanvasControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\CollectionsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\DisplayControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\DynamicCanvasControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\NavigationControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\NavigationToolBarControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\SettingsPanelControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\WindowTitleBarControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+      <Version>6.2.11</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Mvvm">
+      <Version>7.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp">
+      <Version>7.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.UI.Xaml">
+      <Version>2.5.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
+      <Version>2.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Dialogs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Fonts\CalcMDL2.ttf" />
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
+    <VisualStudioVersion>14.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

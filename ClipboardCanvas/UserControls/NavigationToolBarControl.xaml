@@ -1,0 +1,75 @@
+﻿<UserControl
+    x:Class="ClipboardCanvas.UserControls.NavigationToolBarControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Windows10version1903="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 8)"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:local="using:ClipboardCanvas.UserControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uc="using:ClipboardCanvas.UserControls"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <AcrylicBrush
+                        x:Key="NavigationBarBackground"
+                        Windows10version1903:TintLuminosityOpacity="0.25"
+                        BackgroundSource="HostBackdrop"
+                        FallbackColor="{ThemeResource SolidBackgroundAcrylic}"
+                        TintColor="{ThemeResource SolidBackgroundAcrylic}"
+                        TintOpacity="0.25" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <AcrylicBrush
+                        x:Key="NavigationBarBackground"
+                        Windows10version1903:TintLuminosityOpacity="0.25"
+                        BackgroundSource="HostBackdrop"
+                        FallbackColor="{ThemeResource SolidBackgroundAcrylic}"
+                        TintColor="{ThemeResource SolidBackgroundAcrylic}"
+                        TintOpacity="0.25" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Border
+        Height="80"
+        Padding="20,0,20,0"
+        HorizontalAlignment="Stretch"
+        Background="{StaticResource NavigationBarBackground}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+
+                <!--  Adaptive options  -->
+                <ColumnDefinition />
+
+                <!--  Navigation controls  -->
+                <ColumnDefinition />
+
+                <!--  Settings  -->
+                <ColumnDefinition />
+
+            </Grid.ColumnDefinitions>
+
+            <!--  Adaptive options  -->
+            <uc:AdaptiveOptionsControl x:Name="AdaptiveOptions" Grid.Column="0" />
+
+            <!--  Navigation  -->
+            <uc:NavigationControl x:Name="NavigationControls" Grid.Column="1" />
+
+            <!--  Settings Button  -->
+            <HyperlinkButton
+                Grid.Column="2"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Command="{x:Bind ViewModel.OpenOrCloseSettingsCommand}"
+                Content="{x:Bind ViewModel.SettingsHyperlinkText, Mode=OneWay}" />
+        </Grid>
+    </Border>
+</UserControl>

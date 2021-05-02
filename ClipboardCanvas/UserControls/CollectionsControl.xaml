@@ -1,0 +1,109 @@
+﻿<UserControl
+    x:Class="ClipboardCanvas.UserControls.CollectionsControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:local="using:ClipboardCanvas.UserControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vc="using:ClipboardCanvas.ValueConverters"
+    xmlns:vm="using:ClipboardCanvas.ViewModels.UserControls"
+    xmlns:xh="using:ClipboardCanvas.Helpers.XamlHelpers"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <vc:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <vc:SelectedCollectionsContainerConverter x:Key="SelectedCollectionsContainerConverter" />
+    </UserControl.Resources>
+
+    <Grid>
+        <GridView
+            IsDoubleTapEnabled="True"
+            IsItemClickEnabled="True"
+            ItemsSource="{x:Bind vm:CollectionsControlViewModel.Items}"
+            SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
+            SelectionMode="Single">
+            <i:Interaction.Behaviors>
+                <icore:EventTriggerBehavior EventName="DoubleTapped">
+                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DoubleTappedCommand}" />
+                </icore:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+            <!--  Remove Reveal Highlight Effect  -->
+            <GridView.ItemContainerStyle>
+                <Style TargetType="GridViewItem">
+                    <!--  Spacing  -->
+                    <Setter Property="Margin" Value="0,0,10,10" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="GridViewItem">
+                                <ListViewItemPresenter
+                                    x:Name="Root"
+                                    RevealBackground="{ThemeResource GridViewItemRevealBackground}"
+                                    RevealBorderBrush="{ThemeResource GridViewItemRevealBorderBrush}"
+                                    RevealBorderThickness="0" />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </GridView.ItemContainerStyle>
+            <GridView.ItemTemplate>
+                <DataTemplate>
+                    <Border
+                        Width="200"
+                        Height="200"
+                        Background="{ThemeResource SubtleBackgroundBrush}"
+                        BorderBrush="{ThemeResource SystemAccentColor}"
+                        BorderThickness="{Binding IsSelected, Converter={StaticResource SelectedCollectionsContainerConverter}}"
+                        CornerRadius="8">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <!--  Content  -->
+                                <RowDefinition />
+                                <!--  Filename  -->
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <!--  Filename  -->
+                            <TextBlock
+                                Grid.Row="1"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                Text="{Binding DisplayName}"
+                                TextWrapping="Wrap"
+                                ToolTipService.ToolTip="{Binding DisplayName}"
+                                Visibility="{Binding IsEditingName, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter='invert'}" />
+                            <!--  Filename edit box  -->
+                            <TextBox
+                                Grid.Row="1"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Bottom"
+                                Text="{Binding EditBoxText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                TextAlignment="Center"
+                                Visibility="{Binding IsEditingName, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <i:Interaction.Behaviors>
+                                    <icore:EventTriggerBehavior EventName="KeyDown">
+                                        <icore:InvokeCommandAction Command="{Binding EditBoxKeyDownCommand}" />
+                                    </icore:EventTriggerBehavior>
+                                    <icore:EventTriggerBehavior EventName="LostFocus">
+                                        <icore:InvokeCommandAction Command="{Binding EditBoxLostFocusCommand}" />
+                                    </icore:EventTriggerBehavior>
+                                </i:Interaction.Behaviors>
+                            </TextBox>
+                        </Grid>
+                        <Border.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Command="{Binding OpenCollectionLocationCommand}" Text="Open Collection location" />
+                                <MenuFlyoutSeparator />
+                                <MenuFlyoutItem Command="{Binding RenameCollectionCommand}" Text="Edit name" />
+                                <MenuFlyoutItem Command="{Binding RemoveCollectionCommand}" Text="Remove collection" />
+                            </MenuFlyout>
+                        </Border.ContextFlyout>
+                    </Border>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+    </Grid>
+</UserControl>

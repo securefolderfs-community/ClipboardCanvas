@@ -1,0 +1,19 @@
+﻿<ResourceDictionary
+    x:Class="ClipboardCanvas.ResourceDictionaries.CanvasDictionary"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:uc="using:ClipboardCanvas.UserControls.CanvasDisplay"
+    xmlns:vm="using:ClipboardCanvas.ViewModels.UserControls.CanvasDisplay">
+
+    <!--  All available views for displaying content  -->
+
+    <!--  Image view  -->
+    <DataTemplate x:Key="ImageCanvasViewModel" x:DataType="vm:ImageCanvasViewModel">
+        <uc:ImageCanvasControl />
+    </DataTemplate>
+    <!--  Text view  -->
+    <DataTemplate x:Key="TextCanvasViewModel" x:DataType="vm:TextCanvasViewModel">
+        <uc:TextCanvasControl />
+    </DataTemplate>
+
+</ResourceDictionary>

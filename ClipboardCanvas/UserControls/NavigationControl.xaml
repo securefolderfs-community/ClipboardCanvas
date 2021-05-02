@@ -1,0 +1,214 @@
+﻿<UserControl
+    x:Class="ClipboardCanvas.UserControls.NavigationControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:local="using:ClipboardCanvas.UserControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    Background="Transparent"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style x:Key="NavigationButton" TargetType="Button">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Stretch" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <ContentPresenter
+                                x:Name="ContentPresenter"
+                                Padding="{TemplateBinding Padding}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                AutomationProperties.AccessibilityView="Raw"
+                                Background="{TemplateBinding Background}"
+                                BackgroundSizing="{TemplateBinding BackgroundSizing}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                ContentTransitions="{TemplateBinding ContentTransitions}"
+                                CornerRadius="{TemplateBinding CornerRadius}">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal">
+                                            <Storyboard>
+                                                <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="PointerOver">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundPointerOver}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPointerOver}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPointerOver}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="Pressed">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundPressed}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPressed}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPressed}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <PointerDownThemeAnimation Storyboard.TargetName="ContentPresenter" />
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="Disabled">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SubtleBackgroundBrush}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushDisabled}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundDisabled}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </ContentPresenter>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <UserControl.KeyboardAccelerators>
+        <KeyboardAccelerator Key="Up" Modifiers="Menu">
+            <i:Interaction.Behaviors>
+                <icore:EventTriggerBehavior EventName="Invoked">
+                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
+                </icore:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+        </KeyboardAccelerator>
+        <KeyboardAccelerator Key="Down" Modifiers="Menu">
+            <i:Interaction.Behaviors>
+                <icore:EventTriggerBehavior EventName="Invoked">
+                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
+                </icore:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+        </KeyboardAccelerator>
+        <KeyboardAccelerator Key="Right" Modifiers="Menu">
+            <i:Interaction.Behaviors>
+                <icore:EventTriggerBehavior EventName="Invoked">
+                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
+                </icore:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+        </KeyboardAccelerator>
+        <KeyboardAccelerator Key="Right" Modifiers="Menu,Shift">
+            <i:Interaction.Behaviors>
+                <icore:EventTriggerBehavior EventName="Invoked">
+                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
+                </icore:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+        </KeyboardAccelerator>
+        <KeyboardAccelerator Key="Left" Modifiers="Menu">
+            <i:Interaction.Behaviors>
+                <icore:EventTriggerBehavior EventName="Invoked">
+                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
+                </icore:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+        </KeyboardAccelerator>
+        <KeyboardAccelerator Key="Left" Modifiers="Menu,Shift">
+            <i:Interaction.Behaviors>
+                <icore:EventTriggerBehavior EventName="Invoked">
+                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
+                </icore:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+        </KeyboardAccelerator>
+    </UserControl.KeyboardAccelerators>
+
+    <Border
+        Width="300"
+        BorderBrush="{ThemeResource SubtleBackgroundBrush}"
+        BorderThickness="2,0,2,0">
+        <Grid>
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition />
+
+            </Grid.ColumnDefinitions>
+
+            <!--  Navigate back  -->
+            <Button
+                x:Name="NavigateBack"
+                Grid.Column="0"
+                x:Load="{x:Bind ViewModel.NavigateBackLoad, Mode=OneWay}"
+                Command="{x:Bind ViewModel.NavigateBackCommand}"
+                IsEnabled="{x:Bind ViewModel.NavigateBackEnabled, Mode=OneWay}"
+                Style="{StaticResource NavigationButton}"
+                TabIndex="0"
+                ToolTipService.ToolTip="Navigate Back (Alt + Left Arrow)&#x0a;Hold to navigate to last item (Shift + Alt + Left Arrow)">
+                <Button.Content>
+                    <FontIcon Glyph="&#xE76B;" />
+                </Button.Content>
+            </Button>
+
+            <!--  Navigate forward  -->
+            <Button
+                x:Name="NavigateForward"
+                Grid.Column="2"
+                x:Load="{x:Bind ViewModel.NavigateForwardLoad, Mode=OneWay}"
+                Command="{x:Bind ViewModel.NavigateForwardCommand}"
+                IsEnabled="{x:Bind ViewModel.NavigateForwardEnabled, Mode=OneWay}"
+                Style="{StaticResource NavigationButton}"
+                TabIndex="3"
+                ToolTipService.ToolTip="Navigate Forward (Alt + Right Arrow)&#x0a;Hold to navigate to new canvas (Shift + Alt + Right Arrow)">
+                <Button.Content>
+                    <FontIcon Glyph="&#xE76C;" />
+                </Button.Content>
+            </Button>
+
+            <!--  Go to home button  -->
+            <Button
+                x:Name="GoToHome"
+                Grid.Column="1"
+                x:Load="{x:Bind ViewModel.GoToHomeLoad, Mode=OneWay}"
+                Command="{x:Bind ViewModel.GoToHomeCommand}"
+                Style="{StaticResource NavigationButton}"
+                TabIndex="1"
+                ToolTipService.ToolTip="Navigate Home (Alt + Down Arrow)">
+                <Button.Content>
+                    <FontIcon Glyph="&#xE80F;" />
+                </Button.Content>
+            </Button>
+
+            <!--  Go to Canvas button  -->
+            <Button
+                x:Name="GoToCanvas"
+                Grid.ColumnSpan="3"
+                x:Load="{x:Bind ViewModel.GoToCanvasLoad, Mode=OneWay}"
+                Command="{x:Bind ViewModel.GoToCanvasCommand}"
+                Style="{StaticResource NavigationButton}"
+                TabIndex="2"
+                ToolTipService.ToolTip="Navigate to Canvas (Alt + Up Arrow)">
+                <Button.Content>
+                    <FontIcon Glyph="&#xF0E3;" />
+                </Button.Content>
+            </Button>
+        </Grid>
+    </Border>
+</UserControl>
