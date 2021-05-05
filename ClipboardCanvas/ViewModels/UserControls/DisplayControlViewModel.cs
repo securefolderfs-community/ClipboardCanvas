@@ -182,7 +182,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             // We might navigate from home to a canvas that's already filled, so initialize the content
             if (_currentCollectionContainer.IsFilled)
             {
-                await _currentCollectionContainer.LoadCanvasFromCollection(PasteCanvasModel, _canvasLoadCancellationTokenSource.Token, true);
+                await _currentCollectionContainer.LoadCanvasFromCollection(PasteCanvasModel, _canvasLoadCancellationTokenSource.Token, false);
             }
         }
 
@@ -329,15 +329,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void OpenNewCanvas()
         {
-            if (_currentCollectionContainer.IsFilled) // IsFilled, navigate to Unfilled canvas
-            {
-                _currentCollectionContainer.DangerousSetIndex(_currentCollectionContainer.Items.Count);
+            _currentCollectionContainer.DangerousSetIndex(_currentCollectionContainer.Items.Count);
 
-                CurrentPageNavigation = new DisplayFrameNavigationDataModel(
-                        CurrentPageNavigation.pageType,
-                        CurrentPageNavigation.collectionContainer,
-                        CurrentPageNavigation.transitionInfo, true);
-            }
+            CurrentPageNavigation = new DisplayFrameNavigationDataModel(
+                    CurrentPageNavigation.pageType,
+                    CurrentPageNavigation.collectionContainer,
+                    CurrentPageNavigation.transitionInfo, true);
         }
 
         private async void OnPageNavigated(DisplayFrameNavigationDataModel navigationDataModel)
@@ -359,7 +356,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 case DisplayPageType.CanvasPage:
                     {
                         // Add suggested actions
-                        if (_currentCollectionContainer.IsFilled)
+                        if (_currentCollectionContainer.IsFilled && PasteCanvasModel != null)
                         {
                             NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(await PasteCanvasModel.GetSuggestedActions());
                         }
