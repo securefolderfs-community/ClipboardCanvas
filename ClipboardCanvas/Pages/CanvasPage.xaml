@@ -63,7 +63,7 @@
                     x:Name="PastedAsReference"
                     Grid.Row="1"
                     x:Load="{x:Bind ViewModel.PastedAsReferenceLoad, Mode=OneWay}"
-                    Opacity="0.8"
+                    Opacity="0.6"
                     Text="File pasted as reference" />
             </Grid>
 

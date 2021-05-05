@@ -361,9 +361,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             IEnumerable<StorageFile> files = await this.InnerStorageFolder.GetFilesAsync();
 
             // Sort items from oldest (last canvas) to latest (first canvas)
-            // TODO: It is not actually sorted like that - items are not in the right order
-            files.ToList().Sort((x, y) => DateTime.Compare(x.DateCreated.DateTime, y.DateCreated.DateTime));
-            files = files.Reverse();
+            files = files.OrderBy((x) => x.DateCreated.DateTime);
 
             Items.Clear();
             foreach (var item in files)
