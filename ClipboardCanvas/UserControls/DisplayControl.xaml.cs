@@ -42,10 +42,10 @@ namespace ClipboardCanvas.UserControls
         }
 
         // TODO: Move the event handler to the ViewModel
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            // We can't initialize ViewModel.NavigationToolBarControlModel in the constructor, because it didn't load in yet
-            this.ViewModel.InitializeAfterLoad();
+            // Initialize the rest when the view is loaded
+            await this.ViewModel.InitializeAfterLoad();
         }
     }
 }

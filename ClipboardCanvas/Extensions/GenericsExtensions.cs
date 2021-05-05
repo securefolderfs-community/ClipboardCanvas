@@ -45,11 +45,10 @@ namespace ClipboardCanvas.Extensions
         /// <summary>
         /// Tries to cast the given value to new type
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <typeparam name="TOut"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static TOut As<T, TOut>(this T obj)
+        public static TOut As<TOut>(this object obj)
         {
             try
             {

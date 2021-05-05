@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using Windows.Graphics.Imaging;
 using Windows.UI.Xaml.Media.Imaging;
 
+using ClipboardCanvas.Extensions;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
@@ -20,6 +21,8 @@ using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Enums;
+using System.Collections;
+using System.Linq;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -30,6 +33,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         private readonly IDynamicPasteCanvasControlView _view;
 
         private SoftwareBitmap _softwareBitmap;
+
+        private bool _isGifFile;
+
+        private string _gifFileName;
 
         #endregion
 
@@ -75,37 +82,73 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task<SafeWrapperResult> SetData(DataPackageView dataPackage)
         {
-            SafeWrapperResult result;
-            SafeWrapper<RandomAccessStreamReference> bitmap = await SafeWrapperRoutines.SafeWrapAsync(
+            if (dataPackage.Contains(StandardDataFormats.StorageItems))
+            {
+                // .gif file
+                _isGifFile = true;
+
+                SafeWrapper<IReadOnlyList<IStorageItem>> items = await SafeWrapperRoutines.SafeWrapAsync(
+                    () => dataPackage.GetStorageItemsAsync().AsTask());
+
+                if (!items)
+                {
+                    Debugger.Break();
+                    return (SafeWrapperResult)items;
+                }
+
+                StorageFile gifFile = items.Result.As<IEnumerable<IStorageItem>>().First().As<StorageFile>();
+                _gifFileName = Path.GetFileNameWithoutExtension(gifFile.Path);
+
+                SafeWrapper<Stream> openedStream = await SafeWrapperRoutines.SafeWrapAsync(
+                    () => gifFile.OpenStreamForReadAsync());
+
+                if (!openedStream)
+                {
+                    return (SafeWrapperResult)openedStream;
+                }
+
+                dataStream = openedStream.Result;
+
+                return SafeWrapperResult.S_SUCCESS;
+            }
+            else
+            {
+                SafeWrapper<RandomAccessStreamReference> bitmap = await SafeWrapperRoutines.SafeWrapAsync(
                            () => dataPackage.GetBitmapAsync().AsTask());
 
-            result = bitmap;
-            if (!result)
-            {
-                Debugger.Break();
-                return result;
+                if (!bitmap)
+                {
+                    Debugger.Break();
+                    return (SafeWrapperResult)bitmap;
+                }
+
+                SafeWrapper<IRandomAccessStreamWithContentType> openedStream = await SafeWrapperRoutines.SafeWrapAsync(
+                    () => bitmap.Result.OpenReadAsync().AsTask());
+
+                if (!openedStream)
+                {
+                    Debugger.Break();
+                    return (SafeWrapperResult)openedStream;
+                }
+
+                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(openedStream.Result);
+
+                _softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+
+                return SafeWrapperResult.S_SUCCESS;
             }
-
-            SafeWrapper<IRandomAccessStreamWithContentType> openedStream = await SafeWrapperRoutines.SafeWrapAsync(
-                () => bitmap.Result.OpenReadAsync().AsTask());
-
-            result = openedStream;
-            if (!result)
-            {
-                Debugger.Break();
-                return result;
-            }
-
-            BitmapDecoder decoder = await BitmapDecoder.CreateAsync(openedStream.Result);
-
-            _softwareBitmap = await decoder.GetSoftwareBitmapAsync();
-
-            return result;
         }
 
         public override async Task<SafeWrapperResult> TrySaveData()
         {
             SafeWrapperResult result;
+
+            if (_isGifFile)
+            {
+                // .gif file mode
+                // TODO: Sometimes some small portion of gif content is corrupted. WHAT!?!?
+                return await base.TrySaveData();
+            }
 
             BitmapEncoder encoder = null;
             result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
@@ -184,7 +227,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             SafeWrapperResult result;
             SafeWrapper<StorageFile> file;
 
-            file = await AssociatedContainer.GetEmptyFileToWrite(".png");
+            if (_isGifFile)
+            {
+                file = await AssociatedContainer.GetEmptyFileToWrite(".gif", _gifFileName);
+            }
+            else
+            {
+                file = await AssociatedContainer.GetEmptyFileToWrite(".png");
+            }
 
             result = file;
             if (!result)

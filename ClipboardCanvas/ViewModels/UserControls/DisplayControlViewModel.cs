@@ -23,10 +23,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private readonly IDisplayControlView _view;
 
-        private bool _afterLoadInitialized = false;
-
-        private bool _afterConstructorInitialized = false;
-
         private ICollectionsContainerModel _currentCollectionContainer;
 
         private CancellationTokenSource _canvasLoadCancellationTokenSource;

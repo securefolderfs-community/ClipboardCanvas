@@ -45,11 +45,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Public Properties
 
-        public List<CollectionsContainerItemModel> Items 
-        { 
-            get;
-            private set;
-        }
+        public List<CollectionsContainerItemModel> Items { get; private set; }
 
         public string Name
         {
