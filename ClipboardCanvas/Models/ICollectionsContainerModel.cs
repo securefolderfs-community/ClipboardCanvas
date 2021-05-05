@@ -1,4 +1,5 @@
-﻿using ClipboardCanvas.Helpers.SafetyHelpers;
+﻿using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.UserControls;
 using System.Collections.Generic;
 using System.Threading;
@@ -26,6 +27,8 @@ namespace ClipboardCanvas.Models
         /// Gets currently opened canvas
         /// </summary>
         ICollectionsContainerItemModel CurrentCanvas { get; }
+
+        void DangerousSetIndex(int newIndex);
 
         /// <summary>
         /// Creates a file and returns it within this container 
@@ -71,7 +74,8 @@ namespace ClipboardCanvas.Models
         /// Adds item to the collection to refresh it with newly created canvas
         /// </summary>
         /// <param name="file"></param>
-        void RefreshAddItem(StorageFile file);
+        /// <param name="contentType"></param>
+        void RefreshAddItem(StorageFile file, BasePastedContentTypeDataModel contentType);
 
         /// <summary>
         /// Starts UI rename 

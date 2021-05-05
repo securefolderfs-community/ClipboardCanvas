@@ -50,7 +50,7 @@
                 <ColumnDefinition />
 
                 <!--  Navigation controls  -->
-                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
 
                 <!--  Settings  -->
                 <ColumnDefinition />

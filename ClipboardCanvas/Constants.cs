@@ -16,9 +16,16 @@
             public const long FALLBACK_TEXTLOAD_MAX_FILESIZE = 1048576L;
         }
 
+        public static class FileSystem
+        {
+            public const string REFERENCE_FILELIST_EXTENSION = ".ccvrx";
+
+            public const string REFERENCE_FILE_EXTENSION = ".ccvr";
+        }
+
         public static class Collections
         {
-            public const string DEFAULT_COLLECTION_ID = "$DEFAULT_COLLECTION$";
+            public const string DEFAULT_COLLECTION_TOKEN = "$DEFAULT_COLLECTION$";
         }
     }
 }

@@ -24,17 +24,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         private IDynamicPasteCanvasControlView _view;
 
-        private TextContentType _innerContentType;
-
         #endregion
 
         #region Protected Properties
-
-        protected override BasePastedContentTypeDataModel ContentType
-        {
-            get => _innerContentType;
-            set => _innerContentType = (TextContentType)value;
-        }
 
         protected override ICollectionsContainerModel AssociatedContainer => _view?.CollectionContainer;
 
@@ -92,7 +84,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return result;
         }
 
-        protected override async Task<SafeWrapperResult> SetFile()
+        protected override async Task<SafeWrapperResult> TrySetFile()
         {
             SafeWrapperResult result;
             SafeWrapper<StorageFile> file;
@@ -106,7 +98,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             associatedFile = file.Result;
-            RaiseOnFileCreatedEvent(this, new FileCreatedEventArgs(file.Result, AssociatedContainer));
+            RaiseOnFileCreatedEvent(this, new FileCreatedEventArgs(AssociatedContainer, contentType, file.Result));
 
             return result;
         }

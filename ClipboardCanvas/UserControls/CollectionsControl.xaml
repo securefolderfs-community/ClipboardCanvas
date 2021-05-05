@@ -58,7 +58,7 @@
                         BorderBrush="{ThemeResource SystemAccentColor}"
                         BorderThickness="{Binding IsSelected, Converter={StaticResource SelectedCollectionsContainerConverter}}"
                         CornerRadius="8">
-                        <Grid>
+                        <Grid Margin="10,0,10,2">
                             <Grid.RowDefinitions>
                                 <!--  Content  -->
                                 <RowDefinition />

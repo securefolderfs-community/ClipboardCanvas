@@ -46,12 +46,15 @@ namespace ClipboardCanvas.EventArguments
     {
         public readonly ICollectionsContainerModel associatedContainer;
 
+        public readonly BasePastedContentTypeDataModel contentType;
+
         public readonly StorageFile file;
 
-        public FileCreatedEventArgs(StorageFile file, ICollectionsContainerModel associatedContainer)
+        public FileCreatedEventArgs(ICollectionsContainerModel associatedContainer, BasePastedContentTypeDataModel contentType, StorageFile file)
         {
-            this.file = file;
             this.associatedContainer = associatedContainer;
+            this.contentType = contentType;
+            this.file = file;
         }
     }
 

@@ -3,23 +3,25 @@ using Windows.Storage;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Linq;
-
-using ClipboardCanvas.Models;
-using ClipboardCanvas.Helpers.SafetyHelpers;
-using ClipboardCanvas.Helpers.FilesystemHelpers;
-using ClipboardCanvas.EventArguments;
-using ClipboardCanvas.Enums;
-using ClipboardCanvas.Extensions;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.Input;
 using Windows.UI.Xaml.Input;
 using Windows.System;
 using Windows.UI.Xaml;
-using ClipboardCanvas.Helpers;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
+
+using ClipboardCanvas.Models;
+using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.Helpers.SafetyHelpers;
+using ClipboardCanvas.Helpers.FilesystemHelpers;
+using ClipboardCanvas.EventArguments;
+using ClipboardCanvas.Helpers;
+using ClipboardCanvas.Enums;
+using ClipboardCanvas.Extensions;
+using ClipboardCanvas.ReferenceItems;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -189,6 +191,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region ICollectionContainerModel
 
+        public void DangerousSetIndex(int newIndex)
+        {
+            this._currentIndex = newIndex;
+        }
+
         public async Task<SafeWrapper<StorageFile>> GetEmptyFileToWrite(string extension, string fileName = null)
         {
             if (string.IsNullOrEmpty(fileName))
@@ -256,9 +263,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
             await LoadCanvasFromCollection(pasteCanvasModel, cancellationToken, false);
         }
 
-        public void RefreshAddItem(StorageFile file)
+        public void RefreshAddItem(StorageFile file, BasePastedContentTypeDataModel contentType)
         {
-            Items.Add(new CollectionsContainerItemModel(file));
+            Items.Add(new CollectionsContainerItemModel(file, contentType));
         }
 
         public void StartRename()
@@ -354,6 +361,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             IEnumerable<StorageFile> files = await this.InnerStorageFolder.GetFilesAsync();
 
             // Sort items from oldest (last canvas) to latest (first canvas)
+            // TODO: It is not actually sorted like that - items are not in the right order
             files.ToList().Sort((x, y) => DateTime.Compare(x.DateCreated.DateTime, y.DateCreated.DateTime));
             files = files.Reverse();
 

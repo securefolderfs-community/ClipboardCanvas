@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using Windows.Storage;
 using System.IO;
 using System.Threading;
+using System.Linq;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -115,6 +116,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Private Helpers
 
+        /// <summary>
+        /// Initialize View Model from data package
+        /// </summary>
+        /// <param name="dataPackage"></param>
+        /// <returns></returns>
         private async Task<bool> InitializeViewModel(DataPackageView dataPackage)
         {
             // Decide content type and initialize view model
@@ -142,15 +148,33 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 {
                     // TODO: More than one item, paste all files as reference
                 }
-                else
+                else if (items.Count == 1)
                 {
                     // One item, decide view model for it
+                    IStorageItem item = items.First();
+
+                    BasePastedContentTypeDataModel contentType = await BasePastedContentTypeDataModel.GetContentType(item);
+
+                    if (contentType == null)
+                    {
+                        return false;
+                    }
+
+                    return InitializeViewModel(contentType);
+                }
+                else
+                {
+                    // No items
+                    return false;
                 }
             }
 
             return false;
         }
 
+        /// <summary>
+        /// Initialize View Model from existing data
+        /// </summary>
         private async Task<bool> InitializeViewModel(ICollectionsContainerItemModel containerItemModel)
         {
             DiscardData();
@@ -180,6 +204,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 containerItemModel.ContentType = contentType;
             }
 
+            return InitializeViewModel(contentType);
+        }
+
+        private bool InitializeViewModel(BasePastedContentTypeDataModel contentType)
+        {
             // Initialize View Model
 
             // Try for image
@@ -190,6 +219,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             // Try for text
             if (InitializeViewModelForType<TextContentType, TextCanvasViewModel>(contentType, () => new TextCanvasViewModel(_view)))
+            {
+                return true;
+            }
+
+            // Try for media
+            if (InitializeViewModelForType<MediaContentType, MediaCanvasViewModel>(contentType, () => new MediaCanvasViewModel(_view)))
             {
                 return true;
             }

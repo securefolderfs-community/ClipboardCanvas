@@ -47,13 +47,13 @@
                     VerticalAlignment="Center"
                     FontSize="16"
                     FontWeight="SemiLight"
-                    Text="Current Canvas:" />
+                    Text="Current Collection:" />
                 <TextBlock
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     FontSize="16"
                     FontWeight="SemiBold"
-                    Text="{x:Bind ViewModel.CurrentCanvasText, Mode=OneWay}" />
+                    Text="{x:Bind ViewModel.CurrentCollectionText, Mode=OneWay}" />
             </StackPanel>
         </Grid>
 

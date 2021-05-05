@@ -134,6 +134,7 @@
     <Compile Include="DataModels\DisplayFrameNavigationDataModel.cs" />
     <Compile Include="DataModels\PastedContentDataModels\BasePastedContentTypeDataModel.cs" />
     <Compile Include="DataModels\PastedContentDataModels\ImageContentType.cs" />
+    <Compile Include="DataModels\PastedContentDataModels\MediaContentType.cs" />
     <Compile Include="DataModels\PastedContentDataModels\TextContentType.cs" />
     <Compile Include="DataModels\SettingsFrameNavigationDataModel.cs" />
     <Compile Include="Enums\SettingsPageType.cs" />
@@ -143,6 +144,8 @@
     <Compile Include="Extensions\LinqExtensions.cs" />
     <Compile Include="Extensions\SafetyExtensions.cs" />
     <Compile Include="Helpers\CollectionsHelpers.cs" />
+    <Compile Include="ReferenceItems\ReferenceFile.cs" />
+    <Compile Include="ReferenceItems\ReferenceFileData.cs" />
     <Compile Include="Helpers\SafetyHelpers\SafeWrapperRoutines.cs" />
     <Compile Include="Helpers\XamlHelpers\SystemTypeToXaml.cs" />
     <Compile Include="Models\IWindowTitleBarControlModel.cs" />
@@ -159,6 +162,7 @@
     <Compile Include="Pages\SettingsPages\SettingsPastingPage.xaml.cs">
       <DependentUpon>SettingsPastingPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ReferenceItems\ReferenceFolder.cs" />
     <Compile Include="UnsafeNative\UnsafeNativeDataModels.cs" />
     <Compile Include="Enums\DisplayPageType.cs" />
     <Compile Include="Enums\OperationStatus.cs" />
@@ -217,6 +221,9 @@
     <Compile Include="UserControls\CanvasDisplay\TextCanvasControl.xaml.cs">
       <DependentUpon>TextCanvasControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\CanvasDisplay\MediaCanvasControl.xaml.cs">
+      <DependentUpon>MediaCanvasControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\CollectionsControl.xaml.cs">
       <DependentUpon>CollectionsControl.xaml</DependentUpon>
     </Compile>
@@ -245,12 +252,14 @@
     <Compile Include="ViewModels\Pages\CollectionPreviewPageViewModel.cs" />
     <Compile Include="ViewModels\Pages\HomePageViewModel.cs" />
     <Compile Include="ViewModels\Pages\SettingsPages\SettingsGeneralPageViewModel.cs" />
+    <Compile Include="ViewModels\Pages\SettingsPages\SettingsPastingPageViewModel.cs" />
     <Compile Include="ViewModels\UserControls\AdaptiveOptionsControlItemViewModel.cs" />
     <Compile Include="ViewModels\UserControls\AdaptiveOptionsControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\BasePasteCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\DynamicCanvasControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\ImageCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\TextCanvasViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\CanvasDisplay\MediaCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CollectionPreviewItemViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CollectionsContainerItemModel.cs" />
     <Compile Include="ViewModels\UserControls\CollectionsContainerViewModel.cs" />
@@ -326,6 +335,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\CanvasDisplay\TextCanvasControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\CanvasDisplay\MediaCanvasControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

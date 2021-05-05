@@ -29,6 +29,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected CancellationToken cancellationToken;
 
+        protected BasePastedContentTypeDataModel contentType;
+
         protected StorageFile associatedFile;
 
         protected IRandomAccessStream fileStream;
@@ -42,8 +44,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #region Protected Properties
 
         protected abstract ICollectionsContainerModel AssociatedContainer { get; }
-
-        protected abstract BasePastedContentTypeDataModel ContentType { get; set; }
 
         #endregion
 
@@ -85,7 +85,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             SafeWrapperResult result;
             SafeWrapperResult cancelResult = new SafeWrapperResult(OperationErrorCode.InProgress, "The operation was canceled");
 
-            ContentType = itemData.ContentType;
+            contentType = itemData.ContentType;
             associatedFile = itemData.File;
 
             if (!StorageItemHelpers.Exists(associatedFile.Path))
@@ -120,7 +120,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             isFilled = true;
 
-            RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(ContentType, isFilled));
+            RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, isFilled));
 
             return result;
         }
@@ -160,6 +160,18 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return cancelResult;
             }
 
+            result = await TrySetFile();
+            if (!AssertNoError(result))
+            {
+                return result;
+            }
+
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return cancelResult;
+            }
+
             result = await TrySaveData();
             if (!AssertNoError(result))
             {
@@ -186,7 +198,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 }
 
                 isFilled = true;
-                RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(ContentType, isFilled));
+                RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, isFilled));
             }
 
             return result;
@@ -195,14 +207,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         public virtual async Task<SafeWrapperResult> TrySaveData()
         {
             SafeWrapperResult result;
-
-            result = await SetFile();
-
-            if (!result)
-            {
-                Debugger.Break();
-                return result; // Something went very wrong that shouldn't!
-            }
 
             result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
             {
@@ -279,7 +283,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected abstract Task<SafeWrapperResult> SetData(DataPackageView dataPackage);
 
-        protected abstract Task<SafeWrapperResult> SetFile();
+        protected abstract Task<SafeWrapperResult> TrySetFile();
 
         protected abstract Task<SafeWrapperResult> TryFetchDataToView();
 
@@ -312,7 +316,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             dataStream = null;
             fileStream = null;
-            ContentType = null;
+            contentType = null;
             associatedFile = null;
         }
 

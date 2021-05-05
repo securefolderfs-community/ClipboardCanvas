@@ -18,7 +18,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
     {
         #region Public Properties
 
-        public StorageFile File { get; private set; }
+        public StorageFile File { 
+            get; 
+            private set; }
 
         public BasePastedContentTypeDataModel ContentType { get; set; }
 
@@ -27,8 +29,14 @@ namespace ClipboardCanvas.ViewModels.UserControls
         #region Constructor
 
         public CollectionsContainerItemModel(StorageFile file)
+            : this(file, null)
+        {
+        }
+
+        public CollectionsContainerItemModel(StorageFile file, BasePastedContentTypeDataModel contentType)
         {
             this.File = file;
+            this.ContentType = contentType;
         }
 
         #endregion
@@ -43,7 +51,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
         public async Task OpenContainingFolder()
         {
             StorageFolder folder = await StorageItemHelpers.ToStorageItem<StorageFolder>(Path.GetDirectoryName(File.Path));
-            await Launcher.LaunchFolderAsync(folder);
+
+            FolderLauncherOptions launcherOptions = new FolderLauncherOptions();
+            launcherOptions.ItemsToSelect.Add(File);
+
+            await Launcher.LaunchFolderAsync(folder, launcherOptions);
         }
 
         #endregion

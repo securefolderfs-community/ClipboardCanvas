@@ -17,6 +17,8 @@ using Windows.ApplicationModel.Core;
 using Microsoft.Toolkit.Uwp;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 using System.Threading;
+using ClipboardCanvas.ReferenceItems;
+using Windows.Storage;
 
 namespace ClipboardCanvas.Helpers
 {
@@ -49,7 +51,18 @@ namespace ClipboardCanvas.Helpers
                     await collectionsContainer.CurrentCanvas.OpenContainingFolder();
                 }, "Open containing folder", "\uE838");
 
-            var (icon, appName) = await GetInfoFromFileHandlingApp(Path.GetExtension(collectionsContainer.CurrentCanvas.File.Path));
+            IStorageFile actualFile;
+            if (ReferenceFile.IsReferenceFile(collectionsContainer.CurrentCanvas.File))
+            {
+                ReferenceFile referenceFile = await ReferenceFile.GetFile(collectionsContainer.CurrentCanvas.File);
+                actualFile = referenceFile.ReferencedFile;
+            }
+            else
+            {
+                actualFile = collectionsContainer.CurrentCanvas.File;
+            }
+
+            var (icon, appName) = await GetInfoFromFileHandlingApp(Path.GetExtension(actualFile.Path));
             var action_openFile = new AdaptiveOptionsControlItemViewModel(
                 async () =>
                 {

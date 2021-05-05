@@ -186,7 +186,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             if (string.IsNullOrWhiteSpace(lastSelectedCollection))
             {
-                lastSelectedCollection = Constants.Collections.DEFAULT_COLLECTION_ID;
+                lastSelectedCollection = Constants.Collections.DEFAULT_COLLECTION_TOKEN;
                 App.AppSettings.CollectionLocationsSettings.LastSelectedCollection = lastSelectedCollection;
             }
 

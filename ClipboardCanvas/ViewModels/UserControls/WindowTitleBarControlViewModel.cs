@@ -31,11 +31,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
             private set => SetProperty(ref _CanvasTitleBarTextLoad, value);
         }
 
-        private string _CurrentCanvasText;
-        public string CurrentCanvasText
+        private string _CurrentCollectionText;
+        public string CurrentCollectionText
         {
-            get => _CurrentCanvasText;
-            private set => SetProperty(ref _CurrentCanvasText, value);
+            get => _CurrentCollectionText;
+            private set => SetProperty(ref _CurrentCollectionText, value);
         }
 
         #endregion
@@ -92,7 +92,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             DefaultTitleBarTextLoad = false;
             CollectionsTitleBarTextLoad = false;
             CanvasTitleBarTextLoad = true;
-            CurrentCanvasText = collectionName;
+            CurrentCollectionText = collectionName;
         }
 
         #endregion

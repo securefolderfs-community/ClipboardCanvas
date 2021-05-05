@@ -41,10 +41,10 @@ namespace ClipboardCanvas.ApplicationSettings
             set => Set<bool>(value);
         }
 
-        public bool CopyItemsDirectlyToCollection
+        public bool CopyLargeItemsDirectlyToCollection
         {
             get => Get<bool>(false);
-            set => Set<bool>(true);
+            set => Set<bool>(value);
         }
 
         #endregion

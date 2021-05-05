@@ -26,7 +26,7 @@ namespace ClipboardCanvas.ApplicationSettings
 
         public string LastSelectedCollection
         {
-            get => Get<string>(Constants.Collections.DEFAULT_COLLECTION_ID);
+            get => Get<string>(Constants.Collections.DEFAULT_COLLECTION_TOKEN);
             set => Set<string>(value);
         }
 

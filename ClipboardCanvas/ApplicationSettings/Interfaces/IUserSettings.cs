@@ -24,15 +24,19 @@
         /// <br/><br/>
         /// Otherwise, if <see cref="PastePastableFilesAsContent"/> is false, the file is pasted and not displayed as conveniently viewable content
         /// </summary>
-        public bool PastePastableFilesAsContent { get; set; }
+        public bool PastePastableFilesAsContent { get; set; } // TODO: Useless?
 
         /// <summary>
-        /// Determines whether items are copied directly to a collection
+        /// Determines whether large items are copied directly to a collection
         /// <br/><br/>
-        /// If <see cref="CopyItemsDirectlyToCollection"/> is true, then item on paste will be copied.
+        /// If <see cref="CopyLargeItemsDirectlyToCollection"/> is true, then item on paste will be copied.
         /// <br/>
         /// Otherwise, items are copied as reference to original item location.
+        /// <br/><br/>
+        /// Attention!
+        /// <br/>
+        /// Small items like images will always be copied no matter the value of that setting
         /// </summary>
-        public bool CopyItemsDirectlyToCollection { get; set; }
+        public bool CopyLargeItemsDirectlyToCollection { get; set; }
     }
 }

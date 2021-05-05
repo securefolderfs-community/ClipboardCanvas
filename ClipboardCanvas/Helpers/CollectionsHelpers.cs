@@ -9,7 +9,7 @@ namespace ClipboardCanvas.Helpers
         {
             if (container.isDefault)
             {
-                App.AppSettings.CollectionLocationsSettings.LastSelectedCollection = Constants.Collections.DEFAULT_COLLECTION_ID;
+                App.AppSettings.CollectionLocationsSettings.LastSelectedCollection = Constants.Collections.DEFAULT_COLLECTION_TOKEN;
             }
             else
             {

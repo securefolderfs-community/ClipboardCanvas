@@ -86,10 +86,8 @@ namespace ClipboardCanvas.ApplicationSettings
 
                 if (valueObject == null)
                 {
-                    return (TValue)valueObject;
+                    return defaultValue;
                 }
-
-                Type valueType = serializableSettings[propertyName].GetType();
 
                 if (valueObject is JToken jtoken)
                 {

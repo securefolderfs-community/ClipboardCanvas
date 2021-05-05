@@ -243,7 +243,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void PasteCanvasModel_OnFileCreatedEvent(object sender, FileCreatedEventArgs e)
         {
-            _currentCollectionContainer.RefreshAddItem(e.file);
+            _currentCollectionContainer.RefreshAddItem(e.file, e.contentType);
         }
 
         private async void PasteCanvasModel_OnPasteRequestedEvent(object sender, PasteRequestedEventArgs e)
@@ -317,6 +317,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void OpenNewCanvas()
         {
+            _currentCollectionContainer.DangerousSetIndex(_currentCollectionContainer.Items.Count);
             CurrentPageNavigation = new DisplayFrameNavigationDataModel(
                     CurrentPageNavigation.pageType,
                     CurrentPageNavigation.collectionContainer,

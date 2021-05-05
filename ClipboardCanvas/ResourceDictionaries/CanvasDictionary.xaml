@@ -15,5 +15,9 @@
     <DataTemplate x:Key="TextCanvasViewModel" x:DataType="vm:TextCanvasViewModel">
         <uc:TextCanvasControl />
     </DataTemplate>
+    <!--  Media view  -->
+    <DataTemplate x:Key="MediaCanvasViewModel" x:DataType="vm:MediaCanvasViewModel">
+        <uc:MediaCanvasControl />
+    </DataTemplate>
 
 </ResourceDictionary>
