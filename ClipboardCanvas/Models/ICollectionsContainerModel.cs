@@ -70,6 +70,8 @@ namespace ClipboardCanvas.Models
         /// <returns></returns>
         Task NavigateBack(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken);
 
+        Task LoadCanvasFromCollection(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken, bool navigateNext);
+
         /// <summary>
         /// Adds item to the collection to refresh it with newly created canvas
         /// </summary>

@@ -214,16 +214,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public virtual async Task<SafeWrapperResult> TrySaveData()
         {
-            SafeWrapperResult result = SafeWrapperResult.S_SUCCESS;
+            SafeWrapperResult result;
 
-            //result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
-            //{
+            result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
+            {
                 dataStream.Position = 0L;
                 using (fileStream = await associatedFile.OpenAsync(FileAccessMode.ReadWrite))
                 {
                     await dataStream.CopyToAsync(fileStream.AsStreamForWrite());
                 }
-            //}, errorReporter);
+            }, errorReporter);
 
             if (result)
             {

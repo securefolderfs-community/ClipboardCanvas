@@ -271,17 +271,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
             await LoadCanvasFromCollection(pasteCanvasModel, cancellationToken, false);
         }
 
-        public void RefreshAddItem(StorageFile file, BasePastedContentTypeDataModel contentType)
-        {
-            Items.Add(new CollectionsContainerItemModel(file, contentType));
-        }
-
-        #endregion
-
-        #region Private Helpers
-
-        private async Task LoadCanvasFromCollection(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken, bool isOperationSwitchNextCanvas)
-            // TODO: Should isOperationSwitchNextCanvas parameter be removed?
+        public async Task LoadCanvasFromCollection(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken, bool navigateNext)
+        // TODO: Should isOperationSwitchNextCanvas parameter be removed?
         {
             //Debugger.Break(); // TODO: Investigate high memory usage on load
 
@@ -300,7 +291,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 // Calculate new index
                 int newItemsCount = Items.Count;
                 int newIndex = savedIndex - (savedItemsCount - newItemsCount);
-                if (isOperationSwitchNextCanvas)
+                if (navigateNext)
                 {
                     newIndex += savedItemsCount - newItemsCount;
                 }
@@ -325,6 +316,15 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 // TODO: Handle this error
             }
         }
+
+        public void RefreshAddItem(StorageFile file, BasePastedContentTypeDataModel contentType)
+        {
+            Items.Add(new CollectionsContainerItemModel(file, contentType));
+        }
+
+        #endregion
+
+        #region Private Helpers
 
         private async void Initialize()
         {

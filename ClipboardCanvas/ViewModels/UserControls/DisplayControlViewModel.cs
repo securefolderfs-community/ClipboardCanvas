@@ -182,7 +182,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             // We might navigate from home to a canvas that's already filled, so initialize the content
             if (_currentCollectionContainer.IsFilled)
             {
-                await PasteCanvasModel.TryLoadExistingData(_currentCollectionContainer.CurrentCanvas, _canvasLoadCancellationTokenSource.Token);
+                await _currentCollectionContainer.LoadCanvasFromCollection(PasteCanvasModel, _canvasLoadCancellationTokenSource.Token, true);
             }
         }
 
@@ -247,7 +247,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async void PasteCanvasModel_OnPasteRequestedEvent(object sender, PasteRequestedEventArgs e)
         {
-            if (e.hasContent)  // TODO: f It doesn't work - always is false bruh why? my crappy code
+            if (e.hasContent) // TODO: f It doesn't work - always is false bruh why? my crappy code
             {
                 // Already has content, meaning we need to switch to the next page
                 OpenNewCanvas();
@@ -329,11 +329,15 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void OpenNewCanvas()
         {
-            _currentCollectionContainer.DangerousSetIndex(_currentCollectionContainer.Items.Count);
-            CurrentPageNavigation = new DisplayFrameNavigationDataModel(
-                    CurrentPageNavigation.pageType,
-                    CurrentPageNavigation.collectionContainer,
-                    CurrentPageNavigation.transitionInfo, true);
+            if (_currentCollectionContainer.IsFilled) // IsFilled, navigate to Unfilled canvas
+            {
+                _currentCollectionContainer.DangerousSetIndex(_currentCollectionContainer.Items.Count);
+
+                CurrentPageNavigation = new DisplayFrameNavigationDataModel(
+                        CurrentPageNavigation.pageType,
+                        CurrentPageNavigation.collectionContainer,
+                        CurrentPageNavigation.transitionInfo, true);
+            }
         }
 
         private async void OnPageNavigated(DisplayFrameNavigationDataModel navigationDataModel)
