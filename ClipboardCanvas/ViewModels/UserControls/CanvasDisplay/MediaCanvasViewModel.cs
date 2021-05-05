@@ -31,8 +31,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         private StorageFile _sourceFile;
 
-        private bool _pasteAsReference;
-
         #endregion
 
         #region Protected Members
@@ -81,7 +79,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         public override async Task<SafeWrapperResult> TrySaveData()
         {
             SafeWrapperResult result = null;
-            if (_pasteAsReference)
+            if (contentAsReference)
             {
                 ReferenceFile referenceFile = await ReferenceFile.GetFile(associatedFile);
                 await referenceFile.UpdateReferenceFile(new ReferenceFileData(_sourceFile.Path));
@@ -101,11 +99,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             if (App.AppSettings.UserSettings.CopyLargeItemsDirectlyToCollection)
             {
-                _pasteAsReference = false;
+                contentAsReference = false;
             }
             else
             {
-                _pasteAsReference = true;
+                contentAsReference = true;
             }
 
             SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
@@ -124,7 +122,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (ReferenceFile.IsReferenceFile(file))
             {
                 // Reference file
-                _pasteAsReference = true;
+                contentAsReference = true;
 
                 // Get reference file
                 ReferenceFile referenceFile = await ReferenceFile.GetFile(file);
@@ -135,7 +133,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             else
             {
                 // In collection file
-                _pasteAsReference = false;
+                contentAsReference = false;
 
                 associatedFile = file;
             }
@@ -146,7 +144,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             SafeWrapper<StorageFile> file;
 
-            if (_pasteAsReference)
+            if (contentAsReference)
             {
                 file = await AssociatedContainer.GetEmptyFileToWrite(Constants.FileSystem.REFERENCE_FILE_EXTENSION);
             }
@@ -172,7 +170,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             ContentMediaLoad = true;
 
-            if (_pasteAsReference)
+            if (contentAsReference)
             {
                 ContentMedia = MediaSource.CreateFromStorageFile(_sourceFile);
             }   

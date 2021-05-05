@@ -37,7 +37,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected Stream dataStream;
 
+        /// <summary>
+        /// Determines whether canvas content has been loaded
+        /// </summary>
         protected bool isFilled;
+
+        /// <summary>
+        /// Determines whether content is loaded/pasted as reference
+        /// </summary>
+        protected bool contentAsReference;
 
         #endregion
 
@@ -120,7 +128,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             isFilled = true;
 
-            RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, isFilled));
+            RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, isFilled, contentAsReference));
 
             return result;
         }
@@ -198,7 +206,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 }
 
                 isFilled = true;
-                RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, isFilled));
+                RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, isFilled, contentAsReference));
             }
 
             return result;
@@ -289,19 +297,19 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Event Raisers
 
-        protected void RaiseOnOpenNewCanvasRequestedEvent(object s, OpenOpenNewCanvasRequestedEventArgs e) => OnOpenNewCanvasRequestedEvent?.Invoke(s, e);
+        protected virtual void RaiseOnOpenNewCanvasRequestedEvent(object s, OpenOpenNewCanvasRequestedEventArgs e) => OnOpenNewCanvasRequestedEvent?.Invoke(s, e);
 
-        protected void RaiseOnContentLoadedEvent(object s, ContentLoadedEventArgs e) => OnContentLoadedEvent?.Invoke(s, e);
+        protected virtual void RaiseOnContentLoadedEvent(object s, ContentLoadedEventArgs e) => OnContentLoadedEvent?.Invoke(s, e);
 
-        protected void RaiseOnPasteRequestedEvent(object s, PasteRequestedEventArgs e) => OnPasteRequestedEvent?.Invoke(s, e);
+        protected virtual void RaiseOnPasteRequestedEvent(object s, PasteRequestedEventArgs e) => OnPasteRequestedEvent?.Invoke(s, e);
 
-        protected void RaiseOnFileCreatedEvent(object s, FileCreatedEventArgs e) => OnFileCreatedEvent?.Invoke(s, e);
+        protected virtual void RaiseOnFileCreatedEvent(object s, FileCreatedEventArgs e) => OnFileCreatedEvent?.Invoke(s, e);
 
-        protected void RaiseOnFileModifiedEvent(object s, FileModifiedEventArgs e) => OnFileModifiedEvent?.Invoke(s, e);
+        protected virtual void RaiseOnFileModifiedEvent(object s, FileModifiedEventArgs e) => OnFileModifiedEvent?.Invoke(s, e);
 
-        protected void RaiseOnFileDeletedEvent(object s, FileDeletedEventArgs e) => OnFileDeletedEvent?.Invoke(s, e);
+        protected virtual void RaiseOnFileDeletedEvent(object s, FileDeletedEventArgs e) => OnFileDeletedEvent?.Invoke(s, e);
 
-        protected void RaiseOnErrorOccurredEvent(object s, ErrorOccurredEventArgs e) => OnErrorOccurredEvent?.Invoke(s, e);
+        protected virtual void RaiseOnErrorOccurredEvent(object s, ErrorOccurredEventArgs e) => OnErrorOccurredEvent?.Invoke(s, e);
 
         #endregion
 

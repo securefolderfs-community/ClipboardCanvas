@@ -22,10 +22,13 @@ namespace ClipboardCanvas.EventArguments
 
         public readonly bool isFilled;
 
-        public ContentLoadedEventArgs(BasePastedContentTypeDataModel contentDataModel, bool isFilled)
+        public readonly bool pastedByReference;
+
+        public ContentLoadedEventArgs(BasePastedContentTypeDataModel contentDataModel, bool isFilled, bool pastedByReference)
         {
             this.contentDataModel = contentDataModel;
             this.isFilled = isFilled;
+            this.pastedByReference = pastedByReference;
         }
     }
 

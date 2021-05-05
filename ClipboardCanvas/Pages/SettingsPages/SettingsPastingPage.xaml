@@ -17,7 +17,7 @@
 
             <StackPanel>
                 <!--  TODO: Add teaching tooltip here  -->
-                <TextBlock Text="Always copy large items directly to collection" />
+                <TextBlock Text="Copy large items directly to collection" />
                 <!--  TODO: In the future implement it and remove IsEnabled="False"  -->
                 <ToggleSwitch IsEnabled="False" IsOn="{x:Bind ViewModel.CopyLargeItemsDirectlyToCollection, Mode=TwoWay}" />
             </StackPanel>

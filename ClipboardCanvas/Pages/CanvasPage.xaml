@@ -36,10 +36,16 @@
             <Grid
                 Grid.Row="0"
                 Grid.ColumnSpan="2"
-                Padding="10">
+                RowSpacing="8">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
                 <TextBlock
                     x:Name="TitleText"
+                    Grid.Row="0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     x:Load="{x:Bind ViewModel.TitleTextLoad, Mode=OneWay}"
@@ -47,7 +53,18 @@
                     FontWeight="Bold"
                     Text="Press Ctrl+V to paste in content!" />
 
-                <uc:DynamicCanvasControl x:Name="PasteCanvasControl" CollectionContainer="{x:Bind ViewModel.CollectionContainer, Mode=OneWay}" />
+                <uc:DynamicCanvasControl
+                    x:Name="PasteCanvasControl"
+                    Grid.Row="0"
+                    CollectionContainer="{x:Bind ViewModel.CollectionContainer, Mode=OneWay}" />
+
+                <!--  TODO: Add teaching tip here  -->
+                <TextBlock
+                    x:Name="PastedAsReference"
+                    Grid.Row="1"
+                    x:Load="{x:Bind ViewModel.PastedAsReferenceLoad, Mode=OneWay}"
+                    Opacity="0.8"
+                    Text="File pasted as reference" />
             </Grid>
 
             <!--  Error text  -->

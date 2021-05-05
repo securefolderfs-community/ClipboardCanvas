@@ -52,6 +52,13 @@ namespace ClipboardCanvas.ViewModels.Pages
             set => SetProperty(ref _ErrorText, value);
         }
 
+        private bool _PastedAsReferenceLoad;
+        public bool PastedAsReferenceLoad
+        {
+            get => _PastedAsReferenceLoad;
+            set => SetProperty(ref _PastedAsReferenceLoad, value);
+        }
+
         #endregion
 
         #region Commands
@@ -127,6 +134,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private void PasteCanvasModel_OnContentLoadedEvent(object sender, ContentLoadedEventArgs e)
         {
+            PastedAsReferenceLoad = e.pastedByReference;
             TitleTextLoad = false;
             ErrorTextLoad = false;
         }
