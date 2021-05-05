@@ -49,6 +49,16 @@ namespace ClipboardCanvas.Extensions
         /// <typeparam name="TOut"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static TOut As<T, TOut>(this T obj) => (TOut)(object)obj;
+        public static TOut As<T, TOut>(this T obj)
+        {
+            try
+            {
+                return (TOut)(object)obj;
+            }
+            catch
+            {
+                return default(TOut);
+            }
+        }
     }
 }

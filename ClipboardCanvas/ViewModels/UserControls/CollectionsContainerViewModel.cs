@@ -31,6 +31,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private int _currentIndex;
 
+        private bool _itemsInitialized;
+
         #endregion
 
         #region Public Members
@@ -43,7 +45,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Public Properties
 
-        public List<CollectionsContainerItemModel> Items { get; private set; }
+        public List<CollectionsContainerItemModel> Items 
+        { 
+            get;
+            private set;
+        }
 
         public string Name
         {
@@ -138,7 +144,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void RenameCollection()
         {
-            StartRename();
+            if (isDefault)
+            {
+                return;
+            }
+
+            EditBoxText = DisplayName;
+            IsEditingName = true;
         }
 
         private void RemoveCollection()
@@ -268,17 +280,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
             Items.Add(new CollectionsContainerItemModel(file, contentType));
         }
 
-        public void StartRename()
-        {
-            if (isDefault)
-            {
-                return;
-            }
-
-            EditBoxText = DisplayName;
-            IsEditingName = true;
-        }
-
         #endregion
 
         #region Private Helpers
@@ -335,6 +336,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
             {
                 await InitItems();
             }
+            else
+            {
+                // TODO: Display exclamation mark icon that something went wrong
+            }
         }
 
         private async Task<bool> InitInnerStorageFolder()
@@ -360,7 +365,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             IEnumerable<StorageFile> files = await this.InnerStorageFolder.GetFilesAsync();
 
-            // Sort items from oldest (last canvas) to latest (first canvas)
+            // Sort items from oldest (last canvas) to newest (first canvas)
             files = files.OrderBy((x) => x.DateCreated.DateTime);
 
             Items.Clear();
@@ -373,6 +378,23 @@ namespace ClipboardCanvas.ViewModels.UserControls
             _currentIndex = Items.Count; // - exceeds possible index range because we also want to be on unfilled canvas
 
             OnItemsRefreshRequestedEvent?.Invoke(this, new ItemsRefreshRequestedEventArgs(this));
+        }
+
+        public async Task<bool> InitializeItems()
+        {
+            if (!_itemsInitialized && InnerStorageFolder != null)
+            {
+                _itemsInitialized = true;
+                await InitItems();
+
+                return true;
+            }
+            else if (_itemsInitialized)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         #endregion

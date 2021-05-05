@@ -37,6 +37,8 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
 
     public class SafeWrapperResult
     {
+        public static SafeWrapperResult S_SUCCESS => new SafeWrapperResult(OperationErrorCode.Success, null, "Operation completed successfully");
+
         public SafeWrapperResultDetails Details { get; private set; }
 
         public SafeWrapperResult(OperationErrorCode status, Exception innerException)

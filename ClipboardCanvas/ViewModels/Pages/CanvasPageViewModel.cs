@@ -1,10 +1,4 @@
-﻿using ClipboardCanvas.EventArguments;
-using ClipboardCanvas.Helpers;
-using ClipboardCanvas.Helpers.SafetyHelpers;
-using ClipboardCanvas.Models;
-using ClipboardCanvas.ModelViews;
-using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Diagnostics;
@@ -14,6 +8,13 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+
+using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
+using ClipboardCanvas.EventArguments;
+using ClipboardCanvas.Helpers;
+using ClipboardCanvas.Helpers.SafetyHelpers;
+using ClipboardCanvas.Models;
+using ClipboardCanvas.ModelViews;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {

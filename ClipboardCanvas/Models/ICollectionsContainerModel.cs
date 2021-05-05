@@ -78,8 +78,9 @@ namespace ClipboardCanvas.Models
         void RefreshAddItem(StorageFile file, BasePastedContentTypeDataModel contentType);
 
         /// <summary>
-        /// Starts UI rename 
+        /// Initializes collection's items
         /// </summary>
-        void StartRename();
+        /// <returns>Returns true if operation completed successfully, otherwise false</returns>
+        Task<bool> InitializeItems();
     }
 }

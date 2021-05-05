@@ -12,6 +12,8 @@ using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Extensions;
 using Windows.UI.ViewManagement;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -20,6 +22,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
         #region Private Members
 
         private readonly IDisplayControlView _view;
+
+        private bool _afterLoadInitialized = false;
+
+        private bool _afterConstructorInitialized = false;
 
         private ICollectionsContainerModel _currentCollectionContainer;
 
@@ -81,10 +87,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
             this._canvasLoadCancellationTokenSource = new CancellationTokenSource();
 
             HookCollectionsEvents();
-
-            InitializeAfterConstructor();
-
-            OpenPage(DisplayPageType.CanvasPage);
         }
 
         #endregion
@@ -167,18 +169,19 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        private void NavigationControlModel_GoToHomeEvent(object sender, EventArgs e)
+        private async void NavigationControlModel_GoToHomeEvent(object sender, EventArgs e)
         {
-            OpenPage(DisplayPageType.HomePage);
+            await OpenPage(DisplayPageType.HomePage);
         }
 
         private async void NavigationControlModel_GoToCanvasEvent(object sender, EventArgs e)
         {
-            OpenPage(DisplayPageType.CanvasPage);
+            if (! await OpenPage(DisplayPageType.CanvasPage))
+            {
+                return;
+            }
 
             CheckNavigation();
-
-            Debug.WriteLine(_currentCollectionContainer.Name);
 
             // We might navigate from home to a canvas that's already filled, so initialize the content
             if (_currentCollectionContainer.IsFilled)
@@ -214,12 +217,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
             _currentCollectionContainer = e.selectedCollection;
         }
 
-        private void CollectionsControlViewModel_OnCollectionOpenRequested(object sender, CollectionOpenRequestedEventArgs e)
+        private async void CollectionsControlViewModel_OnCollectionOpenRequested(object sender, CollectionOpenRequestedEventArgs e)
         {
             Debugger.Break(); // This operation is not implemented
             return;
 
-            OpenPage(DisplayPageType.CollectionsPreview);
+            await OpenPage(DisplayPageType.CollectionsPreview);
         }
 
         #endregion
@@ -276,12 +279,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Public Helpers
 
-        public async void InitializeAfterLoad()
+        public async Task InitializeAfterLoad()
         {
+            await CollectionsControlViewModel.ReloadAllCollections();
+            await OpenPage(DisplayPageType.CanvasPage);
+
             HookTitleBarEvents();
             HookToolbarEvents();
-
-            NavigationToolBarControlModel.NotifyCurrentPageChanged(CurrentPageNavigation);
 
             // We must hook them here because only now it is not null
             // Hook events if the page navigated is canvas page
@@ -289,6 +293,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
             {
                 HookCanvasControlEvents();
             }
+
+            NavigationToolBarControlModel.NotifyCurrentPageChanged(CurrentPageNavigation);
 
             UpdateTitleBar();
             CheckNavigation();
@@ -299,14 +305,24 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Private Helpers
 
-        private void OpenPage(DisplayPageType pageType, bool simulateNavigation = false)
+        private async Task<bool> OpenPage(DisplayPageType pageType, bool simulateNavigation = false)
         {
-            CurrentPageNavigation = new DisplayFrameNavigationDataModel(pageType, _currentCollectionContainer, simulateNavigation);
-        }
+            if (pageType == DisplayPageType.CanvasPage)
+            {
+                // Performance optimization: instead of initializing all collections at once,
+                // initialize the one that's being opened
+                if (!await _currentCollectionContainer.InitializeItems())
+                {
+                    // Something went wrong, cannot open CanvasPage
+                    // TODO: Inform the user about the error
+                    return false;
+                }
+            }
 
-        private async void InitializeAfterConstructor()
-        {
-            await CollectionsControlViewModel.ReloadAllCollections();
+            // Navigate
+            CurrentPageNavigation = new DisplayFrameNavigationDataModel(pageType, _currentCollectionContainer, simulateNavigation);
+
+            return true;
         }
 
         private void CheckNavigation()

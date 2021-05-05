@@ -84,7 +84,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 ReferenceFile referenceFile = await ReferenceFile.GetFile(associatedFile);
                 await referenceFile.UpdateReferenceFile(new ReferenceFileData(_sourceFile.Path));
 
-                return new SafeWrapperResult(OperationErrorCode.Success, null, null);
+                return SafeWrapperResult.S_SUCCESS;
             }
             else
             {
@@ -137,7 +137,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
                 associatedFile = file;
             }
-            return await Task.FromResult(new SafeWrapperResult(OperationErrorCode.Success, null, null));
+            return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
         protected override async Task<SafeWrapperResult> TrySetFile()
@@ -179,7 +179,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 ContentMedia = MediaSource.CreateFromStorageFile(associatedFile);
             }
 
-            return await Task.FromResult(new SafeWrapperResult(OperationErrorCode.Success, null, null));
+            return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
         public override void Dispose()
