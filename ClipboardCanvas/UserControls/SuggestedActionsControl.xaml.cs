@@ -5,19 +5,19 @@ using Windows.UI.Xaml.Controls;
 
 namespace ClipboardCanvas.UserControls
 {
-    public sealed partial class AdaptiveOptionsControl : UserControl
+    public sealed partial class SuggestedActionsOptionsControl : UserControl
     {
-        public AdaptiveOptionsControlViewModel ViewModel
+        public SuggestedActionsControlViewModel ViewModel
         {
-            get => (AdaptiveOptionsControlViewModel)DataContext;
+            get => (SuggestedActionsControlViewModel)DataContext;
             set => DataContext = value;
         }
 
-        public AdaptiveOptionsControl()
+        public SuggestedActionsOptionsControl()
         {
             this.InitializeComponent();
 
-            this.ViewModel = new AdaptiveOptionsControlViewModel();
+            this.ViewModel = new SuggestedActionsControlViewModel();
         }
     }
 }

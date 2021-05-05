@@ -17,7 +17,7 @@ namespace ClipboardCanvas.UserControls
 
         public INavigationControlModel NavigationControlModel => NavigationControls?.ViewModel;
 
-        public IAdaptiveOptionsControlModel AdaptiveOptionsControlModel => AdaptiveOptions?.ViewModel;
+        public ISuggestedActionsControlModel SuggestedActionsControlModel => SuggestedActions?.ViewModel;
 
         public NavigationToolBarControl()
         {

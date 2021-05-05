@@ -191,7 +191,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\IAdaptiveOptionsControlModel.cs" />
+    <Compile Include="Models\ISuggestedActionsControlModel.cs" />
     <Compile Include="Models\ICollectionsContainerItemModel.cs" />
     <Compile Include="Models\ICollectionsContainerModel.cs" />
     <Compile Include="Models\IDynamicPasteCanvasModel.cs" />
@@ -212,8 +212,8 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceDictionaries\CanvasDictionary.xaml.cs" />
-    <Compile Include="UserControls\AdaptiveOptionsControl.xaml.cs">
-      <DependentUpon>AdaptiveOptionsControl.xaml</DependentUpon>
+    <Compile Include="UserControls\SuggestedActionsControl.xaml.cs">
+      <DependentUpon>SuggestedActionsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\CanvasDisplay\ImageCanvasControl.xaml.cs">
       <DependentUpon>ImageCanvasControl.xaml</DependentUpon>
@@ -253,8 +253,8 @@
     <Compile Include="ViewModels\Pages\HomePageViewModel.cs" />
     <Compile Include="ViewModels\Pages\SettingsPages\SettingsGeneralPageViewModel.cs" />
     <Compile Include="ViewModels\Pages\SettingsPages\SettingsPastingPageViewModel.cs" />
-    <Compile Include="ViewModels\UserControls\AdaptiveOptionsControlItemViewModel.cs" />
-    <Compile Include="ViewModels\UserControls\AdaptiveOptionsControlViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\SuggestedActionsControlItemViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\SuggestedActionsControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\BasePasteCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\DynamicCanvasControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\ImageCanvasViewModel.cs" />
@@ -326,7 +326,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\AdaptiveOptionsControl.xaml">
+    <Page Include="UserControls\SuggestedActionsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

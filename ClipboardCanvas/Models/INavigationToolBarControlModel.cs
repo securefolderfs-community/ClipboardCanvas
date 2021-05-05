@@ -4,6 +4,6 @@
     {
         INavigationControlModel NavigationControlModel { get; }
 
-        IAdaptiveOptionsControlModel AdaptiveOptionsControlModel { get; }
+        ISuggestedActionsControlModel SuggestedActionsControlModel { get; }
     }
 }

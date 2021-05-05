@@ -11,6 +11,7 @@ using System.IO;
 using Windows.System;
 using ClipboardCanvas.Helpers.FilesystemHelpers;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.ReferenceItems;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -18,9 +19,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
     {
         #region Public Properties
 
-        public StorageFile File { 
-            get; 
-            private set; }
+        public StorageFile File { get; private set; }
 
         public BasePastedContentTypeDataModel ContentType { get; set; }
 
@@ -45,15 +44,35 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task OpenFile()
         {
-            await Launcher.LaunchFileAsync(File);
+            if (ReferenceFile.IsReferenceFile(File))
+            {
+                ReferenceFile referenceFile = await ReferenceFile.GetFile(File);
+                await Launcher.LaunchFileAsync(referenceFile.ReferencedFile);
+            }
+            else
+            {
+                await Launcher.LaunchFileAsync(File);
+            }
         }
 
         public async Task OpenContainingFolder()
         {
-            StorageFolder folder = await StorageItemHelpers.ToStorageItem<StorageFolder>(Path.GetDirectoryName(File.Path));
+            IStorageFolder folder;
+            IStorageFile fileToSelect;
+            if (ReferenceFile.IsReferenceFile(File))
+            {
+                ReferenceFile referenceFile = await ReferenceFile.GetFile(File);
+                folder = await StorageItemHelpers.ToStorageItem<StorageFolder>(Path.GetDirectoryName(referenceFile.ReferencedFile.Path));
+                fileToSelect = referenceFile.ReferencedFile;
+            }
+            else
+            {
+                folder = await StorageItemHelpers.ToStorageItem<StorageFolder>(Path.GetDirectoryName(File.Path));
+                fileToSelect = File;
+            }
 
             FolderLauncherOptions launcherOptions = new FolderLauncherOptions();
-            launcherOptions.ItemsToSelect.Add(File);
+            launcherOptions.ItemsToSelect.Add(fileToSelect);
 
             await Launcher.LaunchFolderAsync(folder, launcherOptions);
         }

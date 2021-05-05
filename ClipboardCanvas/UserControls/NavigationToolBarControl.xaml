@@ -46,7 +46,7 @@
         <Grid>
             <Grid.ColumnDefinitions>
 
-                <!--  Adaptive options  -->
+                <!--  Suggested actions  -->
                 <ColumnDefinition />
 
                 <!--  Navigation controls  -->
@@ -57,8 +57,8 @@
 
             </Grid.ColumnDefinitions>
 
-            <!--  Adaptive options  -->
-            <uc:AdaptiveOptionsControl x:Name="AdaptiveOptions" Grid.Column="0" />
+            <!--  Suggested actions  -->
+            <uc:SuggestedActionsOptionsControl x:Name="SuggestedActions" Grid.Column="0" />
 
             <!--  Navigation  -->
             <uc:NavigationControl x:Name="NavigationControls" Grid.Column="1" />

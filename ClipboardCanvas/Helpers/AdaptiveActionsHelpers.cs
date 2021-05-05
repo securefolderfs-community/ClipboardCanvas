@@ -22,64 +22,13 @@ using Windows.Storage;
 
 namespace ClipboardCanvas.Helpers
 {
-    public static class AdaptiveActionsHelpers
+    public static class SuggestedActionsHelpers
     {
-        private static async Task<(BitmapImage icon, string appName)> GetInfoFromFileHandlingApp(string fileExtension)
+        public static IEnumerable<SuggestedActionsControlItemViewModel> GetActionsForEmptyCanvasPage(IPasteCanvasModel pasteCanvasControlModel)
         {
-            IReadOnlyList<AppInfo> apps = await Launcher.FindFileHandlersAsync(fileExtension);
+            List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
 
-            AppInfo app = apps.Last();
-
-            RandomAccessStreamReference stream = app.DisplayInfo.GetLogo(new Size(64d, 64d));
-
-            BitmapImage image = new BitmapImage();
-            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(async () =>
-            {
-                image = await ImagingHelpers.ToBitmapAsync((await stream.OpenReadAsync()).AsStreamForRead());
-            });
-
-            return (image, app.DisplayInfo.DisplayName);
-        }
-
-        public static async Task<IEnumerable<AdaptiveOptionsControlItemViewModel>> GetActionsForFilledCanvasPage(ICollectionsContainerModel collectionsContainer)
-        {
-            List<AdaptiveOptionsControlItemViewModel> actions = new List<AdaptiveOptionsControlItemViewModel>();
-
-            var action_openInFileExplorer = new AdaptiveOptionsControlItemViewModel(
-                async () =>
-                {
-                    await collectionsContainer.CurrentCanvas.OpenContainingFolder();
-                }, "Open containing folder", "\uE838");
-
-            IStorageFile actualFile;
-            if (ReferenceFile.IsReferenceFile(collectionsContainer.CurrentCanvas.File))
-            {
-                ReferenceFile referenceFile = await ReferenceFile.GetFile(collectionsContainer.CurrentCanvas.File);
-                actualFile = referenceFile.ReferencedFile;
-            }
-            else
-            {
-                actualFile = collectionsContainer.CurrentCanvas.File;
-            }
-
-            var (icon, appName) = await GetInfoFromFileHandlingApp(Path.GetExtension(actualFile.Path));
-            var action_openFile = new AdaptiveOptionsControlItemViewModel(
-                async () =>
-                {
-                    await collectionsContainer.CurrentCanvas.OpenFile();
-                }, $"Open with {appName}", icon);
-
-            actions.Add(action_openInFileExplorer);
-            actions.Add(action_openFile);
-
-            return actions;
-        }
-
-        public static IEnumerable<AdaptiveOptionsControlItemViewModel> GetActionsForEmptyCanvasPage(IPasteCanvasModel pasteCanvasControlModel)
-        {
-            List<AdaptiveOptionsControlItemViewModel> actions = new List<AdaptiveOptionsControlItemViewModel>();
-
-            var action_paste = new AdaptiveOptionsControlItemViewModel(
+            var action_paste = new SuggestedActionsControlItemViewModel(
                 async () =>
                 {
                     DynamicCanvasControlViewModel.CanvasPasteCancellationTokenSource.Cancel();
@@ -95,11 +44,11 @@ namespace ClipboardCanvas.Helpers
             return actions;
         }
 
-        public static IEnumerable<AdaptiveOptionsControlItemViewModel> GetActionsForUnselectedCollection()
+        public static IEnumerable<SuggestedActionsControlItemViewModel> GetActionsForUnselectedCollection()
         {
-            List<AdaptiveOptionsControlItemViewModel> actions = new List<AdaptiveOptionsControlItemViewModel>();
+            List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
 
-            var action_addCollection = new AdaptiveOptionsControlItemViewModel(
+            var action_addCollection = new SuggestedActionsControlItemViewModel(
                 async () =>
                 {
                     await CollectionsControlViewModel.AddCollectionViaUi();

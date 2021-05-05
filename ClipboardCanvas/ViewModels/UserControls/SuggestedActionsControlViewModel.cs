@@ -13,11 +13,11 @@ using Windows.UI.Xaml.Input;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
-    public class AdaptiveOptionsControlViewModel : ObservableObject, IAdaptiveOptionsControlModel
+    public class SuggestedActionsControlViewModel : ObservableObject, ISuggestedActionsControlModel
     {
         #region Public Properties
 
-        public ObservableCollection<AdaptiveOptionsControlItemViewModel> Items { get; private set; }
+        public ObservableCollection<SuggestedActionsControlItemViewModel> Items { get; private set; }
 
         #endregion
 
@@ -31,9 +31,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Constructor
 
-        public AdaptiveOptionsControlViewModel()
+        public SuggestedActionsControlViewModel()
         {
-            Items = new ObservableCollection<AdaptiveOptionsControlItemViewModel>();
+            Items = new ObservableCollection<SuggestedActionsControlItemViewModel>();
 
             // Create commands
             ItemClickCommand = new RelayCommand<ItemClickEventArgs>(ItemClick);
@@ -80,17 +80,17 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void ItemClick(ItemClickEventArgs e)
         {
-            var clickedItem = e.ClickedItem as AdaptiveOptionsControlItemViewModel;
+            var clickedItem = e.ClickedItem as SuggestedActionsControlItemViewModel;
             clickedItem.ExecuteAction?.Invoke();
         }
 
         #endregion
 
-        #region IAdaptiveOptionsControlModel
+        #region ISuggestedActionsControlModel
 
-        public void SetActions(IEnumerable<AdaptiveOptionsControlItemViewModel> actions)
+        public void SetActions(IEnumerable<SuggestedActionsControlItemViewModel> actions)
         {
-            List<AdaptiveOptionsControlItemViewModel> itemsThatCollectionDoesntContain = Items.Where((item) => !actions.Contains(item)).ToList();
+            List<SuggestedActionsControlItemViewModel> itemsThatCollectionDoesntContain = Items.Where((item) => !actions.Contains(item)).ToList();
 
             itemsThatCollectionDoesntContain.ForEach((item) => RemoveAction(item));
 
@@ -100,7 +100,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        public void AddAction(AdaptiveOptionsControlItemViewModel action)
+        public void AddAction(SuggestedActionsControlItemViewModel action)
         {
             if (!Items.Contains(action))
             {
@@ -108,7 +108,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        public void RemoveAction(AdaptiveOptionsControlItemViewModel action)
+        public void RemoveAction(SuggestedActionsControlItemViewModel action)
         {
             int indexToRemove = Items.IndexOf(action);
             Items[indexToRemove].Dispose();

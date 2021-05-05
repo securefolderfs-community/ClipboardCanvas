@@ -6,23 +6,19 @@ using System.IO;
 using Windows.Storage.Streams;
 using System.Diagnostics;
 using Windows.UI.Xaml.Media;
-using Windows.ApplicationModel.Core;
-using Microsoft.Toolkit.Uwp;
+using System.Linq;
 using System.Collections.Generic;
 using Windows.Graphics.Imaging;
 using Windows.UI.Xaml.Media.Imaging;
 
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.Helpers.SafetyHelpers;
-using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Enums;
-using System.Collections;
-using System.Linq;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -271,6 +267,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             return result;
         }
+
+        #endregion
+
+        #region IDisposable
 
         public override void Dispose()
         {

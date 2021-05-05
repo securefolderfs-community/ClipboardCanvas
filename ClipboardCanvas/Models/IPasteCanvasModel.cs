@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using System.Threading;
+using System.Collections.Generic;
+using ClipboardCanvas.ViewModels.UserControls;
 
 namespace ClipboardCanvas.Models
 {
@@ -39,6 +41,16 @@ namespace ClipboardCanvas.Models
         /// <returns></returns>
         void DiscardData();
 
+        /// <summary>
+        /// Opens new canvas
+        /// </summary>
         void OpenNewCanvas();
+
+        /// <summary>
+        /// Gets suggested actions based on this canvas
+        /// </summary>
+        /// <param name="collectionContainer"></param>
+        /// <returns></returns>
+        Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions();
     }
 }

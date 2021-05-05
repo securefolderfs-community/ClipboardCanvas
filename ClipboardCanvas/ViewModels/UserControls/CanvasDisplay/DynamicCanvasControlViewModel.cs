@@ -17,7 +17,7 @@ using System.Linq;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
-    public class DynamicCanvasControlViewModel : ObservableObject, IPasteCanvasModel, IDisposable // TODO: Idk but maybe I should move IPasteCanvasModel to here
+    public class DynamicCanvasControlViewModel : ObservableObject, IPasteCanvasModel, IDisposable
     {
         #region Private Members
 
@@ -110,6 +110,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         public void OpenNewCanvas()
         {
             CanvasViewModel?.OpenNewCanvas();
+        }
+
+        public Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions()
+        {
+            return CanvasViewModel?.GetSuggestedActions();
         }
 
         #endregion

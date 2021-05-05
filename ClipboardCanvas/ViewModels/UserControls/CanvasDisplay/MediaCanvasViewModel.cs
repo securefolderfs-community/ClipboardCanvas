@@ -20,6 +20,7 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using ClipboardCanvas.Helpers.FilesystemHelpers;
 using ClipboardCanvas.ReferenceItems;
+using ClipboardCanvas.Helpers;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -181,6 +182,44 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
+
+        public override async Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions()
+        {
+            List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
+
+            var action_openInFileExplorer = new SuggestedActionsControlItemViewModel(
+                async () =>
+                {
+                    await AssociatedContainer.CurrentCanvas.OpenContainingFolder();
+                }, "Open containing folder", "\uE838");
+
+            IStorageFile file;
+            if (contentAsReference)
+            {
+                ReferenceFile referenceFile = await ReferenceFile.GetFile(associatedFile);
+                file = referenceFile.ReferencedFile;
+            }
+            else
+            {
+                file = associatedFile;
+            }
+
+            var (icon, appName) = await ImagingHelpers.GetIconFromFileHandlingApp(Path.GetExtension(file.Path));
+            var action_openFile = new SuggestedActionsControlItemViewModel(
+                async () =>
+                {
+                    await AssociatedContainer.CurrentCanvas.OpenFile();
+                }, $"Open with {appName}", icon);
+
+            actions.Add(action_openInFileExplorer);
+            actions.Add(action_openFile);
+
+            return actions;
+        }
+
+        #endregion
+
+        #region IDisposable
 
         public override void Dispose()
         {

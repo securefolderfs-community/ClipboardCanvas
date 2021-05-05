@@ -361,11 +361,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
                         // Add suggested actions
                         if (_currentCollectionContainer.IsFilled)
                         {
-                            NavigationToolBarControlModel.AdaptiveOptionsControlModel.SetActions(await AdaptiveActionsHelpers.GetActionsForFilledCanvasPage(_currentCollectionContainer));
+                            NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(await PasteCanvasModel.GetSuggestedActions());
                         }
                         else
                         {
-                            NavigationToolBarControlModel.AdaptiveOptionsControlModel.SetActions(AdaptiveActionsHelpers.GetActionsForEmptyCanvasPage(PasteCanvasModel));
+                            NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(SuggestedActionsHelpers.GetActionsForEmptyCanvasPage(PasteCanvasModel));
                         }
 
                         break;
@@ -373,7 +373,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
                 case DisplayPageType.HomePage:
                     {
-                        NavigationToolBarControlModel.AdaptiveOptionsControlModel.SetActions(AdaptiveActionsHelpers.GetActionsForUnselectedCollection());
+                        NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(SuggestedActionsHelpers.GetActionsForUnselectedCollection());
 
                         break;
                     }

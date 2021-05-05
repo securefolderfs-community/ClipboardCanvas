@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
-    public class AdaptiveOptionsControlItemViewModel : ObservableObject, IDisposable, IEquatable<AdaptiveOptionsControlItemViewModel>
+    public class SuggestedActionsControlItemViewModel : ObservableObject, IDisposable, IEquatable<SuggestedActionsControlItemViewModel>
     {
         #region Public Properties
 
@@ -54,7 +54,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Constructor
 
-        public AdaptiveOptionsControlItemViewModel(Action executeAction, string displayText, string glyphIcon)
+        public SuggestedActionsControlItemViewModel(Action executeAction, string displayText, string glyphIcon)
             : this(executeAction, displayText)
         {
             this.GlyphIcon = glyphIcon;
@@ -62,7 +62,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             this.IconImageVisibility = Visibility.Collapsed;
         }
 
-        public AdaptiveOptionsControlItemViewModel(Action executeAction, string displayText, BitmapImage iconImage)
+        public SuggestedActionsControlItemViewModel(Action executeAction, string displayText, BitmapImage iconImage)
             : this(executeAction, displayText)
         {
             this.IconImage = iconImage;
@@ -70,7 +70,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             this.IconImageVisibility = Visibility.Visible;
         }
 
-        private AdaptiveOptionsControlItemViewModel(Action executeAction, string displayText)
+        private SuggestedActionsControlItemViewModel(Action executeAction, string displayText)
         {
             this.DisplayText = displayText;
             this.ExecuteAction = executeAction;
@@ -80,7 +80,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region IEquatable
 
-        public bool Equals(AdaptiveOptionsControlItemViewModel other)
+        public bool Equals(SuggestedActionsControlItemViewModel other)
         {
             if (
                  this.DisplayText == other.DisplayText

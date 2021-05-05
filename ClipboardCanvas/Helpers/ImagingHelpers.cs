@@ -65,5 +65,22 @@ namespace ClipboardCanvas.Helpers
             }
             return array;
         }
+
+        public static async Task<(BitmapImage icon, string appName)> GetIconFromFileHandlingApp(string fileExtension)
+        {
+            IReadOnlyList<AppInfo> apps = await Launcher.FindFileHandlersAsync(fileExtension);
+
+            AppInfo app = apps.Last();
+
+            RandomAccessStreamReference stream = app.DisplayInfo.GetLogo(new Size(64d, 64d));
+
+            BitmapImage image = new BitmapImage();
+            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(async () =>
+            {
+                image = await ImagingHelpers.ToBitmapAsync((await stream.OpenReadAsync()).AsStreamForRead());
+            });
+
+            return (image, app.DisplayInfo.DisplayName);
+        }
     }
 }

@@ -15,6 +15,8 @@ using Windows.Storage.Streams;
 using System.Diagnostics;
 using ClipboardCanvas.Helpers.FilesystemHelpers;
 using System.Threading;
+using System.Collections.Generic;
+using ClipboardCanvas.Helpers;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -257,6 +259,29 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             DiscardData();
             RaiseOnOpenNewCanvasRequestedEvent(this, new OpenOpenNewCanvasRequestedEventArgs());
+        }
+
+        public virtual async Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions()
+        {
+            List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
+
+            var action_openInFileExplorer = new SuggestedActionsControlItemViewModel(
+                async () =>
+                {
+                    await AssociatedContainer.CurrentCanvas.OpenContainingFolder();
+                }, "Open containing folder", "\uE838");
+
+            var (icon, appName) = await ImagingHelpers.GetIconFromFileHandlingApp(Path.GetExtension(associatedFile.Path));
+            var action_openFile = new SuggestedActionsControlItemViewModel(
+                async () =>
+                {
+                    await AssociatedContainer.CurrentCanvas.OpenFile();
+                }, $"Open with {appName}", icon);
+
+            actions.Add(action_openInFileExplorer);
+            actions.Add(action_openFile);
+
+            return actions;
         }
 
         #endregion

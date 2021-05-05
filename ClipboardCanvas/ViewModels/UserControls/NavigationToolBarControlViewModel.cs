@@ -20,7 +20,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public INavigationControlModel NavigationControlModel => _view?.NavigationControlModel;
 
-        public IAdaptiveOptionsControlModel AdaptiveOptionsControlModel => _view?.AdaptiveOptionsControlModel;
+        public ISuggestedActionsControlModel SuggestedActionsControlModel => _view?.SuggestedActionsControlModel;
 
         private bool _IsSettingsPaneOpened;
         public bool IsSettingsPaneOpened
