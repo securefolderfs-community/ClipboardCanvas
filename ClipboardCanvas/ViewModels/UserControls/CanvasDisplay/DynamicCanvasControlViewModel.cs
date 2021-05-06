@@ -46,12 +46,20 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #region IPasteCanvasEventsModel
 
         public event EventHandler<OpenOpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
+
         public event EventHandler<ContentLoadedEventArgs> OnContentLoadedEvent;
+
         public event EventHandler<PasteRequestedEventArgs> OnPasteRequestedEvent;
+
         public event EventHandler<FileCreatedEventArgs> OnFileCreatedEvent;
+
         public event EventHandler<FileModifiedEventArgs> OnFileModifiedEvent;
+
         public event EventHandler<FileDeletedEventArgs> OnFileDeletedEvent;
+
         public event EventHandler<ErrorOccurredEventArgs> OnErrorOccurredEvent;
+
+        public event EventHandler<ProgressReportedEventArgs> OnProgressReportedEvent;
 
         #endregion
 

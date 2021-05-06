@@ -102,4 +102,14 @@ namespace ClipboardCanvas.EventArguments
             this.showErrorImage = showErrorImage;
         }
     }
+
+    public class ProgressReportedEventArgs : EventArgs
+    {
+        public readonly float progress;
+
+        public ProgressReportedEventArgs(float progress)
+        {
+            this.progress = progress;
+        }
+    }
 }

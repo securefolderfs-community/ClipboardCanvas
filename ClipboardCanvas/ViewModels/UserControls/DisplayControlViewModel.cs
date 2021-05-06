@@ -229,6 +229,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region PasteCanvasModel
 
+        private void PasteCanvasModel_OnProgressReportedEvent(object sender, ProgressReportedEventArgs e)
+        {
+            // TODO: Implement this
+        }
+
         private void PasteCanvasModel_OnErrorOccurredEvent(object sender, ErrorOccurredEventArgs e)
         {
             // TODO: Implement this
@@ -502,6 +507,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 this.PasteCanvasModel.OnFileModifiedEvent += PasteCanvasModel_OnFileModifiedEvent;
                 this.PasteCanvasModel.OnFileDeletedEvent += PasteCanvasModel_OnFileDeletedEvent;
                 this.PasteCanvasModel.OnErrorOccurredEvent += PasteCanvasModel_OnErrorOccurredEvent;
+                this.PasteCanvasModel.OnProgressReportedEvent += PasteCanvasModel_OnProgressReportedEvent;
             }
         }
 
@@ -516,6 +522,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 this.PasteCanvasModel.OnFileModifiedEvent -= PasteCanvasModel_OnFileModifiedEvent;
                 this.PasteCanvasModel.OnFileDeletedEvent -= PasteCanvasModel_OnFileDeletedEvent;
                 this.PasteCanvasModel.OnErrorOccurredEvent -= PasteCanvasModel_OnErrorOccurredEvent;
+                this.PasteCanvasModel.OnProgressReportedEvent -= PasteCanvasModel_OnProgressReportedEvent;
             }
         }
 

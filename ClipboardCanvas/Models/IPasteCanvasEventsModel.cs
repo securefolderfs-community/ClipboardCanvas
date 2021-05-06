@@ -18,5 +18,7 @@ namespace ClipboardCanvas.Models
         event EventHandler<FileDeletedEventArgs> OnFileDeletedEvent;
 
         event EventHandler<ErrorOccurredEventArgs> OnErrorOccurredEvent;
+
+        event EventHandler<ProgressReportedEventArgs> OnProgressReportedEvent;
     }
 }

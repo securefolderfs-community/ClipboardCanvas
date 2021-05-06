@@ -39,6 +39,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected Stream dataStream;
 
+        protected IProgress<float> pasteProgress;
+
         /// <summary>
         /// Determines whether canvas content has been loaded
         /// </summary>
@@ -72,6 +74,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         public event EventHandler<FileDeletedEventArgs> OnFileDeletedEvent;
 
         public event EventHandler<ErrorOccurredEventArgs> OnErrorOccurredEvent;
+
+        public event EventHandler<ProgressReportedEventArgs> OnProgressReportedEvent;
 
         #endregion
 
@@ -299,6 +303,19 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return true;
         }
 
+        /// <summary>
+        /// Wrapper for <see cref="pasteProgress"/> that raises <see cref="OnProgressReportedEvent"/>
+        /// </summary>
+        /// <param name="value">New value</param>
+        protected virtual void ReportProgress(float value)
+        {
+            if (pasteProgress != null)
+            {
+                pasteProgress.Report(value);
+                OnProgressReportedEvent(this, new ProgressReportedEventArgs(value));
+            }
+        }
+
         protected virtual async Task<SafeWrapperResult> SetData(StorageFile file)
         {
             SafeWrapperResult result;
@@ -323,19 +340,21 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Event Raisers
 
-        protected virtual void RaiseOnOpenNewCanvasRequestedEvent(object s, OpenOpenNewCanvasRequestedEventArgs e) => OnOpenNewCanvasRequestedEvent?.Invoke(s, e);
+        protected void RaiseOnOpenNewCanvasRequestedEvent(object s, OpenOpenNewCanvasRequestedEventArgs e) => OnOpenNewCanvasRequestedEvent?.Invoke(s, e);
 
-        protected virtual void RaiseOnContentLoadedEvent(object s, ContentLoadedEventArgs e) => OnContentLoadedEvent?.Invoke(s, e);
+        protected void RaiseOnContentLoadedEvent(object s, ContentLoadedEventArgs e) => OnContentLoadedEvent?.Invoke(s, e);
 
-        protected virtual void RaiseOnPasteRequestedEvent(object s, PasteRequestedEventArgs e) => OnPasteRequestedEvent?.Invoke(s, e);
+        protected void RaiseOnPasteRequestedEvent(object s, PasteRequestedEventArgs e) => OnPasteRequestedEvent?.Invoke(s, e);
 
-        protected virtual void RaiseOnFileCreatedEvent(object s, FileCreatedEventArgs e) => OnFileCreatedEvent?.Invoke(s, e);
+        protected void RaiseOnFileCreatedEvent(object s, FileCreatedEventArgs e) => OnFileCreatedEvent?.Invoke(s, e);
 
-        protected virtual void RaiseOnFileModifiedEvent(object s, FileModifiedEventArgs e) => OnFileModifiedEvent?.Invoke(s, e);
+        protected void RaiseOnFileModifiedEvent(object s, FileModifiedEventArgs e) => OnFileModifiedEvent?.Invoke(s, e);
 
-        protected virtual void RaiseOnFileDeletedEvent(object s, FileDeletedEventArgs e) => OnFileDeletedEvent?.Invoke(s, e);
+        protected void RaiseOnFileDeletedEvent(object s, FileDeletedEventArgs e) => OnFileDeletedEvent?.Invoke(s, e);
 
-        protected virtual void RaiseOnErrorOccurredEvent(object s, ErrorOccurredEventArgs e) => OnErrorOccurredEvent?.Invoke(s, e);
+        protected void RaiseOnErrorOccurredEvent(object s, ErrorOccurredEventArgs e) => OnErrorOccurredEvent?.Invoke(s, e);
+
+        protected void RaiseOnProgressReportedEvent(object s, ProgressReportedEventArgs e) => OnProgressReportedEvent?.Invoke(s, e);
 
         #endregion
 

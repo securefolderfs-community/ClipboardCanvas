@@ -15,6 +15,7 @@ using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
+using System.Threading.Tasks;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {
@@ -58,6 +59,20 @@ namespace ClipboardCanvas.ViewModels.Pages
         {
             get => _PastedAsReferenceLoad;
             set => SetProperty(ref _PastedAsReferenceLoad, value);
+        }
+
+        private bool _ProgressBarLoad;
+        public bool ProgressBarLoad
+        {
+            get => _ProgressBarLoad;
+            set => SetProperty(ref _ProgressBarLoad, value);
+        }
+
+        private float _ProgressBarValue;
+        public float ProgressBarValue
+        {
+            get => _ProgressBarValue;
+            set => SetProperty(ref _ProgressBarValue, value);
         }
 
         #endregion
@@ -122,6 +137,21 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         #region Event Handlers
 
+        private async void PasteCanvasModel_OnProgressReportedEvent(object sender, ProgressReportedEventArgs e)
+        {
+            ProgressBarLoad = true;
+            ProgressBarValue = e.progress;
+
+            if (e.progress >= 100.0f)
+            {
+                // TODO: Have smooth fade-out animation for hiding the progressbar
+
+                await Task.Delay(1500); // bruh
+
+                ProgressBarLoad = false;
+            }
+        }
+
         private void PasteCanvasModel_OnErrorOccurredEvent(object sender, ErrorOccurredEventArgs e)
         {
             ErrorTextLoad = true;
@@ -151,6 +181,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             {
                 PasteCanvasModel.OnContentLoadedEvent += PasteCanvasModel_OnContentLoadedEvent;
                 PasteCanvasModel.OnErrorOccurredEvent += PasteCanvasModel_OnErrorOccurredEvent;
+                PasteCanvasModel.OnProgressReportedEvent += PasteCanvasModel_OnProgressReportedEvent;
             }
         }
 
@@ -160,6 +191,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             {
                 PasteCanvasModel.OnContentLoadedEvent -= PasteCanvasModel_OnContentLoadedEvent;
                 PasteCanvasModel.OnErrorOccurredEvent -= PasteCanvasModel_OnErrorOccurredEvent;
+                PasteCanvasModel.OnProgressReportedEvent -= PasteCanvasModel_OnProgressReportedEvent;
             }
         }
 
