@@ -93,15 +93,19 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async void WindowTitleBarControlModel_OnSwitchApplicationViewRequestedEvent(object sender, EventArgs e)
         {
-            Debugger.Break(); // TODO: Improve Compact Overlay mode
-
             if (ApplicationView.GetForCurrentView().ViewMode == ApplicationViewMode.Default)
             {
-                await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay);
+                if (await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay))
+                {
+                    UpdateViewForCompactOverlayMode();
+                }
             }
             else
             {
-                await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default);
+                if (await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default))
+                {
+                    UpdateViewForDefaultMode();
+                }
             }
         }
 
@@ -300,6 +304,16 @@ namespace ClipboardCanvas.ViewModels.UserControls
         #endregion
 
         #region Private Helpers
+
+        private void UpdateViewForCompactOverlayMode()
+        {
+            Debugger.Break(); // TODO: Improve Compact Overlay mode
+        }
+
+        private void UpdateViewForDefaultMode()
+        {
+
+        }
 
         private async Task<bool> OpenPage(DisplayPageType pageType, bool simulateNavigation = false)
         {

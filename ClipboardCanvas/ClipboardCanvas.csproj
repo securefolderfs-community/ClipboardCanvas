@@ -251,6 +251,7 @@
     <Compile Include="ViewModels\Pages\CanvasPageViewModel.cs" />
     <Compile Include="ViewModels\Pages\CollectionPreviewPageViewModel.cs" />
     <Compile Include="ViewModels\Pages\HomePageViewModel.cs" />
+    <Compile Include="ViewModels\Pages\SettingsPages\SettingsAboutPageViewModel.cs" />
     <Compile Include="ViewModels\Pages\SettingsPages\SettingsGeneralPageViewModel.cs" />
     <Compile Include="ViewModels\Pages\SettingsPages\SettingsPastingPageViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SuggestedActionsControlItemViewModel.cs" />

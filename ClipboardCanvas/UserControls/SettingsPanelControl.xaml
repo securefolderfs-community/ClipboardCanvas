@@ -44,7 +44,8 @@
             IsBackButtonVisible="Collapsed"
             IsPaneOpen="False"
             IsSettingsVisible="False"
-            PaneDisplayMode="Top">
+            PaneDisplayMode="Top"
+            SelectedItem="{Binding ElementName=General, RelativeSource={RelativeSource Mode=Self}, Mode=OneTime}">
             <i:Interaction.Behaviors>
                 <icore:EventTriggerBehavior EventName="ItemInvoked">
                     <icore:InvokeCommandAction Command="{x:Bind ViewModel.ItemInvokedCommand}" />
@@ -74,7 +75,7 @@
                 <NavigationViewItem
                     x:Name="About"
                     Tag="About"
-                    ToolTipService.ToolTip="About">
+                    ToolTipService.ToolTip="About Clipboard Canvas">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE946;" />
                     </NavigationViewItem.Icon>
