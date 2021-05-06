@@ -271,7 +271,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     await AssociatedContainer.CurrentCanvas.OpenContainingFolder();
                 }, "Open containing folder", "\uE838");
 
-            var (icon, appName) = await ImagingHelpers.GetIconFromFileHandlingApp(Path.GetExtension(associatedFile.Path));
+            var (icon, appName) = await ImagingHelpers.GetIconFromFileHandlingApp(Path.GetExtension(associatedFile?.Path));
             var action_openFile = new SuggestedActionsControlItemViewModel(
                 async () =>
                 {

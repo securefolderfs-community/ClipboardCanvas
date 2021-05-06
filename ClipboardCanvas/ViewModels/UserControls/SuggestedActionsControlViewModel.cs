@@ -90,6 +90,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public void SetActions(IEnumerable<SuggestedActionsControlItemViewModel> actions)
         {
+            if (actions == null)
+            {
+                RemoveAllActions();
+                return;
+            }
+
             List<SuggestedActionsControlItemViewModel> itemsThatCollectionDoesntContain = Items.Where((item) => !actions.Contains(item)).ToList();
 
             itemsThatCollectionDoesntContain.ForEach((item) => RemoveAction(item));

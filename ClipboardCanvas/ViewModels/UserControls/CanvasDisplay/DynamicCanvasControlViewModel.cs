@@ -112,9 +112,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             CanvasViewModel?.OpenNewCanvas();
         }
 
-        public Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions()
+        public async Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions()
         {
-            return CanvasViewModel?.GetSuggestedActions();
+            if (CanvasViewModel == null)
+            {
+                return null;
+            }
+
+            return await CanvasViewModel?.GetSuggestedActions();
         }
 
         #endregion
