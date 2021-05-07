@@ -85,23 +85,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return result;
         }
 
-        protected override async Task<SafeWrapperResult> TrySetFile()
+        protected override async Task<SafeWrapper<StorageFile>> TrySetFileWithExtension()
         {
-            SafeWrapperResult result;
             SafeWrapper<StorageFile> file;
 
             file = await AssociatedContainer.GetEmptyFileToWrite(".txt");
 
-            result = file;
-            if (!result)
-            {
-                return result;
-            }
-
-            associatedFile = file.Result;
-            RaiseOnFileCreatedEvent(this, new FileCreatedEventArgs(AssociatedContainer, contentType, file.Result));
-
-            return result;
+            return file;
         }
 
         protected override Task<SafeWrapperResult> TryFetchDataToView()

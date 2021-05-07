@@ -154,7 +154,7 @@ namespace ClipboardCanvas.ViewModels.Pages
         private async void OverrideReference()
         {
             OverrideReferenceEnabled = false;
-            SafeWrapperResult result = await PasteCanvasModel.PasteFromReference();
+            SafeWrapperResult result = await PasteCanvasModel.PasteOverrideReference();
 
             if (result)
             {

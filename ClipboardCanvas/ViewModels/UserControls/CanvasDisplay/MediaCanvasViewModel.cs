@@ -141,30 +141,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
-        protected override async Task<SafeWrapperResult> TrySetFile()
+        protected override async Task<SafeWrapper<StorageFile>> TrySetFileWithExtension()
         {
             SafeWrapper<StorageFile> file;
 
-            if (contentAsReference)
-            {
-                file = await AssociatedContainer.GetEmptyFileToWrite(Constants.FileSystem.REFERENCE_FILE_EXTENSION);
-            }
-            else
-            {
-                // Directly in collection
-                file = await AssociatedContainer.GetEmptyFileToWrite(Path.GetExtension(_sourceFile.Path), Path.GetFileNameWithoutExtension(_sourceFile.Path));
-            }
+            file = await AssociatedContainer.GetEmptyFileToWrite(Path.GetExtension(_sourceFile.Path), Path.GetFileNameWithoutExtension(_sourceFile.Path));
 
-            associatedFile = file.Result;
-
-            if (!file)
-            {
-                return (SafeWrapperResult)file;
-            }
-
-            RaiseOnFileCreatedEvent(this, new FileCreatedEventArgs(AssociatedContainer, contentType, file.Result));
-
-            return (SafeWrapperResult)file;
+            return file;
         }
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()

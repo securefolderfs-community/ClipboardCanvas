@@ -111,9 +111,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return await CanvasViewModel?.TryDeleteData();
         }
 
-        public async Task<SafeWrapperResult> PasteFromReference()
+        public async Task<SafeWrapperResult> PasteOverrideReference()
         {
-            return await CanvasViewModel?.PasteFromReference();
+            return await CanvasViewModel?.PasteOverrideReference();
         }
 
         public void DiscardData()

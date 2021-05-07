@@ -258,7 +258,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return result;
         }
 
-        public virtual async Task<SafeWrapperResult> PasteFromReference()
+        public virtual async Task<SafeWrapperResult> PasteOverrideReference()
         {
             if (!contentAsReference)
             {
@@ -383,9 +383,34 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return result;
         }
 
+        protected virtual async Task<SafeWrapperResult> TrySetFile()
+        {
+            SafeWrapper<StorageFile> file;
+
+            if (contentAsReference)
+            {
+                file = await AssociatedContainer.GetEmptyFileToWrite(Constants.FileSystem.REFERENCE_FILE_EXTENSION);
+            }
+            else
+            {
+                file = await TrySetFileWithExtension();
+            }
+
+            associatedFile = file;
+
+            if (!file)
+            {
+                return file;
+            }
+
+            RaiseOnFileCreatedEvent(this, new FileCreatedEventArgs(AssociatedContainer, contentType, associatedFile));
+
+            return file;
+        }
+
         protected abstract Task<SafeWrapperResult> SetData(DataPackageView dataPackage);
 
-        protected abstract Task<SafeWrapperResult> TrySetFile();
+        protected abstract Task<SafeWrapper<StorageFile>> TrySetFileWithExtension();
 
         protected abstract Task<SafeWrapperResult> TryFetchDataToView();
 

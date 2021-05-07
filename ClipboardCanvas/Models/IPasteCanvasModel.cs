@@ -27,7 +27,7 @@ namespace ClipboardCanvas.Models
         /// Attempts to save current data to file in associated container
         /// </summary>
         /// <returns></returns>
-        Task<SafeWrapperResult> TrySaveData();
+        Task<SafeWrapperResult> TrySaveData(); // TODO: Remove this from interface
 
         /// <summary>
         /// Attempts to delete the file and discard data
@@ -39,7 +39,7 @@ namespace ClipboardCanvas.Models
         /// Overrides the reference and pastes the file to the collection
         /// </summary>
         /// <returns></returns>
-        Task<SafeWrapperResult> PasteFromReference();
+        Task<SafeWrapperResult> PasteOverrideReference();
 
         /// <summary>
         /// Frees cached data and disposes the instance

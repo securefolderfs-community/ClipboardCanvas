@@ -33,7 +33,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         private bool _isGifFile;
 
-        private string _gifFileName;
+        private string imageFileName;
 
         #endregion
 
@@ -81,9 +81,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             if (dataPackage.Contains(StandardDataFormats.StorageItems))
             {
-                // .gif file
-                _isGifFile = true;
-
                 SafeWrapper<IReadOnlyList<IStorageItem>> items = await SafeWrapperRoutines.SafeWrapAsync(
                     () => dataPackage.GetStorageItemsAsync().AsTask());
 
@@ -93,11 +90,17 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     return (SafeWrapperResult)items;
                 }
 
-                StorageFile gifFile = items.Result.As<IEnumerable<IStorageItem>>().First().As<StorageFile>();
-                _gifFileName = Path.GetFileNameWithoutExtension(gifFile.Path);
+                StorageFile imageFile = items.Result.As<IEnumerable<IStorageItem>>().First().As<StorageFile>();
+                imageFileName = Path.GetFileNameWithoutExtension(imageFile.Path);
+
+                if (imageFile.Path.EndsWith(".gif"))
+                {
+                    // .gif file
+                    _isGifFile = true;
+                }
 
                 SafeWrapper<Stream> openedStream = await SafeWrapperRoutines.SafeWrapAsync(
-                    () => gifFile.OpenStreamForReadAsync());
+                    () => imageFile.OpenStreamForReadAsync());
 
                 if (!openedStream)
                 {
@@ -219,30 +222,20 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return result;
         }
 
-        protected override async Task<SafeWrapperResult> TrySetFile()
+        protected override async Task<SafeWrapper<StorageFile>> TrySetFileWithExtension()
         {
-            SafeWrapperResult result;
             SafeWrapper<StorageFile> file;
 
             if (_isGifFile)
             {
-                file = await AssociatedContainer.GetEmptyFileToWrite(".gif", _gifFileName);
+                file = await AssociatedContainer.GetEmptyFileToWrite(".gif", imageFileName);
             }
             else
             {
-                file = await AssociatedContainer.GetEmptyFileToWrite(".png");
+                file = await AssociatedContainer.GetEmptyFileToWrite(".png", imageFileName);
             }
 
-            result = file;
-            if (!result)
-            {
-                return result;
-            }
-
-            associatedFile = file.Result;
-            RaiseOnFileCreatedEvent(this, new FileCreatedEventArgs(AssociatedContainer, contentType, file.Result));
-
-            return result;
+            return file;
         }
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()
