@@ -34,13 +34,13 @@ namespace ClipboardCanvas.EventArguments.CanvasControl
 
     public class PasteRequestedEventArgs : EventArgs
     {
-        public readonly bool hasContent;
+        public readonly bool isFilled;
 
         public readonly DataPackageView forwardedDataPackage;
 
-        public PasteRequestedEventArgs(bool hasContent, DataPackageView forwardedDataPackage)
+        public PasteRequestedEventArgs(bool isFilled, DataPackageView forwardedDataPackage)
         {
-            this.hasContent = hasContent;
+            this.isFilled = isFilled;
             this.forwardedDataPackage = forwardedDataPackage;
         }
     }

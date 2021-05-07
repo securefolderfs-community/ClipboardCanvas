@@ -140,8 +140,14 @@ namespace ClipboardCanvas.ViewModels.Pages
                             result = await PasteCanvasModel.TryPasteData(dataPackage, DynamicCanvasControlViewModel.CanvasPasteCancellationTokenSource.Token);
                         }
 
-                        // Check if anything went wrong
-                        if (!result)
+
+                        if (result == null)
+                        {
+                            // The last instance was probably disposed
+                            // That's probably because user tried pasting data to a filled canvas, so new canvas was opened and this disposed
+                            return;
+                        }
+                        else if (!result) // Check if anything went wrong
                         {
                             Debugger.Break();
                         }

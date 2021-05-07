@@ -258,7 +258,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async void PasteCanvasModel_OnPasteRequestedEvent(object sender, PasteRequestedEventArgs e)
         {
-            if (e.hasContent) // TODO: f It doesn't work - always is false bruh why? my crappy code
+            if (e.isFilled)
             {
                 // Already has content, meaning we need to switch to the next page
                 OpenNewCanvas();

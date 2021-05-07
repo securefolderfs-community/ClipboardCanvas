@@ -150,19 +150,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Decide content type and initialize view model
             if (dataPackage.Contains(StandardDataFormats.Bitmap))
             {
-                CanvasViewModel = new ImageCanvasViewModel(_view);
-
-                HookEvents();
-
-                return true;
+                return InitializeViewModel(() => new ImageCanvasViewModel(_view));
             }
             else if (dataPackage.Contains(StandardDataFormats.Text))
             {
-                CanvasViewModel = new TextCanvasViewModel(_view);
-
-                HookEvents();
-
-                return true;
+                return InitializeViewModel(() => new TextCanvasViewModel(_view));
             }
             else if (dataPackage.Contains(StandardDataFormats.StorageItems))
             {
@@ -256,25 +248,32 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return false;
         }
 
-        private bool InitializeViewModelForType<TContentType, TViewModel>(BasePastedContentTypeDataModel contentType, Func<TViewModel> initializator)
+        private bool InitializeViewModelForType<TContentType, TViewModel>(BasePastedContentTypeDataModel contentType, Func<TViewModel> initializer)
             where TViewModel : BasePasteCanvasViewModel
             where TContentType : BasePastedContentTypeDataModel
         {
             if (contentType is TContentType)
             {
-                if (CanvasViewModel is TViewModel) // Reuse View Model
-                {
-                    return true;
-                }
+                return InitializeViewModel<TViewModel>(initializer);
+            }
 
+            return false;
+        }
+
+        public bool InitializeViewModel<TViewModel>(Func<TViewModel> initializer) where TViewModel : BasePasteCanvasViewModel
+        {
+            if (CanvasViewModel is TViewModel) // Reuse View Model
+            {
+                return true;
+            }
+            else // Initialize new View Model
+            {
                 UnhookEvents();
-                CanvasViewModel = initializator();
+                CanvasViewModel = initializer();
                 HookEvents();
 
                 return true;
             }
-
-            return false;
         }
 
         #endregion

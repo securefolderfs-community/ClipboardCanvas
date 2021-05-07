@@ -66,6 +66,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected abstract ICollectionsContainerModel AssociatedContainer { get; }
 
+        protected bool IsDisposed { get; private set; }
+
         #endregion
 
         #region IPasteCanvasEventsModel
@@ -172,6 +174,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             SafeWrapperResult result;
             SafeWrapperResult cancelResult = new SafeWrapperResult(OperationErrorCode.InProgress, "The operation was canceled");
 
+            if (IsDisposed)
+            {
+                return null;
+            }
             if (isFilled)
             {
                 result = new SafeWrapperResult(OperationErrorCode.AlreadyExists, new InvalidOperationException(), "Content has been already pasted.");
@@ -504,6 +510,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public virtual void Dispose()
         {
+            IsDisposed = true;
+
             dataStream?.Dispose();
             fileStream?.Dispose();
 
