@@ -57,6 +57,7 @@
             </StackPanel>
         </Grid>
 
+        <!--  TODO: For now the button is hidden  -->
         <!--  Compact overlay button  -->
         <Button
             Grid.Column="1"
@@ -65,7 +66,8 @@
             VerticalAlignment="Center"
             Background="Transparent"
             BorderBrush="Transparent"
-            Command="{x:Bind ViewModel.SwitchApplicationViewCommand}">
+            Command="{x:Bind ViewModel.SwitchApplicationViewCommand}"
+            Visibility="Collapsed">
             <Grid>
                 <FontIcon FontFamily="/Assets/Fonts/CalcMDL2.ttf#Calculator MDL2 Assets" Glyph="&#xEE49;" />
             </Grid>

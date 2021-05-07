@@ -355,7 +355,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region IDisposable
 
-        // TODO: Very important Dispose(). Please call it if events weren't unhook
         public void Dispose()
         {
             UnhookEvents();

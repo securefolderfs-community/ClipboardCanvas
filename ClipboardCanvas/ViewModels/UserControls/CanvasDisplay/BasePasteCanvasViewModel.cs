@@ -2,20 +2,18 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Windows.Storage.Streams;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
+using System.Threading;
+using System.Collections.Generic;
 
 using ClipboardCanvas.DataModels.PastedContentDataModels;
-using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.Enums;
-using Windows.Storage.Streams;
-using System.Diagnostics;
 using ClipboardCanvas.Helpers.Filesystem;
-using System.Threading;
-using System.Collections.Generic;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.EventArguments.CanvasControl;
 

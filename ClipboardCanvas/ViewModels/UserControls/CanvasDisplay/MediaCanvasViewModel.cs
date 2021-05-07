@@ -1,23 +1,17 @@
-﻿using ClipboardCanvas.DataModels.PastedContentDataModels;
-using ClipboardCanvas.Helpers.SafetyHelpers;
+﻿using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.ModelViews;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Media.Core;
 using Windows.Storage;
 using System.Diagnostics;
-using ClipboardCanvas.EventArguments;
-using Newtonsoft.Json;
 using System.IO;
-using Newtonsoft.Json.Linq;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.Helpers;
@@ -98,7 +92,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 }
 
                 return SafeWrapperResult.S_SUCCESS;
-                //Debugger.Break(); // TODO: Implement robust copying mechanism with progress report
             }
         }
 
