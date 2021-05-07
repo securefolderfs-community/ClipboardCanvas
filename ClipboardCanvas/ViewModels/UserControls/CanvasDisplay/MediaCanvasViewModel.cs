@@ -21,6 +21,7 @@ using Newtonsoft.Json.Linq;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.Helpers;
+using ClipboardCanvas.EventArguments.CanvasControl;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {

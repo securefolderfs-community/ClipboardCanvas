@@ -19,6 +19,7 @@ using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Enums;
+using ClipboardCanvas.EventArguments.CanvasControl;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
