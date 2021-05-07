@@ -166,7 +166,7 @@
     <Compile Include="Enums\DisplayPageType.cs" />
     <Compile Include="Enums\OperationStatus.cs" />
     <Compile Include="EventArguments\CanvasControlEventArgs.cs" />
-    <Compile Include="EventArguments\CollectionControlModelEventArgs.cs" />
+    <Compile Include="EventArguments\CollectionControlEventArgs.cs" />
     <Compile Include="EventArguments\CollectionsContainerEventArgs.cs" />
     <Compile Include="ExtensionInterfaces\ICleanup.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
@@ -175,8 +175,8 @@
     <Compile Include="Helpers\SafetyHelpers\SafeWrapperResultDetails.cs" />
     <Compile Include="Helpers\StreamHelpers.cs" />
     <Compile Include="Helpers\ClipboardHelpers.cs" />
-    <Compile Include="Helpers\FilesystemHelpers\DangerousStorageFileExtensions.cs" />
-    <Compile Include="Helpers\FilesystemHelpers\StorageItemHelpers.cs" />
+    <Compile Include="Helpers\Filesystem\DangerousStorageFileExtensions.cs" />
+    <Compile Include="Helpers\Filesystem\StorageItemHelpers.cs" />
     <Compile Include="Helpers\SafetyHelpers\ExceptionReporters\ClipboardGetDataExceptionReporter.cs" />
     <Compile Include="Helpers\SafetyHelpers\ExceptionReporters\DefaultSafeWrapperExceptionReporter.cs" />
     <Compile Include="Helpers\SafetyHelpers\ExceptionReporters\StaticExceptionReporters.cs" />

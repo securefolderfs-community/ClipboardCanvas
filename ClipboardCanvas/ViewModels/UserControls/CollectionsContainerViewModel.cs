@@ -16,12 +16,13 @@ using System.Linq;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
-using ClipboardCanvas.Helpers.FilesystemHelpers;
+using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.ReferenceItems;
+using ClipboardCanvas.EventArguments.CollectionsContainer;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {

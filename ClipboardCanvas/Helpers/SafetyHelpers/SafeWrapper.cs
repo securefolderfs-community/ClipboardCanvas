@@ -63,6 +63,6 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
 
         public static implicit operator OperationErrorCode(SafeWrapperResult wrapperResult) => wrapperResult?.Details?.errorCode ?? OperationErrorCode.InvalidArgument;
 
-        public static implicit operator bool(SafeWrapperResult wrapperResult) => wrapperResult?.Details.errorCode == OperationErrorCode.Success;
+        public static implicit operator bool(SafeWrapperResult wrapperResult) => wrapperResult?.Details?.errorCode == OperationErrorCode.Success;
     }
 }

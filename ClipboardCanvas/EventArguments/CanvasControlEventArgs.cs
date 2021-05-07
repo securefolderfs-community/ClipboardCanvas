@@ -6,7 +6,7 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using Windows.ApplicationModel.DataTransfer;
 
-namespace ClipboardCanvas.EventArguments
+namespace ClipboardCanvas.EventArguments.CanvasControl
 {
     public class OpenOpenNewCanvasRequestedEventArgs : EventArgs
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using ClipboardCanvas.EventArguments;
+using ClipboardCanvas.EventArguments.CanvasControl;
 
 namespace ClipboardCanvas.Models
 {

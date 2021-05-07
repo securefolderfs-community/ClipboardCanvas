@@ -13,10 +13,11 @@ using ClipboardCanvas.Models;
 using ClipboardCanvas.Enums;
 using Windows.Storage.Streams;
 using System.Diagnostics;
-using ClipboardCanvas.Helpers.FilesystemHelpers;
+using ClipboardCanvas.Helpers.Filesystem;
 using System.Threading;
 using System.Collections.Generic;
 using ClipboardCanvas.Helpers;
+using ClipboardCanvas.EventArguments.CanvasControl;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {

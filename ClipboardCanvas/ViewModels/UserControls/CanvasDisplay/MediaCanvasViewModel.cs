@@ -18,7 +18,7 @@ using ClipboardCanvas.EventArguments;
 using Newtonsoft.Json;
 using System.IO;
 using Newtonsoft.Json.Linq;
-using ClipboardCanvas.Helpers.FilesystemHelpers;
+using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.Helpers;
 

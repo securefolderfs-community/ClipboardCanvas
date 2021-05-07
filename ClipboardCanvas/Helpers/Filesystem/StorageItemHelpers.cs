@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 
-namespace ClipboardCanvas.Helpers.FilesystemHelpers
+namespace ClipboardCanvas.Helpers.Filesystem
 {
     public static class StorageItemHelpers
     {

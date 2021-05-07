@@ -14,6 +14,7 @@ using Windows.Storage;
 using System.IO;
 using System.Threading;
 using System.Linq;
+using ClipboardCanvas.EventArguments.CanvasControl;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {

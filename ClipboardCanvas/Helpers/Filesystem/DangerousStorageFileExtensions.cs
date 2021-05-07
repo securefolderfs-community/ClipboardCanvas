@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace ClipboardCanvas.Helpers.FilesystemHelpers
+namespace ClipboardCanvas.Helpers.Filesystem
 {
     internal static class DangerousStorageFileExtensions
     {

@@ -1,4 +1,5 @@
 ﻿using ClipboardCanvas.EventArguments;
+using ClipboardCanvas.EventArguments.CollectionPreviewItem;
 using ClipboardCanvas.Models;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System;

@@ -14,6 +14,8 @@ using ClipboardCanvas.Extensions;
 using Windows.UI.ViewManagement;
 using System.Collections;
 using System.Collections.Generic;
+using ClipboardCanvas.EventArguments.CanvasControl;
+using ClipboardCanvas.EventArguments.CollectionControl;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {

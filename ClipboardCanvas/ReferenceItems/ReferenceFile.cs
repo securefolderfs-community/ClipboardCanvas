@@ -1,4 +1,4 @@
-﻿using ClipboardCanvas.Helpers.FilesystemHelpers;
+﻿using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using Newtonsoft.Json;
 using System;

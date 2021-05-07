@@ -2,7 +2,7 @@
 using ClipboardCanvas.ViewModels.UserControls;
 using System;
 
-namespace ClipboardCanvas.EventArguments
+namespace ClipboardCanvas.EventArguments.CollectionsContainer
 {
     public class ItemsRefreshRequestedEventArgs : EventArgs
     {

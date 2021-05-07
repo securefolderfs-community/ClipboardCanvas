@@ -14,7 +14,7 @@ using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
-using ClipboardCanvas.Helpers.FilesystemHelpers;
+using ClipboardCanvas.Helpers.Filesystem;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {

@@ -16,6 +16,8 @@ using Windows.Storage.Pickers;
 using System.IO;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.Helpers;
+using ClipboardCanvas.EventArguments.CollectionControl;
+using ClipboardCanvas.EventArguments.CollectionsContainer;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {

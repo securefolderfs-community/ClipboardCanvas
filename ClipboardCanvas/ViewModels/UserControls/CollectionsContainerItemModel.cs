@@ -9,7 +9,7 @@ using Windows.Storage;
 using ClipboardCanvas.Enums;
 using System.IO;
 using Windows.System;
-using ClipboardCanvas.Helpers.FilesystemHelpers;
+using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.ReferenceItems;
 

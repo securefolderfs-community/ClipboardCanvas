@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ViewModels.UserControls;
 
-namespace ClipboardCanvas.EventArguments
+namespace ClipboardCanvas.EventArguments.CollectionControl
 {
     public class CollectionRemovedEventArgs : EventArgs
     {
