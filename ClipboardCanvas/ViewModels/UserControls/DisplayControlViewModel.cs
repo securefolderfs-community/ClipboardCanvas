@@ -51,9 +51,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
             private set
             {
                 // Page switch requested so we need to unhook events
-                if (_CurrentPageNavigation != null && _CurrentPageNavigation.pageType == DisplayPageType.CanvasPage /* && value.pageType != CurrentPageType.CanvasPage)*/)
+                if (_CurrentPageNavigation != null /* && value.pageType != CurrentPageType.CanvasPage)*/)
                 {
                     UnhookCanvasControlEvents(); // Unhook events
+                    PasteCanvasModel?.Dispose();
                     //PasteCanvasModel.Dispose(); // Dispose stuff
                 }
 
