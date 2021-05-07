@@ -21,6 +21,8 @@
             public const string REFERENCE_FILELIST_EXTENSION = ".ccvrx";
 
             public const string REFERENCE_FILE_EXTENSION = ".ccvr";
+
+            public const int COPY_FILE_BUFFER_SIZE = 1024 * 1024; // 1mb
         }
 
         public static class Collections

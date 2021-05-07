@@ -28,7 +28,25 @@ namespace ClipboardCanvas.Models
         /// </summary>
         ICollectionsContainerItemModel CurrentCanvas { get; }
 
+        /// <summary>
+        /// Sets index of currently selected canvas
+        /// <br/><br/>
+        /// Note:
+        /// <br/>
+        /// This function is considered as *dangerous* since calling it may yield unexpected results
+        /// </summary>
+        /// <param name="newIndex">New value</param>
         void DangerousSetIndex(int newIndex);
+
+        /// <summary>
+        /// Gets folder associated with the collection
+        /// <br/><br/>
+        /// Note:
+        /// <br/>
+        /// This function is considered as *dangerous* since <see cref="ICollectionsContainerModel"/> contains wrapper functions for provided return value
+        /// </summary>
+        /// <returns></returns>
+        IStorageFolder DangerousGetCollectionFolder();
 
         /// <summary>
         /// Creates a file and returns it within this container 

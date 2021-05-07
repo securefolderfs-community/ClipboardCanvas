@@ -80,7 +80,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public override async Task<SafeWrapperResult> TrySaveData()
         {
-            SafeWrapperResult result = null;
             if (contentAsReference)
             {
                 ReferenceFile referenceFile = await ReferenceFile.GetFile(associatedFile);
@@ -91,10 +90,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             else
             {
                 // Copy to the collection
-                Debugger.Break(); // TODO: Implement robust copying mechanism with progress report
-            }
+                if (! await FilesystemOperations.CopyFileAsync(_sourceFile, associatedFile, ReportProgress, cancellationToken))
+                {
+                    // Failed
+                    Debugger.Break();
+                    return new SafeWrapperResult(OperationErrorCode.Unauthorized, new Exception(), "Copy operation failed");
+                }
 
-            return result;
+                return SafeWrapperResult.S_SUCCESS;
+                //Debugger.Break(); // TODO: Implement robust copying mechanism with progress report
+            }
         }
 
         protected override async Task<SafeWrapperResult> SetData(DataPackageView dataPackage)
@@ -153,7 +158,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             else
             {
                 // Directly in collection
-                file = await AssociatedContainer.GetEmptyFileToWrite(Path.GetExtension(_sourceFile.Path), _sourceFile.Path);
+                file = await AssociatedContainer.GetEmptyFileToWrite(Path.GetExtension(_sourceFile.Path), Path.GetFileNameWithoutExtension(_sourceFile.Path));
             }
 
             associatedFile = file.Result;

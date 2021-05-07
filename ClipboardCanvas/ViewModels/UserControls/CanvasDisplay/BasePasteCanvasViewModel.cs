@@ -310,11 +310,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         /// <param name="value">New value</param>
         protected virtual void ReportProgress(float value)
         {
-            if (pasteProgress != null)
-            {
-                pasteProgress.Report(value);
-                OnProgressReportedEvent(this, new ProgressReportedEventArgs(value));
-            }
+            pasteProgress?.Report(value);
+            RaiseOnProgressReportedEvent(this, new ProgressReportedEventArgs(value));
         }
 
         protected virtual async Task<SafeWrapperResult> SetData(StorageFile file)

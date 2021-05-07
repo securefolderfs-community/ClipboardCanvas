@@ -276,6 +276,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Event Handlers
 
+        private void CanvasViewModel_OnProgressReportedEvent(object sender, ProgressReportedEventArgs e)
+        {
+            OnProgressReportedEvent?.Invoke(sender, e);
+        }
+
         private void CanvasViewModel_OnErrorOccurredEvent(object sender, ErrorOccurredEventArgs e)
         {
             OnErrorOccurredEvent?.Invoke(sender, e);
@@ -327,6 +332,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 CanvasViewModel.OnFileModifiedEvent += PasteCanvasControlModel_OnFileModifiedEvent;
                 CanvasViewModel.OnFileDeletedEvent += PasteCanvasControlModel_OnFileDeletedEvent;
                 CanvasViewModel.OnErrorOccurredEvent += CanvasViewModel_OnErrorOccurredEvent;
+                CanvasViewModel.OnProgressReportedEvent += CanvasViewModel_OnProgressReportedEvent;
             }
         }
 
@@ -341,6 +347,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 CanvasViewModel.OnFileModifiedEvent -= PasteCanvasControlModel_OnFileModifiedEvent;
                 CanvasViewModel.OnFileDeletedEvent -= PasteCanvasControlModel_OnFileDeletedEvent;
                 CanvasViewModel.OnErrorOccurredEvent -= CanvasViewModel_OnErrorOccurredEvent;
+                CanvasViewModel.OnProgressReportedEvent -= CanvasViewModel_OnProgressReportedEvent;
             }
         }
 

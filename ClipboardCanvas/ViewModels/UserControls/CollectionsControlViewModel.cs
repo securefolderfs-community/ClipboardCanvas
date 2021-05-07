@@ -135,7 +135,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             if (canRename)
             {
                 e.renamed = true;
-                await e.containerViewModel.InnerStorageFolder.RenameAsync(e.newName, NameCollisionOption.FailIfExists);
+                await e.containerViewModel.DangerousGetCollectionFolder().RenameAsync(e.newName, NameCollisionOption.FailIfExists);
             }
         }
 

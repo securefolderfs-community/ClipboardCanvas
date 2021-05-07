@@ -30,6 +30,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
     {
         #region Private Members
 
+        private IStorageFolder _innerStorageFolder;
+
         private int _currentIndex;
 
         private bool _itemsInitialized;
@@ -78,8 +80,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
             get => _IsSelected;
             set => SetProperty(ref _IsSelected, value);
         }
-
-        public IStorageFolder InnerStorageFolder { get; private set; }
 
         public bool IsFilled => _currentIndex < Items.Count;
 
@@ -136,7 +136,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async void OpenCollectionLocation()
         {
-            await Launcher.LaunchFolderAsync(InnerStorageFolder);
+            await Launcher.LaunchFolderAsync(_innerStorageFolder);
         }
 
         private void RenameCollection()
@@ -175,7 +175,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
                         if (args.renamed)
                         {
-                            this.collectionFolderPath = InnerStorageFolder.Path;
+                            this.collectionFolderPath = _innerStorageFolder.Path;
                             OnPropertyChanged(nameof(DisplayName));
 
                             // Also update settings
@@ -205,6 +205,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
             this._currentIndex = newIndex;
         }
 
+        public IStorageFolder DangerousGetCollectionFolder()
+        {
+            return _innerStorageFolder;
+        }
+
         public async Task<SafeWrapper<StorageFile>> GetEmptyFileToWrite(string extension, string fileName = null)
         {
             if (string.IsNullOrEmpty(fileName))
@@ -212,13 +217,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 fileName = DateTime.Now.ToString("dd.MM.yyyy HH_mm_ss");
             }
 
-            if (InnerStorageFolder == null)
+            if (_innerStorageFolder == null)
             {
                 throw new UnauthorizedAccessException("The folder associated with this collection does not exist!");
             }
 
             string newFileName = $"{fileName}{extension}";
-            SafeWrapper<StorageFile> file = await SafeWrapperRoutines.SafeWrapAsync(() => InnerStorageFolder.CreateFileAsync(newFileName, CreationCollisionOption.GenerateUniqueName).AsTask());
+            SafeWrapper<StorageFile> file = await SafeWrapperRoutines.SafeWrapAsync(() => _innerStorageFolder.CreateFileAsync(newFileName, CreationCollisionOption.GenerateUniqueName).AsTask());
 
             return file;
         }
@@ -341,14 +346,14 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async Task<bool> InitInnerStorageFolder()
         {
-            if (InnerStorageFolder != null)
+            if (_innerStorageFolder != null)
             {
                 return true;
             }
 
-            this.InnerStorageFolder = await StorageItemHelpers.ToStorageItem<IStorageFolder>(this.collectionFolderPath);
+            this._innerStorageFolder = await StorageItemHelpers.ToStorageItem<IStorageFolder>(this.collectionFolderPath);
 
-            if (InnerStorageFolder == null)
+            if (_innerStorageFolder == null)
             {
                 // Looks like the collection has been moved/deleted, remove it!
                 OnRemoveCollectionRequestedEvent?.Invoke(this, new RemoveCollectionRequestedEventArgs(this));
@@ -360,7 +365,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async Task InitItems()
         {
-            IEnumerable<StorageFile> files = await this.InnerStorageFolder.GetFilesAsync();
+            IEnumerable<StorageFile> files = await this._innerStorageFolder.GetFilesAsync();
 
             // Sort items from oldest (last canvas) to newest (first canvas)
             files = files.OrderBy((x) => x.DateCreated.DateTime);
@@ -379,7 +384,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task<bool> InitializeItems()
         {
-            if (!_itemsInitialized && InnerStorageFolder != null)
+            if (!_itemsInitialized && _innerStorageFolder != null)
             {
                 _itemsInitialized = true;
                 await InitItems();
@@ -400,9 +405,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public void InitInnerStorageFolder(IStorageFolder folder)
         {
-            this.InnerStorageFolder = folder;
+            this._innerStorageFolder = folder;
 
-            if (InnerStorageFolder == null)
+            if (_innerStorageFolder == null)
             {
                 Debugger.Break(); // bruh :((
             }
