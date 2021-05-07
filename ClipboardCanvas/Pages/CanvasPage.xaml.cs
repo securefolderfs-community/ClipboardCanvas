@@ -45,5 +45,10 @@ namespace ClipboardCanvas.Pages
 
             this.ViewModel = new CanvasPageViewModel(this);
         }
+
+        private void PastedAsReference_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            Flyout.ShowAttachedFlyout(PastedAsReference);
+        }
     }
 }

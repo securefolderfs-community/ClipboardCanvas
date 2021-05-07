@@ -1,17 +1,13 @@
-﻿using ClipboardCanvas.DataModels;
-using ClipboardCanvas.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Storage;
-using ClipboardCanvas.Enums;
+﻿using System;
 using System.IO;
 using Windows.System;
+using Windows.Storage;
+using System.Threading.Tasks;
+
+using ClipboardCanvas.Models;
+using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
-using ClipboardCanvas.ReferenceItems;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -75,6 +71,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
             launcherOptions.ItemsToSelect.Add(fileToSelect);
 
             await Launcher.LaunchFolderAsync(folder, launcherOptions);
+        }
+
+        public void DangerousUpdateFile(StorageFile file)
+        {
+            this.File = file;
         }
 
         #endregion

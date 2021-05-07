@@ -36,6 +36,12 @@ namespace ClipboardCanvas.Models
         Task<SafeWrapperResult> TryDeleteData();
 
         /// <summary>
+        /// Overrides the reference and pastes the file to the collection
+        /// </summary>
+        /// <returns></returns>
+        Task<SafeWrapperResult> PasteFromReference();
+
+        /// <summary>
         /// Frees cached data and disposes the instance
         /// </summary>
         /// <returns></returns>

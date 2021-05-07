@@ -54,8 +54,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 if (_CurrentPageNavigation != null /* && value.pageType != CurrentPageType.CanvasPage)*/)
                 {
                     UnhookCanvasControlEvents(); // Unhook events
-                    PasteCanvasModel?.Dispose();
-                    //PasteCanvasModel.Dispose(); // Dispose stuff
+                    PasteCanvasModel?.Dispose(); // Dispose stuff
                 }
 
                 if (SetProperty(ref _CurrentPageNavigation, value/*, comparer: new ComparingExtensions.DefaultEqualityComparer<DisplayFrameNavigationDataModel>()*/))

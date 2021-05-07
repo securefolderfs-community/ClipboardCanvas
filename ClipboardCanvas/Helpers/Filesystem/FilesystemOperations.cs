@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ClipboardCanvas.Enums;
+using ClipboardCanvas.Helpers.SafetyHelpers;
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,11 +11,11 @@ namespace ClipboardCanvas.Helpers.Filesystem
 {
     public static class FilesystemOperations
     {
-        public static async Task<bool> CopyFileAsync(IStorageFile source, IStorageFile destination, Action<float> progressReportDelegate, CancellationToken cancellationToken)
+        public static async Task<SafeWrapperResult> CopyFileAsync(IStorageFile source, IStorageFile destination, Action<float> progressReportDelegate, CancellationToken cancellationToken)
         {
             long fileSize = await StorageItemHelpers.GetFileSize(source);
             byte[] buffer = new byte[Constants.FileSystem.COPY_FILE_BUFFER_SIZE];
-            bool returnFlag = true;
+            SafeWrapperResult result = SafeWrapperResult.S_SUCCESS;
 
             using (IRandomAccessStreamWithContentType sourceStream = await source.OpenReadAsync())
             {
@@ -33,14 +35,14 @@ namespace ClipboardCanvas.Helpers.Filesystem
                         if (cancellationToken.IsCancellationRequested)
                         {
                             // TODO: Delete copied file there
-                            returnFlag = false;
+                            result = new SafeWrapperResult(OperationErrorCode.InProgress, new Exception(), "The operation was canceled");
                             break;
                         }
                     }
                 }
             }
 
-            return returnFlag;
+            return result;
         }
     }
 }

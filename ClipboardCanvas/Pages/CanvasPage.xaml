@@ -62,12 +62,50 @@
                     CollectionContainer="{x:Bind ViewModel.CollectionContainer, Mode=OneWay}" />
 
                 <!--  TODO: Add teaching tip here  -->
-                <TextBlock
+                <HyperlinkButton
                     x:Name="PastedAsReference"
                     Grid.Row="1"
                     x:Load="{x:Bind ViewModel.PastedAsReferenceLoad, Mode=OneWay}"
-                    Opacity="0.6"
-                    Text="File pasted as reference" />
+                    Click="PastedAsReference_Click"
+                    Content="File pasted as reference"
+                    Opacity="0.8">
+                    <FlyoutBase.AttachedFlyout>
+                        <Flyout x:Name="LinkButtonFlyout" Placement="Right">
+                            <Grid RowSpacing="8">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <!--  Title  -->
+                                <TextBlock
+                                    Grid.Row="0"
+                                    FontSize="16"
+                                    FontWeight="SemiBold"
+                                    Text="Reference Files" />
+
+                                <!--  Content text  -->
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Width="300"
+                                    Text="This file has been pasted as a reference. A reference to the item outside of this collection is displayed. You can disable referenced content by heading to Settings.&#x0a;&#x0a;You can override the reference and copy the item directly to this collection by pressing the button below."
+                                    TextTrimming="WordEllipsis"
+                                    TextWrapping="Wrap" />
+
+                                <!--  Paste reference  -->
+                                <Button
+                                    Grid.Row="2"
+                                    Margin="0,16,0,0"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Center"
+                                    Command="{x:Bind ViewModel.OverrideReferenceCommand}"
+                                    Content="Paste reference"
+                                    IsEnabled="{x:Bind ViewModel.OverrideReferenceEnabled, Mode=OneWay}" />
+                            </Grid>
+                        </Flyout>
+                    </FlyoutBase.AttachedFlyout>
+                </HyperlinkButton>
             </Grid>
 
             <!--  Error text  -->

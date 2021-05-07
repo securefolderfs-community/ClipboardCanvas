@@ -16,6 +16,8 @@ using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.EventArguments.CanvasControl;
+using ClipboardCanvas.ReferenceItems;
+using System.Diagnostics;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -32,6 +34,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected BasePastedContentTypeDataModel contentType;
 
+        /// <summary>
+        /// The file that's associated with the canvas
+        /// </summary>
         protected StorageFile associatedFile;
 
         protected IRandomAccessStream fileStream;
@@ -253,6 +258,45 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return result;
         }
 
+        public virtual async Task<SafeWrapperResult> PasteFromReference()
+        {
+            if (!contentAsReference)
+            {
+                return new SafeWrapperResult(OperationErrorCode.Unauthorized, new InvalidOperationException(), "Cannot paste file that's not a reference");
+            }
+
+            // Get referenced file
+            ReferenceFile referenceFile = await ReferenceFile.GetFile(associatedFile);
+            IStorageFile referencedFile = referenceFile.ReferencedFile;
+
+            // Delete reference file
+            await associatedFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
+
+            string extension = Path.GetExtension(referencedFile.Path);
+            string fileName = Path.GetFileNameWithoutExtension(referencedFile.Path);
+            SafeWrapper<StorageFile> newFile = await AssociatedContainer.GetEmptyFileToWrite(extension, fileName);
+
+            if (!AssertNoError(newFile))
+            {
+                return newFile;
+            }
+
+            // Copy to the collection
+            SafeWrapperResult copyResult = await FilesystemOperations.CopyFileAsync(referencedFile, newFile.Result, ReportProgress, cancellationToken);
+            if (!copyResult)
+            {
+                // Failed
+                Debugger.Break();
+                AssertNoError(copyResult);
+                return copyResult;
+            }
+
+            associatedFile = newFile;
+            AssociatedContainer.CurrentCanvas.DangerousUpdateFile(associatedFile);
+            contentAsReference = false;
+            return copyResult;
+        }
+
         public virtual void DiscardData()
         {
             Dispose();
@@ -274,7 +318,18 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     await AssociatedContainer.CurrentCanvas.OpenContainingFolder();
                 }, "Open containing folder", "\uE838");
 
-            var (icon, appName) = await ImagingHelpers.GetIconFromFileHandlingApp(Path.GetExtension(associatedFile?.Path));
+            IStorageFile file;
+            if (contentAsReference)
+            {
+                ReferenceFile referenceFile = await ReferenceFile.GetFile(associatedFile);
+                file = referenceFile.ReferencedFile;
+            }
+            else
+            {
+                file = associatedFile;
+            }
+
+            var (icon, appName) = await ImagingHelpers.GetIconFromFileHandlingApp(Path.GetExtension(file.Path));
             var action_openFile = new SuggestedActionsControlItemViewModel(
                 async () =>
                 {
@@ -295,7 +350,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             if (result == null || !result)
             {
-                RaiseOnErrorOccurredEvent(this, new ErrorOccurredEventArgs(result, result.Details.message));
+                RaiseOnErrorOccurredEvent(this, new ErrorOccurredEventArgs(result, result?.Details?.message));
                 return false;
             }
 

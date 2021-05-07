@@ -16,5 +16,15 @@ namespace ClipboardCanvas.Models
         Task OpenFile();
 
         Task OpenContainingFolder();
+
+        /// <summary>
+        /// Updates <see cref="File"/> with new <paramref name="file"/>
+        /// <br/><br/>
+        /// Note:
+        /// <br/>
+        /// This function is considered as *dangerous* since calling it may yield unexpected results
+        /// </summary>
+        /// <param name="file">New file</param>
+        void DangerousUpdateFile(StorageFile file);
     }
 }

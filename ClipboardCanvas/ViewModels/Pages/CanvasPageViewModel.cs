@@ -62,6 +62,13 @@ namespace ClipboardCanvas.ViewModels.Pages
             set => SetProperty(ref _PastedAsReferenceLoad, value);
         }
 
+        private bool _OverrideReferenceEnabled = true;
+        public bool OverrideReferenceEnabled
+        {
+            get => _OverrideReferenceEnabled;
+            set => SetProperty(ref _OverrideReferenceEnabled, value);
+        }
+
         private bool _ProgressBarLoad;
         public bool ProgressBarLoad
         {
@@ -89,6 +96,8 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public ICommand DefaultKeyboardAcceleratorInvokedCommand { get; private set; }
 
+        public ICommand OverrideReferenceCommand { get; private set; }
+
         #endregion
 
         #region Constructor
@@ -101,6 +110,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
             // Create commands
             DefaultKeyboardAcceleratorInvokedCommand = new RelayCommand<KeyboardAcceleratorInvokedEventArgs>(DefaultKeyboardAcceleratorInvoked);
+            OverrideReferenceCommand = new RelayCommand(OverrideReference);
         }
 
         #endregion
@@ -141,11 +151,28 @@ namespace ClipboardCanvas.ViewModels.Pages
             }
         }
 
+        private async void OverrideReference()
+        {
+            OverrideReferenceEnabled = false;
+            SafeWrapperResult result = await PasteCanvasModel.PasteFromReference();
+
+            if (result)
+            {
+                PastedAsReferenceLoad = false;
+            }
+            else
+            {
+                // TODO: Show error here
+            }
+
+            OverrideReferenceEnabled = true;
+        }
+
         #endregion
 
         #region Event Handlers
 
-        private async void PasteCanvasModel_OnProgressReportedEvent(object sender, ProgressReportedEventArgs e)
+        private void PasteCanvasModel_OnProgressReportedEvent(object sender, ProgressReportedEventArgs e)
         {
             ProgressBarLoad = true;
             ProgressBarValue = e.progress;
@@ -158,9 +185,6 @@ namespace ClipboardCanvas.ViewModels.Pages
             {
                 // TODO: Have smooth fade-out animation for hiding the progressbar
                 ProgressBarIndeterminate = false;
-
-                await Task.Delay(1500); // bruh
-
                 ProgressBarLoad = false;
             }
             else
