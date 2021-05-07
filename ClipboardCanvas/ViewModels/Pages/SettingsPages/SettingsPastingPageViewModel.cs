@@ -6,16 +6,16 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
     {
         #region Public Properties
 
-        public bool CopyLargeItemsDirectlyToCollection
+        public bool AlwaysPasteFilesAsReference
         {
-            get => App.AppSettings.UserSettings.CopyLargeItemsDirectlyToCollection;
+            get => App.AppSettings.UserSettings.AlwaysPasteFilesAsReference;
             set
             {
-                if (value != App.AppSettings.UserSettings.CopyLargeItemsDirectlyToCollection)
+                if (value != App.AppSettings.UserSettings.AlwaysPasteFilesAsReference)
                 {
-                    App.AppSettings.UserSettings.CopyLargeItemsDirectlyToCollection = value;
+                    App.AppSettings.UserSettings.AlwaysPasteFilesAsReference = value;
 
-                    OnPropertyChanged(nameof(CopyLargeItemsDirectlyToCollection));
+                    OnPropertyChanged(nameof(AlwaysPasteFilesAsReference));
                 }
             }
         }

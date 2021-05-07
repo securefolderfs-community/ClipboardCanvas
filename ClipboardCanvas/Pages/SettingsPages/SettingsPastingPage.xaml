@@ -17,8 +17,8 @@
 
             <StackPanel>
                 <!--  TODO: Add teaching tooltip here  -->
-                <TextBlock Text="Copy large items directly to collection" />
-                <ToggleSwitch IsOn="{x:Bind ViewModel.CopyLargeItemsDirectlyToCollection, Mode=TwoWay}" />
+                <TextBlock Text="Always paste files as reference" />
+                <ToggleSwitch IsOn="{x:Bind ViewModel.AlwaysPasteFilesAsReference, Mode=TwoWay}" />
             </StackPanel>
 
         </StackPanel>

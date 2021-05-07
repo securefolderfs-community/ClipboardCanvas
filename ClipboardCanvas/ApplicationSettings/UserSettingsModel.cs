@@ -41,7 +41,7 @@ namespace ClipboardCanvas.ApplicationSettings
             set => Set<bool>(value);
         }
 
-        public bool CopyLargeItemsDirectlyToCollection
+        public bool AlwaysPasteFilesAsReference
         {
             get => Get<bool>(false);
             set => Set<bool>(value);

@@ -20,6 +20,7 @@ using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.EventArguments.CanvasControl;
+using ClipboardCanvas.Helpers.Filesystem;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -90,17 +91,17 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     return (SafeWrapperResult)items;
                 }
 
-                StorageFile imageFile = items.Result.As<IEnumerable<IStorageItem>>().First().As<StorageFile>();
-                imageFileName = Path.GetFileNameWithoutExtension(imageFile.Path);
+                sourceFile = items.Result.As<IEnumerable<IStorageItem>>().First().As<StorageFile>();
+                imageFileName = Path.GetFileName(sourceFile.Path);
 
-                if (imageFile.Path.EndsWith(".gif"))
+                if (sourceFile.Path.EndsWith(".gif"))
                 {
                     // .gif file
                     _isGifFile = true;
                 }
 
                 SafeWrapper<Stream> openedStream = await SafeWrapperRoutines.SafeWrapAsync(
-                    () => imageFile.OpenStreamForReadAsync());
+                    () => sourceFile.OpenStreamForReadAsync());
 
                 if (!openedStream)
                 {
@@ -113,6 +114,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             else
             {
+                // We need to always set it to false if we're pasting image from clipboard
+                // It could've been set to true in SetContentMode() function
+                contentAsReference = false;
+
                 SafeWrapper<RandomAccessStreamReference> bitmap = await SafeWrapperRoutines.SafeWrapAsync(
                            () => dataPackage.GetBitmapAsync().AsTask());
 
@@ -143,11 +148,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             SafeWrapperResult result;
 
-            if (_isGifFile)
+            if (sourceFile != null)
             {
-                // .gif file mode
                 // TODO: Sometimes some small portion of gif content is corrupted. WHAT!?!?
-                return await base.TrySaveData();
+
+                // Copy to the collection
+                SafeWrapperResult copyResult = await FilesystemOperations.CopyFileAsync(sourceFile, associatedFile, ReportProgress, cancellationToken);
+
+                return copyResult;
             }
 
             BitmapEncoder encoder = null;
@@ -226,13 +234,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             SafeWrapper<StorageFile> file;
 
-            if (_isGifFile)
+            if (!string.IsNullOrEmpty(imageFileName))
             {
-                file = await AssociatedContainer.GetEmptyFileToWrite(".gif", imageFileName);
+                string extension = Path.GetExtension(imageFileName);
+                file = await AssociatedContainer.GetEmptyFileToWrite(extension, Path.GetFileNameWithoutExtension(imageFileName));
             }
             else
             {
-                file = await AssociatedContainer.GetEmptyFileToWrite(".png", imageFileName);
+                file = await AssociatedContainer.GetEmptyFileToWrite(".png");
             }
 
             return file;
@@ -249,6 +258,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 {
                     byte[] buffer = await ImagingHelpers.EncodedBytes(_softwareBitmap, BitmapEncoder.PngEncoderId);
                     ContentImage = await ImagingHelpers.ToBitmapAsync(buffer);
+                    Array.Clear(buffer, 0, buffer.Length);
                 }
                 else // Data is read from file, load from data stream
                 {

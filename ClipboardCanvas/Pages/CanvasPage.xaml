@@ -61,7 +61,7 @@
                     Grid.Row="0"
                     CollectionContainer="{x:Bind ViewModel.CollectionContainer, Mode=OneWay}" />
 
-                <!--  TODO: Add teaching tip here  -->
+                <!--  TODO: Add teaching tip here: "What's this?"  -->
                 <HyperlinkButton
                     x:Name="PastedAsReference"
                     Grid.Row="1"

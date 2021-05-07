@@ -27,16 +27,12 @@
         public bool PastePastableFilesAsContent { get; set; } // TODO: Useless?
 
         /// <summary>
-        /// Determines whether large items are copied directly to a collection
+        /// Determines whether items are copied as reference or directly to collection
         /// <br/><br/>
-        /// If <see cref="CopyLargeItemsDirectlyToCollection"/> is true, then item on paste will be copied.
+        /// If <see cref="AlwaysPasteFilesAsReference"/> is true, then item on paste will be copied as reference to original item location.
         /// <br/>
-        /// Otherwise, items are copied as reference to original item location.
-        /// <br/><br/>
-        /// Attention!
-        /// <br/>
-        /// Small items like images will always be copied no matter the value of that setting
+        /// Otherwise, items are copied directly to collection.
         /// </summary>
-        public bool CopyLargeItemsDirectlyToCollection { get; set; }
+        public bool AlwaysPasteFilesAsReference { get; set; } // TODO: Add a setting so user can also select which items to paste as reference
     }
 }

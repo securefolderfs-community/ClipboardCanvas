@@ -94,6 +94,22 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return file;
         }
 
+        public override async Task<SafeWrapperResult> TrySaveData()
+        {
+            SafeWrapperResult result;
+
+            result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
+            {
+                dataStream.Position = 0L;
+                using (fileStream = await associatedFile.OpenAsync(FileAccessMode.ReadWrite))
+                {
+                    await dataStream.CopyToAsync(fileStream.AsStreamForWrite());
+                }
+            }, errorReporter);
+
+            return result;
+        }
+
         protected override Task<SafeWrapperResult> TryFetchDataToView()
         {
             ContentTextLoad = true;

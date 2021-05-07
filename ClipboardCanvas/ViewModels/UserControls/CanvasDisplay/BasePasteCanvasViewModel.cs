@@ -39,6 +39,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         /// </summary>
         protected StorageFile associatedFile;
 
+        /// <summary>
+        /// The source file. Can be null if not in canvas reference mode
+        /// </summary>
+        protected StorageFile sourceFile;
+
         protected IRandomAccessStream fileStream;
 
         protected Stream dataStream;
@@ -118,7 +123,22 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return cancelResult;
             }
 
-            result = await SetData(associatedFile);
+            await SetContentMode(associatedFile);
+
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return cancelResult;
+            }
+
+            if (contentAsReference && sourceFile != null)
+            {
+                result = await SetData(sourceFile);
+            }
+            else
+            {
+                result = await SetData(associatedFile);
+            }
             if (!AssertNoError(result))
             {
                 return result;
@@ -166,6 +186,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return cancelResult;
             }
 
+            await SetContentMode();
+
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return cancelResult;
+            }
+
             result = await SetData(dataPackage);
             if (!AssertNoError(result))
             {
@@ -190,7 +218,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return cancelResult;
             }
 
-            result = await TrySaveData();
+            result = await InnerTrySaveData();
             if (!AssertNoError(result))
             {
                 return result;
@@ -222,26 +250,31 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return result;
         }
 
-        public virtual async Task<SafeWrapperResult> TrySaveData()
+        protected virtual async Task<SafeWrapperResult> InnerTrySaveData()
         {
-            SafeWrapperResult result;
-
-            result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
+            if (contentAsReference && sourceFile != null)
             {
-                dataStream.Position = 0L;
-                using (fileStream = await associatedFile.OpenAsync(FileAccessMode.ReadWrite))
-                {
-                    await dataStream.CopyToAsync(fileStream.AsStreamForWrite());
-                }
-            }, errorReporter);
+                ReferenceFile referenceFile = await ReferenceFile.GetFile(associatedFile);
 
-            if (result)
-            {
-                RaiseOnFileModifiedEvent(this, new FileModifiedEventArgs(associatedFile, AssociatedContainer));
+                // We need to update it since it's empty
+                await referenceFile.UpdateReferenceFile(new ReferenceFileData(sourceFile.Path));
+
+                return SafeWrapperResult.S_SUCCESS;
             }
+            else
+            {
+                SafeWrapperResult result = await TrySaveData();
 
-            return result;
+                if (result)
+                {
+                    RaiseOnFileModifiedEvent(this, new FileModifiedEventArgs(associatedFile, AssociatedContainer));
+                }
+
+                return result;
+            }
         }
+
+        public abstract Task<SafeWrapperResult> TrySaveData();
 
         public virtual async Task<SafeWrapperResult> TryDeleteData()
         {
@@ -398,14 +431,45 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             associatedFile = file;
 
-            if (!file)
+            if (file)
             {
-                return file;
+                RaiseOnFileCreatedEvent(this, new FileCreatedEventArgs(AssociatedContainer, contentType, associatedFile));
             }
 
-            RaiseOnFileCreatedEvent(this, new FileCreatedEventArgs(AssociatedContainer, contentType, associatedFile));
-
             return file;
+        }
+
+        protected virtual async Task SetContentMode(StorageFile file)
+        {
+            if (ReferenceFile.IsReferenceFile(file))
+            {
+                // Reference file
+                contentAsReference = true;
+
+                // Get reference file
+                ReferenceFile referenceFile = await ReferenceFile.GetFile(file);
+
+                // Set the sourceFile
+                sourceFile = referenceFile.ReferencedFile;
+            }
+            else
+            {
+                // In collection file
+                contentAsReference = false;
+            }
+        }
+
+        protected virtual async Task SetContentMode()
+        {
+            // TODO: Choose option here based on which items should be pasted as reference
+            if (App.AppSettings.UserSettings.AlwaysPasteFilesAsReference)
+            {
+                contentAsReference = false;
+            }
+            else
+            {
+                contentAsReference = true;
+            }
         }
 
         protected abstract Task<SafeWrapperResult> SetData(DataPackageView dataPackage);

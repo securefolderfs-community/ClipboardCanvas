@@ -25,8 +25,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         private readonly IDynamicPasteCanvasControlView _view;
 
-        private StorageFile _sourceFile;
-
         #endregion
 
         #region Protected Members
@@ -74,45 +72,20 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public override async Task<SafeWrapperResult> TrySaveData()
         {
-            if (contentAsReference)
-            {
-                ReferenceFile referenceFile = await ReferenceFile.GetFile(associatedFile);
-                await referenceFile.UpdateReferenceFile(new ReferenceFileData(_sourceFile.Path));
+            // Copy to the collection
+            SafeWrapperResult copyResult = await FilesystemOperations.CopyFileAsync(sourceFile, associatedFile, ReportProgress, cancellationToken);
 
-                return SafeWrapperResult.S_SUCCESS;
-            }
-            else
-            {
-                // Copy to the collection
-                SafeWrapperResult copyResult = await FilesystemOperations.CopyFileAsync(_sourceFile, associatedFile, ReportProgress, cancellationToken);
-                if (!copyResult)
-                {
-                    // Failed
-                    Debugger.Break();
-                    return copyResult;
-                }
-
-                return copyResult;
-            }
+            return copyResult;
         }
 
         protected override async Task<SafeWrapperResult> SetData(DataPackageView dataPackage)
         {
-            if (App.AppSettings.UserSettings.CopyLargeItemsDirectlyToCollection)
-            {
-                contentAsReference = false;
-            }
-            else
-            {
-                contentAsReference = true;
-            }
-
             SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
             {
                 IReadOnlyList<IStorageItem> items = await dataPackage.GetStorageItemsAsync();
                 StorageFile mediaFile = (StorageFile)items.First();
 
-                _sourceFile = mediaFile;
+                sourceFile = mediaFile;
             });
 
             return result;
@@ -120,24 +93,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task<SafeWrapperResult> SetData(StorageFile file)
         {
-            if (ReferenceFile.IsReferenceFile(file))
-            {
-                // Reference file
-                contentAsReference = true;
-
-                // Get reference file
-                ReferenceFile referenceFile = await ReferenceFile.GetFile(file);
-
-                // Set the _sourceFile
-                _sourceFile = referenceFile.ReferencedFile;
-            }
-            else
-            {
-                // In collection file
-                contentAsReference = false;
-
-                associatedFile = file;
-            }
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
@@ -145,7 +100,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             SafeWrapper<StorageFile> file;
 
-            file = await AssociatedContainer.GetEmptyFileToWrite(Path.GetExtension(_sourceFile.Path), Path.GetFileNameWithoutExtension(_sourceFile.Path));
+            file = await AssociatedContainer.GetEmptyFileToWrite(Path.GetExtension(sourceFile.Path), Path.GetFileNameWithoutExtension(sourceFile.Path));
 
             return file;
         }
@@ -156,7 +111,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (contentAsReference)
             {
-                ContentMedia = MediaSource.CreateFromStorageFile(_sourceFile);
+                ContentMedia = MediaSource.CreateFromStorageFile(sourceFile);
             }   
             else
             {
