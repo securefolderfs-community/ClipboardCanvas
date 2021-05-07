@@ -68,6 +68,13 @@ namespace ClipboardCanvas.ViewModels.Pages
             set => SetProperty(ref _ProgressBarLoad, value);
         }
 
+        private bool _ProgressBarIndeterminate;
+        public bool ProgressBarIndeterminate
+        {
+            get => _ProgressBarIndeterminate;
+            set => SetProperty(ref _ProgressBarIndeterminate, value);
+        }
+
         private float _ProgressBarValue;
         public float ProgressBarValue
         {
@@ -142,13 +149,22 @@ namespace ClipboardCanvas.ViewModels.Pages
             ProgressBarLoad = true;
             ProgressBarValue = e.progress;
 
-            if (e.progress >= 100.0f)
+            if (ProgressBarValue == 0.0f)
+            {
+                ProgressBarIndeterminate = true;
+            }
+            else if (e.progress >= 100.0f)
             {
                 // TODO: Have smooth fade-out animation for hiding the progressbar
+                ProgressBarIndeterminate = false;
 
                 await Task.Delay(1500); // bruh
 
                 ProgressBarLoad = false;
+            }
+            else
+            {
+                ProgressBarIndeterminate = false;
             }
         }
 

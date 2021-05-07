@@ -14,18 +14,5 @@ namespace ClipboardCanvas.Helpers
 
             return memoryStream;
         }
-
-        public static byte[] ReadAll(this Stream input, int streamLength)
-        {
-            byte[] result;
-            //using (Stream stream = input)
-            {
-                var memoryStream = new MemoryStream();
-                    input.CopyTo(memoryStream);
-                    result = memoryStream.ToArray();
-            }
-
-            return result;
-        }
     }
 }

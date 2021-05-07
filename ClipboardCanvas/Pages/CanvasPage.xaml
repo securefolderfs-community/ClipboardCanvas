@@ -86,7 +86,7 @@
                 Grid.Row="2"
                 Grid.ColumnSpan="2"
                 x:Load="{x:Bind ViewModel.ProgressBarLoad, Mode=OneWay}"
-                IsIndeterminate="False"
+                IsIndeterminate="{x:Bind ViewModel.ProgressBarIndeterminate, Mode=OneWay}"
                 Value="{x:Bind ViewModel.ProgressBarValue, Mode=OneWay}" />
 
             <!--  File name  -->

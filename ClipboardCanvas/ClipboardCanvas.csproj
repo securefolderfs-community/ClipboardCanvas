@@ -139,7 +139,6 @@
     <Compile Include="DataModels\SettingsFrameNavigationDataModel.cs" />
     <Compile Include="Enums\SettingsPageType.cs" />
     <Compile Include="EventArguments\CollectionPreviewItemEventArgs.cs" />
-    <Compile Include="Extensions\ComparingExtensions.cs" />
     <Compile Include="Extensions\GenericsExtensions.cs" />
     <Compile Include="Extensions\LinqExtensions.cs" />
     <Compile Include="Extensions\SafetyExtensions.cs" />
@@ -166,15 +165,12 @@
     <Compile Include="UnsafeNative\UnsafeNativeDataModels.cs" />
     <Compile Include="Enums\DisplayPageType.cs" />
     <Compile Include="Enums\OperationStatus.cs" />
-    <Compile Include="Enums\PastedContentFileType.cs" />
-    <Compile Include="Enums\PastedContentType.cs" />
     <Compile Include="EventArguments\CanvasControlEventArgs.cs" />
     <Compile Include="EventArguments\CollectionControlModelEventArgs.cs" />
     <Compile Include="EventArguments\CollectionsContainerEventArgs.cs" />
     <Compile Include="ExtensionInterfaces\ICleanup.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Helpers\AdaptiveActionsHelpers.cs" />
-    <Compile Include="Helpers\FileSelectionHelpers.cs" />
     <Compile Include="Helpers\ImagingHelpers.cs" />
     <Compile Include="Helpers\SafetyHelpers\SafeWrapperResultDetails.cs" />
     <Compile Include="Helpers\StreamHelpers.cs" />
