@@ -470,11 +470,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // TODO: Choose option here based on which items should be pasted as reference
             if (App.AppSettings.UserSettings.AlwaysPasteFilesAsReference)
             {
-                contentAsReference = false;
+                contentAsReference = true;
             }
             else
             {
-                contentAsReference = true;
+                contentAsReference = false;
             }
         }
 
