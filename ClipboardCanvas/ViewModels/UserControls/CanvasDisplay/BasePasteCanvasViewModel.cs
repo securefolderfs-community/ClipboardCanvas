@@ -18,6 +18,7 @@ using ClipboardCanvas.Helpers;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.ReferenceItems;
 using System.Diagnostics;
+using ClipboardCanvas.EventArguments;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {

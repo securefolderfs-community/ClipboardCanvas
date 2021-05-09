@@ -19,6 +19,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public ObservableCollection<SuggestedActionsControlItemViewModel> Items { get; private set; }
 
+        private bool _NoActionsAvailableLoad;
+        public bool NoActionsAvailableLoad
+        {
+            get => _NoActionsAvailableLoad;
+            set => SetProperty(ref _NoActionsAvailableLoad, value);
+        }
+
         #endregion
 
         #region Commands
@@ -38,6 +45,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
             // Create commands
             ItemClickCommand = new RelayCommand<ItemClickEventArgs>(ItemClick);
             DefaultKeyboardAcceleratorInvokedCommand = new RelayCommand<KeyboardAcceleratorInvokedEventArgs>(DefaultKeyboardAcceleratorInvoked);
+
+            CheckAnyActionsExist();
         }
 
         #endregion
@@ -104,6 +113,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
             {
                 AddAction(item);
             }
+
+            CheckAnyActionsExist();
         }
 
         public void AddAction(SuggestedActionsControlItemViewModel action)
@@ -119,6 +130,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
             int indexToRemove = Items.IndexOf(action);
             Items[indexToRemove].Dispose();
             Items.RemoveAt(indexToRemove);
+
+            CheckAnyActionsExist();
         }
 
         public void RemoveActionAt(int index)
@@ -130,6 +143,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             Items[index].Dispose();
             Items.RemoveAt(index);
+
+            CheckAnyActionsExist();
         }
 
         public void RemoveAllActions()
@@ -138,6 +153,24 @@ namespace ClipboardCanvas.ViewModels.UserControls
             {
                 Items[i].Dispose();
                 Items.RemoveAt(i);
+            }
+
+            CheckAnyActionsExist();
+        }
+
+        #endregion
+
+        #region Private Helpers
+
+        private void CheckAnyActionsExist()
+        {
+            if (Items.IsEmpty())
+            {
+                NoActionsAvailableLoad = true;
+            }
+            else
+            {
+                NoActionsAvailableLoad = false;
             }
         }
 

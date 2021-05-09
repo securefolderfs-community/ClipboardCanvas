@@ -206,6 +206,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
             if (e.showErrorImage)
             {
+                TitleTextLoad = false;
                 PasteCanvasModel?.DiscardData();
             }
         }

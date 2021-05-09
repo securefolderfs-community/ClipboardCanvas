@@ -91,6 +91,14 @@
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
             </ListView>
+
+            <TextBlock
+                x:Name="NoActionsText"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                x:Load="{x:Bind ViewModel.NoActionsAvailableLoad, Mode=OneWay}"
+                Opacity="0.6"
+                Text="No actions available" />
         </Grid>
     </Border>
 </UserControl>

@@ -67,8 +67,7 @@
                     Grid.Row="1"
                     x:Load="{x:Bind ViewModel.PastedAsReferenceLoad, Mode=OneWay}"
                     Click="PastedAsReference_Click"
-                    Content="File pasted as reference"
-                    Opacity="0.8">
+                    Content="File pasted as reference">
                     <FlyoutBase.AttachedFlyout>
                         <Flyout x:Name="LinkButtonFlyout" Placement="Right">
                             <Grid RowSpacing="8">

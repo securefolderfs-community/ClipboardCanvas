@@ -8,13 +8,6 @@ using Windows.ApplicationModel.DataTransfer;
 
 namespace ClipboardCanvas.EventArguments.CanvasControl
 {
-    public class OpenNewCanvasRequestedEventArgs : EventArgs
-    {
-        public OpenNewCanvasRequestedEventArgs()
-        {
-        }
-    }
-
     public class ContentLoadedEventArgs : EventArgs
     {
         public readonly BasePastedContentTypeDataModel contentDataModel;

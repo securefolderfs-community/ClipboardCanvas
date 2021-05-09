@@ -196,6 +196,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region CollectionsControlViewModel
 
+
+        private void CollectionsControlViewModel_OnOpenNewCanvasRequestedEvent(object sender, OpenNewCanvasRequestedEventArgs e)
+        {
+            OpenNewCanvas();
+        }
+
         private void CollectionsControlViewModel_OnCollectionItemsRefreshRequested(object sender, CollectionItemsRefreshRequestedEventArgs e)
         {
             if (NavigationToolBarControlModel != null && e.selectedCollection != null)
@@ -492,6 +498,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CollectionsControlViewModel.OnCollectionRemoved += CollectionsControlViewModel_OnCollectionRemoved;
             CollectionsControlViewModel.OnCollectionAdded += CollectionsControlViewModel_OnCollectionAdded;
             CollectionsControlViewModel.OnCollectionItemsRefreshRequested += CollectionsControlViewModel_OnCollectionItemsRefreshRequested;
+            CollectionsControlViewModel.OnOpenNewCanvasRequestedEvent += CollectionsControlViewModel_OnOpenNewCanvasRequestedEvent;
         }
 
         private void UnhookCollectionsEvents()
@@ -501,6 +508,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CollectionsControlViewModel.OnCollectionRemoved -= CollectionsControlViewModel_OnCollectionRemoved;
             CollectionsControlViewModel.OnCollectionAdded -= CollectionsControlViewModel_OnCollectionAdded;
             CollectionsControlViewModel.OnCollectionItemsRefreshRequested -= CollectionsControlViewModel_OnCollectionItemsRefreshRequested;
+            CollectionsControlViewModel.OnOpenNewCanvasRequestedEvent -= CollectionsControlViewModel_OnOpenNewCanvasRequestedEvent;
         }
 
         private void HookCanvasControlEvents()

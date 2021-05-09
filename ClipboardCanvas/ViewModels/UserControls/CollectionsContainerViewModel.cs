@@ -104,6 +104,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public event EventHandler<RemoveCollectionRequestedEventArgs> OnRemoveCollectionRequestedEvent;
 
+        public event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
+
         #endregion
 
         #region Commands
@@ -291,7 +293,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             if (_currentIndex == Items.Count)
             {
                 // Open new canvas if _currentIndex exceeds the _items size
-                pasteCanvasModel.OpenNewCanvas();
+                OnOpenNewCanvasRequestedEvent?.Invoke(this, new OpenNewCanvasRequestedEventArgs());
             }
             else
             {

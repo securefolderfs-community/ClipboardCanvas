@@ -80,6 +80,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public static event EventHandler<CollectionItemsRefreshRequestedEventArgs> OnCollectionItemsRefreshRequested;
 
+        public static event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
+
         #endregion
 
         #region Commands
@@ -108,6 +110,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
         #endregion
 
         #region Event Handlers
+
+        private static void Container_OnOpenNewCanvasRequestedEvent(object sender, OpenNewCanvasRequestedEventArgs e)
+        {
+            OnOpenNewCanvasRequestedEvent?.Invoke(null, e);
+        }
 
         private static void Container_OnRemoveCollectionRequestedEvent(object sender, RemoveCollectionRequestedEventArgs e)
         {
@@ -205,6 +212,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             container.OnItemsRefreshRequestedEvent -= Container_OnItemsRefreshRequestedEvent;
             container.OnRenameCollectionRequestedEvent -= Container_OnRenameCollectionRequestedEvent;
             container.OnRemoveCollectionRequestedEvent -= Container_OnRemoveCollectionRequestedEvent;
+            container.OnOpenNewCanvasRequestedEvent -= Container_OnOpenNewCanvasRequestedEvent;
 
             int index = Items.IndexOf(container);
             container.Dispose();
@@ -226,6 +234,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             container.OnItemsRefreshRequestedEvent += Container_OnItemsRefreshRequestedEvent;
             container.OnRenameCollectionRequestedEvent += Container_OnRenameCollectionRequestedEvent;
             container.OnRemoveCollectionRequestedEvent += Container_OnRemoveCollectionRequestedEvent;
+            container.OnOpenNewCanvasRequestedEvent += Container_OnOpenNewCanvasRequestedEvent;
 
             Items.Add(container);
 

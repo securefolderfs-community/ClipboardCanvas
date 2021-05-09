@@ -139,6 +139,7 @@
     <Compile Include="DataModels\SettingsFrameNavigationDataModel.cs" />
     <Compile Include="Enums\SettingsPageType.cs" />
     <Compile Include="EventArguments\CollectionPreviewItemEventArgs.cs" />
+    <Compile Include="EventArguments\CommonEventArgs.cs" />
     <Compile Include="Extensions\GenericsExtensions.cs" />
     <Compile Include="Extensions\LinqExtensions.cs" />
     <Compile Include="Extensions\SafetyExtensions.cs" />
