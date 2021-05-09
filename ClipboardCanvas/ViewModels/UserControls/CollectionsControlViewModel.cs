@@ -165,14 +165,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             CollectionsContainerViewModel collection;
 
-            collection = new CollectionsContainerViewModel(defaultCollectionFolder.Path, true);
-            collection.InitInnerStorageFolder(defaultCollectionFolder);
+            collection = new CollectionsContainerViewModel(defaultCollectionFolder, true);
             AddCollection(collection);
 
             foreach (var item in savedCollectionPaths)
             {
                 collection = new CollectionsContainerViewModel(item);
-                collection.InitInnerStorageFolder(defaultCollectionFolder);
 
                 AddCollection(collection);
             }
@@ -258,7 +256,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 return false; // User didn't pick any folder
             }
 
-            var collection = new CollectionsContainerViewModel(folder.Path);
+            var collection = new CollectionsContainerViewModel(folder);
             if (AddCollection(collection))
             {
                 //collection.StartRename();

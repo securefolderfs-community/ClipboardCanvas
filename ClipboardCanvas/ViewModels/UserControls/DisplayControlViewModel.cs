@@ -328,10 +328,16 @@ namespace ClipboardCanvas.ViewModels.UserControls
             {
                 // Performance optimization: instead of initializing all collections at once,
                 // initialize the one that's being opened
-                if (!await _currentCollectionContainer.InitializeItems())
+                if (_currentCollectionContainer == null || !_currentCollectionContainer.CanOpenCollection || ! await _currentCollectionContainer.InitializeItems())
                 {
                     // Something went wrong, cannot open CanvasPage
                     // TODO: Inform the user about the error
+                    if (CurrentPageNavigation == null)
+                    {
+                        // Avoid unexpected exceptions
+                        CurrentPageNavigation = new DisplayFrameNavigationDataModel(DisplayPageType.HomePage, _currentCollectionContainer);
+                    }
+
                     return false;
                 }
             }

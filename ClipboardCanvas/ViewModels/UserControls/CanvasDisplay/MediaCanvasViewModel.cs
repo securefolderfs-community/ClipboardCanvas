@@ -112,7 +112,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (contentAsReference)
             {
                 ContentMedia = MediaSource.CreateFromStorageFile(sourceFile);
-            }   
+            }
             else
             {
                 ContentMedia = MediaSource.CreateFromStorageFile(associatedFile);

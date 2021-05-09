@@ -58,26 +58,33 @@
                         BorderBrush="{ThemeResource SystemAccentColor}"
                         BorderThickness="{Binding IsSelected, Converter={StaticResource SelectedCollectionsContainerConverter}}"
                         CornerRadius="8">
-                        <Grid Margin="10,0,10,2">
+                        <Grid Margin="4,0,4,2">
                             <Grid.RowDefinitions>
                                 <!--  Content  -->
                                 <RowDefinition />
                                 <!--  Filename  -->
                                 <RowDefinition />
                             </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
                             <!--  Filename  -->
                             <TextBlock
                                 Grid.Row="1"
+                                Grid.ColumnSpan="2"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Bottom"
                                 Text="{Binding DisplayName}"
                                 TextWrapping="Wrap"
                                 ToolTipService.ToolTip="{Binding DisplayName}"
                                 Visibility="{Binding IsEditingName, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter='invert'}" />
+
                             <!--  Filename edit box  -->
                             <TextBox
                                 Grid.Row="1"
+                                Grid.ColumnSpan="2"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Bottom"
                                 Text="{Binding EditBoxText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
@@ -92,6 +99,35 @@
                                     </icore:EventTriggerBehavior>
                                 </i:Interaction.Behaviors>
                             </TextBox>
+
+                            <!--  Collection Error Warning  -->
+                            <FontIcon
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                Foreground="Red"
+                                Glyph="&#xE783;"
+                                Visibility="{Binding ErrorIconVisibility}">
+                                <ToolTipService.ToolTip>
+                                    <ToolTip>
+                                        <StackPanel Spacing="8">
+                                            <!--  Title  -->
+                                            <TextBlock
+                                                FontSize="16"
+                                                FontWeight="SemiBold"
+                                                Text="Collection Error" />
+
+                                            <!--  Content text  -->
+                                            <TextBlock
+                                                Width="200"
+                                                Text="This Collection folder was not found"
+                                                TextTrimming="WordEllipsis"
+                                                TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </ToolTip>
+                                </ToolTipService.ToolTip>
+                            </FontIcon>
                         </Grid>
                         <Border.ContextFlyout>
                             <MenuFlyout>

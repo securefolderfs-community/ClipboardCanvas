@@ -16,6 +16,8 @@ namespace ClipboardCanvas.Models
     {
         List<CollectionsContainerItemModel> Items { get; }
 
+        bool CanOpenCollection { get; }
+
         string Name { get; }
 
         /// <summary>

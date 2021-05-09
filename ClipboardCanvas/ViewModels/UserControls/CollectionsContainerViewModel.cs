@@ -30,7 +30,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
     {
         #region Private Members
 
-        private IStorageFolder _innerStorageFolder;
+        private StorageFolder _innerStorageFolder;
 
         private int _currentIndex;
 
@@ -49,6 +49,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
         #region Public Properties
 
         public List<CollectionsContainerItemModel> Items { get; private set; }
+
+        public bool CanOpenCollection { get; private set; } = true;
 
         public string Name
         {
@@ -79,6 +81,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             get => _IsSelected;
             set => SetProperty(ref _IsSelected, value);
+        }
+
+        private Visibility _ErrorIconVisibility = Visibility.Collapsed;
+        public Visibility ErrorIconVisibility
+        {
+            get => _ErrorIconVisibility;
+            set => SetProperty(ref _ErrorIconVisibility, value);
         }
 
         public bool IsFilled => _currentIndex < Items.Count;
@@ -114,8 +123,26 @@ namespace ClipboardCanvas.ViewModels.UserControls
         #region Constructor
 
         public CollectionsContainerViewModel(string collectionFolderPath, bool isDefault = false)
+            : this (collectionFolderPath, null, isDefault)
         {
-            this.collectionFolderPath = collectionFolderPath;
+        }
+
+        public CollectionsContainerViewModel(StorageFolder collectionFolder, bool isDefault = false)
+            : this (null, collectionFolder, isDefault)
+        {
+        }
+
+        private CollectionsContainerViewModel(string collectionFolderPath, StorageFolder collectionFolder, bool isDefault = false)
+        {
+            if (!string.IsNullOrEmpty(collectionFolderPath))
+            {
+                this.collectionFolderPath = collectionFolderPath;
+            }
+            else
+            {
+                this.collectionFolderPath = collectionFolder?.Path;
+            }
+            this._innerStorageFolder = collectionFolder;
             this.isDefault = isDefault;
             OnPropertyChanged(nameof(DisplayName));
             this.Items = new List<CollectionsContainerItemModel>();
@@ -136,12 +163,17 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async void OpenCollectionLocation()
         {
+            if (!CanOpenCollection)
+            {
+                return;
+            }
+
             await Launcher.LaunchFolderAsync(_innerStorageFolder);
         }
 
         private void RenameCollection()
         {
-            if (isDefault)
+            if (isDefault || !CanOpenCollection)
             {
                 return;
             }
@@ -340,6 +372,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
             else
             {
+                ErrorIconVisibility = Visibility.Visible;
                 // TODO: Display exclamation mark icon that something went wrong
             }
         }
@@ -351,12 +384,15 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 return true;
             }
 
-            this._innerStorageFolder = await StorageItemHelpers.ToStorageItem<IStorageFolder>(this.collectionFolderPath);
+            if (StorageItemHelpers.Exists(this.collectionFolderPath))
+            {
+                this._innerStorageFolder = await StorageItemHelpers.ToStorageItem<StorageFolder>(this.collectionFolderPath);
+            }
 
             if (_innerStorageFolder == null)
             {
-                // Looks like the collection has been moved/deleted, remove it!
-                OnRemoveCollectionRequestedEvent?.Invoke(this, new RemoveCollectionRequestedEventArgs(this));
+                ErrorIconVisibility = Visibility.Visible;
+                CanOpenCollection = false; // Lock the collection and prevent from opening it
                 return false;
             }
 
@@ -397,20 +433,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
 
             return false;
-        }
-
-        #endregion
-
-        #region Public Helpers
-
-        public void InitInnerStorageFolder(IStorageFolder folder)
-        {
-            this._innerStorageFolder = folder;
-
-            if (_innerStorageFolder == null)
-            {
-                Debugger.Break(); // bruh :((
-            }
         }
 
         #endregion
