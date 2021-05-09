@@ -1,8 +1,9 @@
-﻿using System;
+﻿using ClipboardCanvas.DataModels;
+using System;
 
 namespace ClipboardCanvas.Models
 {
-    public interface INavigationControlModel : IInstanceNotifyModel
+    public interface INavigationControlModel
     {
         event EventHandler OnNavigateLastRequestedEvent;
 
@@ -19,5 +20,7 @@ namespace ClipboardCanvas.Models
         bool NavigateBackEnabled { get; set; }
 
         bool NavigateForwardEnabled { get; set; }
+
+        void NotifyCurrentPageChanged(DisplayFrameNavigationDataModel navigationDataModel);
     }
 }

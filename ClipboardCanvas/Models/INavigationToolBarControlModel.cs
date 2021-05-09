@@ -1,9 +1,13 @@
-﻿namespace ClipboardCanvas.Models
+﻿using ClipboardCanvas.DataModels;
+
+namespace ClipboardCanvas.Models
 {
-    public interface INavigationToolBarControlModel : IInstanceNotifyModel
+    public interface INavigationToolBarControlModel
     {
         INavigationControlModel NavigationControlModel { get; }
 
         ISuggestedActionsControlModel SuggestedActionsControlModel { get; }
+
+        void NotifyCurrentPageChanged(DisplayFrameNavigationDataModel navigationDataModel);
     }
 }

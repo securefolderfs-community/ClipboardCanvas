@@ -195,7 +195,6 @@
     <Compile Include="Models\IDynamicPasteCanvasModel.cs" />
     <Compile Include="Models\IPasteCanvasEventsModel.cs" />
     <Compile Include="Models\IPasteCanvasModel.cs" />
-    <Compile Include="Models\IInstanceNotifyModel.cs" />
     <Compile Include="Models\INavigationControlModel.cs" />
     <Compile Include="Models\INavigationToolBarControlModel.cs" />
     <Compile Include="ModelViews\ICanvasPageView.cs" />

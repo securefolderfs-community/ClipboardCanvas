@@ -210,7 +210,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #endregion
 
-        #region IInstanceNotifyModel
+        #region INavigationToolBarControlModel
 
         public void NotifyCurrentPageChanged(DisplayFrameNavigationDataModel navigationDataModel)
         {
