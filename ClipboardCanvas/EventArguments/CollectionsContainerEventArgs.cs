@@ -24,7 +24,7 @@ namespace ClipboardCanvas.EventArguments.CollectionsContainer
         }
     }
 
-    public class RenameCollectionRequestedEventArgs : EventArgs
+    public class CheckRenameCollectionRequestedEventArgs : EventArgs
     {
         public readonly CollectionsContainerViewModel containerViewModel;
 
@@ -32,7 +32,7 @@ namespace ClipboardCanvas.EventArguments.CollectionsContainer
 
         public bool canRename;
 
-        public RenameCollectionRequestedEventArgs(CollectionsContainerViewModel containerViewModel, string newName)
+        public CheckRenameCollectionRequestedEventArgs(CollectionsContainerViewModel containerViewModel, string newName)
         {
             this.containerViewModel = containerViewModel;
             this.newName = newName;

@@ -51,7 +51,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
                         CollectionsHelpers.UpdateLastSelectedCollectionSetting(_CurrentCollection);
 
-                        OnCollectionSelectionChanged?.Invoke(null, new CollectionSelectionChangedEventArgs(value));
+                        OnCollectionSelectionChangedEvent?.Invoke(null, new CollectionSelectionChangedEventArgs(value));
                     }
                 }
             }
@@ -70,15 +70,15 @@ namespace ClipboardCanvas.ViewModels.UserControls
         /// <summary>
         /// Navigate to page with items in collection
         /// </summary>
-        public static event EventHandler<CollectionOpenRequestedEventArgs> OnCollectionOpenRequested;
+        public static event EventHandler<CollectionOpenRequestedEventArgs> OnCollectionOpenRequestedEvent;
 
-        public static event EventHandler<CollectionSelectionChangedEventArgs> OnCollectionSelectionChanged;
+        public static event EventHandler<CollectionSelectionChangedEventArgs> OnCollectionSelectionChangedEvent;
 
-        public static event EventHandler<CollectionRemovedEventArgs> OnCollectionRemoved;
+        public static event EventHandler<CollectionRemovedEventArgs> OnCollectionRemovedEvent;
 
-        public static event EventHandler<CollectionAddedEventArgs> OnCollectionAdded;
+        public static event EventHandler<CollectionAddedEventArgs> OnCollectionAddedEvent;
 
-        public static event EventHandler<CollectionItemsRefreshRequestedEventArgs> OnCollectionItemsRefreshRequested;
+        public static event EventHandler<CollectionItemsRefreshRequestedEventArgs> OnCollectionItemsRefreshRequestedEvent;
 
         public static event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
 
@@ -104,7 +104,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void DoubleTapped(DoubleTappedRoutedEventArgs e)
         {
-            OnCollectionOpenRequested?.Invoke(this, new CollectionOpenRequestedEventArgs(SelectedItem));
+            OnCollectionOpenRequestedEvent?.Invoke(this, new CollectionOpenRequestedEventArgs(SelectedItem));
         }
 
         #endregion
@@ -121,7 +121,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             RemoveCollection(e.containerViewModel);
         }
 
-        private static void Container_OnRenameCollectionRequestedEvent(object sender, RenameCollectionRequestedEventArgs e)
+        private static void Container_OnCheckRenameCollectionRequestedEvent(object sender, CheckRenameCollectionRequestedEventArgs e)
         {
             if (
                 !Items.Any((item) => item.DisplayName == e.newName)
@@ -140,7 +140,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private static void Container_OnItemsRefreshRequestedEvent(object sender, ItemsRefreshRequestedEventArgs e)
         {
-            OnCollectionItemsRefreshRequested?.Invoke(null, new CollectionItemsRefreshRequestedEventArgs(e.containerViewModel));
+            OnCollectionItemsRefreshRequestedEvent?.Invoke(null, new CollectionItemsRefreshRequestedEventArgs(e.containerViewModel));
         }
 
         #endregion
@@ -176,7 +176,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             TrySetSelectedItem();
 
-            OnCollectionItemsRefreshRequested?.Invoke(null, new CollectionItemsRefreshRequestedEventArgs(CurrentCollection));
+            OnCollectionItemsRefreshRequestedEvent?.Invoke(null, new CollectionItemsRefreshRequestedEventArgs(CurrentCollection));
         }
 
         public static void TrySetSelectedItem()
@@ -210,7 +210,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
 
             container.OnItemsRefreshRequestedEvent -= Container_OnItemsRefreshRequestedEvent;
-            container.OnRenameCollectionRequestedEvent -= Container_OnRenameCollectionRequestedEvent;
+            container.OnCheckRenameCollectionRequestedEvent -= Container_OnCheckRenameCollectionRequestedEvent;
             container.OnRemoveCollectionRequestedEvent -= Container_OnRemoveCollectionRequestedEvent;
             container.OnOpenNewCanvasRequestedEvent -= Container_OnOpenNewCanvasRequestedEvent;
 
@@ -221,7 +221,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
             TrySetSelectedItem();
             CollectionsHelpers.UpdateLastSelectedCollectionSetting(CurrentCollection);
-            OnCollectionRemoved?.Invoke(null, new CollectionRemovedEventArgs(container));
+            OnCollectionRemovedEvent?.Invoke(null, new CollectionRemovedEventArgs(container));
         }
 
         public static bool AddCollection(CollectionsContainerViewModel container)
@@ -232,13 +232,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
 
             container.OnItemsRefreshRequestedEvent += Container_OnItemsRefreshRequestedEvent;
-            container.OnRenameCollectionRequestedEvent += Container_OnRenameCollectionRequestedEvent;
+            container.OnCheckRenameCollectionRequestedEvent += Container_OnCheckRenameCollectionRequestedEvent;
             container.OnRemoveCollectionRequestedEvent += Container_OnRemoveCollectionRequestedEvent;
             container.OnOpenNewCanvasRequestedEvent += Container_OnOpenNewCanvasRequestedEvent;
 
             Items.Add(container);
 
-            OnCollectionAdded?.Invoke(null, new CollectionAddedEventArgs(container));
+            OnCollectionAddedEvent?.Invoke(null, new CollectionAddedEventArgs(container));
 
             CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
 

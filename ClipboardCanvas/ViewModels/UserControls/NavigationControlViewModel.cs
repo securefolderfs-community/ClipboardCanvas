@@ -67,17 +67,17 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Events
 
-        public event EventHandler NavigateLastEvent;
+        public event EventHandler OnNavigateLastRequestedEvent;
 
-        public event EventHandler NavigateBackEvent;
+        public event EventHandler OnNavigateBackRequestedEvent;
 
-        public event EventHandler NavigateFirstEvent;
+        public event EventHandler OnNavigateFirstRequestedEvent;
 
-        public event EventHandler NavigateForwardEvent;
+        public event EventHandler OnNavigateForwardRequestedEvent;
 
-        public event EventHandler GoToHomeEvent;
+        public event EventHandler OnGoToHomePageRequestedEvent;
 
-        public event EventHandler GoToCanvasEvent;
+        public event EventHandler OnGoToCanvasRequestedEvent;
 
         #endregion
 
@@ -180,32 +180,32 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void NavigateLast()
         {
-            NavigateLastEvent?.Invoke(this, EventArgs.Empty);
+            OnNavigateLastRequestedEvent?.Invoke(this, EventArgs.Empty);
         }
 
         private void NavigateBack()
         {
-            NavigateBackEvent?.Invoke(this, EventArgs.Empty);
+            OnNavigateBackRequestedEvent?.Invoke(this, EventArgs.Empty);
         }
 
         private void NavigateFirst()
         {
-            NavigateFirstEvent?.Invoke(this, EventArgs.Empty);
+            OnNavigateFirstRequestedEvent?.Invoke(this, EventArgs.Empty);
         }
 
         private void NavigateForward()
         {
-            NavigateForwardEvent?.Invoke(this, EventArgs.Empty);
+            OnNavigateForwardRequestedEvent?.Invoke(this, EventArgs.Empty);
         }
 
         private void GoToHome()
         {
-            GoToHomeEvent?.Invoke(this, EventArgs.Empty);
+            OnGoToHomePageRequestedEvent?.Invoke(this, EventArgs.Empty);
         }
 
         private void GoToCanvas()
         {
-            GoToCanvasEvent?.Invoke(this, EventArgs.Empty);
+            OnGoToCanvasRequestedEvent?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion

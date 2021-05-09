@@ -4,17 +4,17 @@ namespace ClipboardCanvas.Models
 {
     public interface INavigationControlModel : IInstanceNotifyModel
     {
-        event EventHandler NavigateLastEvent;
+        event EventHandler OnNavigateLastRequestedEvent;
 
-        event EventHandler NavigateBackEvent;
+        event EventHandler OnNavigateBackRequestedEvent;
 
-        event EventHandler NavigateFirstEvent;
+        event EventHandler OnNavigateFirstRequestedEvent;
 
-        event EventHandler NavigateForwardEvent;
+        event EventHandler OnNavigateForwardRequestedEvent;
 
-        event EventHandler GoToHomeEvent;
+        event EventHandler OnGoToHomePageRequestedEvent;
 
-        event EventHandler GoToCanvasEvent;
+        event EventHandler OnGoToCanvasRequestedEvent;
 
         bool NavigateBackEnabled { get; set; }
 

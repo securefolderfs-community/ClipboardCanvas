@@ -100,7 +100,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public event EventHandler<ItemsRefreshRequestedEventArgs> OnItemsRefreshRequestedEvent;
 
-        public event EventHandler<RenameCollectionRequestedEventArgs> OnRenameCollectionRequestedEvent;
+        public event EventHandler<CheckRenameCollectionRequestedEventArgs> OnCheckRenameCollectionRequestedEvent;
 
         public event EventHandler<RemoveCollectionRequestedEventArgs> OnRemoveCollectionRequestedEvent;
 
@@ -204,8 +204,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     {
                         string newName = EditBoxText;
 
-                        RenameCollectionRequestedEventArgs args = new RenameCollectionRequestedEventArgs(this, EditBoxText);
-                        OnRenameCollectionRequestedEvent?.Invoke(this, args);
+                        CheckRenameCollectionRequestedEventArgs args = new CheckRenameCollectionRequestedEventArgs(this, EditBoxText);
+                        OnCheckRenameCollectionRequestedEvent?.Invoke(this, args);
 
                         if (args.canRename)
                         {

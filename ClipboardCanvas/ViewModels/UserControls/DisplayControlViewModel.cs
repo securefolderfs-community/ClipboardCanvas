@@ -115,7 +115,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region NavigationControlModel
 
-        private async void NavigationControlModel_NavigateLastEvent(object sender, EventArgs e)
+        private async void NavigationControlModel_OnNavigateLastRequestedEvent(object sender, EventArgs e)
         {
             if (CurrentPage == DisplayPageType.CanvasPage && _currentCollectionContainer.HasBack())
             {
@@ -129,7 +129,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        private async void NavigationControlModel_NavigateBackEvent(object sender, EventArgs e)
+        private async void NavigationControlModel_OnNavigateBackRequestedEvent(object sender, EventArgs e)
         {
             if (CurrentPage == DisplayPageType.CanvasPage && _currentCollectionContainer.HasBack())
             {
@@ -143,7 +143,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        private async void NavigationControlModel_NavigateFirstEvent(object sender, EventArgs e)
+        private async void NavigationControlModel_OnNavigateFirstRequestedEvent(object sender, EventArgs e)
         {
             if (CurrentPage == DisplayPageType.CanvasPage && _currentCollectionContainer.HasNext())
             {
@@ -157,7 +157,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        private async void NavigationControlModel_NavigateForwardEvent(object sender, EventArgs e)
+        private async void NavigationControlModel_OnNavigateForwardRequestedEvent(object sender, EventArgs e)
         {
             if (CurrentPage == DisplayPageType.CanvasPage && _currentCollectionContainer.HasNext())
             {
@@ -171,12 +171,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        private async void NavigationControlModel_GoToHomeEvent(object sender, EventArgs e)
+        private async void NavigationControlModel_OnGoToHomePageRequestedEvent(object sender, EventArgs e)
         {
             await OpenPage(DisplayPageType.HomePage);
         }
 
-        private async void NavigationControlModel_GoToCanvasEvent(object sender, EventArgs e)
+        private async void NavigationControlModel_OnGoToCanvasRequestedEvent(object sender, EventArgs e)
         {
             if (! await OpenPage(DisplayPageType.CanvasPage))
             {
@@ -197,12 +197,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
         #region CollectionsControlViewModel
 
 
-        private void CollectionsControlViewModel_OnOpenNewCanvasRequestedEvent(object sender, OpenNewCanvasRequestedEventArgs e)
+        private void CollectionsControlViewModel_OnOpenNewCanvasRequestedEventEvent(object sender, OpenNewCanvasRequestedEventArgs e)
         {
             OpenNewCanvas();
         }
 
-        private void CollectionsControlViewModel_OnCollectionItemsRefreshRequested(object sender, CollectionItemsRefreshRequestedEventArgs e)
+        private void CollectionsControlViewModel_OnCollectionItemsRefreshRequestedEvent(object sender, CollectionItemsRefreshRequestedEventArgs e)
         {
             if (NavigationToolBarControlModel != null && e.selectedCollection != null)
             {
@@ -210,22 +210,22 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        private void CollectionsControlViewModel_OnCollectionAdded(object sender, CollectionAddedEventArgs e)
+        private void CollectionsControlViewModel_OnCollectionAddedEvent(object sender, CollectionAddedEventArgs e)
         {
             //throw new NotImplementedException();
         }
 
-        private void CollectionsControlViewModel_OnCollectionRemoved(object sender, CollectionRemovedEventArgs e)
+        private void CollectionsControlViewModel_OnCollectionRemovedEvent(object sender, CollectionRemovedEventArgs e)
         {
             //throw new NotImplementedException();
         }
 
-        private void CollectionsControlViewModel_OnCollectionSelectionChanged(object sender, CollectionSelectionChangedEventArgs e)
+        private void CollectionsControlViewModel_OnCollectionSelectionChangedEvent(object sender, CollectionSelectionChangedEventArgs e)
         {
             _currentCollectionContainer = e.selectedCollection;
         }
 
-        private void CollectionsControlViewModel_OnCollectionOpenRequested(object sender, CollectionOpenRequestedEventArgs e)
+        private void CollectionsControlViewModel_OnCollectionOpenRequestedEvent(object sender, CollectionOpenRequestedEventArgs e)
         {
             Debugger.Break(); // This operation is not implemented
             return;
@@ -468,12 +468,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
             UnhookToolbarEvents();
             if (this.NavigationToolBarControlModel != null && this.NavigationToolBarControlModel.NavigationControlModel != null)
             {
-                this.NavigationToolBarControlModel.NavigationControlModel.NavigateLastEvent += NavigationControlModel_NavigateLastEvent;
-                this.NavigationToolBarControlModel.NavigationControlModel.NavigateBackEvent += NavigationControlModel_NavigateBackEvent;
-                this.NavigationToolBarControlModel.NavigationControlModel.NavigateFirstEvent += NavigationControlModel_NavigateFirstEvent;
-                this.NavigationToolBarControlModel.NavigationControlModel.NavigateForwardEvent += NavigationControlModel_NavigateForwardEvent;
-                this.NavigationToolBarControlModel.NavigationControlModel.GoToHomeEvent += NavigationControlModel_GoToHomeEvent;
-                this.NavigationToolBarControlModel.NavigationControlModel.GoToCanvasEvent += NavigationControlModel_GoToCanvasEvent;
+                this.NavigationToolBarControlModel.NavigationControlModel.OnNavigateLastRequestedEvent += NavigationControlModel_OnNavigateLastRequestedEvent;
+                this.NavigationToolBarControlModel.NavigationControlModel.OnNavigateBackRequestedEvent += NavigationControlModel_OnNavigateBackRequestedEvent;
+                this.NavigationToolBarControlModel.NavigationControlModel.OnNavigateFirstRequestedEvent += NavigationControlModel_OnNavigateFirstRequestedEvent;
+                this.NavigationToolBarControlModel.NavigationControlModel.OnNavigateForwardRequestedEvent += NavigationControlModel_OnNavigateForwardRequestedEvent;
+                this.NavigationToolBarControlModel.NavigationControlModel.OnGoToHomePageRequestedEvent += NavigationControlModel_OnGoToHomePageRequestedEvent;
+                this.NavigationToolBarControlModel.NavigationControlModel.OnGoToCanvasRequestedEvent += NavigationControlModel_OnGoToCanvasRequestedEvent;
             }
         }
 
@@ -481,34 +481,34 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             if (this.NavigationToolBarControlModel != null && this.NavigationToolBarControlModel.NavigationControlModel != null)
             {
-                this.NavigationToolBarControlModel.NavigationControlModel.NavigateLastEvent -= NavigationControlModel_NavigateLastEvent;
-                this.NavigationToolBarControlModel.NavigationControlModel.NavigateBackEvent -= NavigationControlModel_NavigateBackEvent;
-                this.NavigationToolBarControlModel.NavigationControlModel.NavigateForwardEvent -= NavigationControlModel_NavigateForwardEvent;
-                this.NavigationToolBarControlModel.NavigationControlModel.NavigateFirstEvent -= NavigationControlModel_NavigateFirstEvent;
-                this.NavigationToolBarControlModel.NavigationControlModel.GoToHomeEvent -= NavigationControlModel_GoToHomeEvent;
-                this.NavigationToolBarControlModel.NavigationControlModel.GoToCanvasEvent -= NavigationControlModel_GoToCanvasEvent;
+                this.NavigationToolBarControlModel.NavigationControlModel.OnNavigateLastRequestedEvent -= NavigationControlModel_OnNavigateLastRequestedEvent;
+                this.NavigationToolBarControlModel.NavigationControlModel.OnNavigateBackRequestedEvent -= NavigationControlModel_OnNavigateBackRequestedEvent;
+                this.NavigationToolBarControlModel.NavigationControlModel.OnNavigateForwardRequestedEvent -= NavigationControlModel_OnNavigateForwardRequestedEvent;
+                this.NavigationToolBarControlModel.NavigationControlModel.OnNavigateFirstRequestedEvent -= NavigationControlModel_OnNavigateFirstRequestedEvent;
+                this.NavigationToolBarControlModel.NavigationControlModel.OnGoToHomePageRequestedEvent -= NavigationControlModel_OnGoToHomePageRequestedEvent;
+                this.NavigationToolBarControlModel.NavigationControlModel.OnGoToCanvasRequestedEvent -= NavigationControlModel_OnGoToCanvasRequestedEvent;
             }
         }
 
         private void HookCollectionsEvents()
         {
             UnhookCollectionsEvents();
-            CollectionsControlViewModel.OnCollectionOpenRequested += CollectionsControlViewModel_OnCollectionOpenRequested;
-            CollectionsControlViewModel.OnCollectionSelectionChanged += CollectionsControlViewModel_OnCollectionSelectionChanged;
-            CollectionsControlViewModel.OnCollectionRemoved += CollectionsControlViewModel_OnCollectionRemoved;
-            CollectionsControlViewModel.OnCollectionAdded += CollectionsControlViewModel_OnCollectionAdded;
-            CollectionsControlViewModel.OnCollectionItemsRefreshRequested += CollectionsControlViewModel_OnCollectionItemsRefreshRequested;
-            CollectionsControlViewModel.OnOpenNewCanvasRequestedEvent += CollectionsControlViewModel_OnOpenNewCanvasRequestedEvent;
+            CollectionsControlViewModel.OnCollectionOpenRequestedEvent += CollectionsControlViewModel_OnCollectionOpenRequestedEvent;
+            CollectionsControlViewModel.OnCollectionSelectionChangedEvent += CollectionsControlViewModel_OnCollectionSelectionChangedEvent;
+            CollectionsControlViewModel.OnCollectionRemovedEvent += CollectionsControlViewModel_OnCollectionRemovedEvent;
+            CollectionsControlViewModel.OnCollectionAddedEvent += CollectionsControlViewModel_OnCollectionAddedEvent;
+            CollectionsControlViewModel.OnCollectionItemsRefreshRequestedEvent += CollectionsControlViewModel_OnCollectionItemsRefreshRequestedEvent;
+            CollectionsControlViewModel.OnOpenNewCanvasRequestedEvent += CollectionsControlViewModel_OnOpenNewCanvasRequestedEventEvent;
         }
 
         private void UnhookCollectionsEvents()
         {
-            CollectionsControlViewModel.OnCollectionOpenRequested -= CollectionsControlViewModel_OnCollectionOpenRequested;
-            CollectionsControlViewModel.OnCollectionSelectionChanged -= CollectionsControlViewModel_OnCollectionSelectionChanged;
-            CollectionsControlViewModel.OnCollectionRemoved -= CollectionsControlViewModel_OnCollectionRemoved;
-            CollectionsControlViewModel.OnCollectionAdded -= CollectionsControlViewModel_OnCollectionAdded;
-            CollectionsControlViewModel.OnCollectionItemsRefreshRequested -= CollectionsControlViewModel_OnCollectionItemsRefreshRequested;
-            CollectionsControlViewModel.OnOpenNewCanvasRequestedEvent -= CollectionsControlViewModel_OnOpenNewCanvasRequestedEvent;
+            CollectionsControlViewModel.OnCollectionOpenRequestedEvent -= CollectionsControlViewModel_OnCollectionOpenRequestedEvent;
+            CollectionsControlViewModel.OnCollectionSelectionChangedEvent -= CollectionsControlViewModel_OnCollectionSelectionChangedEvent;
+            CollectionsControlViewModel.OnCollectionRemovedEvent -= CollectionsControlViewModel_OnCollectionRemovedEvent;
+            CollectionsControlViewModel.OnCollectionAddedEvent -= CollectionsControlViewModel_OnCollectionAddedEvent;
+            CollectionsControlViewModel.OnCollectionItemsRefreshRequestedEvent -= CollectionsControlViewModel_OnCollectionItemsRefreshRequestedEvent;
+            CollectionsControlViewModel.OnOpenNewCanvasRequestedEvent -= CollectionsControlViewModel_OnOpenNewCanvasRequestedEventEvent;
         }
 
         private void HookCanvasControlEvents()
