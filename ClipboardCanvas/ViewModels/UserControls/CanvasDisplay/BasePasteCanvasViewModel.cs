@@ -19,6 +19,8 @@ using ClipboardCanvas.Helpers;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.EventArguments;
+using ClipboardCanvas.Extensions;
+using System.Linq;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -201,7 +203,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return cancelResult;
             }
 
-            result = await SetData(dataPackage);
+            result = await SetDataInternal(dataPackage);
             if (!AssertNoError(result))
             {
                 return result;
@@ -225,7 +227,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return cancelResult;
             }
 
-            result = await InnerTrySaveData();
+            result = await TrySaveDataInternal();
             if (!AssertNoError(result))
             {
                 return result;
@@ -257,7 +259,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return result;
         }
 
-        protected virtual async Task<SafeWrapperResult> InnerTrySaveData()
+        protected virtual async Task<SafeWrapperResult> TrySaveDataInternal()
         {
             if (contentAsReference && sourceFile != null)
             {
@@ -270,6 +272,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             else
             {
+                if (sourceFile != null) // If pasting a file not raw data from clipboard...
+                {
+                    // Copy to collection
+                    SafeWrapperResult copyResult = await FilesystemOperations.CopyFileAsync(sourceFile, associatedFile, ReportProgress, cancellationToken);
+
+                    return copyResult;
+                }
+
                 SafeWrapperResult result = await TrySaveData();
 
                 if (result)
@@ -428,6 +438,29 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return result;
         }
 
+        protected virtual async Task<SafeWrapperResult> SetDataInternal(DataPackageView dataPackage)
+        {
+            if (dataPackage.Contains(StandardDataFormats.StorageItems))
+            {
+                SafeWrapper<IReadOnlyList<IStorageItem>> items = await SafeWrapperRoutines.SafeWrapAsync(
+                    () => dataPackage.GetStorageItemsAsync().AsTask());
+
+                if (!items)
+                {
+                    Debugger.Break();
+                    return (SafeWrapperResult)items;
+                }
+
+                sourceFile = items.Result.As<IEnumerable<IStorageItem>>().First().As<StorageFile>();
+
+                return SafeWrapperResult.S_SUCCESS;
+            }
+            else
+            {
+                return await SetData(dataPackage);
+            }
+        }
+
         protected virtual async Task<SafeWrapperResult> TrySetFile()
         {
             SafeWrapper<StorageFile> file;
@@ -438,7 +471,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             else
             {
-                file = await TrySetFileWithExtension();
+                if (sourceFile != null)
+                {
+                    string extension = Path.GetExtension(sourceFile.Path);
+                    file = await AssociatedContainer.GetEmptyFileToWrite(extension, Path.GetFileNameWithoutExtension(sourceFile.Path));
+                }
+                else
+                {
+                    file = await TrySetFileWithExtension();
+                }
             }
 
             associatedFile = file;

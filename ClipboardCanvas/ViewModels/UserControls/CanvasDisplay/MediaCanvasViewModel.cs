@@ -1,17 +1,18 @@
-﻿using ClipboardCanvas.Helpers.SafetyHelpers;
-using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
-using ClipboardCanvas.Models;
-using ClipboardCanvas.Enums;
-using ClipboardCanvas.ModelViews;
+﻿using System.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Media.Core;
 using Windows.Storage;
-using System.Diagnostics;
-using System.IO;
+
+using ClipboardCanvas.Helpers.SafetyHelpers;
+using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
+using ClipboardCanvas.Models;
+using ClipboardCanvas.Enums;
+using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.Helpers;
@@ -72,23 +73,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public override async Task<SafeWrapperResult> TrySaveData()
         {
-            // Copy to the collection
-            SafeWrapperResult copyResult = await FilesystemOperations.CopyFileAsync(sourceFile, associatedFile, ReportProgress, cancellationToken);
-
-            return copyResult;
+            return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
         protected override async Task<SafeWrapperResult> SetData(DataPackageView dataPackage)
         {
-            SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
-            {
-                IReadOnlyList<IStorageItem> items = await dataPackage.GetStorageItemsAsync();
-                StorageFile mediaFile = (StorageFile)items.First();
-
-                sourceFile = mediaFile;
-            });
-
-            return result;
+            return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
         protected override async Task<SafeWrapperResult> SetData(StorageFile file)
@@ -98,11 +88,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task<SafeWrapper<StorageFile>> TrySetFileWithExtension()
         {
-            SafeWrapper<StorageFile> file;
-
-            file = await AssociatedContainer.GetEmptyFileToWrite(Path.GetExtension(sourceFile.Path), Path.GetFileNameWithoutExtension(sourceFile.Path));
-
-            return file;
+            return await Task.FromResult(new SafeWrapper<StorageFile>(associatedFile, SafeWrapperResult.S_SUCCESS));
         }
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()

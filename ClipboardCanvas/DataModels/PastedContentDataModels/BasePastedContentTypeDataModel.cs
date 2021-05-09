@@ -24,22 +24,28 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
                     ext = Path.GetExtension(referenceFile.ReferencedFile.Path);
                 }
 
+                // Image
                 if (ImageCanvasViewModel.Extensions.Contains(ext))
                 {
-                    // Image
                     return new ImageContentType();
                 }
 
+                // Text
                 if (TextCanvasViewModel.Extensions.Contains(ext))
                 {
-                    // Text
                     return new TextContentType();
                 }
 
+                // Media
                 if (MediaCanvasViewModel.Extensions.Contains(ext))
                 {
-                    // Media
                     return new MediaContentType();
+                }
+
+                // WebView
+                if (WebViewCanvasViewModel.Extensions.Contains(ext))
+                {
+                    return new WebViewContentType();
                 }
 
                 // Default, try as text

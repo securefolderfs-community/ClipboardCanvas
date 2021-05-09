@@ -1,9 +1,16 @@
-﻿using ClipboardCanvas.Models;
+﻿using ClipboardCanvas.Helpers.Filesystem;
+using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
+using ClipboardCanvas.UnsafeNative;
 using ClipboardCanvas.ViewModels.Pages;
 using ClipboardCanvas.ViewModels.UserControls;
+using System.Collections;
+using System.Collections.Generic;
+using Windows.Storage;
 using Windows.UI.Xaml;
+using System;
 using Windows.UI.Xaml.Controls;
+using System.Diagnostics;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 

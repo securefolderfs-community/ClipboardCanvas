@@ -19,5 +19,9 @@
     <DataTemplate x:Key="MediaCanvasViewModel" x:DataType="vm:MediaCanvasViewModel">
         <uc:MediaCanvasControl />
     </DataTemplate>
+    <!--  Html view  -->
+    <DataTemplate x:Key="WebViewCanvasViewModel" x:DataType="vm:WebViewCanvasViewModel">
+        <uc:WebViewCanvasControl />
+    </DataTemplate>
 
 </ResourceDictionary>

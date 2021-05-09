@@ -15,6 +15,7 @@ using System.IO;
 using System.Threading;
 using System.Linq;
 using ClipboardCanvas.EventArguments.CanvasControl;
+using System.Diagnostics;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -148,15 +149,36 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         private async Task<bool> InitializeViewModel(DataPackageView dataPackage)
         {
             // Decide content type and initialize view model
+
+            // From raw clipboard data
             if (dataPackage.Contains(StandardDataFormats.Bitmap))
             {
                 return InitializeViewModel(() => new ImageCanvasViewModel(_view));
             }
             else if (dataPackage.Contains(StandardDataFormats.Text))
             {
-                return InitializeViewModel(() => new TextCanvasViewModel(_view));
+                SafeWrapper<string> text = await SafeWrapperRoutines.SafeWrapAsync(() => dataPackage.GetTextAsync().AsTask());
+
+                if (!text)
+                {
+                    Debugger.Break(); // What!?
+                    return false;
+                }
+
+                // Check if it's a webpage link
+                bool isWebpageLink = Uri.TryCreate(text, UriKind.Absolute, out Uri uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
+                if (isWebpageLink)
+                {
+                    // Webpage link
+                    return InitializeViewModel(() => new WebViewCanvasViewModel(_view));
+                }
+                else
+                {
+                    // Normal text
+                    return InitializeViewModel(() => new TextCanvasViewModel(_view));
+                }
             }
-            else if (dataPackage.Contains(StandardDataFormats.StorageItems))
+            else if (dataPackage.Contains(StandardDataFormats.StorageItems)) // From clipboard storage items
             {
                 IReadOnlyList<IStorageItem> items = await dataPackage.GetStorageItemsAsync();
 
@@ -241,6 +263,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             // Try for media
             if (InitializeViewModelForType<MediaContentType, MediaCanvasViewModel>(contentType, () => new MediaCanvasViewModel(_view)))
+            {
+                return true;
+            }
+
+            // Try for WebView
+            if (InitializeViewModelForType<WebViewContentType, WebViewCanvasViewModel>(contentType, () => new WebViewCanvasViewModel(_view)))
             {
                 return true;
             }

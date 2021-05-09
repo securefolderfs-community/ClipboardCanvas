@@ -32,8 +32,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         private SoftwareBitmap _softwareBitmap;
 
-        private string imageFileName;
-
         #endregion
 
         #region Protected Properties
@@ -76,22 +74,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Override
 
-        protected override async Task<SafeWrapperResult> SetData(DataPackageView dataPackage)
+        protected override async Task<SafeWrapperResult> SetDataInternal(DataPackageView dataPackage)
         {
-            if (dataPackage.Contains(StandardDataFormats.StorageItems))
+            SafeWrapperResult result = await base.SetDataInternal(dataPackage);
+
+            if (sourceFile != null && result)
             {
-                SafeWrapper<IReadOnlyList<IStorageItem>> items = await SafeWrapperRoutines.SafeWrapAsync(
-                    () => dataPackage.GetStorageItemsAsync().AsTask());
-
-                if (!items)
-                {
-                    Debugger.Break();
-                    return (SafeWrapperResult)items;
-                }
-
-                sourceFile = items.Result.As<IEnumerable<IStorageItem>>().First().As<StorageFile>();
-                imageFileName = Path.GetFileName(sourceFile.Path);
-
                 SafeWrapper<Stream> openedStream = await SafeWrapperRoutines.SafeWrapAsync(
                     () => sourceFile.OpenStreamForReadAsync());
 
@@ -101,48 +89,44 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 }
 
                 dataStream = openedStream.Result;
-
-                return SafeWrapperResult.S_SUCCESS;
+                result = (SafeWrapperResult)openedStream;
             }
-            else
+
+            return result;
+        }
+
+        protected override async Task<SafeWrapperResult> SetData(DataPackageView dataPackage)
+        {
+            // Always won't contain StorageItems since they are handled in SetDataInternal()
+
+            SafeWrapper<RandomAccessStreamReference> bitmap = await SafeWrapperRoutines.SafeWrapAsync(
+                       () => dataPackage.GetBitmapAsync().AsTask());
+
+            if (!bitmap)
             {
-                SafeWrapper<RandomAccessStreamReference> bitmap = await SafeWrapperRoutines.SafeWrapAsync(
-                           () => dataPackage.GetBitmapAsync().AsTask());
-
-                if (!bitmap)
-                {
-                    Debugger.Break();
-                    return (SafeWrapperResult)bitmap;
-                }
-
-                SafeWrapper<IRandomAccessStreamWithContentType> openedStream = await SafeWrapperRoutines.SafeWrapAsync(
-                    () => bitmap.Result.OpenReadAsync().AsTask());
-
-                if (!openedStream)
-                {
-                    Debugger.Break();
-                    return (SafeWrapperResult)openedStream;
-                }
-
-                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(openedStream.Result);
-
-                _softwareBitmap = await decoder.GetSoftwareBitmapAsync();
-
-                return SafeWrapperResult.S_SUCCESS;
+                Debugger.Break();
+                return (SafeWrapperResult)bitmap;
             }
+
+            SafeWrapper<IRandomAccessStreamWithContentType> openedStream = await SafeWrapperRoutines.SafeWrapAsync(
+                () => bitmap.Result.OpenReadAsync().AsTask());
+
+            if (!openedStream)
+            {
+                Debugger.Break();
+                return (SafeWrapperResult)openedStream;
+            }
+
+            BitmapDecoder decoder = await BitmapDecoder.CreateAsync(openedStream.Result);
+
+            _softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+
+            return SafeWrapperResult.S_SUCCESS;
         }
 
         public override async Task<SafeWrapperResult> TrySaveData()
         {
             SafeWrapperResult result;
-
-            if (sourceFile != null)
-            {
-                // Copy to the collection
-                SafeWrapperResult copyResult = await FilesystemOperations.CopyFileAsync(sourceFile, associatedFile, ReportProgress, cancellationToken);
-
-                return copyResult;
-            }
 
             BitmapEncoder encoder = null;
             result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
@@ -218,17 +202,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task<SafeWrapper<StorageFile>> TrySetFileWithExtension()
         {
-            SafeWrapper<StorageFile> file;
-
-            if (!string.IsNullOrEmpty(imageFileName))
-            {
-                string extension = Path.GetExtension(imageFileName);
-                file = await AssociatedContainer.GetEmptyFileToWrite(extension, Path.GetFileNameWithoutExtension(imageFileName));
-            }
-            else
-            {
-                file = await AssociatedContainer.GetEmptyFileToWrite(".png");
-            }
+            SafeWrapper<StorageFile> file = await AssociatedContainer.GetEmptyFileToWrite(".png");
 
             return file;
         }
@@ -260,7 +234,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override bool CanPasteAsReference()
         {
-            return sourceFile != null;
+            return true;
         }
 
         #endregion

@@ -131,9 +131,11 @@
     <Compile Include="ApplicationSettings\UserSettingsModel.cs" />
     <Compile Include="AttachedProperties\BaseAttachedProperty.cs" />
     <Compile Include="AttachedProperties\FrameAttachedProperties.cs" />
+    <Compile Include="AttachedProperties\WebViewAttachedProperties.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DataModels\DisplayFrameNavigationDataModel.cs" />
     <Compile Include="DataModels\PastedContentDataModels\BasePastedContentTypeDataModel.cs" />
+    <Compile Include="DataModels\PastedContentDataModels\WebViewContentType.cs" />
     <Compile Include="DataModels\PastedContentDataModels\ImageContentType.cs" />
     <Compile Include="DataModels\PastedContentDataModels\MediaContentType.cs" />
     <Compile Include="DataModels\PastedContentDataModels\TextContentType.cs" />
@@ -210,6 +212,9 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceDictionaries\CanvasDictionary.xaml.cs" />
+    <Compile Include="UserControls\CanvasDisplay\WebViewCanvasControl.xaml.cs">
+      <DependentUpon>WebViewCanvasControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\SuggestedActionsControl.xaml.cs">
       <DependentUpon>SuggestedActionsControl.xaml</DependentUpon>
     </Compile>
@@ -252,6 +257,7 @@
     <Compile Include="ViewModels\Pages\SettingsPages\SettingsAboutPageViewModel.cs" />
     <Compile Include="ViewModels\Pages\SettingsPages\SettingsGeneralPageViewModel.cs" />
     <Compile Include="ViewModels\Pages\SettingsPages\SettingsPastingPageViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\CanvasDisplay\WebViewCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SuggestedActionsControlItemViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SuggestedActionsControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\BasePasteCanvasViewModel.cs" />
@@ -322,6 +328,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ResourceDictionaries\ColorsDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\CanvasDisplay\WebViewCanvasControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

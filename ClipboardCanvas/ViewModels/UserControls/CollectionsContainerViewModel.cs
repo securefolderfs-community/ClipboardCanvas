@@ -264,7 +264,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
 
             string newFileName = $"{fileName}{extension}";
-            SafeWrapper<StorageFile> file = await SafeWrapperRoutines.SafeWrapAsync(() => _innerStorageFolder.CreateFileAsync(newFileName, CreationCollisionOption.GenerateUniqueName).AsTask());
+            SafeWrapper<StorageFile> file = await SafeWrapperRoutines.SafeWrapAsync(async () => await _innerStorageFolder.CreateFileAsync(newFileName, CreationCollisionOption.GenerateUniqueName));
 
             return file;
         }
