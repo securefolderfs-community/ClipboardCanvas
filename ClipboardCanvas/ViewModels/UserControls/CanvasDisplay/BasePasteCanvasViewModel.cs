@@ -468,7 +468,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         protected virtual async Task SetContentMode()
         {
             // TODO: Choose option here based on which items should be pasted as reference
-            if (App.AppSettings.UserSettings.AlwaysPasteFilesAsReference)
+            if (App.AppSettings.UserSettings.AlwaysPasteFilesAsReference && CanPasteAsReference())
             {
                 contentAsReference = true;
             }
@@ -477,6 +477,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 contentAsReference = false;
             }
         }
+
+        protected abstract bool CanPasteAsReference();
 
         protected abstract Task<SafeWrapperResult> SetData(DataPackageView dataPackage);
 

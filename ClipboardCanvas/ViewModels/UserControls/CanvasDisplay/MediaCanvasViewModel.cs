@@ -121,6 +121,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
+        protected override bool CanPasteAsReference()
+        {
+            return true;
+        }
+
         #endregion
 
         #region IDisposable

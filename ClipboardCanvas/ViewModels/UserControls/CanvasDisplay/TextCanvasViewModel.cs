@@ -123,6 +123,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return Task.FromResult(result);
         }
 
+        protected override bool CanPasteAsReference()
+        {
+            return true; // TODO: Return value based on if content is pasted as StorageFile or raw data from clipboard
+        }
+
         #endregion
 
         #region Public Helpers

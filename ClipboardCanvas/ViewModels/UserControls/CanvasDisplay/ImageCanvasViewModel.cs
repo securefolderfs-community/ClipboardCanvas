@@ -114,10 +114,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             else
             {
-                // We need to always set it to false if we're pasting image from clipboard
-                // It could've been set to true in SetContentMode() function
-                contentAsReference = false;
-
                 SafeWrapper<RandomAccessStreamReference> bitmap = await SafeWrapperRoutines.SafeWrapAsync(
                            () => dataPackage.GetBitmapAsync().AsTask());
 
@@ -270,6 +266,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             });
 
             return result;
+        }
+
+        protected override bool CanPasteAsReference()
+        {
+            return sourceFile != null;
         }
 
         #endregion
