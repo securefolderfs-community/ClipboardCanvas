@@ -317,7 +317,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
         }
 
         public async Task LoadCanvasFromCollection(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken, bool navigateNext)
-        // TODO: Should isOperationSwitchNextCanvas parameter be removed?
         {
             //Debugger.Break(); // TODO: Investigate high memory usage on load
 

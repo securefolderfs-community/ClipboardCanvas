@@ -8,11 +8,10 @@ using Windows.ApplicationModel.DataTransfer;
 
 namespace ClipboardCanvas.EventArguments.CanvasControl
 {
-    public class OpenOpenNewCanvasRequestedEventArgs : EventArgs
+    public class OpenNewCanvasRequestedEventArgs : EventArgs
     {
-        public OpenOpenNewCanvasRequestedEventArgs()
+        public OpenNewCanvasRequestedEventArgs()
         {
-            // TODO: Maybe add something useful there?
         }
     }
 

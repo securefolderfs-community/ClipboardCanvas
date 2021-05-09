@@ -6,7 +6,7 @@ namespace ClipboardCanvas.Models
 {
     public interface IPasteCanvasEventsModel
     {
-        event EventHandler<OpenOpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
+        event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
 
         event EventHandler<ContentLoadedEventArgs> OnContentLoadedEvent;
 

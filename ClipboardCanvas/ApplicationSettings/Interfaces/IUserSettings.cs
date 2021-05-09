@@ -14,19 +14,6 @@
         bool AlwaysOpenNewPageWhenSelectingCollection { get; set; }
 
         /// <summary>
-        /// Determines whether pasted file is pasted as content
-        /// <br/><br/>
-        /// Presume a case where user pastes a file which is an image file
-        /// <br/>
-        /// If <see cref="PastePastableFilesAsContent"/> is true, then the file is pasted and displayed as an image.
-        /// <br/>
-        /// This is retained with other types of which content can be displayed.
-        /// <br/><br/>
-        /// Otherwise, if <see cref="PastePastableFilesAsContent"/> is false, the file is pasted and not displayed as conveniently viewable content
-        /// </summary>
-        public bool PastePastableFilesAsContent { get; set; } // TODO: Useless?
-
-        /// <summary>
         /// Determines whether items are copied as reference or directly to collection
         /// <br/><br/>
         /// If <see cref="AlwaysPasteFilesAsReference"/> is true, then item on paste will be copied as reference to original item location.

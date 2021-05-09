@@ -46,7 +46,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region IPasteCanvasEventsModel
 
-        public event EventHandler<OpenOpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
+        public event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
 
         public event EventHandler<ContentLoadedEventArgs> OnContentLoadedEvent;
 
@@ -315,7 +315,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             OnContentLoadedEvent?.Invoke(sender, e);
         }
 
-        private void PasteCanvasControlModel_OnOpenNewCanvasRequestedEvent(object sender, OpenOpenNewCanvasRequestedEventArgs e)
+        private void PasteCanvasControlModel_OnOpenNewCanvasRequestedEvent(object sender, OpenNewCanvasRequestedEventArgs e)
         {
             OnOpenNewCanvasRequestedEvent?.Invoke(sender, e);
         }

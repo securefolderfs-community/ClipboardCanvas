@@ -275,7 +275,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             await SetSuggestedActions();
         }
 
-        private void PasteCanvasModel_OnOpenNewCanvasRequestedEvent(object sender, OpenOpenNewCanvasRequestedEventArgs e)
+        private void PasteCanvasModel_OnOpenNewCanvasRequestedEvent(object sender, OpenNewCanvasRequestedEventArgs e)
         {
             OpenNewCanvas();
         }

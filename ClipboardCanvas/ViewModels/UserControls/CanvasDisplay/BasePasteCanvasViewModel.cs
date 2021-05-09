@@ -72,7 +72,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region IPasteCanvasEventsModel
 
-        public event EventHandler<OpenOpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
+        public event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
 
         public event EventHandler<ContentLoadedEventArgs> OnContentLoadedEvent;
 
@@ -192,7 +192,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return cancelResult;
             }
 
-            await SetContentMode();
+            SetContentMode();
 
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
@@ -344,7 +344,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         public virtual void OpenNewCanvas()
         {
             DiscardData();
-            RaiseOnOpenNewCanvasRequestedEvent(this, new OpenOpenNewCanvasRequestedEventArgs());
+            RaiseOnOpenNewCanvasRequestedEvent(this, new OpenNewCanvasRequestedEventArgs());
         }
 
         public virtual async Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions()
@@ -465,9 +465,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
         }
 
-        protected virtual async Task SetContentMode()
+        protected virtual void SetContentMode()
         {
-            // TODO: Choose option here based on which items should be pasted as reference
             if (App.AppSettings.UserSettings.AlwaysPasteFilesAsReference && CanPasteAsReference())
             {
                 contentAsReference = true;
@@ -488,7 +487,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Event Raisers
 
-        protected void RaiseOnOpenNewCanvasRequestedEvent(object s, OpenOpenNewCanvasRequestedEventArgs e) => OnOpenNewCanvasRequestedEvent?.Invoke(s, e);
+        protected void RaiseOnOpenNewCanvasRequestedEvent(object s, OpenNewCanvasRequestedEventArgs e) => OnOpenNewCanvasRequestedEvent?.Invoke(s, e);
 
         protected void RaiseOnContentLoadedEvent(object s, ContentLoadedEventArgs e) => OnContentLoadedEvent?.Invoke(s, e);
 

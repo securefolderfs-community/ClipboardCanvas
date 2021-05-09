@@ -27,7 +27,7 @@ namespace ClipboardCanvas.Models
         /// Attempts to save current data to file in associated container
         /// </summary>
         /// <returns></returns>
-        Task<SafeWrapperResult> TrySaveData(); // TODO: Remove this from interface
+        Task<SafeWrapperResult> TrySaveData();
 
         /// <summary>
         /// Attempts to delete the file and discard data

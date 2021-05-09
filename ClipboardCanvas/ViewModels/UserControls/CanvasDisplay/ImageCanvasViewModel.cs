@@ -138,8 +138,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (sourceFile != null)
             {
-                // TODO: Sometimes some small portion of gif content is corrupted. WHAT!?!?
-
                 // Copy to the collection
                 SafeWrapperResult copyResult = await FilesystemOperations.CopyFileAsync(sourceFile, associatedFile, ReportProgress, cancellationToken);
 
