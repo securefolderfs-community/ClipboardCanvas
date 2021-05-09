@@ -130,7 +130,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             switch (c: ctrl, s: shift, a: alt, w: win, k: vkey)
             {
-                case (c: false, s: false, a: true, w: false, k: VirtualKey.Up):
+                case (c: true, s: false, a: false, w: false, k: VirtualKey.Up):
                     {
                         if (_currentPage == DisplayPageType.CanvasPage)
                         {
@@ -141,7 +141,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                         break;
                     }
 
-                case (c: false, s: false, a: true, w: false, k: VirtualKey.Down):
+                case (c: true, s: false, a: false, w: false, k: VirtualKey.Down):
                     {
                         if (_currentPage == DisplayPageType.HomePage)
                         {
@@ -152,25 +152,25 @@ namespace ClipboardCanvas.ViewModels.UserControls
                         break;
                     }
 
-                case (c: false, s: false, a: true, w: false, k: VirtualKey.Right):
+                case (c: false, s: false, a: false, w: false, k: VirtualKey.Right):
                     {
                         NavigateForward();
                         break;
                     }
 
-                case (c: false, s: true, a: true, w: false, k: VirtualKey.Right):
+                case (c: true, s: false, a: false, w: false, k: VirtualKey.Right):
                     {
                         NavigateFirst();
                         break;
                     }
 
-                case (c: false, s: false, a: true, w: false, k: VirtualKey.Left):
+                case (c: false, s: false, a: false, w: false, k: VirtualKey.Left):
                     {
                         NavigateBack();
                         break;
                     }
 
-                case (c: false, s: true, a: true, w: false, k: VirtualKey.Left):
+                case (c: true, s: false, a: false, w: false, k: VirtualKey.Left):
                     {
                         NavigateLast();
                         break;
