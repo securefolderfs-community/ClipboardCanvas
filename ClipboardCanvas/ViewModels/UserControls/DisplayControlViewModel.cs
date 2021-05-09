@@ -219,12 +219,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
             _currentCollectionContainer = e.selectedCollection;
         }
 
-        private async void CollectionsControlViewModel_OnCollectionOpenRequested(object sender, CollectionOpenRequestedEventArgs e)
+        private void CollectionsControlViewModel_OnCollectionOpenRequested(object sender, CollectionOpenRequestedEventArgs e)
         {
             Debugger.Break(); // This operation is not implemented
             return;
 
-            await OpenPage(DisplayPageType.CollectionsPreview);
+            //await OpenPage(DisplayPageType.CollectionsPreview);
         }
 
         #endregion

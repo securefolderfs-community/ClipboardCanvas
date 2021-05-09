@@ -30,7 +30,7 @@ namespace ClipboardCanvas.EventArguments.CollectionsContainer
 
         public readonly string newName;
 
-        public bool renamed;
+        public bool canRename;
 
         public RenameCollectionRequestedEventArgs(CollectionsContainerViewModel containerViewModel, string newName)
         {

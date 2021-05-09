@@ -36,13 +36,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private bool _itemsInitialized;
 
+        private string _collectionFolderPath;
+
         #endregion
 
         #region Public Members
 
         public readonly bool isDefault;
-
-        public string collectionFolderPath;
 
         #endregion
 
@@ -54,12 +54,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public string Name
         {
-            get => Path.GetFileName(collectionFolderPath);
+            get => Path.GetFileName(_collectionFolderPath);
         }
 
         public string DisplayName
         {
-            get => Path.GetFileName(collectionFolderPath);
+            get => Path.GetFileName(_collectionFolderPath);
         }
 
         private string _EditBoxText;
@@ -136,11 +136,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             if (!string.IsNullOrEmpty(collectionFolderPath))
             {
-                this.collectionFolderPath = collectionFolderPath;
+                this._collectionFolderPath = collectionFolderPath;
             }
             else
             {
-                this.collectionFolderPath = collectionFolder?.Path;
+                this._collectionFolderPath = collectionFolder?.Path;
             }
             this._innerStorageFolder = collectionFolder;
             this.isDefault = isDefault;
@@ -187,7 +187,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             OnRemoveCollectionRequestedEvent?.Invoke(this, new RemoveCollectionRequestedEventArgs(this));
         }
 
-        private void EditBoxKeyDown(KeyRoutedEventArgs e)
+        private async void EditBoxKeyDown(KeyRoutedEventArgs e)
         {
             switch (e.Key)
             {
@@ -200,19 +200,26 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
                 case VirtualKey.Enter:
                     {
-                        string oldPath = collectionFolderPath;
+                        string newName = EditBoxText;
 
                         RenameCollectionRequestedEventArgs args = new RenameCollectionRequestedEventArgs(this, EditBoxText);
                         OnRenameCollectionRequestedEvent?.Invoke(this, args);
 
-                        if (args.renamed)
+                        if (args.canRename)
                         {
-                            this.collectionFolderPath = _innerStorageFolder.Path;
-                            OnPropertyChanged(nameof(DisplayName));
+                            SafeWrapperResult result = await FilesystemOperations.RenameItemAsync(_innerStorageFolder, EditBoxText, NameCollisionOption.FailIfExists);
 
-                            // Also update settings
-                            CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
-                            CollectionsHelpers.UpdateLastSelectedCollectionSetting(this);
+                            if (result)
+                            {
+                                this._collectionFolderPath = _innerStorageFolder.Path;
+
+                                OnPropertyChanged(nameof(DisplayName));
+
+                                // Also update settings
+                                CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
+                                CollectionsHelpers.UpdateLastSelectedCollectionSetting(this);
+
+                            }
                         }
 
                         IsEditingName = false;
@@ -384,9 +391,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 return true;
             }
 
-            if (StorageItemHelpers.Exists(this.collectionFolderPath))
+            if (StorageItemHelpers.Exists(this._collectionFolderPath))
             {
-                this._innerStorageFolder = await StorageItemHelpers.ToStorageItem<StorageFolder>(this.collectionFolderPath);
+                this._innerStorageFolder = await StorageItemHelpers.ToStorageItem<StorageFolder>(this._collectionFolderPath);
             }
 
             if (_innerStorageFolder == null)

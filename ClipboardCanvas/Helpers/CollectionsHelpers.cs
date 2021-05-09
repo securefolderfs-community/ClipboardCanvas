@@ -13,13 +13,13 @@ namespace ClipboardCanvas.Helpers
             }
             else
             {
-                App.AppSettings.CollectionLocationsSettings.LastSelectedCollection = container.collectionFolderPath;
+                App.AppSettings.CollectionLocationsSettings.LastSelectedCollection = container.DangerousGetCollectionFolder()?.Path;
             }
         }
 
         public static void UpdateSavedCollectionLocationsSetting()
         {
-            App.AppSettings.CollectionLocationsSettings.SavedCollectionLocations = CollectionsControlViewModel.Items.Where((item) => !item.isDefault).Select((item) => item.collectionFolderPath).ToList();
+            App.AppSettings.CollectionLocationsSettings.SavedCollectionLocations = CollectionsControlViewModel.Items.Where((item) => !item.isDefault).Select((item) => item.DangerousGetCollectionFolder()?.Path).ToList();
         }
     }
 }

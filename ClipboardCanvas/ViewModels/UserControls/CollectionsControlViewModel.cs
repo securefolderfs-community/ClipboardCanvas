@@ -18,6 +18,8 @@ using ClipboardCanvas.Extensions;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.EventArguments.CollectionControl;
 using ClipboardCanvas.EventArguments.CollectionsContainer;
+using ClipboardCanvas.Helpers.Filesystem;
+using ClipboardCanvas.Helpers.SafetyHelpers;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -112,30 +114,20 @@ namespace ClipboardCanvas.ViewModels.UserControls
             RemoveCollection(e.containerViewModel);
         }
 
-        private static async void Container_OnRenameCollectionRequestedEvent(object sender, RenameCollectionRequestedEventArgs e)
+        private static void Container_OnRenameCollectionRequestedEvent(object sender, RenameCollectionRequestedEventArgs e)
         {
-            if (e.containerViewModel.isDefault)
+            if (
+                !Items.Any((item) => item.DisplayName == e.newName)
+                && !e.containerViewModel.isDefault
+                && !string.IsNullOrWhiteSpace(e.newName)
+                && !e.containerViewModel.DisplayName.SequenceEqual(e.newName)
+                )
             {
-                e.renamed = false;
-                return;
+                e.canRename = true;
             }
-            if (string.IsNullOrWhiteSpace(e.newName))
+            else
             {
-                e.renamed = false;
-                return;
-            }
-            else if (e.containerViewModel.DisplayName.SequenceEqual(e.newName))
-            {
-                e.renamed = false;
-                return;
-            }
-
-            bool canRename = !Items.Any((item) => item.DisplayName == e.newName);
-
-            if (canRename)
-            {
-                e.renamed = true;
-                await e.containerViewModel.DangerousGetCollectionFolder().RenameAsync(e.newName, NameCollisionOption.FailIfExists);
+                e.canRename = false;
             }
         }
 
@@ -190,7 +182,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 App.AppSettings.CollectionLocationsSettings.LastSelectedCollection = lastSelectedCollection;
             }
 
-            var collection = Items.Where((item) => item.collectionFolderPath == lastSelectedCollection).FirstOrDefault();
+            var collection = Items.Where((item) => item.DangerousGetCollectionFolder()?.Path == lastSelectedCollection).FirstOrDefault();
 
             if (collection == null)
             {
@@ -226,7 +218,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public static bool AddCollection(CollectionsContainerViewModel container)
         {
-            if (Items.Any((item) => item.collectionFolderPath == container.collectionFolderPath))
+            if (Items.Any((item) => item.DangerousGetCollectionFolder()?.Path == container.DangerousGetCollectionFolder()?.Path))
             {
                 return false;
             }

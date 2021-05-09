@@ -32,8 +32,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         private SoftwareBitmap _softwareBitmap;
 
-        private bool _isGifFile;
-
         private string imageFileName;
 
         #endregion
@@ -93,12 +91,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
                 sourceFile = items.Result.As<IEnumerable<IStorageItem>>().First().As<StorageFile>();
                 imageFileName = Path.GetFileName(sourceFile.Path);
-
-                if (sourceFile.Path.EndsWith(".gif"))
-                {
-                    // .gif file
-                    _isGifFile = true;
-                }
 
                 SafeWrapper<Stream> openedStream = await SafeWrapperRoutines.SafeWrapAsync(
                     () => sourceFile.OpenStreamForReadAsync());
