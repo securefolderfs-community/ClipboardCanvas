@@ -165,13 +165,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CollectionsContainerViewModel collection;
 
             collection = new CollectionsContainerViewModel(defaultCollectionFolder, true);
-            AddCollection(collection);
+            await AddCollection(collection);
 
             foreach (var item in savedCollectionPaths)
             {
                 collection = new CollectionsContainerViewModel(item);
 
-                AddCollection(collection);
+                await AddCollection(collection);
             }
 
             TrySetSelectedItem();
@@ -224,7 +224,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             OnCollectionRemovedEvent?.Invoke(null, new CollectionRemovedEventArgs(container));
         }
 
-        public static bool AddCollection(CollectionsContainerViewModel container)
+        public static async Task<bool> AddCollection(CollectionsContainerViewModel container)
         {
             if (Items.Any((item) => item.DangerousGetCollectionFolder()?.Path == container.DangerousGetCollectionFolder()?.Path))
             {
@@ -235,6 +235,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             container.OnCheckRenameCollectionRequestedEvent += Container_OnCheckRenameCollectionRequestedEvent;
             container.OnRemoveCollectionRequestedEvent += Container_OnRemoveCollectionRequestedEvent;
             container.OnOpenNewCanvasRequestedEvent += Container_OnOpenNewCanvasRequestedEvent;
+            await container.Initialize();
 
             Items.Add(container);
 
@@ -258,7 +259,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
 
             var collection = new CollectionsContainerViewModel(folder);
-            if (AddCollection(collection))
+            if (await AddCollection(collection))
             {
                 //collection.StartRename();
                 return true;

@@ -38,6 +38,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private string _collectionFolderPath;
 
+        private bool _initialized;
+
         #endregion
 
         #region Public Members
@@ -155,8 +157,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
             RemoveCollectionCommand = new RelayCommand(RemoveCollection);
             EditBoxKeyDownCommand = new RelayCommand<KeyRoutedEventArgs>(EditBoxKeyDown);
             EditBoxLostFocusCommand = new RelayCommand<RoutedEventArgs>(EditBoxLostFocus);
-
-            Initialize();
         }
 
         #endregion
@@ -371,19 +371,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Private Helpers
 
-        private async void Initialize()
-        {
-            if (await InitInnerStorageFolder())
-            {
-                await InitItems();
-            }
-            else
-            {
-                ErrorIconVisibility = Visibility.Visible;
-                // TODO: Display exclamation mark icon that something went wrong
-            }
-        }
-
         private async Task<bool> InitInnerStorageFolder()
         {
             if (_innerStorageFolder != null)
@@ -425,6 +412,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
             OnItemsRefreshRequestedEvent?.Invoke(this, new ItemsRefreshRequestedEventArgs(this));
         }
 
+        #endregion
+
+        #region Public Helpers
+
         public async Task<bool> InitializeItems()
         {
             if (!_itemsInitialized && _innerStorageFolder != null)
@@ -440,6 +431,25 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
 
             return false;
+        }
+
+        public async Task Initialize()
+        {
+            if (_initialized)
+            {
+                return;
+            }
+            _initialized = true;
+
+            if (await InitInnerStorageFolder())
+            {
+                await InitItems();
+            }
+            else
+            {
+                ErrorIconVisibility = Visibility.Visible;
+                // TODO: Display exclamation mark icon that something went wrong
+            }
         }
 
         #endregion

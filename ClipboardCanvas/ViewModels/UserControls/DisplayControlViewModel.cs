@@ -356,8 +356,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void CheckNavigation()
         {
-            NavigationToolBarControlModel.NavigationControlModel.NavigateBackEnabled = _currentCollectionContainer.HasBack();
-            NavigationToolBarControlModel.NavigationControlModel.NavigateForwardEnabled = _currentCollectionContainer.HasNext();
+            if (_currentCollectionContainer != null)
+            {
+                NavigationToolBarControlModel.NavigationControlModel.NavigateBackEnabled = _currentCollectionContainer.HasBack();
+                NavigationToolBarControlModel.NavigationControlModel.NavigateForwardEnabled = _currentCollectionContainer.HasNext();
+            }
         }
 
         private void OpenNewCanvas()
