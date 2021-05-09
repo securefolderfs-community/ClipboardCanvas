@@ -353,11 +353,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     result = await pasteCanvasModel.TryLoadExistingData(this.Items[_currentIndex], cancellationToken);
                 }
             }
-            else if (result == OperationErrorCode.Unauthorized)
+            else if ((uint)result.Details.errorCode == 0x400u)
             {
                 // View Model wasn't found
                 // Cannot display content for this file. - i.e. canvas display doesn't exists for this file
-                // TODO: Handle this error
             }
         }
 

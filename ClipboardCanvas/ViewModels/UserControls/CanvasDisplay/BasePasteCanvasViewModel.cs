@@ -351,6 +351,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
 
+            if (associatedFile == null)
+            {
+                return actions;
+            }
+
             var action_openInFileExplorer = new SuggestedActionsControlItemViewModel(
                 async () =>
                 {

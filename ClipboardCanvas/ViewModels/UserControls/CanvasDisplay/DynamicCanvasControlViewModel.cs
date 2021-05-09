@@ -82,7 +82,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return await CanvasViewModel?.TryLoadExistingData(itemData, cancellationToken);
             }
 
-            SafeWrapperResult result = new SafeWrapperResult(OperationErrorCode.Unauthorized, new InvalidOperationException(), "Couldn't display content for this file");
+            SafeWrapperResult result = new SafeWrapperResult((OperationErrorCode)0x400u, new InvalidOperationException(), "Couldn't display content for this file");
             OnErrorOccurredEvent?.Invoke(this, new ErrorOccurredEventArgs(result, result.Details.message));
 
             return result;

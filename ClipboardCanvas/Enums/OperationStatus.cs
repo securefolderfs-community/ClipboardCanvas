@@ -9,7 +9,7 @@ namespace ClipboardCanvas.Enums
     /// <summary>
     /// Contains all kinds of return statuses
     /// </summary>
-    public enum OperationErrorCode
+    public enum OperationErrorCode : uint
     {
         Success = 0,
         Generic = 1,
