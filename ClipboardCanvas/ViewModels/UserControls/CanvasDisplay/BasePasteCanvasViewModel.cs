@@ -195,7 +195,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return cancelResult;
             }
 
-            SetContentMode();
+            result = await SetDataInternal(dataPackage);
+            if (!AssertNoError(result))
+            {
+                return result;
+            }
 
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
@@ -203,11 +207,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return cancelResult;
             }
 
-            result = await SetDataInternal(dataPackage);
-            if (!AssertNoError(result))
-            {
-                return result;
-            }
+            SetContentMode();
 
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {

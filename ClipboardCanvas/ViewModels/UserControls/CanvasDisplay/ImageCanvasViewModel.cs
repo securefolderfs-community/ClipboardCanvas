@@ -234,7 +234,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override bool CanPasteAsReference()
         {
-            return true;
+            return sourceFile != null;
         }
 
         #endregion
