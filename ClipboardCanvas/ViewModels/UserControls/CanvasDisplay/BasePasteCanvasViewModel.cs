@@ -353,12 +353,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public virtual async Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions()
         {
-            List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
-
             if (associatedFile == null)
             {
-                return actions;
+                return null;
             }
+
+            List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
 
             // Open file
             IStorageFile file;

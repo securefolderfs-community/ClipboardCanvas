@@ -105,13 +105,33 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 return;
             }
 
-            List<SuggestedActionsControlItemViewModel> itemsThatCollectionDoesntContain = Items.Where((item) => !actions.Contains(item)).ToList();
+            // The following stuff is to reuse already existing actions
+
+            List<int> indexesToPutActionsIn = new List<int>();
+            List<SuggestedActionsControlItemViewModel> itemsThatCollectionDoesntContain = Items.Where((item) => 
+            {
+                if (!actions.Contains(item))
+                {
+                    indexesToPutActionsIn.Add(Items.IndexOf(item));
+
+                    return true;
+                }
+
+                return false;
+            }).ToList();
 
             itemsThatCollectionDoesntContain.ForEach((item) => RemoveAction(item));
 
-            foreach (var item in actions)
+            for (int i = 0, j = 0; i < actions.Count(); i++)
             {
-                AddAction(item);
+                if (i >= indexesToPutActionsIn.Count)
+                {
+                    AddAction(actions.ElementAt(i));
+                }
+                else
+                {
+                    AddActionAt(actions.ElementAt(i), indexesToPutActionsIn[i]);
+                }
             }
 
             CheckAnyActionsExist();
@@ -122,6 +142,14 @@ namespace ClipboardCanvas.ViewModels.UserControls
             if (!Items.Contains(action))
             {
                 Items.Add(action);
+            }
+        }
+
+        public void AddActionAt(SuggestedActionsControlItemViewModel action, int index)
+        {
+            if (!Items.Contains(action))
+            {
+                Items.Insert(index, action);
             }
         }
 

@@ -110,9 +110,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public override async Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions()
         {
-            List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
-
-            return actions;
+            return null;
         }
 
         protected override bool CanPasteAsReference()
