@@ -4,6 +4,7 @@ using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Models;
 using Windows.UI.Xaml.Navigation;
 using ClipboardCanvas.DataModels;
+using System.Diagnostics;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 

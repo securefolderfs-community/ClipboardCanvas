@@ -17,6 +17,7 @@ using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using System.Threading.Tasks;
 using ClipboardCanvas.EventArguments.CanvasControl;
+using Windows.UI.Xaml;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {
@@ -96,6 +97,10 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public ICommand DefaultKeyboardAcceleratorInvokedCommand { get; private set; }
 
+        public ICommand DragEnterCommand { get; private set; }
+
+        public ICommand DropCommand { get; private set; }
+
         public ICommand OverrideReferenceCommand { get; private set; }
 
         #endregion
@@ -110,6 +115,8 @@ namespace ClipboardCanvas.ViewModels.Pages
 
             // Create commands
             DefaultKeyboardAcceleratorInvokedCommand = new RelayCommand<KeyboardAcceleratorInvokedEventArgs>(DefaultKeyboardAcceleratorInvoked);
+            DragEnterCommand = new RelayCommand<DragEventArgs>(DragEnter);
+            DropCommand = new RelayCommand<DragEventArgs>(Drop);
             OverrideReferenceCommand = new RelayCommand(OverrideReference);
         }
 
@@ -130,31 +137,22 @@ namespace ClipboardCanvas.ViewModels.Pages
             {
                 case (c: true, s: false, a: false, w: false, k: VirtualKey.V):
                     {
-                        DynamicCanvasControlViewModel.CanvasPasteCancellationTokenSource.Cancel();
-                        DynamicCanvasControlViewModel.CanvasPasteCancellationTokenSource = new CancellationTokenSource();
-                        SafeWrapper<DataPackageView> dataPackage = await ClipboardHelpers.GetClipboardData();
-                        SafeWrapperResult result = dataPackage;
-
-                        if (result)
-                        {
-                            result = await PasteCanvasModel.TryPasteData(dataPackage, DynamicCanvasControlViewModel.CanvasPasteCancellationTokenSource.Token);
-                        }
-
-
-                        if (result == null)
-                        {
-                            // The last instance was probably disposed
-                            // That's probably because user tried pasting data to a filled canvas, so new canvas was opened and this disposed
-                            return;
-                        }
-                        else if (!result) // Check if anything went wrong
-                        {
-                            Debugger.Break();
-                        }
-
+                        await PasteDataInternal();
                         break;
                     }
             }
+        }
+
+        private void DragEnter(DragEventArgs e)
+        {
+            e.AcceptedOperation = DataPackageOperation.Copy;
+            e.Handled = true;
+        }
+
+        private async void Drop(DragEventArgs e)
+        {
+            DataPackageView dataPackage = e.DataView;
+            await PasteDataInternal(dataPackage);
         }
 
         private async void OverrideReference()
@@ -216,6 +214,43 @@ namespace ClipboardCanvas.ViewModels.Pages
             PastedAsReferenceLoad = e.pastedByReference;
             TitleTextLoad = false;
             ErrorTextLoad = false;
+        }
+
+        #endregion
+
+        #region Private Helpers
+
+        private async Task PasteDataInternal(DataPackageView dataPackage = null)
+        {
+            SafeWrapperResult result = null;
+            DynamicCanvasControlViewModel.CanvasPasteCancellationTokenSource.Cancel();
+            DynamicCanvasControlViewModel.CanvasPasteCancellationTokenSource = new CancellationTokenSource();
+
+            if (dataPackage == null)
+            {
+                SafeWrapper<DataPackageView> dataPackageWrapper = await ClipboardHelpers.GetClipboardData();
+
+                if (dataPackageWrapper)
+                {
+                    result = await PasteCanvasModel.TryPasteData(dataPackageWrapper, DynamicCanvasControlViewModel.CanvasPasteCancellationTokenSource.Token);
+                }
+            }
+            else
+            {
+                result = await PasteCanvasModel.TryPasteData(dataPackage, DynamicCanvasControlViewModel.CanvasPasteCancellationTokenSource.Token);
+            }
+
+            if (result == null)
+            {
+                // The last instance was probably disposed
+                // That's probably because user tried pasting data to a filled canvas, so new canvas was opened and this disposed
+                return;
+            }
+            else if (!result) // Check if anything went wrong
+            {
+                Debugger.Break();
+            }
+
         }
 
         #endregion
