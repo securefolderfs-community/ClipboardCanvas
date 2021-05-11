@@ -69,20 +69,27 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task<SafeWrapperResult> SetData(DataPackageView dataPackage)
         {
-            SafeWrapperResult result;
             SafeWrapper<string> text = await SafeWrapperRoutines.SafeWrapAsync(
                            () => dataPackage.GetTextAsync().AsTask());
 
-            result = text;
-            if (!result)
+            if (!text)
             {
                 Debugger.Break();
-                return result;
+                return (SafeWrapperResult)text;
             }
 
-            dataStream = StreamHelpers.CreateStreamFromString(text);
+            _ContentText = text;
 
-            return result;
+            return (SafeWrapperResult)text;
+        }
+
+        protected override async Task<SafeWrapperResult> SetData(IStorageFile file)
+        {
+            SafeWrapper<string> text = await SafeWrapperRoutines.SafeWrapAsync(async () => await FileIO.ReadTextAsync(file));
+
+            this._ContentText = text;
+
+            return text;
         }
 
         protected override async Task<SafeWrapper<StorageFile>> TrySetFileWithExtension()
@@ -96,15 +103,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public override async Task<SafeWrapperResult> TrySaveData()
         {
-            SafeWrapperResult result;
-
-            result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
+            SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
             {
-                dataStream.Position = 0L;
-                using (fileStream = await associatedFile.OpenAsync(FileAccessMode.ReadWrite))
-                {
-                    await dataStream.CopyToAsync(fileStream.AsStreamForWrite());
-                }
+                await FileIO.WriteTextAsync(sourceFile, ContentText);
             }, errorReporter);
 
             return result;
@@ -114,13 +115,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             ContentTextLoad = true;
 
-            SafeWrapperResult result = SafeWrapperRoutines.SafeWrap(() =>
-            {
-                StreamReader reader = new StreamReader(dataStream);
-                ContentText = reader.ReadToEnd();
-            });
+            OnPropertyChanged(nameof(ContentText));
 
-            return Task.FromResult(result);
+            return Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
         protected override bool CanPasteAsReference()

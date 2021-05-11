@@ -81,7 +81,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
-        protected override async Task<SafeWrapperResult> SetData(StorageFile file)
+        protected override async Task<SafeWrapperResult> SetData(IStorageFile file)
         {
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }

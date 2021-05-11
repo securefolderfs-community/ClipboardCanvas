@@ -38,14 +38,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         protected BasePastedContentTypeDataModel contentType;
 
         /// <summary>
-        /// The file that's associated with the canvas
+        /// The file that's associated with the canvas, use is not recommended. Use <see cref="associatedFile"/> instead.
         /// </summary>
         protected StorageFile associatedFile;
 
         /// <summary>
-        /// The source file. Can be null if not in canvas reference mode
+        /// The source file. If not in reference mode, points to <see cref="associatedFile"/>
         /// </summary>
-        protected StorageFile sourceFile;
+        protected IStorageFile sourceFile;
 
         protected IRandomAccessStream fileStream;
 
@@ -136,14 +136,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return cancelResult;
             }
 
-            if (contentAsReference && sourceFile != null)
-            {
-                result = await SetData(sourceFile);
-            }
-            else
-            {
-                result = await SetData(associatedFile);
-            }
+            result = await SetData(sourceFile);
             if (!AssertNoError(result))
             {
                 return result;
@@ -425,22 +418,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             RaiseOnProgressReportedEvent(this, new ProgressReportedEventArgs(value));
         }
 
-        protected virtual async Task<SafeWrapperResult> SetData(StorageFile file)
-        {
-            SafeWrapperResult result;
-
-            dataStream = new MemoryStream();
-            result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
-            {
-                using (fileStream = await file?.OpenAsync(FileAccessMode.Read))
-                {
-                    await fileStream.AsStreamForRead().CopyToAsync(dataStream.AsOutputStream().AsStreamForWrite());
-                }
-            }, errorReporter);
-
-            return result;
-        }
-
         protected virtual async Task<SafeWrapperResult> SetDataInternal(DataPackageView dataPackage)
         {
             if (dataPackage.Contains(StandardDataFormats.StorageItems))
@@ -512,6 +489,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 // In collection file
                 contentAsReference = false;
+
+                // Set the sourceFile
+                sourceFile = file;
             }
         }
 
@@ -528,6 +508,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         }
 
         protected abstract bool CanPasteAsReference();
+
+        protected abstract Task<SafeWrapperResult> SetData(IStorageFile file);
 
         protected abstract Task<SafeWrapperResult> SetData(DataPackageView dataPackage);
 

@@ -131,7 +131,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             if (CanvasViewModel == null)
             {
-                return null;
+                return new List<SuggestedActionsControlItemViewModel>();
             }
 
             return await CanvasViewModel?.GetSuggestedActions();
