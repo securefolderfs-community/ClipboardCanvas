@@ -367,12 +367,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return actions;
             }
 
-            var action_openInFileExplorer = new SuggestedActionsControlItemViewModel(
-                async () =>
-                {
-                    await AssociatedContainer.CurrentCanvas.OpenContainingFolder();
-                }, "Open containing folder", "\uE838");
-
+            // Open file
             IStorageFile file;
             if (contentAsReference)
             {
@@ -391,8 +386,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     await AssociatedContainer.CurrentCanvas.OpenFile();
                 }, $"Open with {appName}", icon);
 
-            actions.Add(action_openInFileExplorer);
+            // Open directory
+            var action_openInFileExplorer = new SuggestedActionsControlItemViewModel(
+                async () =>
+                {
+                    await AssociatedContainer.CurrentCanvas.OpenContainingFolder();
+                }, "Open containing folder", "\uE838");
+
+
             actions.Add(action_openFile);
+            actions.Add(action_openInFileExplorer);
 
             return actions;
         }

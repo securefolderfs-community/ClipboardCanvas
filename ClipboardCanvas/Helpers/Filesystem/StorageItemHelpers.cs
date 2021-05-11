@@ -14,9 +14,16 @@ namespace ClipboardCanvas.Helpers.Filesystem
             SafeWrapper<StorageFile> file = null;
             SafeWrapper<StorageFolder> folder = null;
 
+            // Check if path is to .lnk or .url file
             if (path.ToLower().EndsWith(".lnk") || path.ToLower().EndsWith(".url"))
             {
                 throw new UnauthorizedAccessException("Function ToStorageItem<TOut>() does not support converting from .lnk nor .url files");
+            }
+
+            // Check if exists
+            if (!Exists(path))
+            {
+                return default(TOut);
             }
 
             if (typeof(IStorageFile).IsAssignableFrom(typeof(TOut)))

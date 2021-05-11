@@ -49,6 +49,9 @@
                     <icore:EventTriggerBehavior EventName="Drop">
                         <icore:InvokeCommandAction Command="{x:Bind ViewModel.DropCommand}" />
                     </icore:EventTriggerBehavior>
+                    <icore:EventTriggerBehavior EventName="DragLeave">
+                        <icore:InvokeCommandAction Command="{x:Bind ViewModel.DragLeaveCommand}" />
+                    </icore:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
 
                 <Grid.RowDefinitions>
@@ -65,7 +68,7 @@
                     AllowDrop="True"
                     FontSize="32"
                     FontWeight="Bold"
-                    Text="Press Ctrl+V to paste in content!" />
+                    Text="{x:Bind ViewModel.TitleText, Mode=OneWay}" />
 
                 <uc:DynamicCanvasControl
                     x:Name="PasteCanvasControl"

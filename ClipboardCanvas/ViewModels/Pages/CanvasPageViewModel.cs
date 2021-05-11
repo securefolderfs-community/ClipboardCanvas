@@ -27,6 +27,10 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private readonly ICanvasPageView _view;
 
+        private const string DEFAULT_TITLE_TEXT = "Press Ctrl+V to paste in content!";
+
+        private const string DRAG_TITLE_TEXT = "Release to paste in content!";
+
         #endregion
 
         #region Public Properties
@@ -40,6 +44,13 @@ namespace ClipboardCanvas.ViewModels.Pages
         {
             get => _TitleTextLoad;
             set => SetProperty(ref _TitleTextLoad, value);
+        }
+
+        private string _TitleText = DEFAULT_TITLE_TEXT;
+        public string TitleText
+        {
+            get => _TitleText;
+            set => SetProperty(ref _TitleText, value);
         }
 
         private bool _ErrorTextLoad = true;
@@ -99,6 +110,8 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public ICommand DragEnterCommand { get; private set; }
 
+        public ICommand DragLeaveCommand { get; private set; }
+
         public ICommand DropCommand { get; private set; }
 
         public ICommand OverrideReferenceCommand { get; private set; }
@@ -116,6 +129,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             // Create commands
             DefaultKeyboardAcceleratorInvokedCommand = new RelayCommand<KeyboardAcceleratorInvokedEventArgs>(DefaultKeyboardAcceleratorInvoked);
             DragEnterCommand = new RelayCommand<DragEventArgs>(DragEnter);
+            DragLeaveCommand = new RelayCommand<DragEventArgs>(DragLeave);
             DropCommand = new RelayCommand<DragEventArgs>(Drop);
             OverrideReferenceCommand = new RelayCommand(OverrideReference);
         }
@@ -145,8 +159,25 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private void DragEnter(DragEventArgs e)
         {
-            e.AcceptedOperation = DataPackageOperation.Copy;
-            e.Handled = true;
+            DragOperationDeferral deferral = null;
+
+            try
+            {
+                deferral = e.GetDeferral();
+
+                e.AcceptedOperation = DataPackageOperation.Copy;
+                TitleText = DRAG_TITLE_TEXT;
+            }
+            finally
+            {
+                e.Handled = true;
+                deferral?.Complete();
+            }
+        }
+
+        private void DragLeave(DragEventArgs e)
+        {
+            TitleText = DEFAULT_TITLE_TEXT;
         }
 
         private async void Drop(DragEventArgs e)
