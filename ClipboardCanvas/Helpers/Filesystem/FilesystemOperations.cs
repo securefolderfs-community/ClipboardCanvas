@@ -47,7 +47,7 @@ namespace ClipboardCanvas.Helpers.Filesystem
 
         public static async Task<SafeWrapperResult> RenameItemAsync(IStorageItem item, string newName, NameCollisionOption collision = NameCollisionOption.GenerateUniqueName)
         {
-            SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(() => item.RenameAsync(newName, collision).AsTask());
+            SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(async () => await item.RenameAsync(newName, collision).AsTask());
             return result;
         }
     }

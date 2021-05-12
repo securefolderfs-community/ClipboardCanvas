@@ -22,6 +22,8 @@
 
             public const string REFERENCE_FILE_EXTENSION = ".ccvr";
 
+            public const string WEBSITE_LINK_FILE_EXTENSION = ".ccvwl";
+
             public const int COPY_FILE_BUFFER_SIZE = 1024 * 1024; // 1mb
         }
 

@@ -81,7 +81,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
-        protected override async Task<SafeWrapperResult> SetData(IStorageFile file)
+        protected override async Task<SafeWrapperResult> SetData(StorageFile file)
         {
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
@@ -95,14 +95,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             ContentMediaLoad = true;
 
-            if (contentAsReference)
-            {
-                ContentMedia = MediaSource.CreateFromStorageFile(sourceFile);
-            }
-            else
-            {
-                ContentMedia = MediaSource.CreateFromStorageFile(associatedFile);
-            }
+            ContentMedia = MediaSource.CreateFromStorageFile(sourceFile);
 
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }

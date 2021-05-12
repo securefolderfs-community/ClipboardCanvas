@@ -18,6 +18,7 @@ using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.Extensions;
+using ClipboardCanvas.UnsafeNative;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -26,6 +27,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #region Private Members
 
         private readonly IDynamicPasteCanvasControlView _view;
+
+        private readonly WebViewCanvasMode _mode;
 
         #endregion
 
@@ -37,10 +40,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public WebViewCanvasViewModel(IDynamicPasteCanvasControlView view)
+        public WebViewCanvasViewModel(IDynamicPasteCanvasControlView view, WebViewCanvasMode mode)
             : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter)
         {
             this._view = view;
+            this._mode = mode;
         }
 
         #endregion
@@ -48,7 +52,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #region Public Properties
 
         public static List<string> Extensions => new List<string>() {
-            ".html", ".htm",
+            ".html", ".htm", Constants.FileSystem.WEBSITE_LINK_FILE_EXTENSION,
         };
 
         private string _TextHtml;
@@ -58,54 +62,95 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             set => SetProperty(ref _TextHtml, value);
         }
 
+        private string _Source;
+        public string Source
+        {
+            get => _Source;
+            set => SetProperty(ref _Source, value);
+        }
+
+
         #endregion
 
         #region Override
 
         protected override async Task<SafeWrapperResult> SetData(DataPackageView dataPackage)
         {
-            return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
+            SafeWrapper<string> text = await SafeWrapperRoutines.SafeWrapAsync(
+                   () => dataPackage.GetTextAsync().AsTask());
+
+            if (_mode == WebViewCanvasMode.ReadWebsite)
+            {
+                _Source = text;
+            }
+            else
+            {
+                _TextHtml = text;
+            }
+
+            return text;
         }
 
         public override async Task<SafeWrapperResult> TrySaveData()
         {
-            SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(() => FileIO.WriteTextAsync(associatedFile, TextHtml).AsTask());
+            SafeWrapperResult result;
+
+            if (_mode == WebViewCanvasMode.ReadWebsite)
+            {
+                result = await SafeWrapperRoutines.SafeWrapAsync(() => FileIO.WriteTextAsync(associatedFile, Source).AsTask());
+            }
+            else
+            {
+                result = await SafeWrapperRoutines.SafeWrapAsync(() => FileIO.WriteTextAsync(associatedFile, TextHtml).AsTask());
+            }
+
             return result;
         }
 
-        protected override async Task<SafeWrapperResult> SetData(IStorageFile file)
+        protected override async Task<SafeWrapperResult> SetData(StorageFile file)
         {
-            string text = await FileIO.ReadTextAsync(file);
-            _TextHtml = text;
+            SafeWrapper<string> text = SafeWrapperRoutines.SafeWrap(() => UnsafeNativeHelpers.ReadStringFromFile(file.Path));
 
-            return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
+            if (_mode == WebViewCanvasMode.ReadWebsite)
+            {
+                _Source = text;
+            }
+            else
+            {
+                _TextHtml = text;
+            }
+
+            return text;
         }
 
         protected override async Task<SafeWrapper<StorageFile>> TrySetFileWithExtension()
         {
-            SafeWrapper<StorageFile> file = await AssociatedContainer.GetEmptyFileToWrite(".html");
-           
+            SafeWrapper<StorageFile> file;
+
+            if (_mode == WebViewCanvasMode.ReadWebsite)
+            {
+                file = await AssociatedContainer.GetEmptyFileToWrite(Constants.FileSystem.WEBSITE_LINK_FILE_EXTENSION);
+            }
+            else
+            {
+                file = await AssociatedContainer.GetEmptyFileToWrite(".html");
+            }
+
             return file;
         }
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()
         {
-            if (!string.IsNullOrEmpty(TextHtml))
+            if (_mode == WebViewCanvasMode.ReadWebsite)
             {
-                OnPropertyChanged(nameof(TextHtml));
-                return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
+                OnPropertyChanged(nameof(Source));
             }
             else
             {
-                SafeWrapper<string> text = await SafeWrapperRoutines.SafeWrapAsync(async () => await FileIO.ReadTextAsync(sourceFile));
-
-                if (text)
-                {
-                    TextHtml = text;
-                }
-
-                return (SafeWrapperResult)text;
+                OnPropertyChanged(nameof(TextHtml));
             }
+
+            return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
         public override async Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions()
@@ -115,7 +160,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override bool CanPasteAsReference()
         {
-            return true;
+            return sourceFile != null;
         }
 
         #endregion

@@ -136,7 +136,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return cancelResult;
             }
 
-            result = await SetData(sourceFile);
+            result = await SetData(sourceFile as StorageFile);
             if (!AssertNoError(result))
             {
                 return result;
@@ -265,8 +265,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             else
             {
-                if (sourceFile != null) // If pasting a file not raw data from clipboard...
+                if (!sourceFile.Path.SequenceEqual(associatedFile.Path)) // Make sure we don't copy to the same path smh
                 {
+                    // If pasting a file not raw data from clipboard...
+
                     // Copy to collection
                     SafeWrapperResult copyResult = await FilesystemOperations.CopyFileAsync(sourceFile, associatedFile, ReportProgress, cancellationToken);
 
@@ -433,7 +435,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
                 sourceFile = items.Result.As<IEnumerable<IStorageItem>>().First().As<StorageFile>();
 
-                return SafeWrapperResult.S_SUCCESS;
+                SafeWrapperResult result = await SetData(sourceFile as StorageFile);
+
+                return result;
             }
             else
             {
@@ -463,6 +467,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             associatedFile = file;
+
+            if (sourceFile == null)
+            {
+                sourceFile = associatedFile;
+            }
 
             if (file)
             {
@@ -509,7 +518,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected abstract bool CanPasteAsReference();
 
-        protected abstract Task<SafeWrapperResult> SetData(IStorageFile file);
+        protected abstract Task<SafeWrapperResult> SetData(StorageFile file);
 
         protected abstract Task<SafeWrapperResult> SetData(DataPackageView dataPackage);
 

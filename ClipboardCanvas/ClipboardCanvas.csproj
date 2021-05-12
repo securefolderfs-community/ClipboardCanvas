@@ -141,6 +141,7 @@
     <Compile Include="DataModels\PastedContentDataModels\TextContentType.cs" />
     <Compile Include="DataModels\SettingsFrameNavigationDataModel.cs" />
     <Compile Include="Enums\SettingsPageType.cs" />
+    <Compile Include="Enums\WebViewCanvasMode.cs" />
     <Compile Include="EventArguments\CollectionPreviewItemEventArgs.cs" />
     <Compile Include="EventArguments\CommonEventArgs.cs" />
     <Compile Include="Extensions\GenericsExtensions.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Extensions\SafetyExtensions.cs" />
     <Compile Include="Helpers\CollectionsHelpers.cs" />
     <Compile Include="Helpers\Filesystem\FilesystemOperations.cs" />
+    <Compile Include="Helpers\StringHelpers.cs" />
     <Compile Include="ReferenceItems\ReferenceFile.cs" />
     <Compile Include="ReferenceItems\ReferenceFileData.cs" />
     <Compile Include="Helpers\SafetyHelpers\SafeWrapperRoutines.cs" />

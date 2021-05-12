@@ -16,6 +16,9 @@ using System.Threading;
 using System.Linq;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using System.Diagnostics;
+using ClipboardCanvas.Helpers;
+using Windows.ApplicationModel.Core;
+using Microsoft.Toolkit.Uwp;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -142,7 +145,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #region Private Helpers
 
         /// <summary>
-        /// Initialize View Model from data package
+        /// Decide and initialize View Model from data package
         /// </summary>
         /// <param name="dataPackage"></param>
         /// <returns></returns>
@@ -167,10 +170,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
                 // Check if it's a webpage link
                 bool isWebpageLink = Uri.TryCreate(text, UriKind.Absolute, out Uri uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
-                if (isWebpageLink)
+                if (StringHelpers.IsWebsiteLink(text))
                 {
                     // Webpage link
-                    return InitializeViewModel(() => new WebViewCanvasViewModel(_view));
+                    return InitializeViewModel(() => new WebViewCanvasViewModel(_view, WebViewCanvasMode.ReadWebsite));
+                }
+                else if (StringHelpers.IsHTML(text))
+                {
+                    // Html
+                    return InitializeViewModel(() => new WebViewCanvasViewModel(_view, WebViewCanvasMode.ReadHtml));
                 }
                 else
                 {
@@ -268,7 +276,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             // Try for WebView
-            if (InitializeViewModelForType<WebViewContentType, WebViewCanvasViewModel>(contentType, () => new WebViewCanvasViewModel(_view)))
+            if (InitializeViewModelForType<WebViewContentType, WebViewCanvasViewModel>(contentType, () => new WebViewCanvasViewModel(_view, (contentType as WebViewContentType)?.mode ?? WebViewCanvasMode.Unknown)))
             {
                 return true;
             }

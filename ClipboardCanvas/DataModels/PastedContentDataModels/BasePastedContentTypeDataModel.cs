@@ -1,7 +1,9 @@
-﻿using ClipboardCanvas.ReferenceItems;
+﻿using ClipboardCanvas.Enums;
+using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -45,7 +47,12 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
                 // WebView
                 if (WebViewCanvasViewModel.Extensions.Contains(ext))
                 {
-                    return new WebViewContentType();
+                    if (ext == Constants.FileSystem.WEBSITE_LINK_FILE_EXTENSION)
+                    {
+                        return new WebViewContentType(WebViewCanvasMode.ReadWebsite);
+                    }
+
+                    return new WebViewContentType(WebViewCanvasMode.ReadHtml);
                 }
 
                 // Default, try as text

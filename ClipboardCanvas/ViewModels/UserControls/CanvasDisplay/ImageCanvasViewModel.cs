@@ -74,27 +74,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Override
 
-        protected override async Task<SafeWrapperResult> SetDataInternal(DataPackageView dataPackage)
-        {
-            SafeWrapperResult result = await base.SetDataInternal(dataPackage);
-
-            if (sourceFile != null && result)
-            {
-                SafeWrapper<Stream> openedStream = await SafeWrapperRoutines.SafeWrapAsync(
-                    () => sourceFile.OpenStreamForReadAsync());
-
-                if (!openedStream)
-                {
-                    return (SafeWrapperResult)openedStream;
-                }
-
-                dataStream = openedStream.Result;
-                result = (SafeWrapperResult)openedStream;
-            }
-
-            return result;
-        }
-
         protected override async Task<SafeWrapperResult> SetData(DataPackageView dataPackage)
         {
             // Always won't contain StorageItems since they are handled in SetDataInternal()
@@ -131,7 +110,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             BitmapEncoder encoder = null;
             result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
             {
-                using (IRandomAccessStream fileStream = await associatedFile.OpenAsync(FileAccessMode.ReadWrite))
+                using (IRandomAccessStream fileStream = await sourceFile.OpenAsync(FileAccessMode.ReadWrite))
                 {
                     encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
 
@@ -150,7 +129,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 {
                     if (hresult == WINCODEC_ERR_UNSUPPORTEDOPERATION)
                     {
-                        using (fileStream = await associatedFile.OpenAsync(FileAccessMode.ReadWrite))
+                        using (fileStream = await sourceFile.OpenAsync(FileAccessMode.ReadWrite))
                         {
                             encoder.IsThumbnailGenerated = false;
 
@@ -162,13 +141,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (result)
             {
-                RaiseOnFileModifiedEvent(this, new FileModifiedEventArgs(associatedFile, AssociatedContainer));
+                RaiseOnFileModifiedEvent(this, new FileModifiedEventArgs(sourceFile, AssociatedContainer));
             }
 
             return result;
         }
 
-        protected override async Task<SafeWrapperResult> SetData(IStorageFile file)
+        protected override async Task<SafeWrapperResult> SetData(StorageFile file)
         {
             SafeWrapperResult result;
 
@@ -177,19 +156,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return new SafeWrapperResult(OperationErrorCode.InProgress, "The operation was canceled");
             }
 
-            dataStream = new MemoryStream();
-            result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
-            {
-                using (fileStream = await file?.OpenAsync(FileAccessMode.Read))
-                {
-                    await fileStream.AsStreamForRead().CopyToAsync(dataStream.AsOutputStream().AsStreamForWrite());
-                }
-            }, errorReporter);
+            SafeWrapper<Stream> openedStream = await SafeWrapperRoutines.SafeWrapAsync(
+                    () => sourceFile.OpenStreamForReadAsync());
 
-            if (!result)
+            if (!openedStream)
             {
-                return result;
+                return (SafeWrapperResult)openedStream;
             }
+
+            dataStream = openedStream.Result;
+            result = (SafeWrapperResult)openedStream;
 
             result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
             {
