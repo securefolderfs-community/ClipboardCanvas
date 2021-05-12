@@ -30,6 +30,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         private readonly IDynamicPasteCanvasControlView _view;
 
+        private Stream _dataStream;
+
         private SoftwareBitmap _softwareBitmap;
 
         #endregion
@@ -129,7 +131,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 {
                     if (hresult == WINCODEC_ERR_UNSUPPORTEDOPERATION)
                     {
-                        using (fileStream = await sourceFile.OpenAsync(FileAccessMode.ReadWrite))
+                        using (IRandomAccessStream fileStream = await sourceFile.OpenAsync(FileAccessMode.ReadWrite))
                         {
                             encoder.IsThumbnailGenerated = false;
 
@@ -164,12 +166,17 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return (SafeWrapperResult)openedStream;
             }
 
-            dataStream = openedStream.Result;
+            _dataStream = openedStream.Result;
             result = (SafeWrapperResult)openedStream;
+
+            if (!result)
+            {
+                return result;
+            }
 
             result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
             {
-                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(dataStream.AsRandomAccessStream());
+                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(_dataStream.AsRandomAccessStream());
                 _softwareBitmap = await decoder.GetSoftwareBitmapAsync();
             });
 
@@ -190,9 +197,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
             {
-                if (dataStream == null) // Data is pasted, load from _softwareBitmap
+                if (_dataStream == null) // Data is pasted, load from _softwareBitmap
                 {
-                    byte[] buffer = await ImagingHelpers.EncodedBytes(_softwareBitmap, BitmapEncoder.PngEncoderId);
+                    byte[] buffer = await ImagingHelpers.GetBytesFromSoftwareBitmap(_softwareBitmap, BitmapEncoder.PngEncoderId);
                     ContentImage = await ImagingHelpers.ToBitmapAsync(buffer);
                     Array.Clear(buffer, 0, buffer.Length);
                 }
@@ -200,8 +207,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 {
                     BitmapImage image = new BitmapImage();
                     ContentImage = image;
-                    dataStream.Position = 0;
-                    await image.SetSourceAsync(dataStream.AsRandomAccessStream());
+                    _dataStream.Position = 0;
+                    await image.SetSourceAsync(_dataStream.AsRandomAccessStream());
                 }
             });
 
@@ -221,8 +228,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             base.Dispose();
 
+            _dataStream?.Dispose();
             _softwareBitmap?.Dispose();
+
             _softwareBitmap = null;
+            _dataStream = null;
             ContentImage = null;
         }
 

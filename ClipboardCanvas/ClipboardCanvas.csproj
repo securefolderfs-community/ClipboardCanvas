@@ -149,6 +149,7 @@
     <Compile Include="Extensions\SafetyExtensions.cs" />
     <Compile Include="Helpers\CollectionsHelpers.cs" />
     <Compile Include="Helpers\Filesystem\FilesystemOperations.cs" />
+    <Compile Include="Helpers\IconHelpers.cs" />
     <Compile Include="Helpers\StringHelpers.cs" />
     <Compile Include="ReferenceItems\ReferenceFile.cs" />
     <Compile Include="ReferenceItems\ReferenceFileData.cs" />
@@ -180,7 +181,6 @@
     <Compile Include="Helpers\AdaptiveActionsHelpers.cs" />
     <Compile Include="Helpers\ImagingHelpers.cs" />
     <Compile Include="Helpers\SafetyHelpers\SafeWrapperResultDetails.cs" />
-    <Compile Include="Helpers\StreamHelpers.cs" />
     <Compile Include="Helpers\ClipboardHelpers.cs" />
     <Compile Include="Helpers\Filesystem\DangerousStorageFileExtensions.cs" />
     <Compile Include="Helpers\Filesystem\StorageItemHelpers.cs" />

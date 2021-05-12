@@ -47,10 +47,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         /// </summary>
         protected IStorageFile sourceFile;
 
-        protected IRandomAccessStream fileStream;
-
-        protected Stream dataStream;
-
         protected IProgress<float> pasteProgress;
 
         /// <summary>
@@ -374,7 +370,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 file = associatedFile;
             }
 
-            var (icon, appName) = await ImagingHelpers.GetIconFromFileHandlingApp(Path.GetExtension(file.Path));
+            var (icon, appName) = await IconHelpers.GetIconFromFileHandlingApp(Path.GetExtension(file.Path));
             var action_openFile = new SuggestedActionsControlItemViewModel(
                 async () =>
                 {
@@ -554,13 +550,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             IsDisposed = true;
 
-            dataStream?.Dispose();
-            fileStream?.Dispose();
-
-            dataStream = null;
-            fileStream = null;
-            contentType = null;
             associatedFile = null;
+            sourceFile = null;
+            contentType = null;
         }
 
         #endregion
