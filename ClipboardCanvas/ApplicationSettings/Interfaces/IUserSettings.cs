@@ -21,5 +21,10 @@
         /// Otherwise, items are copied directly to collection.
         /// </summary>
         public bool AlwaysPasteFilesAsReference { get; set; } // TODO: Add a setting so user can also select which items to paste as reference
+
+        /// <summary>
+        /// Determines whether to favor markdown or .txt files when pasting items
+        /// </summary>
+        public bool PrioritizeMarkdownOverText { get; set; }
     }
 }

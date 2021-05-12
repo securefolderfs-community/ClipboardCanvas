@@ -23,5 +23,9 @@
     <DataTemplate x:Key="WebViewCanvasViewModel" x:DataType="vm:WebViewCanvasViewModel">
         <uc:WebViewCanvasControl />
     </DataTemplate>
+    <!--  Markdown view  -->
+    <DataTemplate x:Key="MarkdownCanvasViewModel" x:DataType="vm:MarkdownCanvasViewModel">
+        <uc:MarkdownCanvasControl />
+    </DataTemplate>
 
 </ResourceDictionary>

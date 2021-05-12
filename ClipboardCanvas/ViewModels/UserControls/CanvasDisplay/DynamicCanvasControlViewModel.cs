@@ -182,8 +182,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 }
                 else
                 {
-                    // Normal text
-                    return InitializeViewModel(() => new TextCanvasViewModel(_view));
+                    if (StringHelpers.IsMarkdown(text) && App.AppSettings.UserSettings.PrioritizeMarkdownOverText)
+                    {
+                        // Markdown
+                        return InitializeViewModel(() => new MarkdownCanvasViewModel(_view));
+                    }
+                    else
+                    {
+                        // Normal text
+                        return InitializeViewModel(() => new TextCanvasViewModel(_view));
+                    }
                 }
             }
             else if (dataPackage.Contains(StandardDataFormats.StorageItems)) // From clipboard storage items
@@ -277,6 +285,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             // Try for WebView
             if (InitializeViewModelForType<WebViewContentType, WebViewCanvasViewModel>(contentType, () => new WebViewCanvasViewModel(_view, (contentType as WebViewContentType)?.mode ?? WebViewCanvasMode.Unknown)))
+            {
+                return true;
+            }
+
+            // Try for markdown
+            if (InitializeViewModelForType<MarkdownContentType, MarkdownCanvasViewModel>(contentType, () => new MarkdownCanvasViewModel(_view)))
             {
                 return true;
             }

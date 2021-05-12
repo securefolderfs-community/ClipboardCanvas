@@ -16,8 +16,7 @@
                 Text="General" />
 
             <StackPanel>
-                <TextBlock Text="Always open new canvas on paste" />
-                <ToggleSwitch IsOn="{x:Bind ViewModel.OpenNewCanvasOnPaste, Mode=TwoWay}" />
+                <ToggleSwitch Header="Always open new canvas on paste" IsOn="{x:Bind ViewModel.OpenNewCanvasOnPaste, Mode=TwoWay}" />
             </StackPanel>
 
         </StackPanel>

@@ -55,6 +55,12 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
                     return new WebViewContentType(WebViewCanvasMode.ReadHtml);
                 }
 
+                // Markdown
+                if (MarkdownCanvasViewModel.Extensions.Contains(ext))
+                {
+                    return new MarkdownContentType();
+                }
+
                 // Default, try as text
                 if (await TextCanvasViewModel.CanLoadAsText(file))
                 {

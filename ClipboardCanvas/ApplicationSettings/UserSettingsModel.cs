@@ -41,6 +41,12 @@ namespace ClipboardCanvas.ApplicationSettings
             set => Set<bool>(value);
         }
 
+        public bool PrioritizeMarkdownOverText
+        {
+            get => Get<bool>(false);
+            set => Set<bool>(value);
+        }
+
         #endregion
     }
 }

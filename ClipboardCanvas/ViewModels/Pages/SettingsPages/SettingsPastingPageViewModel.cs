@@ -20,6 +20,20 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
             }
         }
 
+        public bool PrioritizeMarkdownOverText
+        {
+            get => App.AppSettings.UserSettings.PrioritizeMarkdownOverText;
+            set
+            {
+                if (value != App.AppSettings.UserSettings.PrioritizeMarkdownOverText)
+                {
+                    App.AppSettings.UserSettings.PrioritizeMarkdownOverText = value;
+
+                    OnPropertyChanged(nameof(PrioritizeMarkdownOverText));
+                }
+            }
+        }
+
         #endregion
     }
 }

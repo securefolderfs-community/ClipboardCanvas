@@ -324,11 +324,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             // Copy to the collection
             SafeWrapperResult copyResult = await FilesystemOperations.CopyFileAsync(referencedFile, newFile.Result, ReportProgress, cancellationToken);
-            if (!copyResult)
+            if (!AssertNoError(copyResult))
             {
                 // Failed
                 Debugger.Break();
-                AssertNoError(copyResult);
                 return copyResult;
             }
 
