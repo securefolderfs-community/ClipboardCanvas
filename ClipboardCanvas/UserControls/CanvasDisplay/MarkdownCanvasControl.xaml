@@ -11,6 +11,8 @@
     mc:Ignorable="d">
 
     <Grid>
-        <uwptuc:MarkdownTextBlock Text="{x:Bind ViewModel.TextMarkdown, Mode=OneWay}" />
+        <ScrollViewer>
+            <uwptuc:MarkdownTextBlock Text="{x:Bind ViewModel.TextMarkdown, Mode=OneWay}" />
+        </ScrollViewer>
     </Grid>
 </UserControl>

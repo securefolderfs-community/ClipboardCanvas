@@ -55,6 +55,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             ".html", ".htm", Constants.FileSystem.WEBSITE_LINK_FILE_EXTENSION,
         };
 
+        private bool _ContentWebViewLoad;
+        public bool ContentWebViewLoad
+        {
+            get => _ContentWebViewLoad;
+            set => SetProperty(ref _ContentWebViewLoad, value);
+        }
+
         private string _TextHtml;
         public string TextHtml
         {
@@ -68,7 +75,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             get => _Source;
             set => SetProperty(ref _Source, value);
         }
-
 
         #endregion
 
@@ -141,6 +147,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()
         {
+            this.ContentWebViewLoad = true;
+
             if (_mode == WebViewCanvasMode.ReadWebsite)
             {
                 OnPropertyChanged(nameof(Source));
@@ -158,9 +166,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return null;
         }
 
-        protected override bool CanPasteAsReference()
+        #endregion
+
+        #region IDisposable
+
+        public override void Dispose()
         {
-            return sourceFile != null;
+            base.Dispose();
+
+            this.ContentWebViewLoad = false;
         }
 
         #endregion

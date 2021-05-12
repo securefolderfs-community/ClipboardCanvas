@@ -11,11 +11,9 @@
 
     <Grid>
         <MediaPlayerElement
-            x:Name="MediaContent"
-            x:Load="{x:Bind ViewModel.ContentMediaLoad, Mode=OneWay}"
             AreTransportControlsEnabled="True"
-            Foreground="Transparent"
             AutoPlay="True"
+            Foreground="Transparent"
             Source="{x:Bind ViewModel.ContentMedia, Mode=OneWay}">
             <MediaPlayerElement.TransportControls>
                 <MediaTransportControls

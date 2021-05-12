@@ -499,7 +499,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
         }
 
-        protected virtual void SetContentMode()
+        protected void SetContentMode()
         {
             if (App.AppSettings.UserSettings.AlwaysPasteFilesAsReference && CanPasteAsReference())
             {
@@ -511,7 +511,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
         }
 
-        protected abstract bool CanPasteAsReference();
+        protected virtual bool CanPasteAsReference()
+        {
+            return sourceFile != null;
+        }
 
         protected abstract Task<SafeWrapperResult> SetData(StorageFile file);
 

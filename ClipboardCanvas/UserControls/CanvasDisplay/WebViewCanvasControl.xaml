@@ -11,6 +11,13 @@
     mc:Ignorable="d">
 
     <Grid>
-        <WebView ap:WebViewNavigationAttachedProperty.Value="{x:Bind ViewModel.TextHtml, Mode=OneWay}" Source="{x:Bind ViewModel.Source, Mode=OneWay}" />
+        <StackPanel Spacing="12">
+            <TextBlock Text="{x:Bind ViewModel.Source, Mode=OneWay}" />
+            <WebView
+                x:Name="ContentWebView"
+                ap:WebViewNavigationAttachedProperty.Value="{x:Bind ViewModel.TextHtml, Mode=OneWay}"
+                x:Load="{x:Bind ViewModel.ContentWebViewLoad, Mode=OneWay}"
+                Source="{x:Bind ViewModel.Source, Mode=OneWay}" />
+        </StackPanel>
     </Grid>
 </UserControl>

@@ -35,13 +35,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Public Properties
 
-        private bool _ContentTextLoad;
-        public bool ContentTextLoad
-        {
-            get => _ContentTextLoad;
-            private set => SetProperty(ref _ContentTextLoad, value);
-        }
-
         private string _ContentText;
         public string ContentText
         {
@@ -113,16 +106,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override Task<SafeWrapperResult> TryFetchDataToView()
         {
-            ContentTextLoad = true;
-
             OnPropertyChanged(nameof(ContentText));
 
             return Task.FromResult(SafeWrapperResult.S_SUCCESS);
-        }
-
-        protected override bool CanPasteAsReference()
-        {
-            return sourceFile != null;
         }
 
         #endregion
@@ -153,6 +139,17 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 return false;
             }
+        }
+
+        #endregion
+
+        #region IDisposable
+
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            _ContentText = null;
         }
 
         #endregion

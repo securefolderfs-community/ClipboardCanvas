@@ -48,13 +48,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             ".png", ".jpg", ".jpeg", ".bmp", ".gif", ".tiff", ".ico", ".svg", ".webp"
         };
 
-        private bool _ContentImageLoad;
-        public bool ContentImageLoad
-        {
-            get => _ContentImageLoad;
-            private set => SetProperty(ref _ContentImageLoad, value);
-        }
-
         private ImageSource _ContentImage;
         public ImageSource ContentImage
         {
@@ -153,11 +146,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             SafeWrapperResult result;
 
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return new SafeWrapperResult(OperationErrorCode.InProgress, "The operation was canceled");
-            }
-
             SafeWrapper<Stream> openedStream = await SafeWrapperRoutines.SafeWrapAsync(
                     () => sourceFile.OpenStreamForReadAsync());
 
@@ -167,11 +155,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             _dataStream = openedStream.Result;
-            result = (SafeWrapperResult)openedStream;
 
-            if (!result)
+            if (!openedStream)
             {
-                return result;
+                return (SafeWrapperResult)openedStream;
             }
 
             result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
@@ -192,7 +179,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()
         {
-            ContentImageLoad = true;
             SafeWrapperResult result = null;
 
             result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
@@ -215,11 +201,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return result;
         }
 
-        protected override bool CanPasteAsReference()
-        {
-            return sourceFile != null;
-        }
-
         #endregion
 
         #region IDisposable
@@ -233,7 +214,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             _softwareBitmap = null;
             _dataStream = null;
-            ContentImage = null;
+            _ContentImage = null;
         }
 
         #endregion

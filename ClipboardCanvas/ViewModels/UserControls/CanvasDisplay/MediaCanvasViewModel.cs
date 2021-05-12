@@ -43,13 +43,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             ".mp3", ".m4a", ".wav", ".wma", ".aac", ".adt", ".adts", ".cda",
         };
 
-        private bool _ContentMediaLoad;
-        public bool ContentMediaLoad
-        {
-            get => _ContentMediaLoad;
-            set => SetProperty(ref _ContentMediaLoad, value);
-        }
-
         private MediaSource _ContentMedia;
         public MediaSource ContentMedia
         {
@@ -93,16 +86,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()
         {
-            ContentMediaLoad = true;
-
             ContentMedia = MediaSource.CreateFromStorageFile(sourceFile);
 
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
-        }
-
-        protected override bool CanPasteAsReference()
-        {
-            return true;
         }
 
         #endregion
@@ -113,8 +99,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             base.Dispose();
 
-            ContentMedia?.Dispose();
-            ContentMedia = null;
+            _ContentMedia?.Dispose();
+            _ContentMedia = null;
         }
 
         #endregion

@@ -10,9 +10,6 @@
     mc:Ignorable="d">
 
     <Grid>
-        <TextBlock
-            x:Name="TextContent"
-            x:Load="{x:Bind ViewModel.ContentTextLoad, Mode=OneWay}"
-            Text="{x:Bind ViewModel.ContentText, Mode=OneWay}" />
+        <TextBlock Text="{x:Bind ViewModel.ContentText, Mode=OneWay}" />
     </Grid>
 </UserControl>

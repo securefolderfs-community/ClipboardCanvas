@@ -110,9 +110,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return file;
         }
 
-        protected override bool CanPasteAsReference()
+        #endregion
+
+        #region IDisposable
+
+        public override void Dispose()
         {
-            return sourceFile != null;
+            base.Dispose();
+
+            _TextMarkdown = null;
         }
 
         #endregion

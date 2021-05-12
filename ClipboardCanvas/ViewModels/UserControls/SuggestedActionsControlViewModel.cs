@@ -122,7 +122,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             itemsThatCollectionDoesntContain.ForEach((item) => RemoveAction(item));
 
-            for (int i = 0, j = 0; i < actions.Count(); i++)
+            for (int i = 0; i < actions.Count(); i++)
             {
                 if (i >= indexesToPutActionsIn.Count)
                 {
