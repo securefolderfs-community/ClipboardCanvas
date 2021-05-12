@@ -15,7 +15,7 @@
                 FontWeight="SemiBold"
                 Text="Pasting" />
 
-            <StackPanel>
+            <StackPanel Spacing="12">
                 <!--  TODO: Add teaching tooltip here  -->
                 <ToggleSwitch Header="Always paste files as reference" IsOn="{x:Bind ViewModel.AlwaysPasteFilesAsReference, Mode=TwoWay}" />
 
