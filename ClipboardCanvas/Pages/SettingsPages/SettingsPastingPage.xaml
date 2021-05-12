@@ -19,7 +19,7 @@
                 <!--  TODO: Add teaching tooltip here  -->
                 <ToggleSwitch Header="Always paste files as reference" IsOn="{x:Bind ViewModel.AlwaysPasteFilesAsReference, Mode=TwoWay}" />
 
-                <ToggleSwitch Header="Prioritize markdown format over raw text forma" IsOn="{x:Bind ViewModel.PrioritizeMarkdownOverText, Mode=OneWay}" />
+                <ToggleSwitch Header="Prioritize markdown format over raw text format" IsOn="{x:Bind ViewModel.PrioritizeMarkdownOverText, Mode=TwoWay}" />
             </StackPanel>
 
         </StackPanel>
