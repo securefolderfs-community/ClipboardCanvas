@@ -52,6 +52,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public bool CanOpenCollection { get; private set; } = true;
 
+        public bool IsOnNewCanvas => this._currentIndex == Items.Count;
+
         public string Name
         {
             get => Path.GetFileName(_collectionFolderPath);
@@ -92,7 +94,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public bool IsFilled => _currentIndex < Items.Count;
 
-        public ICollectionsContainerItemModel CurrentCanvas => this.Items[_currentIndex];
+        public ICollectionsContainerItemModel CurrentCanvas => Items.Count == _currentIndex ? null : this.Items[_currentIndex];
 
         #endregion
 

@@ -18,6 +18,8 @@ namespace ClipboardCanvas.Models
 
         bool CanOpenCollection { get; }
 
+        bool IsOnNewCanvas { get; }
+
         string Name { get; }
 
         /// <summary>
