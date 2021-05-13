@@ -5,11 +5,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.Pages.SettingsPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignWidth="400"
     Background="Transparent"
     mc:Ignorable="d">
 
-    <Grid Padding="20,8,20,20">
-        <StackPanel Spacing="12">
+    <Grid Padding="20,16,20,20">
+        <StackPanel Spacing="16">
 
             <!--  App Info  -->
             <Grid>
@@ -20,6 +21,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
                 <Image
@@ -34,14 +36,28 @@
                     FontSize="20"
                     FontWeight="SemiBold"
                     Text="Clipboard Canvas" />
-                <TextBlock
+
+                <StackPanel
                     Grid.Row="1"
                     Grid.Column="1"
                     Padding="12,0,0,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    Text="{x:Bind ViewModel.VersionNumber}" />
+                    Orientation="Horizontal"
+                    Spacing="4">
+                    <TextBlock Opacity="0.6" Text="Version" />
+                    <TextBlock Opacity="0.6" Text="{x:Bind ViewModel.VersionNumber}" />
+                </StackPanel>
             </Grid>
+
+            <TextBlock FontSize="15" Text="Created and developed by d2dyno" />
+
+            <!--  External links  -->
+            <StackPanel Margin="0,8,0,0" Spacing="4">
+                <HyperlinkButton Command="{x:Bind ViewModel.ShowChangelogCommand}" Content="Release changelog" />
+                <HyperlinkButton Command="{x:Bind ViewModel.SubmitFeedbackCommand}" Content="Submit feedback" />
+            </StackPanel>
+
         </StackPanel>
     </Grid>
 </Page>
