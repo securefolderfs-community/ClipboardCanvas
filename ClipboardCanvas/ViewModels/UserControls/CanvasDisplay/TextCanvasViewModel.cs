@@ -135,8 +135,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
                 return true;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 return false;
             }
         }

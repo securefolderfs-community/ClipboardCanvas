@@ -126,7 +126,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 _TextHtml = text;
             }
 
-            return text;
+            return await Task.FromResult(text);
         }
 
         protected override async Task<SafeWrapper<StorageFile>> TrySetFileWithExtension()
@@ -163,7 +163,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public override async Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions()
         {
-            return null;
+            return await Task.FromResult<IEnumerable<SuggestedActionsControlItemViewModel>>(null);
         }
 
         #endregion

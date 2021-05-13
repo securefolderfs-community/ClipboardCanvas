@@ -50,8 +50,9 @@ namespace ClipboardCanvas.ApplicationSettings
             {
                 serializableSettings = (Dictionary<string, object>)import;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 Debugger.Break();
             }
         }
@@ -96,8 +97,9 @@ namespace ClipboardCanvas.ApplicationSettings
 
                 return (TValue)valueObject;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 Debugger.Break();
                 return default(TValue);
             }
@@ -119,8 +121,9 @@ namespace ClipboardCanvas.ApplicationSettings
                 // Serialize
                 UnsafeNativeHelpers.WriteStringToFile(settingsPath, JsonConvert.SerializeObject(serializableSettings, Formatting.Indented));
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 Debugger.Break();
                 return false;
             }

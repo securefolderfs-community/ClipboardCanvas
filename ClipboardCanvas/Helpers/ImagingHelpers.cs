@@ -64,7 +64,8 @@ namespace ClipboardCanvas.Helpers
                     await encoder.FlushAsync();
                 }
                 catch (Exception ex) 
-                { 
+                {
+                    Console.WriteLine(ex);
                     return new byte[0];
                 }
 

@@ -48,8 +48,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             ".png", ".jpg", ".jpeg", ".bmp", ".gif", ".tiff", ".ico", ".svg", ".webp"
         };
 
-        private ImageSource _ContentImage;
-        public ImageSource ContentImage
+        private BitmapImage _ContentImage;
+        public BitmapImage ContentImage
         {
             get => _ContentImage;
             set => SetProperty(ref _ContentImage, value);
@@ -239,8 +239,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             _dataStream?.Dispose();
             _softwareBitmap?.Dispose();
 
-            _softwareBitmap = null;
             _dataStream = null;
+            _softwareBitmap = null;
             _ContentImage = null;
         }
 

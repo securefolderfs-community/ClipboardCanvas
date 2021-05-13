@@ -19,25 +19,5 @@ namespace ClipboardCanvas.Helpers
         {
             return Uri.TryCreate(str, UriKind.Absolute, out Uri uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
         }
-
-        /// <summary>
-        /// Checks whether string is a markdown. The function check whether string contains markdown format elements
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static bool IsMarkdown(string str)
-        {
-            MarkdownDocument document = new MarkdownDocument();
-            document.Parse(str);
-            
-            if (document.Blocks.Count == 0)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
     }
 }

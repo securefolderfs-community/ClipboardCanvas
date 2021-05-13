@@ -184,7 +184,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 }
                 else
                 {
-                    if (StringHelpers.IsMarkdown(text) && App.AppSettings.UserSettings.PrioritizeMarkdownOverText)
+                    if (App.AppSettings.UserSettings.PrioritizeMarkdownOverText)
                     {
                         // Markdown
                         return InitializeViewModel(() => new MarkdownCanvasViewModel(_view));
