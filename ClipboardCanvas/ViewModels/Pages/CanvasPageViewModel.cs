@@ -18,6 +18,9 @@ using ClipboardCanvas.ModelViews;
 using System.Threading.Tasks;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using Windows.UI.Xaml;
+using System.Collections.Generic;
+using Windows.Storage;
+using System.Linq;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {
@@ -40,6 +43,13 @@ namespace ClipboardCanvas.ViewModels.Pages
         public ICollectionsContainerModel CollectionContainer => _view?.AssociatedCollection;
 
         public IPasteCanvasModel PasteCanvasModel => _view?.PasteCanvasModel;
+
+        private bool _IsDragAvailable = true;
+        public bool IsDragAvailable
+        {
+            get => _IsDragAvailable;
+            private set => SetProperty(ref _IsDragAvailable, value);
+        }
 
         private bool _TitleTextLoad = true;
         public bool TitleTextLoad
@@ -166,7 +176,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             }
         }
 
-        private void DragEnter(DragEventArgs e)
+        private async void DragEnter(DragEventArgs e)
         {
             DragOperationDeferral deferral = null;
 
@@ -174,8 +184,22 @@ namespace ClipboardCanvas.ViewModels.Pages
             {
                 deferral = e.GetDeferral();
 
-                e.AcceptedOperation = DataPackageOperation.Copy;
-                TitleText = DRAG_TITLE_TEXT;
+                SafeWrapper<IReadOnlyList<IStorageItem>> draggedItems = await SafeWrapperRoutines.SafeWrapAsync(async () =>
+                    await e.DataView.GetStorageItemsAsync());
+
+                if (draggedItems)
+                {
+                    if (!draggedItems.Result.Any((item) => item.Path == CollectionContainer.CurrentCanvas.File.Path))
+                    {
+                        e.AcceptedOperation = DataPackageOperation.Copy;
+                        TitleText = DRAG_TITLE_TEXT;
+
+                        return;
+                    }
+                }
+
+                e.AcceptedOperation = DataPackageOperation.None;
+                TitleText = DEFAULT_TITLE_TEXT;
             }
             finally
             {

@@ -19,6 +19,8 @@ namespace ClipboardCanvas.UserControls
 
         public ICollectionsContainerModel CollectionContainer { get; set; }
 
+        public bool IsDragAvailable { get; set; } = false;
+
         public DynamicCanvasControl()
         {
             this.InitializeComponent();

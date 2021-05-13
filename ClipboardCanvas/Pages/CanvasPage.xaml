@@ -88,7 +88,9 @@
                 <uc:DynamicCanvasControl
                     x:Name="PasteCanvasControl"
                     Grid.Row="0"
-                    CollectionContainer="{x:Bind ViewModel.CollectionContainer, Mode=OneWay}" />
+                    Background="Transparent"
+                    CollectionContainer="{x:Bind ViewModel.CollectionContainer, Mode=OneWay}"
+                    IsDragAvailable="{x:Bind ViewModel.IsDragAvailable, Mode=OneWay}" />
 
                 <!--  TODO: Add teaching tip here: "What's this?"  -->
                 <HyperlinkButton

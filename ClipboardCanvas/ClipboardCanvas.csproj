@@ -152,6 +152,7 @@
     <Compile Include="Helpers\Filesystem\FilesystemOperations.cs" />
     <Compile Include="Helpers\IconHelpers.cs" />
     <Compile Include="Helpers\StringHelpers.cs" />
+    <Compile Include="Models\ICanvasContentDraggable.cs" />
     <Compile Include="ReferenceItems\ReferenceFile.cs" />
     <Compile Include="ReferenceItems\ReferenceFileData.cs" />
     <Compile Include="Helpers\SafetyHelpers\SafeWrapperRoutines.cs" />

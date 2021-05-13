@@ -10,6 +10,9 @@
     mc:Ignorable="d">
 
     <Grid>
-        <Image Source="{x:Bind ViewModel.ContentImage, Mode=OneWay}" />
+        <Image
+            CanDrag="{x:Bind ViewModel.IsDragAvailable, Mode=OneWay}"
+            DragStarting="Image_DragStarting"
+            Source="{x:Bind ViewModel.ContentImage, Mode=OneWay}" />
     </Grid>
 </UserControl>

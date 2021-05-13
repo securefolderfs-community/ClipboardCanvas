@@ -24,7 +24,7 @@ using ClipboardCanvas.Helpers.Filesystem;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
-    public sealed class ImageCanvasViewModel : BasePasteCanvasViewModel
+    public sealed class ImageCanvasViewModel : BasePasteCanvasViewModel, ICanvasContentDraggable
     {
         #region Private Members
 
@@ -55,6 +55,19 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             set => SetProperty(ref _ContentImage, value);
         }
 
+        private bool _IsDragAvailable;
+        public bool IsDragAvailable
+        {
+            get => _IsDragAvailable;
+            set => SetProperty(ref _IsDragAvailable, value);
+        }
+
+        #endregion
+
+        #region Events
+
+        public event EventHandler OnDragStartedEvent;
+
         #endregion
 
         #region Constructor
@@ -63,6 +76,20 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter) // TODO: Use custom exception reporter
         {
             this._view = view;
+        }
+
+        #endregion
+
+        #region Public Helpers
+
+        public IReadOnlyList<IStorageItem> ProvideDragData()
+        {
+            return new List<IStorageItem>() { sourceFile };
+        }
+
+        public void RaiseOnDragStartedEvent()
+        {
+            OnDragStartedEvent?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion

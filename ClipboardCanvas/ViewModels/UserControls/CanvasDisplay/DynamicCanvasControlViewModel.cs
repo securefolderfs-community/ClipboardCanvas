@@ -320,17 +320,41 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             else // Initialize new View Model
             {
+                UninitializeExtensionsForViewModel();
                 UnhookEvents();
                 CanvasViewModel = initializer();
                 HookEvents();
 
+                InitializeExtensionsForViewModel();
+
                 return true;
+            }
+        }
+
+        private void InitializeExtensionsForViewModel()
+        {
+            if (CanvasViewModel is ICanvasContentDraggable draggable)
+            {
+                draggable.IsDragAvailable = _view?.IsDragAvailable ?? false;
+                draggable.OnDragStartedEvent += CanvasViewModelDraggable_OnDragStartedEvent;
+            }
+        }
+
+        private void UninitializeExtensionsForViewModel()
+        {
+            if (CanvasViewModel is ICanvasContentDraggable draggable)
+            {
+                draggable.OnDragStartedEvent -= CanvasViewModelDraggable_OnDragStartedEvent;
             }
         }
 
         #endregion
 
         #region Event Handlers
+
+        private void CanvasViewModelDraggable_OnDragStartedEvent(object sender, EventArgs e)
+        {
+        }
 
         private void CanvasViewModel_OnProgressReportedEvent(object sender, ProgressReportedEventArgs e)
         {
@@ -420,6 +444,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public void Dispose()
         {
+            UninitializeExtensionsForViewModel();
             UnhookEvents();
             DiscardData();
         }
