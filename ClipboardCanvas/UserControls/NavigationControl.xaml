@@ -153,34 +153,53 @@
             </Grid.ColumnDefinitions>
 
             <!--  Navigate back  -->
-            <Button
+            <Grid
                 x:Name="NavigateBack"
                 Grid.Column="0"
-                x:Load="{x:Bind ViewModel.NavigateBackLoad, Mode=OneWay}"
-                Command="{x:Bind ViewModel.NavigateBackCommand}"
-                IsEnabled="{x:Bind ViewModel.NavigateBackEnabled, Mode=OneWay}"
-                Style="{StaticResource NavigationButton}"
-                TabIndex="0"
-                ToolTipService.ToolTip="Navigate Back (Left Arrow)&#x0a;Hold to navigate to last item (Ctrl + Left Arrow)">
-                <Button.Content>
-                    <FontIcon Glyph="&#xE76B;" />
-                </Button.Content>
-            </Button>
+                x:Load="{x:Bind ViewModel.NavigateBackLoad, Mode=OneWay}">
+                <Button
+                    Command="{x:Bind ViewModel.NavigateBackCommand}"
+                    IsEnabled="{x:Bind ViewModel.NavigateBackEnabled, Mode=OneWay}"
+                    Style="{StaticResource NavigationButton}"
+                    TabIndex="0"
+                    ToolTipService.ToolTip="Navigate Back (Left Arrow)&#x0a;Hold to navigate to last item (Ctrl + Left Arrow)">
+                    <Button.Content>
+                        <FontIcon Glyph="&#xE76B;" />
+                    </Button.Content>
+                </Button>
+                <ProgressRing
+                    x:Name="NavigateBackRing"
+                    Margin="12"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    x:Load="{x:Bind ViewModel.NavigateBackLoading, Mode=OneWay}"
+                    IsActive="True" />
+            </Grid>
 
             <!--  Navigate forward  -->
-            <Button
+            <Grid
                 x:Name="NavigateForward"
                 Grid.Column="2"
-                x:Load="{x:Bind ViewModel.NavigateForwardLoad, Mode=OneWay}"
-                Command="{x:Bind ViewModel.NavigateForwardCommand}"
-                IsEnabled="{x:Bind ViewModel.NavigateForwardEnabled, Mode=OneWay}"
-                Style="{StaticResource NavigationButton}"
-                TabIndex="3"
-                ToolTipService.ToolTip="Navigate Forward (Right Arrow)&#x0a;Hold to navigate to new canvas (Ctrl + Right Arrow)">
-                <Button.Content>
-                    <FontIcon Glyph="&#xE76C;" />
-                </Button.Content>
-            </Button>
+                x:Load="{x:Bind ViewModel.NavigateForwardLoad, Mode=OneWay}">
+                <Button
+                    Command="{x:Bind ViewModel.NavigateForwardCommand}"
+                    IsEnabled="{x:Bind ViewModel.NavigateForwardEnabled, Mode=OneWay}"
+                    Style="{StaticResource NavigationButton}"
+                    TabIndex="3"
+                    ToolTipService.ToolTip="Navigate Forward (Right Arrow)&#x0a;Hold to navigate to new canvas (Ctrl + Right Arrow)">
+                    <Button.Content>
+                        <FontIcon Glyph="&#xE76C;" />
+                    </Button.Content>
+                </Button>
+                <ProgressRing
+                    x:Name="NavigateForwardRing"
+                    Margin="12"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    x:Load="{x:Bind ViewModel.NavigateForwardLoading, Mode=OneWay}"
+                    IsActive="True" />
+            </Grid>
+
 
             <!--  Go to home button  -->
             <Button

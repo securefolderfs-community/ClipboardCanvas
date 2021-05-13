@@ -19,7 +19,11 @@ namespace ClipboardCanvas.Models
 
         bool NavigateBackEnabled { get; set; }
 
+        bool NavigateBackLoading { get; set; }
+
         bool NavigateForwardEnabled { get; set; }
+
+        bool NavigateForwardLoading { get; set; }
 
         void NotifyCurrentPageChanged(DisplayFrameNavigationDataModel navigationDataModel);
     }

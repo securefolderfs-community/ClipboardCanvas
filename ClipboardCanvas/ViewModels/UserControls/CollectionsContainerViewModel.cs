@@ -34,8 +34,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private int _currentIndex;
 
-        private bool _itemsInitialized;
-
         private string _collectionFolderPath;
 
         #endregion
@@ -53,6 +51,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
         public bool CanOpenCollection { get; private set; } = true;
 
         public bool IsOnNewCanvas => this._currentIndex == Items.Count;
+
+        public bool CanvasInitialized { get; private set; }
 
         public string Name
         {
@@ -398,14 +398,14 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task<bool> InitializeItems()
         {
-            if (!_itemsInitialized && _innerStorageFolder != null)
+            if (!CanvasInitialized && _innerStorageFolder != null)
             {
-                _itemsInitialized = true;
+                CanvasInitialized = true;
                 await InitItems();
 
                 return true;
             }
-            else if (_itemsInitialized)
+            else if (CanvasInitialized)
             {
                 return true;
             }

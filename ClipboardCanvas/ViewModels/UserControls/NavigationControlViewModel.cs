@@ -28,13 +28,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
             private set => SetProperty(ref _NavigateBackLoad, value);
         }
 
-        private bool _NavigateForwardLoad;
-        public bool NavigateForwardLoad
-        {
-            get => _NavigateForwardLoad;
-            private set => SetProperty(ref _NavigateForwardLoad, value);
-        }
-
         private bool _NavigateBackEnabled = true;
         public bool NavigateBackEnabled
         {
@@ -42,11 +35,32 @@ namespace ClipboardCanvas.ViewModels.UserControls
             set => SetProperty(ref _NavigateBackEnabled, value);
         }
 
+        private bool _NavigateBackLoading = false;
+        public bool NavigateBackLoading
+        {
+            get => _NavigateBackLoading;
+            set => SetProperty(ref _NavigateBackLoading, value);
+        }
+
+        private bool _NavigateForwardLoad;
+        public bool NavigateForwardLoad
+        {
+            get => _NavigateForwardLoad;
+            private set => SetProperty(ref _NavigateForwardLoad, value);
+        }
+
         private bool _NavigateForwardEnabled = true;
         public bool NavigateForwardEnabled
         {
             get => _NavigateForwardEnabled;
             set => SetProperty(ref _NavigateForwardEnabled, value);
+        }
+
+        private bool _NavigateForwardLoading = false;
+        public bool NavigateForwardLoading
+        {
+            get => _NavigateForwardLoading;
+            set => SetProperty(ref _NavigateForwardLoading, value);
         }
 
         private bool _GoToHomeLoad;

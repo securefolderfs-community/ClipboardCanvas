@@ -20,6 +20,8 @@ namespace ClipboardCanvas.Models
 
         bool IsOnNewCanvas { get; }
 
+        bool CanvasInitialized { get; }
+
         string Name { get; }
 
         /// <summary>
