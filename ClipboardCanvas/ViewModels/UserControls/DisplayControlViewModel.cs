@@ -356,7 +356,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             if (!_currentCollectionContainer.CanvasInitialized)
             {
-                // Disable navigation
+                // Show navigation loading
                 NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = true;
 
                 await _currentCollectionContainer.InitializeItems();

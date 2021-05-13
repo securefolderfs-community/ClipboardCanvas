@@ -61,7 +61,14 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public string DisplayName
         {
-            get => Path.GetFileName(_collectionFolderPath);
+            get => Name;
+        }
+
+        private bool _IsLoadingItems;
+        public bool IsLoadingItems
+        {
+            get => _IsLoadingItems;
+            set => SetProperty(ref _IsLoadingItems, value);
         }
 
         private string _EditBoxText;
@@ -375,6 +382,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async Task InitItems()
         {
+            IsLoadingItems = true;
+
             IEnumerable<StorageFile> files = await this._innerStorageFolder.GetFilesAsync();
 
             // Sort items from oldest (last canvas) to newest (first canvas)
@@ -390,6 +399,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
             _currentIndex = Items.Count; // - exceeds possible index range because we also want to be on unfilled canvas
 
             OnItemsRefreshRequestedEvent?.Invoke(this, new ItemsRefreshRequestedEventArgs(this));
+
+            IsLoadingItems = false;
         }
 
         #endregion

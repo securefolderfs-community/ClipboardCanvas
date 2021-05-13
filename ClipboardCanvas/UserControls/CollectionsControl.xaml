@@ -65,15 +65,17 @@
                                 <!--  Filename  -->
                                 <RowDefinition />
                             </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
+
+                            <ProgressRing
+                                Grid.Row="0"
+                                Margin="10,30,10,10"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                IsActive="{Binding IsLoadingItems}" />
 
                             <!--  Filename  -->
                             <TextBlock
                                 Grid.Row="1"
-                                Grid.ColumnSpan="2"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Bottom"
                                 Text="{Binding DisplayName}"
@@ -84,7 +86,6 @@
                             <!--  Filename edit box  -->
                             <TextBox
                                 Grid.Row="1"
-                                Grid.ColumnSpan="2"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Bottom"
                                 Text="{Binding EditBoxText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
@@ -103,7 +104,6 @@
                             <!--  Collection Error Warning  -->
                             <FontIcon
                                 Grid.Row="1"
-                                Grid.Column="1"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Bottom"
                                 Foreground="Red"
