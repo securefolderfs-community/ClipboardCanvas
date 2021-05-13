@@ -38,8 +38,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private string _collectionFolderPath;
 
-        private bool _initialized;
-
         #endregion
 
         #region Public Members
@@ -148,8 +146,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
             this._innerStorageFolder = collectionFolder;
             this.isDefault = isDefault;
-            OnPropertyChanged(nameof(DisplayName));
+
             this.Items = new List<CollectionsContainerItemModel>();
+
+            OnPropertyChanged(nameof(DisplayName));
 
             // Create commands
             OpenCollectionLocationCommand = new RelayCommand(OpenCollectionLocation);
@@ -430,25 +430,20 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 return true;
             }
 
+            CanOpenCollection = false;
             return false;
         }
 
-        public async Task Initialize()
+        public async Task InitializeStorageFolder()
         {
-            if (_initialized)
+            if (_innerStorageFolder != null)
             {
                 return;
             }
-            _initialized = true;
 
-            if (await InitInnerStorageFolder())
-            {
-                await InitItems();
-            }
-            else
+            if (! await InitInnerStorageFolder())
             {
                 ErrorIconVisibility = Visibility.Visible;
-                // TODO: Display exclamation mark icon that something went wrong
             }
         }
 

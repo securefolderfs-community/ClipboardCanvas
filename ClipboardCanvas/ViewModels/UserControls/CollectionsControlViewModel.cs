@@ -235,7 +235,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             container.OnCheckRenameCollectionRequestedEvent += Container_OnCheckRenameCollectionRequestedEvent;
             container.OnRemoveCollectionRequestedEvent += Container_OnRemoveCollectionRequestedEvent;
             container.OnOpenNewCanvasRequestedEvent += Container_OnOpenNewCanvasRequestedEvent;
-            await container.Initialize();
+            await container.InitializeStorageFolder();
 
             Items.Add(container);
 

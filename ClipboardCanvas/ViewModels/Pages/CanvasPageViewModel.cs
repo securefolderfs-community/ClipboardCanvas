@@ -330,7 +330,6 @@ namespace ClipboardCanvas.ViewModels.Pages
             {
                 Debugger.Break();
             }
-
         }
 
         #endregion

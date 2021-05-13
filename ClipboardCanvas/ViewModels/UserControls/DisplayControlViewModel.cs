@@ -294,11 +294,14 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task InitializeAfterLoad()
         {
-            await CollectionsControlViewModel.ReloadAllCollections();
-            await OpenPage(DisplayPageType.CanvasPage);
-
             HookTitleBarEvents();
             HookToolbarEvents();
+
+            NavigationToolBarControlModel.NavigationControlModel.NavigateBackEnabled = false;
+            NavigationToolBarControlModel.NavigationControlModel.NavigateForwardEnabled = false;
+
+            await CollectionsControlViewModel.ReloadAllCollections();
+            await OpenPage(DisplayPageType.CanvasPage);
 
             // We must hook them here because only now it is not null
             // Hook events if the page navigated is canvas page
