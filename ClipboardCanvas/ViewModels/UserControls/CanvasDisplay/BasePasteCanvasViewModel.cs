@@ -63,6 +63,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Protected Properties
 
+        protected SafeWrapperResult CancelledResult => new SafeWrapperResult(OperationErrorCode.InProgress, "The operation was canceled");
+
+        protected SafeWrapperResult ReferencedFileNotFoundResult => new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "The file referenced was not found");
+
         protected abstract ICollectionsContainerModel AssociatedContainer { get; }
 
         protected bool IsDisposed { get; private set; }
@@ -109,7 +113,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             DiscardData();
 
             SafeWrapperResult result;
-            SafeWrapperResult cancelResult = new SafeWrapperResult(OperationErrorCode.InProgress, "The operation was canceled");
 
             contentType = itemData.ContentType;
             associatedFile = itemData.File;
@@ -125,15 +128,19 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
                 DiscardData();
-                return cancelResult;
+                return CancelledResult;
             }
 
-            await SetContentMode(associatedFile);
+            result = await SetContentMode(associatedFile);
+            if (!AssertNoError(result))
+            {
+                return result;
+            }
 
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
                 DiscardData();
-                return cancelResult;
+                return CancelledResult;
             }
 
             result = await SetData(sourceFile as StorageFile);
@@ -145,7 +152,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
                 DiscardData();
-                return cancelResult;
+                return CancelledResult;
             }
 
             result = await TryFetchDataToView();
@@ -314,6 +321,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             ReferenceFile referenceFile = await ReferenceFile.GetFile(associatedFile);
             IStorageFile referencedFile = referenceFile.ReferencedFile;
 
+            if (referencedFile == null)
+            {
+                Debugger.Break();
+                return ReferencedFileNotFoundResult;
+            }
+
             // Delete reference file
             await associatedFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
 
@@ -336,8 +349,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             associatedFile = newFile;
-            AssociatedContainer.CurrentCanvas.DangerousUpdateFile(associatedFile);
+            sourceFile = associatedFile;
             contentAsReference = false;
+            AssociatedContainer.CurrentCanvas.DangerousUpdateFile(associatedFile);
             return copyResult;
         }
 
@@ -373,12 +387,17 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 file = associatedFile;
             }
 
-            var (icon, appName) = await IconHelpers.GetIconFromFileHandlingApp(Path.GetExtension(file.Path));
-            var action_openFile = new SuggestedActionsControlItemViewModel(
-                async () =>
-                {
-                    await AssociatedContainer.CurrentCanvas.OpenFile();
-                }, $"Open with {appName}", icon);
+            if (file != null)
+            {
+                var (icon, appName) = await IconHelpers.GetIconFromFileHandlingApp(Path.GetExtension(file.Path));
+                var action_openFile = new SuggestedActionsControlItemViewModel(
+                    async () =>
+                    {
+                        await AssociatedContainer.CurrentCanvas.OpenFile();
+                    }, $"Open with {appName}", icon);
+
+                actions.Add(action_openFile);
+            }
 
             // Open directory
             var action_openInFileExplorer = new SuggestedActionsControlItemViewModel(
@@ -387,8 +406,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     await AssociatedContainer.CurrentCanvas.OpenContainingFolder();
                 }, "Open containing folder", "\uE838");
 
-
-            actions.Add(action_openFile);
             actions.Add(action_openInFileExplorer);
 
             return actions;
@@ -480,7 +497,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return file;
         }
 
-        protected virtual async Task SetContentMode(StorageFile file)
+        protected virtual async Task<SafeWrapperResult> SetContentMode(StorageFile file)
         {
             if (ReferenceFile.IsReferenceFile(file))
             {
@@ -492,6 +509,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
                 // Set the sourceFile
                 sourceFile = referenceFile.ReferencedFile;
+
+                if (sourceFile == null)
+                {
+                    return ReferencedFileNotFoundResult;
+                }
+                else
+                {
+                    return SafeWrapperResult.S_SUCCESS;
+                }
             }
             else
             {
@@ -500,6 +526,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
                 // Set the sourceFile
                 sourceFile = file;
+
+                return SafeWrapperResult.S_SUCCESS;
             }
         }
 
