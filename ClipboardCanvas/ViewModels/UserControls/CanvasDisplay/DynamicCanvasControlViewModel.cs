@@ -53,6 +53,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         public event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
 
         public event EventHandler<ContentLoadedEventArgs> OnContentLoadedEvent;
+        
+        public event EventHandler<ContentStartedLoadingEventArgs> OnContentStartedLoadingEvent;
 
         public event EventHandler<PasteRequestedEventArgs> OnPasteRequestedEvent;
 
@@ -360,6 +362,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             OnPasteRequestedEvent?.Invoke(sender, e);
         }
 
+        private void CanvasViewModel_OnContentStartedLoadingEvent(object sender, ContentStartedLoadingEventArgs e)
+        {
+            OnContentStartedLoadingEvent?.Invoke(sender, e);
+        }
+
         private void PasteCanvasControlModel_OnContentLoadedEvent(object sender, ContentLoadedEventArgs e)
         {
             OnContentLoadedEvent?.Invoke(sender, e);
@@ -381,6 +388,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 CanvasViewModel.OnOpenNewCanvasRequestedEvent += PasteCanvasControlModel_OnOpenNewCanvasRequestedEvent;
                 CanvasViewModel.OnContentLoadedEvent += PasteCanvasControlModel_OnContentLoadedEvent;
+                CanvasViewModel.OnContentStartedLoadingEvent += CanvasViewModel_OnContentStartedLoadingEvent;
                 CanvasViewModel.OnPasteRequestedEvent += PasteCanvasControlModel_OnPasteRequestedEvent;
                 CanvasViewModel.OnFileCreatedEvent += PasteCanvasControlModel_OnFileCreatedEvent;
                 CanvasViewModel.OnFileModifiedEvent += PasteCanvasControlModel_OnFileModifiedEvent;
@@ -396,6 +404,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 CanvasViewModel.OnOpenNewCanvasRequestedEvent -= PasteCanvasControlModel_OnOpenNewCanvasRequestedEvent;
                 CanvasViewModel.OnContentLoadedEvent -= PasteCanvasControlModel_OnContentLoadedEvent;
+                CanvasViewModel.OnContentStartedLoadingEvent -= CanvasViewModel_OnContentStartedLoadingEvent;
                 CanvasViewModel.OnPasteRequestedEvent -= PasteCanvasControlModel_OnPasteRequestedEvent;
                 CanvasViewModel.OnFileCreatedEvent -= PasteCanvasControlModel_OnFileCreatedEvent;
                 CanvasViewModel.OnFileModifiedEvent -= PasteCanvasControlModel_OnFileModifiedEvent;

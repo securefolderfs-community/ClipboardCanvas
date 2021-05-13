@@ -254,6 +254,7 @@
     <Compile Include="UserControls\WindowTitleBarControl.xaml.cs">
       <DependentUpon>WindowTitleBarControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ValueConverters\BooleanInvertConverter.cs" />
     <Compile Include="ValueConverters\BooleanToVisibilityConverter.cs" />
     <Compile Include="ValueConverters\ImplicitDataTemplateConverter.cs" />
     <Compile Include="ValueConverters\SelectedCollectionsContainerConverter.cs" />

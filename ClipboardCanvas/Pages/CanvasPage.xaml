@@ -8,10 +8,14 @@
     xmlns:local="using:ClipboardCanvas.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="using:ClipboardCanvas.UserControls"
+    xmlns:vc="using:ClipboardCanvas.ValueConverters"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     IsTabStop="False"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <vc:BooleanInvertConverter x:Key="BooleanInvertConverter" />
+    </Page.Resources>
     <Page.KeyboardAccelerators>
         <KeyboardAccelerator Key="V" Modifiers="Control">
             <i:Interaction.Behaviors>
@@ -59,6 +63,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
+                <!--  Title text  -->
                 <TextBlock
                     x:Name="TitleText"
                     Grid.Row="0"
@@ -70,6 +75,16 @@
                     FontWeight="Bold"
                     Text="{x:Bind ViewModel.TitleText, Mode=OneWay}" />
 
+                <!--  Content Loading progress ring  -->
+                <ProgressRing
+                    x:Name="LoadingRing"
+                    Grid.Row="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    x:Load="{x:Bind ViewModel.LoadingRingLoad, Mode=OneWay}"
+                    IsActive="True" />
+
+                <!--  The canvas  -->
                 <uc:DynamicCanvasControl
                     x:Name="PasteCanvasControl"
                     Grid.Row="0"

@@ -75,6 +75,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public event EventHandler<ContentLoadedEventArgs> OnContentLoadedEvent;
 
+        public event EventHandler<ContentStartedLoadingEventArgs> OnContentStartedLoadingEvent;
+
         public event EventHandler<PasteRequestedEventArgs> OnPasteRequestedEvent;
 
         public event EventHandler<FileCreatedEventArgs> OnFileCreatedEvent;
@@ -111,6 +113,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             contentType = itemData.ContentType;
             associatedFile = itemData.File;
+
+            RaiseOnContentStartedLoadingEvent(this, new ContentStartedLoadingEventArgs(contentType));
 
             if (!StorageItemHelpers.Exists(associatedFile.Path))
             {
@@ -529,6 +533,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         protected void RaiseOnOpenNewCanvasRequestedEvent(object s, OpenNewCanvasRequestedEventArgs e) => OnOpenNewCanvasRequestedEvent?.Invoke(s, e);
 
         protected void RaiseOnContentLoadedEvent(object s, ContentLoadedEventArgs e) => OnContentLoadedEvent?.Invoke(s, e);
+
+        protected void RaiseOnContentStartedLoadingEvent(object s, ContentStartedLoadingEventArgs e) => OnContentStartedLoadingEvent?.Invoke(s, e);
 
         protected void RaiseOnPasteRequestedEvent(object s, PasteRequestedEventArgs e) => OnPasteRequestedEvent?.Invoke(s, e);
 

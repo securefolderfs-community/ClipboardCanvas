@@ -24,6 +24,16 @@ namespace ClipboardCanvas.EventArguments.CanvasControl
         }
     }
 
+    public class ContentStartedLoadingEventArgs : EventArgs
+    {
+        public readonly BasePastedContentTypeDataModel contentDataModel;
+
+        public ContentStartedLoadingEventArgs(BasePastedContentTypeDataModel contentDataModel)
+        {
+            this.contentDataModel = contentDataModel;
+        }
+    }
+
     public class PasteRequestedEventArgs : EventArgs
     {
         public readonly bool isFilled;

@@ -31,6 +31,8 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private const string DRAG_TITLE_TEXT = "Release to paste in content!";
 
+        private bool _contentLoaded;
+
         #endregion
 
         #region Public Properties
@@ -44,6 +46,13 @@ namespace ClipboardCanvas.ViewModels.Pages
         {
             get => _TitleTextLoad;
             set => SetProperty(ref _TitleTextLoad, value);
+        }
+
+        private bool _LoadingRingLoad = false;
+        public bool LoadingRingLoad
+        {
+            get => _LoadingRingLoad;
+            set => SetProperty(ref _LoadingRingLoad, value);
         }
 
         private string _TitleText = DEFAULT_TITLE_TEXT;
@@ -240,9 +249,25 @@ namespace ClipboardCanvas.ViewModels.Pages
             }
         }
 
+        private async void PasteCanvasModel_OnContentStartedLoadingEvent(object sender, ContentStartedLoadingEventArgs e)
+        {
+            _contentLoaded = false;
+            TitleTextLoad = false;
+
+            // Await a short delay before showing the loading ring
+            await Task.Delay(Constants.CanvasContent.SHOW_LOADING_RING_AFTER_TIME);
+
+            if (!_contentLoaded) // The value might have changed
+            {
+                LoadingRingLoad = true;
+            }
+        }
+
         private void PasteCanvasModel_OnContentLoadedEvent(object sender, ContentLoadedEventArgs e)
         {
             PastedAsReferenceLoad = e.pastedByReference;
+            LoadingRingLoad = false;
+            _contentLoaded = true;
             TitleTextLoad = false;
             ErrorTextLoad = false;
         }
@@ -294,6 +319,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             if (PasteCanvasModel != null)
             {
                 PasteCanvasModel.OnContentLoadedEvent += PasteCanvasModel_OnContentLoadedEvent;
+                PasteCanvasModel.OnContentStartedLoadingEvent += PasteCanvasModel_OnContentStartedLoadingEvent;
                 PasteCanvasModel.OnErrorOccurredEvent += PasteCanvasModel_OnErrorOccurredEvent;
                 PasteCanvasModel.OnProgressReportedEvent += PasteCanvasModel_OnProgressReportedEvent;
             }
@@ -304,6 +330,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             if (PasteCanvasModel != null)
             {
                 PasteCanvasModel.OnContentLoadedEvent -= PasteCanvasModel_OnContentLoadedEvent;
+                PasteCanvasModel.OnContentStartedLoadingEvent -= PasteCanvasModel_OnContentStartedLoadingEvent;
                 PasteCanvasModel.OnErrorOccurredEvent -= PasteCanvasModel_OnErrorOccurredEvent;
                 PasteCanvasModel.OnProgressReportedEvent -= PasteCanvasModel_OnProgressReportedEvent;
             }
