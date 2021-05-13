@@ -48,7 +48,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Public Properties
 
-        public List<CollectionsContainerItemModel> Items { get; private set; }
+        public List<CollectionsContainerItemViewModel> Items { get; private set; }
 
         public bool CanOpenCollection { get; private set; } = true;
 
@@ -147,7 +147,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             this._innerStorageFolder = collectionFolder;
             this.isDefault = isDefault;
 
-            this.Items = new List<CollectionsContainerItemModel>();
+            this.Items = new List<CollectionsContainerItemViewModel>();
 
             OnPropertyChanged(nameof(DisplayName));
 
@@ -364,34 +364,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public void RefreshAddItem(StorageFile file, BasePastedContentTypeDataModel contentType)
         {
-            Items.Add(new CollectionsContainerItemModel(file, contentType));
+            Items.Add(new CollectionsContainerItemViewModel(file, contentType));
         }
 
         #endregion
 
         #region Private Helpers
-
-        private async Task<bool> InitInnerStorageFolder()
-        {
-            if (_innerStorageFolder != null)
-            {
-                return true;
-            }
-
-            if (StorageItemHelpers.Exists(this._collectionFolderPath))
-            {
-                this._innerStorageFolder = await StorageItemHelpers.ToStorageItem<StorageFolder>(this._collectionFolderPath);
-            }
-
-            if (_innerStorageFolder == null)
-            {
-                ErrorIconVisibility = Visibility.Visible;
-                CanOpenCollection = false; // Lock the collection and prevent from opening it
-                return false;
-            }
-
-            return true;
-        }
 
         private async Task InitItems()
         {
@@ -403,7 +381,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             Items.Clear();
             foreach (var item in files)
             {
-                Items.Add(new CollectionsContainerItemModel(item));
+                Items.Add(new CollectionsContainerItemViewModel(item));
             }
 
             // TODO: save index somewhere to file?
@@ -434,17 +412,23 @@ namespace ClipboardCanvas.ViewModels.UserControls
             return false;
         }
 
-        public async Task InitializeStorageFolder()
+        public async Task<bool> InitializeInnerStorageFolder()
         {
             if (_innerStorageFolder != null)
             {
-                return;
+                return true;
             }
 
-            if (! await InitInnerStorageFolder())
+            this._innerStorageFolder = await StorageItemHelpers.ToStorageItem<StorageFolder>(this._collectionFolderPath);
+
+            if (_innerStorageFolder == null)
             {
                 ErrorIconVisibility = Visibility.Visible;
+                CanOpenCollection = false; // Lock the collection and prevent from opening it
+                return false;
             }
+
+            return true;
         }
 
         #endregion

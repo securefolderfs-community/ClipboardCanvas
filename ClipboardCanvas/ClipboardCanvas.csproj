@@ -275,7 +275,7 @@
     <Compile Include="ViewModels\UserControls\CanvasDisplay\TextCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\MediaCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CollectionPreviewItemViewModel.cs" />
-    <Compile Include="ViewModels\UserControls\CollectionsContainerItemModel.cs" />
+    <Compile Include="ViewModels\UserControls\CollectionsContainerItemViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CollectionsContainerViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CollectionsControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\DisplayControlViewModel.cs" />

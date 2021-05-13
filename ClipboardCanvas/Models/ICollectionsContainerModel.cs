@@ -14,7 +14,7 @@ namespace ClipboardCanvas.Models
     /// </summary>
     public interface ICollectionsContainerModel
     {
-        List<CollectionsContainerItemModel> Items { get; }
+        List<CollectionsContainerItemViewModel> Items { get; }
 
         bool CanOpenCollection { get; }
 
