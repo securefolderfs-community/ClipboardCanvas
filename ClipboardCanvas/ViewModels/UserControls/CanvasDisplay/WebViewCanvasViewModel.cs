@@ -80,10 +80,28 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Override
 
+        protected override async Task<SafeWrapperResult> SetDataInternal(DataPackageView dataPackage)
+        {
+            // We override the function there because if clipboard contains link, checking dataPackage.Contains() is true
+            // for some reason for both StandardDataFormats.Text and StandardDataFormats.StorageItems -> Since we know it's the text we must check it first
+            // to avoid exceptions and only then if not text, StandardDataFormats.StorageItems
+
+            if (dataPackage.Contains(StandardDataFormats.Text))
+            {
+                // Check for text
+                return await SetData(dataPackage);
+            }
+            else
+            {
+                // Check for storage items
+                return await base.SetDataInternal(dataPackage);
+            }
+        }
+
         protected override async Task<SafeWrapperResult> SetData(DataPackageView dataPackage)
         {
             SafeWrapper<string> text = await SafeWrapperRoutines.SafeWrapAsync(
-                   () => dataPackage.GetTextAsync().AsTask());
+                   async () => await dataPackage.GetTextAsync());
 
             if (_mode == WebViewCanvasMode.ReadWebsite)
             {

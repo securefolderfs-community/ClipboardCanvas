@@ -189,17 +189,22 @@ namespace ClipboardCanvas.ViewModels.Pages
 
                 if (draggedItems)
                 {
-                    if (!draggedItems.Result.Any((item) => item.Path == CollectionContainer.CurrentCanvas.File.Path))
+                    if (CollectionContainer.IsOnNewCanvas || (!CollectionContainer.IsOnNewCanvas && !draggedItems.Result.Any((item) => item.Path == CollectionContainer.CurrentCanvas.File.Path)))
                     {
                         e.AcceptedOperation = DataPackageOperation.Copy;
                         TitleText = DRAG_TITLE_TEXT;
-
-                        return;
+                    }
+                    else
+                    {
+                        e.AcceptedOperation = DataPackageOperation.None;
+                        TitleText = DEFAULT_TITLE_TEXT;
                     }
                 }
-
-                e.AcceptedOperation = DataPackageOperation.None;
-                TitleText = DEFAULT_TITLE_TEXT;
+                else
+                {
+                    e.AcceptedOperation = DataPackageOperation.Copy;
+                    TitleText = DRAG_TITLE_TEXT;
+                }
             }
             finally
             {
