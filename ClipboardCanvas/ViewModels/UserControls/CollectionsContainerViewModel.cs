@@ -107,7 +107,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Events
 
-        public event EventHandler<ItemsRefreshRequestedEventArgs> OnItemsRefreshRequestedEvent;
+        public event EventHandler<CollectionItemsInitializationStartedEventArgs> OnCollectionItemsInitializationStartedEvent;
+
+        public event EventHandler<CollectionItemsInitializationFinishedEventArgs> OnCollectionItemsInitializationFinishedEvent;
 
         public event EventHandler<CheckRenameCollectionRequestedEventArgs> OnCheckRenameCollectionRequestedEvent;
 
@@ -382,6 +384,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async Task InitItems()
         {
+            OnCollectionItemsInitializationStartedEvent?.Invoke(this, new CollectionItemsInitializationStartedEventArgs(this));
+
             IsLoadingItems = true;
 
             IEnumerable<StorageFile> files = await this._innerStorageFolder.GetFilesAsync();
@@ -398,7 +402,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             // TODO: save index somewhere to file?
             _currentIndex = Items.Count; // - exceeds possible index range because we also want to be on unfilled canvas
 
-            OnItemsRefreshRequestedEvent?.Invoke(this, new ItemsRefreshRequestedEventArgs(this));
+            OnCollectionItemsInitializationFinishedEvent?.Invoke(this, new CollectionItemsInitializationFinishedEventArgs(this));
 
             IsLoadingItems = false;
         }

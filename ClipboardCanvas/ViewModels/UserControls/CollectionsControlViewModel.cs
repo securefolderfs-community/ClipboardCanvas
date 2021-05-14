@@ -78,7 +78,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public static event EventHandler<CollectionAddedEventArgs> OnCollectionAddedEvent;
 
-        public static event EventHandler<CollectionItemsRefreshRequestedEventArgs> OnCollectionItemsRefreshRequestedEvent;
+        public static event EventHandler<CollectionItemsInitializationStartedEventArgs> OnCollectionItemsInitializationStartedEvent;
+
+        public static event EventHandler<CollectionItemsInitializationFinishedEventArgs> OnCollectionItemsInitializationFinishedEvent;
 
         public static event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
 
@@ -138,9 +140,14 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        private static void Container_OnItemsRefreshRequestedEvent(object sender, ItemsRefreshRequestedEventArgs e)
+        private static void Container_OnCollectionItemsInitializationFinishedEvent(object sender, CollectionItemsInitializationFinishedEventArgs e)
         {
-            OnCollectionItemsRefreshRequestedEvent?.Invoke(null, new CollectionItemsRefreshRequestedEventArgs(e.containerViewModel));
+            OnCollectionItemsInitializationFinishedEvent?.Invoke(null, e);
+        }
+
+        private static void Container_OnCollectionItemsInitializationStartedEvent(object sender, CollectionItemsInitializationStartedEventArgs e)
+        {
+            OnCollectionItemsInitializationStartedEvent?.Invoke(null, e);
         }
 
         #endregion
@@ -176,7 +183,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             TrySetSelectedItem();
 
-            OnCollectionItemsRefreshRequestedEvent?.Invoke(null, new CollectionItemsRefreshRequestedEventArgs(CurrentCollection));
+            OnCollectionItemsInitializationFinishedEvent?.Invoke(null, new CollectionItemsInitializationFinishedEventArgs(CurrentCollection));
         }
 
         public static void TrySetSelectedItem()
@@ -209,7 +216,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 return;
             }
 
-            container.OnItemsRefreshRequestedEvent -= Container_OnItemsRefreshRequestedEvent;
+            container.OnCollectionItemsInitializationStartedEvent -= Container_OnCollectionItemsInitializationStartedEvent;
+            container.OnCollectionItemsInitializationFinishedEvent -= Container_OnCollectionItemsInitializationFinishedEvent;
             container.OnCheckRenameCollectionRequestedEvent -= Container_OnCheckRenameCollectionRequestedEvent;
             container.OnRemoveCollectionRequestedEvent -= Container_OnRemoveCollectionRequestedEvent;
             container.OnOpenNewCanvasRequestedEvent -= Container_OnOpenNewCanvasRequestedEvent;
@@ -231,7 +239,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 return false;
             }
 
-            container.OnItemsRefreshRequestedEvent += Container_OnItemsRefreshRequestedEvent;
+            container.OnCollectionItemsInitializationStartedEvent += Container_OnCollectionItemsInitializationStartedEvent;
+            container.OnCollectionItemsInitializationFinishedEvent += Container_OnCollectionItemsInitializationFinishedEvent;
             container.OnCheckRenameCollectionRequestedEvent += Container_OnCheckRenameCollectionRequestedEvent;
             container.OnRemoveCollectionRequestedEvent += Container_OnRemoveCollectionRequestedEvent;
             container.OnOpenNewCanvasRequestedEvent += Container_OnOpenNewCanvasRequestedEvent;

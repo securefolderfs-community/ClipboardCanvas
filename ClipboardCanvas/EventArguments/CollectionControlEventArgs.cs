@@ -44,14 +44,4 @@ namespace ClipboardCanvas.EventArguments.CollectionControl
             this.openedCollection = openedCollection;
         }
     }
-
-    public class CollectionItemsRefreshRequestedEventArgs : EventArgs
-    {
-        public readonly ICollectionsContainerModel selectedCollection;
-
-        public CollectionItemsRefreshRequestedEventArgs(ICollectionsContainerModel selectedCollection)
-        {
-            this.selectedCollection = selectedCollection;
-        }
-    }
 }

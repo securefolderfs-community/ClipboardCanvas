@@ -202,12 +202,28 @@ namespace ClipboardCanvas.ViewModels.UserControls
             OpenNewCanvas();
         }
 
-        private void CollectionsControlViewModel_OnCollectionItemsRefreshRequestedEvent(object sender, CollectionItemsRefreshRequestedEventArgs e)
+
+        private void CollectionsControlViewModel_OnCollectionItemsInitializationFinishedEvent(object sender, CollectionItemsInitializationFinishedEventArgs e)
         {
-            if (NavigationToolBarControlModel != null && e.selectedCollection != null)
+            if (NavigationToolBarControlModel != null)
             {
+                // Re-enable navigation after items have loaded
+                NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = false;
+                NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading = false;
                 CheckNavigation();
             }
+        }
+
+        private void CollectionsControlViewModel_OnCollectionItemsInitializationStartedEvent(object sender, CollectionItemsInitializationStartedEventArgs e)
+        {
+            // Show navigation loading
+            NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = true;
+            if (!_currentCollectionContainer?.IsOnNewCanvas ?? false)
+            {
+                // Also show loading for forward button if not on new canvas
+                NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading = true;
+            }
+            CheckNavigation();
         }
 
         private void CollectionsControlViewModel_OnCollectionAddedEvent(object sender, CollectionAddedEventArgs e)
@@ -356,13 +372,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             if (!_currentCollectionContainer.CanvasInitialized)
             {
-                // Show navigation loading
-                NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = true;
-
                 await _currentCollectionContainer.InitializeItems();
-
-                // Re-enable navigation after items have loaded
-                NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = false;
             }
 
             return true;
@@ -372,8 +382,23 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             if (_currentCollectionContainer != null)
             {
-                NavigationToolBarControlModel.NavigationControlModel.NavigateBackEnabled = _currentCollectionContainer.HasBack();
-                NavigationToolBarControlModel.NavigationControlModel.NavigateForwardEnabled = _currentCollectionContainer.HasNext();
+                if (NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading)
+                {
+                    NavigationToolBarControlModel.NavigationControlModel.NavigateBackEnabled = false;
+                }
+                else
+                {
+                    NavigationToolBarControlModel.NavigationControlModel.NavigateBackEnabled = _currentCollectionContainer.HasBack();
+                }
+
+                if (NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading)
+                {
+                    NavigationToolBarControlModel.NavigationControlModel.NavigateForwardEnabled = false;
+                }
+                else
+                {
+                    NavigationToolBarControlModel.NavigationControlModel.NavigateForwardEnabled = _currentCollectionContainer.HasNext();
+                }
             }
         }
 
@@ -514,7 +539,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CollectionsControlViewModel.OnCollectionSelectionChangedEvent += CollectionsControlViewModel_OnCollectionSelectionChangedEvent;
             CollectionsControlViewModel.OnCollectionRemovedEvent += CollectionsControlViewModel_OnCollectionRemovedEvent;
             CollectionsControlViewModel.OnCollectionAddedEvent += CollectionsControlViewModel_OnCollectionAddedEvent;
-            CollectionsControlViewModel.OnCollectionItemsRefreshRequestedEvent += CollectionsControlViewModel_OnCollectionItemsRefreshRequestedEvent;
+            CollectionsControlViewModel.OnCollectionItemsInitializationStartedEvent += CollectionsControlViewModel_OnCollectionItemsInitializationStartedEvent;
+            CollectionsControlViewModel.OnCollectionItemsInitializationFinishedEvent += CollectionsControlViewModel_OnCollectionItemsInitializationFinishedEvent;
             CollectionsControlViewModel.OnOpenNewCanvasRequestedEvent += CollectionsControlViewModel_OnOpenNewCanvasRequestedEventEvent;
         }
 
@@ -524,7 +550,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CollectionsControlViewModel.OnCollectionSelectionChangedEvent -= CollectionsControlViewModel_OnCollectionSelectionChangedEvent;
             CollectionsControlViewModel.OnCollectionRemovedEvent -= CollectionsControlViewModel_OnCollectionRemovedEvent;
             CollectionsControlViewModel.OnCollectionAddedEvent -= CollectionsControlViewModel_OnCollectionAddedEvent;
-            CollectionsControlViewModel.OnCollectionItemsRefreshRequestedEvent -= CollectionsControlViewModel_OnCollectionItemsRefreshRequestedEvent;
+            CollectionsControlViewModel.OnCollectionItemsInitializationStartedEvent -= CollectionsControlViewModel_OnCollectionItemsInitializationStartedEvent;
+            CollectionsControlViewModel.OnCollectionItemsInitializationFinishedEvent -= CollectionsControlViewModel_OnCollectionItemsInitializationFinishedEvent;
             CollectionsControlViewModel.OnOpenNewCanvasRequestedEvent -= CollectionsControlViewModel_OnOpenNewCanvasRequestedEventEvent;
         }
 

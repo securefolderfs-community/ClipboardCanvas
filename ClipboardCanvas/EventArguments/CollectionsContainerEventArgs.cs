@@ -4,16 +4,6 @@ using System;
 
 namespace ClipboardCanvas.EventArguments.CollectionsContainer
 {
-    public class ItemsRefreshRequestedEventArgs : EventArgs
-    {
-        public readonly CollectionsContainerViewModel containerViewModel;
-
-        public ItemsRefreshRequestedEventArgs(CollectionsContainerViewModel containerViewModel)
-        {
-            this.containerViewModel = containerViewModel;
-        }
-    }
-
     public class RemoveCollectionRequestedEventArgs : EventArgs
     {
         public readonly CollectionsContainerViewModel containerViewModel;
