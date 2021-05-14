@@ -374,6 +374,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
             {
                 await _currentCollectionContainer.InitializeItems();
             }
+            else
+            {
+                NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = false;
+                NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading = false;
+                CheckNavigation();
+            }
 
             return true;
         }
