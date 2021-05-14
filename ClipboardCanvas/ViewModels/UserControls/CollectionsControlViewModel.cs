@@ -84,6 +84,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public static event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
 
+        public static event EventHandler<GoToHomePageRequestedEventArgs> OnGoToHomePageRequestedEvent;
+
         #endregion
 
         #region Commands
@@ -113,9 +115,14 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Event Handlers
 
+        private static void Container_OnGoToHomePageRequestedEvent(object sender, GoToHomePageRequestedEventArgs e)
+        {
+            OnGoToHomePageRequestedEvent?.Invoke(sender, e);
+        }
+
         private static void Container_OnOpenNewCanvasRequestedEvent(object sender, OpenNewCanvasRequestedEventArgs e)
         {
-            OnOpenNewCanvasRequestedEvent?.Invoke(null, e);
+            OnOpenNewCanvasRequestedEvent?.Invoke(sender, e);
         }
 
         private static void Container_OnRemoveCollectionRequestedEvent(object sender, RemoveCollectionRequestedEventArgs e)
@@ -142,12 +149,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private static void Container_OnCollectionItemsInitializationFinishedEvent(object sender, CollectionItemsInitializationFinishedEventArgs e)
         {
-            OnCollectionItemsInitializationFinishedEvent?.Invoke(null, e);
+            OnCollectionItemsInitializationFinishedEvent?.Invoke(sender, e);
         }
 
         private static void Container_OnCollectionItemsInitializationStartedEvent(object sender, CollectionItemsInitializationStartedEventArgs e)
         {
-            OnCollectionItemsInitializationStartedEvent?.Invoke(null, e);
+            OnCollectionItemsInitializationStartedEvent?.Invoke(sender, e);
         }
 
         #endregion
@@ -221,6 +228,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             container.OnCheckRenameCollectionRequestedEvent -= Container_OnCheckRenameCollectionRequestedEvent;
             container.OnRemoveCollectionRequestedEvent -= Container_OnRemoveCollectionRequestedEvent;
             container.OnOpenNewCanvasRequestedEvent -= Container_OnOpenNewCanvasRequestedEvent;
+            container.OnGoToHomePageRequestedEvent -= Container_OnGoToHomePageRequestedEvent;
 
             int index = Items.IndexOf(container);
             container.Dispose();
@@ -244,6 +252,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             container.OnCheckRenameCollectionRequestedEvent += Container_OnCheckRenameCollectionRequestedEvent;
             container.OnRemoveCollectionRequestedEvent += Container_OnRemoveCollectionRequestedEvent;
             container.OnOpenNewCanvasRequestedEvent += Container_OnOpenNewCanvasRequestedEvent;
+            container.OnGoToHomePageRequestedEvent += Container_OnGoToHomePageRequestedEvent;
             await container.InitializeInnerStorageFolder();
 
             Items.Add(container);

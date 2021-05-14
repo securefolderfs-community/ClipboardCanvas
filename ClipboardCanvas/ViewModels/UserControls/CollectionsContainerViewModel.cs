@@ -117,6 +117,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
 
+        public event EventHandler<GoToHomePageRequestedEventArgs> OnGoToHomePageRequestedEvent;
+
         #endregion
 
         #region Commands
@@ -338,6 +340,15 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             if (result == OperationErrorCode.NotFound) // A canvas is missing, meaning we need to reload all other items
             {
+                if (!StorageItemHelpers.Exists(_innerStorageFolder?.Path))
+                {
+                    SetCollectionError(true);
+
+                    // TODO: Pass error code here in the future
+                    OnGoToHomePageRequestedEvent?.Invoke(this, new GoToHomePageRequestedEventArgs());
+                    return;
+                }
+
                 // Save indexes for later
                 int savedIndex = _currentIndex;
                 int savedItemsCount = Items.Count;
@@ -407,6 +418,20 @@ namespace ClipboardCanvas.ViewModels.UserControls
             IsLoadingItems = false;
         }
 
+        private void SetCollectionError(bool isError)
+        {
+            if (isError)
+            {
+                ErrorIconVisibility = Visibility.Visible;
+                CanOpenCollection = false;
+            }
+            else
+            {
+                ErrorIconVisibility = Visibility.Collapsed;
+                CanOpenCollection = true;
+            }
+        }
+
         #endregion
 
         #region Public Helpers
@@ -440,8 +465,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             if (_innerStorageFolder == null)
             {
-                ErrorIconVisibility = Visibility.Visible;
-                CanOpenCollection = false; // Lock the collection and prevent from opening it
+                // Lock the collection and prevent from opening it
+                SetCollectionError(true);
+
                 return false;
             }
 

@@ -196,12 +196,15 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region CollectionsControlViewModel
 
+        private async void CollectionsControlViewModel_OnGoToHomePageRequestedEvent(object sender, GoToHomePageRequestedEventArgs e)
+        {
+            await OpenPage(DisplayPageType.HomePage);
+        }
 
         private void CollectionsControlViewModel_OnOpenNewCanvasRequestedEventEvent(object sender, OpenNewCanvasRequestedEventArgs e)
         {
             OpenNewCanvas();
         }
-
 
         private void CollectionsControlViewModel_OnCollectionItemsInitializationFinishedEvent(object sender, CollectionItemsInitializationFinishedEventArgs e)
         {
@@ -548,6 +551,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CollectionsControlViewModel.OnCollectionItemsInitializationStartedEvent += CollectionsControlViewModel_OnCollectionItemsInitializationStartedEvent;
             CollectionsControlViewModel.OnCollectionItemsInitializationFinishedEvent += CollectionsControlViewModel_OnCollectionItemsInitializationFinishedEvent;
             CollectionsControlViewModel.OnOpenNewCanvasRequestedEvent += CollectionsControlViewModel_OnOpenNewCanvasRequestedEventEvent;
+            CollectionsControlViewModel.OnGoToHomePageRequestedEvent += CollectionsControlViewModel_OnGoToHomePageRequestedEvent;
         }
 
         private void UnhookCollectionsEvents()
@@ -559,6 +563,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CollectionsControlViewModel.OnCollectionItemsInitializationStartedEvent -= CollectionsControlViewModel_OnCollectionItemsInitializationStartedEvent;
             CollectionsControlViewModel.OnCollectionItemsInitializationFinishedEvent -= CollectionsControlViewModel_OnCollectionItemsInitializationFinishedEvent;
             CollectionsControlViewModel.OnOpenNewCanvasRequestedEvent -= CollectionsControlViewModel_OnOpenNewCanvasRequestedEventEvent;
+            CollectionsControlViewModel.OnGoToHomePageRequestedEvent -= CollectionsControlViewModel_OnGoToHomePageRequestedEvent;
         }
 
         private void HookCanvasControlEvents()

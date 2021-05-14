@@ -76,6 +76,7 @@
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Source="{Binding IconImage}"
+                                    Stretch="UniformToFill"
                                     Visibility="{Binding IconImageVisibility}" />
                             </Grid>
                             <TextBlock

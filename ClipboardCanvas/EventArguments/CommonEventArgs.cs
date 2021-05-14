@@ -14,6 +14,14 @@ namespace ClipboardCanvas.EventArguments
         }
     }
 
+    public class GoToHomePageRequestedEventArgs : EventArgs
+    {
+        public GoToHomePageRequestedEventArgs()
+        {
+
+        }
+    }
+
     public class CollectionItemsInitializationStartedEventArgs : EventArgs
     {
         public readonly CollectionsContainerViewModel containerViewModel;
