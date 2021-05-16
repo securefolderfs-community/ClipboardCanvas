@@ -20,6 +20,13 @@ namespace ClipboardCanvas.Pages
             set => DataContext = value;
         }
 
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            CollectionsWidget.ViewModel.Dispose();
+
+            base.OnNavigatingFrom(e);
+        }
+
         public HomePage()
         {
             this.InitializeComponent();

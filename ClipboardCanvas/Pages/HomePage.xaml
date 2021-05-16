@@ -10,6 +10,6 @@
     mc:Ignorable="d">
 
     <Border Padding="15,10,15,10">
-        <uc:CollectionsControl Grid.Row="1" />
+        <uc:CollectionsControl x:Name="CollectionsWidget" Grid.Row="1" />
     </Border>
 </Page>
