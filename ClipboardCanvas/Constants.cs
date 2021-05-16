@@ -32,8 +32,6 @@
         public static class Collections
         {
             public const string DEFAULT_COLLECTION_TOKEN = "$DEFAULT_COLLECTION$";
-
-            public const int NEW_CANVAS_SPECIAL_INDEX = -1;
         }
     }
 }

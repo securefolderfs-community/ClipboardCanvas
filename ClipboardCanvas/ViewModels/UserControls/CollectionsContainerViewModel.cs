@@ -32,7 +32,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private StorageFolder _innerStorageFolder;
 
-        private int _currentIndex = Constants.Collections.NEW_CANVAS_SPECIAL_INDEX;
+        private int _currentIndex;
 
         private string _collectionFolderPath;
 
@@ -50,7 +50,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public bool CanOpenCollection { get; private set; } = true;
 
-        public bool IsOnNewCanvas => this._currentIndex == Constants.Collections.NEW_CANVAS_SPECIAL_INDEX || this._currentIndex == Items.Count;
+        public bool IsOnNewCanvas => this._currentIndex == Items.Count;
 
         public bool CanvasInitialized { get; private set; }
 
@@ -418,18 +418,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
 
             // TODO: save index somewhere to file?
-            if (_currentIndex == Constants.Collections.NEW_CANVAS_SPECIAL_INDEX)
-            {
-                _currentIndex = Items.Count; // - exceeds possible index range because we also want to be on unfilled canvas
-            }
-            else
-            {
-                // Calculate new index
-                int newItemsCount = Items.Count;
-                int newIndex = savedIndex - (savedItemsCount - newItemsCount);
-                
-                this._currentIndex = Extensions.CollectionExtensions.IndexFitBounds(this.Items.Count, newIndex);
-            }
+            // Calculate new index
+            int newItemsCount = Items.Count;
+            int newIndex = savedIndex - (savedItemsCount - newItemsCount);
+            
+            this._currentIndex = Extensions.CollectionExtensions.IndexFitBounds(this.Items.Count, newIndex);
 
             OnCollectionItemsInitializationFinishedEvent?.Invoke(this, new CollectionItemsInitializationFinishedEventArgs(this));
 
