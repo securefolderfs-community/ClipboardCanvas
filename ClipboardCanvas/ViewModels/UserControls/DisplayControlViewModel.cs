@@ -370,11 +370,22 @@ namespace ClipboardCanvas.ViewModels.UserControls
             // Navigate
             CurrentPageNavigation = new DisplayFrameNavigationDataModel(pageType, _currentCollectionContainer, simulateNavigation);
 
-            if (!_currentCollectionContainer.CanvasInitialized)
+            if (_currentCollectionContainer.CanvasInitializing)
+            {
+                // Show navigation loading
+                NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = true;
+                if (!_currentCollectionContainer.IsOnNewCanvas)
+                {
+                    // Also show loading for forward button if not on new canvas
+                    NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading = true;
+                }
+                CheckNavigation();
+            }
+            else if (!_currentCollectionContainer.CanvasInitialized)
             {
                 await _currentCollectionContainer.InitializeItems();
             }
-            else if (!_currentCollectionContainer.CanvasInitializing)
+            else
             {
                 NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = false;
                 NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading = false;

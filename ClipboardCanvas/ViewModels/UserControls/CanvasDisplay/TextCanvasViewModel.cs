@@ -150,7 +150,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             base.Dispose();
 
-            _ContentText = null;
+            ContentText = null;
         }
 
         #endregion

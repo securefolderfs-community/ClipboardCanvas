@@ -446,7 +446,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             UninitializeExtensionsForViewModel();
             UnhookEvents();
-            DiscardData();
+            CanvasViewModel?.Dispose();
         }
 
         #endregion

@@ -100,7 +100,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             base.Dispose();
 
             _ContentMedia?.Dispose();
-            _ContentMedia = null;
+            ContentMedia = null;
         }
 
         #endregion

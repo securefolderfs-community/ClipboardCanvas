@@ -241,7 +241,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             _dataStream = null;
             _softwareBitmap = null;
-            _ContentImage = null;
+            ContentImage = null;
         }
 
         #endregion

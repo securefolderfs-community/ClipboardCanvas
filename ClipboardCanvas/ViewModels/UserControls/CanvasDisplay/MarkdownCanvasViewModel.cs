@@ -118,7 +118,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             base.Dispose();
 
-            _TextMarkdown = null;
+            TextMarkdown = null;
         }
 
         #endregion
