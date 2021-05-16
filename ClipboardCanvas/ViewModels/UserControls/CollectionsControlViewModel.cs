@@ -25,8 +25,16 @@ using Windows.ApplicationModel.DataTransfer;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
-    public class CollectionsControlViewModel : ObservableObject
+    public class CollectionsControlViewModel : ObservableObject, IDisposable
     {
+        #region Private Members
+
+        private static bool _itemAddedInternally;
+
+        private static int _internalCollectionsCount;
+
+        #endregion
+
         #region Public Properties
 
         // Collection of folders (canvas collection)
@@ -104,6 +112,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public CollectionsControlViewModel()
         {
+            HookEvents();
+
             // Create commands
             DragOverCommand = new RelayCommand<DragEventArgs>(DragOver);
             DropCommand = new RelayCommand<DragEventArgs>(Drop);
@@ -188,6 +198,16 @@ namespace ClipboardCanvas.ViewModels.UserControls
         #endregion
 
         #region Event Handlers
+
+        private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (!_itemAddedInternally && _internalCollectionsCount < Items.Count)
+            {
+                CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
+            }
+
+            _internalCollectionsCount = Items.Count;
+        }
 
         private static void Container_OnGoToHomePageRequestedEvent(object sender, GoToHomePageRequestedEventArgs e)
         {
@@ -332,7 +352,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
             container.OnGoToHomePageRequestedEvent += Container_OnGoToHomePageRequestedEvent;
             await container.InitializeInnerStorageFolder();
 
+            _itemAddedInternally = true;
             Items.Add(container);
+            _itemAddedInternally = false;
 
             OnCollectionAddedEvent?.Invoke(null, new CollectionAddedEventArgs(container));
 
@@ -364,6 +386,30 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
 
             return false;
+        }
+
+        #endregion
+
+        #region Event Hooks
+
+        private void HookEvents()
+        {
+            UnhookEvents();
+            Items.CollectionChanged += Items_CollectionChanged;
+        }
+
+        private void UnhookEvents()
+        {
+            Items.CollectionChanged -= Items_CollectionChanged;
+        }
+
+        #endregion
+
+        #region IDisposable
+
+        public void Dispose()
+        {
+            UnhookEvents();
         }
 
         #endregion

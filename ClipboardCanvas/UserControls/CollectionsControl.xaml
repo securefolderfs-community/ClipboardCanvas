@@ -28,10 +28,14 @@
                 <icore:InvokeCommandAction Command="{x:Bind ViewModel.DropCommand}" />
             </icore:EventTriggerBehavior>
         </i:Interaction.Behaviors>
+
         <GridView
+            CanReorderItems="True"
             IsDoubleTapEnabled="True"
+            AllowDrop="True"
             IsItemClickEnabled="True"
             ItemsSource="{x:Bind vm:CollectionsControlViewModel.Items}"
+            ReorderMode="Enabled"
             SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
             SelectionMode="Single">
             <i:Interaction.Behaviors>
