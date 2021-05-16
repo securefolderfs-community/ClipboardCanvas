@@ -20,6 +20,8 @@ using ClipboardCanvas.EventArguments.CollectionControl;
 using ClipboardCanvas.EventArguments.CollectionsContainer;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
+using Windows.UI.Xaml;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -90,6 +92,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Commands
 
+        public ICommand DragOverCommand { get; private set; }
+
+        public ICommand DropCommand { get; private set; }
+
         public ICommand DoubleTappedCommand { get; private set; }
 
         #endregion
@@ -99,12 +105,80 @@ namespace ClipboardCanvas.ViewModels.UserControls
         public CollectionsControlViewModel()
         {
             // Create commands
+            DragOverCommand = new RelayCommand<DragEventArgs>(DragOver);
+            DropCommand = new RelayCommand<DragEventArgs>(Drop);
             DoubleTappedCommand = new RelayCommand<DoubleTappedRoutedEventArgs>(DoubleTapped);
         }
 
         #endregion
 
         #region Command Implementation
+
+        private async void DragOver(DragEventArgs e)
+        {
+            DragOperationDeferral deferral = null;
+
+            try
+            {
+                deferral = e.GetDeferral();
+
+                if (e.DataView.Contains(StandardDataFormats.StorageItems))
+                {
+                    SafeWrapper<IReadOnlyList<IStorageItem>> items = await SafeWrapperRoutines.SafeWrapAsync(async () =>
+                        await e.DataView.GetStorageItemsAsync());
+
+                    if (items)
+                    {
+                        if (!items.Result.Any((item) => item is not IStorageFolder))
+                        {
+                            e.AcceptedOperation = DataPackageOperation.Move;
+                            return;
+                        }
+                    }
+                }
+
+                e.AcceptedOperation = DataPackageOperation.None;
+            }
+            finally
+            {
+                e.Handled = true;
+                deferral?.Complete();
+            }
+        }
+
+        private async void Drop(DragEventArgs e)
+        {
+            DragOperationDeferral deferral = null;
+
+            try
+            {
+                deferral = e.GetDeferral();
+
+                SafeWrapper<IReadOnlyList<IStorageItem>> items = await SafeWrapperRoutines.SafeWrapAsync(async () =>
+                        await e.DataView.GetStorageItemsAsync());
+
+                if (!items)
+                {
+                    return;
+                }
+
+                CollectionsContainerViewModel collection;
+                foreach (var item in items.Result)
+                {
+                    collection = new CollectionsContainerViewModel(item as StorageFolder);
+
+                    await AddCollection(collection, true);
+                }
+
+                // We need to update saved collections because we suppressed that in AddCollection()
+                CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
+            }
+            finally
+            {
+                e.Handled = true;
+                deferral?.Complete();
+            }
+        }
 
         private void DoubleTapped(DoubleTappedRoutedEventArgs e)
         {
@@ -179,14 +253,17 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CollectionsContainerViewModel collection;
 
             collection = new CollectionsContainerViewModel(defaultCollectionFolder, true);
-            await AddCollection(collection);
+            await AddCollection(collection, true);
 
             foreach (var item in savedCollectionPaths)
             {
                 collection = new CollectionsContainerViewModel(item);
 
-                await AddCollection(collection);
+                await AddCollection(collection, true);
             }
+
+            // We need to update saved collections because we suppressed that in AddCollection()
+            CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
 
             TrySetSelectedItem();
 
@@ -240,12 +317,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
             OnCollectionRemovedEvent?.Invoke(null, new CollectionRemovedEventArgs(container));
         }
 
-        public static async Task<bool> AddCollection(CollectionsContainerViewModel container)
+        public static async Task<bool> AddCollection(CollectionsContainerViewModel container, bool suppressSettingsUpdate = false)
         {
             if (Items.Any((item) => item.DangerousGetCollectionFolder()?.Path == container.DangerousGetCollectionFolder()?.Path))
             {
                 return false;
-            }
+            } 
 
             container.OnCollectionItemsInitializationStartedEvent += Container_OnCollectionItemsInitializationStartedEvent;
             container.OnCollectionItemsInitializationFinishedEvent += Container_OnCollectionItemsInitializationFinishedEvent;
@@ -259,7 +336,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             OnCollectionAddedEvent?.Invoke(null, new CollectionAddedEventArgs(container));
 
-            CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
+            if (!suppressSettingsUpdate)
+            {
+                CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
+            }
 
             return true;
         }

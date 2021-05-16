@@ -19,7 +19,15 @@
         <vc:SelectedCollectionsContainerConverter x:Key="SelectedCollectionsContainerConverter" />
     </UserControl.Resources>
 
-    <Grid>
+    <Grid AllowDrop="True">
+        <i:Interaction.Behaviors>
+            <icore:EventTriggerBehavior EventName="DragOver">
+                <icore:InvokeCommandAction Command="{x:Bind ViewModel.DragOverCommand}" />
+            </icore:EventTriggerBehavior>
+            <icore:EventTriggerBehavior EventName="Drop">
+                <icore:InvokeCommandAction Command="{x:Bind ViewModel.DropCommand}" />
+            </icore:EventTriggerBehavior>
+        </i:Interaction.Behaviors>
         <GridView
             IsDoubleTapEnabled="True"
             IsItemClickEnabled="True"
