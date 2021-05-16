@@ -300,7 +300,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public bool HasBack()
         {
-            return _currentIndex != Constants.Collections.NEW_CANVAS_SPECIAL_INDEX && _currentIndex > 0;
+            return _currentIndex > 0;
         }
 
         public void NavigateFirst(IPasteCanvasModel pasteCanvasModel)
