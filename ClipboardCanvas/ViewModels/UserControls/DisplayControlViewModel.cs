@@ -208,20 +208,17 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void CollectionsControlViewModel_OnCollectionItemsInitializationFinishedEvent(object sender, CollectionItemsInitializationFinishedEventArgs e)
         {
-            if (NavigationToolBarControlModel != null)
-            {
-                // Re-enable navigation after items have loaded
-                NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = false;
-                NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading = false;
-                CheckNavigation();
-            }
+            // Re-enable navigation after items have loaded
+            NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = false;
+            NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading = false;
+            CheckNavigation();
         }
 
         private void CollectionsControlViewModel_OnCollectionItemsInitializationStartedEvent(object sender, CollectionItemsInitializationStartedEventArgs e)
         {
             // Show navigation loading
             NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = true;
-            if (!_currentCollectionContainer?.IsOnNewCanvas ?? false)
+            if (!_currentCollectionContainer.IsOnNewCanvas)
             {
                 // Also show loading for forward button if not on new canvas
                 NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading = true;
@@ -377,7 +374,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             {
                 await _currentCollectionContainer.InitializeItems();
             }
-            else
+            else if (!_currentCollectionContainer.CanvasInitializing)
             {
                 NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = false;
                 NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading = false;

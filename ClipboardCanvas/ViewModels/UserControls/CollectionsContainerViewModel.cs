@@ -32,7 +32,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private StorageFolder _innerStorageFolder;
 
-        private int _currentIndex;
+        private int _currentIndex = Constants.Collections.NEW_CANVAS_SPECIAL_INDEX;
 
         private string _collectionFolderPath;
 
@@ -50,9 +50,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public bool CanOpenCollection { get; private set; } = true;
 
-        public bool IsOnNewCanvas => this._currentIndex == Items.Count;
+        public bool IsOnNewCanvas => this._currentIndex == Constants.Collections.NEW_CANVAS_SPECIAL_INDEX || this._currentIndex == Items.Count;
 
         public bool CanvasInitialized { get; private set; }
+
+        public bool CanvasInitializing { get; private set; }
 
         public string Name
         {
@@ -125,6 +127,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public ICommand OpenCollectionLocationCommand { get; private set; }
 
+        public ICommand RefreshCollectionCommand { get; private set; }
+
         public ICommand RenameCollectionCommand { get; private set; }
 
         public ICommand RemoveCollectionCommand { get; private set; }
@@ -166,6 +170,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             // Create commands
             OpenCollectionLocationCommand = new RelayCommand(OpenCollectionLocation);
+            RefreshCollectionCommand = new RelayCommand(RefreshCollection);
             RenameCollectionCommand = new RelayCommand(RenameCollection);
             RemoveCollectionCommand = new RelayCommand(RemoveCollection);
             EditBoxKeyDownCommand = new RelayCommand<KeyRoutedEventArgs>(EditBoxKeyDown);
@@ -184,6 +189,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
 
             await Launcher.LaunchFolderAsync(_innerStorageFolder);
+        }
+
+        private async void RefreshCollection()
+        {
+            CanvasInitialized = false;
+            await InitializeItems();
         }
 
         private void RenameCollection()
@@ -284,12 +295,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public bool HasNext()
         {
-            return _currentIndex <= (Items.Count - 1); // Return true if there's any item available or _currentIndex is on last filled canvas
+            return !IsOnNewCanvas;
         }
 
         public bool HasBack()
         {
-            return _currentIndex > 0;
+            return _currentIndex != Constants.Collections.NEW_CANVAS_SPECIAL_INDEX && _currentIndex > 0;
         }
 
         public void NavigateFirst(IPasteCanvasModel pasteCanvasModel)
@@ -349,22 +360,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     return;
                 }
 
-                // Save indexes for later
-                int savedIndex = _currentIndex;
-                int savedItemsCount = Items.Count;
-
                 // We must reload items because some were missing
                 await InitItems();
 
-                // Calculate new index
-                int newItemsCount = Items.Count;
-                int newIndex = savedIndex - (savedItemsCount - newItemsCount);
                 if (navigateNext)
                 {
-                    newIndex += savedItemsCount - newItemsCount;
+                    _currentIndex = Extensions.CollectionExtensions.IndexFitBounds(this.Items.Count + 1, _currentIndex + 1);
                 }
-
-                this._currentIndex = Extensions.CollectionExtensions.IndexFitBounds(this.Items.Count, newIndex);
 
                 if (!HasNext())
                 {
@@ -395,6 +397,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async Task InitItems()
         {
+            CanvasInitializing = true;
             OnCollectionItemsInitializationStartedEvent?.Invoke(this, new CollectionItemsInitializationStartedEventArgs(this));
 
             IsLoadingItems = true;
@@ -404,6 +407,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
             // Sort items from oldest (last canvas) to newest (first canvas)
             files = files.OrderBy((x) => x.DateCreated.DateTime);
 
+            // Save indexes for later
+            int savedIndex = _currentIndex;
+            int savedItemsCount = Items.Count;
+
             Items.Clear();
             foreach (var item in files)
             {
@@ -411,11 +418,23 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
 
             // TODO: save index somewhere to file?
-            _currentIndex = Items.Count; // - exceeds possible index range because we also want to be on unfilled canvas
+            if (_currentIndex == Constants.Collections.NEW_CANVAS_SPECIAL_INDEX)
+            {
+                _currentIndex = Items.Count; // - exceeds possible index range because we also want to be on unfilled canvas
+            }
+            else
+            {
+                // Calculate new index
+                int newItemsCount = Items.Count;
+                int newIndex = savedIndex - (savedItemsCount - newItemsCount);
+                
+                this._currentIndex = Extensions.CollectionExtensions.IndexFitBounds(this.Items.Count, newIndex);
+            }
 
             OnCollectionItemsInitializationFinishedEvent?.Invoke(this, new CollectionItemsInitializationFinishedEventArgs(this));
 
             IsLoadingItems = false;
+            CanvasInitializing = false;
         }
 
         private void SetCollectionError(bool isError)

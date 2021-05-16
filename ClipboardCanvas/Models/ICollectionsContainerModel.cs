@@ -22,6 +22,8 @@ namespace ClipboardCanvas.Models
 
         bool CanvasInitialized { get; }
 
+        bool CanvasInitializing { get; }
+
         string Name { get; }
 
         /// <summary>

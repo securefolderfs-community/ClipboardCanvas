@@ -132,6 +132,7 @@
                         <Border.ContextFlyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem Command="{Binding OpenCollectionLocationCommand}" Text="Open Collection location" />
+                                <MenuFlyoutItem Command="{Binding RefreshCollectionCommand}" Text="Refresh Collection's contents" />
                                 <MenuFlyoutSeparator />
                                 <MenuFlyoutItem Command="{Binding RenameCollectionCommand}" Text="Edit name" />
                                 <MenuFlyoutItem Command="{Binding RemoveCollectionCommand}" Text="Remove collection" />
