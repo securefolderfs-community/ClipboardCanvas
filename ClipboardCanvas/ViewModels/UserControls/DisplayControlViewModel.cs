@@ -16,6 +16,7 @@ using System.Collections;
 using System.Collections.Generic;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.EventArguments.CollectionControl;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -367,8 +368,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 }
             }
 
+            NavigationTransitionInfo navigationTransition = new DrillInNavigationTransitionInfo();
+
             // Navigate
-            CurrentPageNavigation = new DisplayFrameNavigationDataModel(pageType, _currentCollectionContainer, simulateNavigation);
+            CurrentPageNavigation = new DisplayFrameNavigationDataModel(pageType, _currentCollectionContainer, navigationTransition, simulateNavigation);
 
             if (_currentCollectionContainer.CanvasInitializing)
             {

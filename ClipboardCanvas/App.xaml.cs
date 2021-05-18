@@ -1,4 +1,5 @@
 ﻿using ClipboardCanvas.ApplicationSettings;
+using ClipboardCanvas.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -26,6 +27,8 @@ namespace ClipboardCanvas
     sealed partial class App : Application
     {
         public static SettingsInstance AppSettings = new SettingsInstance();
+
+        public static ILogger ExceptionLogger = new ExceptionLogger();
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -91,6 +94,14 @@ namespace ClipboardCanvas
 
         private void LogExceptionToFile(Exception e)
         {
+            string exceptionString = "";
+
+            exceptionString += $"HRESULT {e.HResult}\n";
+            exceptionString += $"MESSAGE {e.Message}\n";
+            exceptionString += $"STACKTRACE {e.StackTrace}\n";
+            exceptionString += $"SOURCE {e.Source}\n";
+
+            ExceptionLogger.Log(exceptionString);
         }
 
         /// <summary>

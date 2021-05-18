@@ -30,9 +30,9 @@
         </i:Interaction.Behaviors>
 
         <GridView
+            AllowDrop="True"
             CanReorderItems="True"
             IsDoubleTapEnabled="True"
-            AllowDrop="True"
             IsItemClickEnabled="True"
             ItemsSource="{x:Bind vm:CollectionsControlViewModel.Items}"
             ReorderMode="Enabled"
