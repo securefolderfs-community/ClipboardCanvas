@@ -367,6 +367,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 {
                     _currentIndex = Extensions.CollectionExtensions.IndexFitBounds(this.Items.Count + 1, _currentIndex + 1);
                 }
+                else
+                {
+                    _currentIndex = Extensions.CollectionExtensions.IndexFitBounds(this.Items.Count + 1, _currentIndex - 1);
+                }
 
                 if (!HasNext())
                 {
