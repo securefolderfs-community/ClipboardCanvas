@@ -23,6 +23,12 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
                 {
                     // Reference File, get the destination file extension
                     ReferenceFile referenceFile = await ReferenceFile.GetFile(file);
+
+                    if (referenceFile.ReferencedFile == null)
+                    {
+                        return null;
+                    }
+
                     ext = Path.GetExtension(referenceFile.ReferencedFile.Path);
                 }
 

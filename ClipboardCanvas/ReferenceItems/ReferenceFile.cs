@@ -27,19 +27,10 @@ namespace ClipboardCanvas.ReferenceItems
             this.ReferencedFile = referencedFile;
         }
 
-        public async Task<bool> UpdateReferenceFile(ReferenceFileData referenceFileData)
+        public async Task UpdateReferenceFile(ReferenceFileData referenceFileData)
         {
-            StorageFile file = await StorageItemHelpers.ToStorageItem<StorageFile>(referenceFileData.path);
-
-            if (file == null)
-            {
-                return false;
-            }
-
             string serialized = JsonConvert.SerializeObject(referenceFileData, Formatting.Indented);
             await FileIO.WriteTextAsync(_innerFile, serialized);
-
-            return true;
         }
 
         internal static async Task<ReferenceFileData> ReadData(StorageFile referenceFile)

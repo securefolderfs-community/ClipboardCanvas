@@ -58,6 +58,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
             if (ReferenceFile.IsReferenceFile(File))
             {
                 ReferenceFile referenceFile = await ReferenceFile.GetFile(File);
+
+                if (referenceFile.ReferencedFile == null)
+                {
+                    return;
+                }
+
                 folder = await StorageItemHelpers.ToStorageItem<StorageFolder>(Path.GetDirectoryName(referenceFile.ReferencedFile.Path));
                 fileToSelect = referenceFile.ReferencedFile;
             }
