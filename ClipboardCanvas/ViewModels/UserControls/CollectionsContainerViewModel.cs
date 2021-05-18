@@ -319,7 +319,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             _currentIndex = Items.Count;
 
-            pasteCanvasModel.OpenNewCanvas();
+            OnOpenNewCanvasRequestedEvent?.Invoke(this, new OpenNewCanvasRequestedEventArgs());
         }
 
         public async Task NavigateNext(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken)
@@ -356,8 +356,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task LoadCanvasFromCollection(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken, bool navigateNext)
         {
-            //Debugger.Break(); // TODO: Investigate high memory usage on load
-
             // You can only load existing data
             SafeWrapperResult result = await pasteCanvasModel.TryLoadExistingData(this.Items[_currentIndex], cancellationToken);
 
@@ -387,7 +385,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 if (!HasNext())
                 {
                     // Doesn't have next, so we're on new canvas - open new canvas
-                    pasteCanvasModel.OpenNewCanvas();
+                    OnOpenNewCanvasRequestedEvent?.Invoke(this, new OpenNewCanvasRequestedEventArgs());
                 }
                 else
                 {

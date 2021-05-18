@@ -55,6 +55,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             IStorageFolder folder;
             IStorageFile fileToSelect;
+
             if (ReferenceFile.IsReferenceFile(File))
             {
                 ReferenceFile referenceFile = await ReferenceFile.GetFile(File);
