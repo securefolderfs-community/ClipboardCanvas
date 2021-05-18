@@ -5,6 +5,7 @@ using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using Windows.ApplicationModel.DataTransfer;
+using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.EventArguments.CanvasControl
 {
@@ -107,11 +108,17 @@ namespace ClipboardCanvas.EventArguments.CanvasControl
 
     public class ProgressReportedEventArgs : EventArgs
     {
-        public readonly float progress;
+        public readonly float value;
 
-        public ProgressReportedEventArgs(float progress)
+        public readonly bool isIndeterminate;
+
+        public readonly CanvasPageProgressType progressType;
+
+        public ProgressReportedEventArgs(float value, bool isIndeterminate, CanvasPageProgressType progressType)
         {
-            this.progress = progress;
+            this.value = value;
+            this.isIndeterminate = isIndeterminate;
+            this.progressType = progressType;
         }
     }
 }

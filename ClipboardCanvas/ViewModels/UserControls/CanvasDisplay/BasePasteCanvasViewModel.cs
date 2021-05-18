@@ -426,14 +426,19 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return true;
         }
 
+        /// <inheritdoc cref="ReportProgress(float, bool, CanvasPageProgressType)"/>
+        protected virtual void ReportProgress(float value)
+        {
+            ReportProgress(value, false, CanvasPageProgressType.OperationProgressBar);
+        }
+
         /// <summary>
         /// Wrapper for <see cref="pasteProgress"/> that raises <see cref="OnProgressReportedEvent"/>
         /// </summary>
-        /// <param name="value">New value</param>
-        protected virtual void ReportProgress(float value)
+        protected virtual void ReportProgress(float value, bool isIndeterminate, CanvasPageProgressType progressType)
         {
             pasteProgress?.Report(value);
-            RaiseOnProgressReportedEvent(this, new ProgressReportedEventArgs(value));
+            RaiseOnProgressReportedEvent(this, new ProgressReportedEventArgs(value, isIndeterminate, progressType));
         }
 
         protected virtual async Task<SafeWrapperResult> SetDataInternal(DataPackageView dataPackage)

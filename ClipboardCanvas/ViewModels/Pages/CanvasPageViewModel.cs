@@ -21,6 +21,7 @@ using Windows.UI.Xaml;
 using System.Collections.Generic;
 using Windows.Storage;
 using System.Linq;
+using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {
@@ -58,11 +59,11 @@ namespace ClipboardCanvas.ViewModels.Pages
             set => SetProperty(ref _TitleTextLoad, value);
         }
 
-        private bool _LoadingRingLoad = false;
-        public bool LoadingRingLoad
+        private bool _CanvasRingLoad = false;
+        public bool CanvasRingLoad
         {
-            get => _LoadingRingLoad;
-            set => SetProperty(ref _LoadingRingLoad, value);
+            get => _CanvasRingLoad;
+            set => SetProperty(ref _CanvasRingLoad, value);
         }
 
         private string _TitleText = DEFAULT_TITLE_TEXT;
@@ -100,25 +101,25 @@ namespace ClipboardCanvas.ViewModels.Pages
             set => SetProperty(ref _OverrideReferenceEnabled, value);
         }
 
-        private bool _ProgressBarLoad;
-        public bool ProgressBarLoad
+        private bool _OperationProgressBarLoad;
+        public bool OperationProgressBarLoad
         {
-            get => _ProgressBarLoad;
-            set => SetProperty(ref _ProgressBarLoad, value);
+            get => _OperationProgressBarLoad;
+            set => SetProperty(ref _OperationProgressBarLoad, value);
         }
 
-        private bool _ProgressBarIndeterminate;
-        public bool ProgressBarIndeterminate
+        private bool _OperationProgressBarIndeterminate;
+        public bool OperationProgressBarIndeterminate
         {
-            get => _ProgressBarIndeterminate;
-            set => SetProperty(ref _ProgressBarIndeterminate, value);
+            get => _OperationProgressBarIndeterminate;
+            set => SetProperty(ref _OperationProgressBarIndeterminate, value);
         }
 
-        private float _ProgressBarValue;
-        public float ProgressBarValue
+        private float _OperationProgressBarValue;
+        public float OperationProgressBarValue
         {
-            get => _ProgressBarValue;
-            set => SetProperty(ref _ProgressBarValue, value);
+            get => _OperationProgressBarValue;
+            set => SetProperty(ref _OperationProgressBarValue, value);
         }
 
         #endregion
@@ -247,22 +248,45 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private void PasteCanvasModel_OnProgressReportedEvent(object sender, ProgressReportedEventArgs e)
         {
-            ProgressBarLoad = true;
-            ProgressBarValue = e.progress;
+            switch (e.progressType)
+            {
+                case CanvasPageProgressType.MainCanvasProgressBar:
+                    {
+                        if (e.value == 100.0f)
+                        {
+                            CanvasRingLoad = false;
+                        }
+                        else
+                        {
+                            CanvasRingLoad = true;
+                        }
+                        break;
+                    }
 
-            if (ProgressBarValue == 0.0f)
-            {
-                ProgressBarIndeterminate = true;
-            }
-            else if (e.progress >= 100.0f)
-            {
-                // TODO: Have smooth fade-out animation for hiding the progressbar
-                ProgressBarIndeterminate = false;
-                ProgressBarLoad = false;
-            }
-            else
-            {
-                ProgressBarIndeterminate = false;
+                case CanvasPageProgressType.OperationProgressBar:
+                    {
+                        if (e.value >= 100.0f)
+                        {
+                            OperationProgressBarIndeterminate = false;
+                            OperationProgressBarLoad = false;
+                        }
+                        else
+                        {
+                            OperationProgressBarLoad = true;
+                            OperationProgressBarValue = e.value;
+
+                            if (OperationProgressBarValue == 0.0f || e.isIndeterminate)
+                            {
+                                OperationProgressBarIndeterminate = true;
+                            }
+                            else
+                            {
+                                OperationProgressBarIndeterminate = false;
+                            }
+                        }
+
+                        break;
+                    }
             }
         }
 
@@ -280,6 +304,29 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private async void PasteCanvasModel_OnContentStartedLoadingEvent(object sender, ContentStartedLoadingEventArgs e)
         {
+            await PrepareForContentStartLoading();
+        }
+
+        private void PasteCanvasModel_OnContentLoadedEvent(object sender, ContentLoadedEventArgs e)
+        {
+            PastedAsReferenceLoad = e.pastedByReference;
+            CanvasRingLoad = false;
+            _contentLoaded = true;
+            TitleTextLoad = false;
+            ErrorTextLoad = false;
+        }
+
+        private async void PasteCanvasModel_OnPasteRequestedEvent(object sender, PasteRequestedEventArgs e)
+        {
+            await PrepareForContentStartLoading();
+        }
+
+        #endregion
+
+        #region Private Helpers
+
+        private async Task PrepareForContentStartLoading()
+        {
             _contentLoaded = false;
             TitleTextLoad = false;
 
@@ -288,22 +335,9 @@ namespace ClipboardCanvas.ViewModels.Pages
 
             if (!_contentLoaded) // The value might have changed
             {
-                LoadingRingLoad = true;
+                CanvasRingLoad = true;
             }
         }
-
-        private void PasteCanvasModel_OnContentLoadedEvent(object sender, ContentLoadedEventArgs e)
-        {
-            PastedAsReferenceLoad = e.pastedByReference;
-            LoadingRingLoad = false;
-            _contentLoaded = true;
-            TitleTextLoad = false;
-            ErrorTextLoad = false;
-        }
-
-        #endregion
-
-        #region Private Helpers
 
         private async Task PasteDataInternal(DataPackageView dataPackage = null)
         {
@@ -346,6 +380,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             UnhookEvents();
             if (PasteCanvasModel != null)
             {
+                PasteCanvasModel.OnPasteRequestedEvent += PasteCanvasModel_OnPasteRequestedEvent;
                 PasteCanvasModel.OnContentLoadedEvent += PasteCanvasModel_OnContentLoadedEvent;
                 PasteCanvasModel.OnContentStartedLoadingEvent += PasteCanvasModel_OnContentStartedLoadingEvent;
                 PasteCanvasModel.OnErrorOccurredEvent += PasteCanvasModel_OnErrorOccurredEvent;
@@ -357,6 +392,7 @@ namespace ClipboardCanvas.ViewModels.Pages
         {
             if (PasteCanvasModel != null)
             {
+                PasteCanvasModel.OnPasteRequestedEvent -= PasteCanvasModel_OnPasteRequestedEvent;
                 PasteCanvasModel.OnContentLoadedEvent -= PasteCanvasModel_OnContentLoadedEvent;
                 PasteCanvasModel.OnContentStartedLoadingEvent -= PasteCanvasModel_OnContentStartedLoadingEvent;
                 PasteCanvasModel.OnErrorOccurredEvent -= PasteCanvasModel_OnErrorOccurredEvent;

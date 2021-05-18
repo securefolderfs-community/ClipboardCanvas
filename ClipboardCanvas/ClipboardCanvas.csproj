@@ -141,6 +141,7 @@
     <Compile Include="DataModels\PastedContentDataModels\MediaContentType.cs" />
     <Compile Include="DataModels\PastedContentDataModels\TextContentType.cs" />
     <Compile Include="DataModels\SettingsFrameNavigationDataModel.cs" />
+    <Compile Include="Enums\CanvasPageProgressType.cs" />
     <Compile Include="Enums\SettingsPageType.cs" />
     <Compile Include="Enums\WebViewCanvasMode.cs" />
     <Compile Include="EventArguments\CollectionPreviewItemEventArgs.cs" />

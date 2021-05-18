@@ -81,7 +81,7 @@
                     Grid.Row="0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    x:Load="{x:Bind ViewModel.LoadingRingLoad, Mode=OneWay}"
+                    x:Load="{x:Bind ViewModel.CanvasRingLoad, Mode=OneWay}"
                     IsActive="True" />
 
                 <!--  The canvas  -->
@@ -150,12 +150,12 @@
 
             <!--  Large file paste progress  -->
             <ProgressBar
-                x:Name="PasteProgress"
+                x:Name="OperationProgressBar"
                 Grid.Row="2"
                 Grid.ColumnSpan="2"
-                x:Load="{x:Bind ViewModel.ProgressBarLoad, Mode=OneWay}"
-                IsIndeterminate="{x:Bind ViewModel.ProgressBarIndeterminate, Mode=OneWay}"
-                Value="{x:Bind ViewModel.ProgressBarValue, Mode=OneWay}" />
+                x:Load="{x:Bind ViewModel.OperationProgressBarLoad, Mode=OneWay}"
+                IsIndeterminate="{x:Bind ViewModel.OperationProgressBarIndeterminate, Mode=OneWay}"
+                Value="{x:Bind ViewModel.OperationProgressBarValue, Mode=OneWay}" />
 
             <!--  File name  -->
             <!--<TextBlock

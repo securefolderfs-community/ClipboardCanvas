@@ -245,7 +245,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             else
             {
-                return await CanvasViewModel.TryPasteData(dataPackage, cancellationToken);
+                OnProgressReportedEvent?.Invoke(this, new ProgressReportedEventArgs(0.0f, true, CanvasPageProgressType.MainCanvasProgressBar));
+                SafeWrapperResult result = await CanvasViewModel.TryPasteData(dataPackage, cancellationToken);
+                OnProgressReportedEvent?.Invoke(this, new ProgressReportedEventArgs(100.0f, true, CanvasPageProgressType.MainCanvasProgressBar));
+
+                return result;
             }
         }
 
