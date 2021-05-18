@@ -12,7 +12,7 @@ namespace ClipboardCanvas.Extensions
         /// Converts given <paramref name="value"/> to provided <typeparamref name="TOut"/>
         /// </summary>
         /// <typeparam name="TOut">The generic type to convert to</typeparam>
-        /// <typeparam name="TIn">The type to convert from</typeparam>
+        /// <typeparam name="TSource">The type to convert from</typeparam>
         /// <param name="value">The value</param>
         /// <remarks>
         /// The <typeparamref name="TOut"/> must implement <see cref="IConvertible"/>
@@ -32,23 +32,12 @@ namespace ClipboardCanvas.Extensions
             EqualityComparer<T>.Default.Equals(value1, value2);
 
         /// <summary>
-        /// Converts given value to a given instantiate type
-        /// </summary>
-        /// <typeparam name="T">The source value</typeparam>
-        /// <typeparam name="TOut">The result value</typeparam>
-        /// <param name="value">The first value</param>
-        /// <param name="instantiate">Instantiate action</param>
-        /// <returns>Converted value</returns>
-        public static TOut ConvertTo<T, TOut>(this T value, Func<T, TOut> instantiate) =>
-            instantiate(value);
-
-        /// <summary>
         /// Tries to cast the given value to new type
         /// </summary>
         /// <typeparam name="TOut"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static TOut As<TOut>(this object obj)
+        public static TOut As<TOut>(this object obj, TOut defaultValue = default(TOut))
         {
             try
             {
@@ -56,7 +45,7 @@ namespace ClipboardCanvas.Extensions
             }
             catch
             {
-                return default(TOut);
+                return defaultValue;
             }
         }
     }

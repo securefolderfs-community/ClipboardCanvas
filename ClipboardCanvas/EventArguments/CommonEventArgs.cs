@@ -26,9 +26,12 @@ namespace ClipboardCanvas.EventArguments
     {
         public readonly CollectionsContainerViewModel containerViewModel;
 
-        public CollectionItemsInitializationStartedEventArgs(CollectionsContainerViewModel containerViewModel)
+        public readonly string infoText;
+
+        public CollectionItemsInitializationStartedEventArgs(CollectionsContainerViewModel containerViewModel, string infoText)
         {
             this.containerViewModel = containerViewModel;
+            this.infoText = infoText;
         }
     }
 

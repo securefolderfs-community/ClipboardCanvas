@@ -228,12 +228,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     {
                         string newName = EditBoxText;
 
-                        CheckRenameCollectionRequestedEventArgs args = new CheckRenameCollectionRequestedEventArgs(this, EditBoxText);
+                        CheckRenameCollectionRequestedEventArgs args = new CheckRenameCollectionRequestedEventArgs(this, newName);
                         OnCheckRenameCollectionRequestedEvent?.Invoke(this, args);
 
                         if (args.canRename)
                         {
-                            SafeWrapperResult result = await FilesystemOperations.RenameItemAsync(_innerStorageFolder, EditBoxText, NameCollisionOption.FailIfExists);
+                            SafeWrapperResult result = await FilesystemOperations.RenameItemAsync(_innerStorageFolder, newName, NameCollisionOption.FailIfExists);
 
                             if (result)
                             {
@@ -244,7 +244,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
                                 // Also update settings
                                 CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
                                 CollectionsHelpers.UpdateLastSelectedCollectionSetting(this);
-
                             }
                         }
 
@@ -361,7 +360,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 }
 
                 // We must reload items because some were missing
-                await InitItems();
+                await InitItems("Collection is reloaded because some items were missing");
 
                 if (navigateNext)
                 {
@@ -399,10 +398,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Private Helpers
 
-        private async Task InitItems()
+        private async Task InitItems(string infoText = null)
         {
             CanvasInitializing = true;
-            OnCollectionItemsInitializationStartedEvent?.Invoke(this, new CollectionItemsInitializationStartedEventArgs(this));
+            OnCollectionItemsInitializationStartedEvent?.Invoke(this, new CollectionItemsInitializationStartedEventArgs(this, infoText));
 
             IsLoadingItems = true;
 

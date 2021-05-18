@@ -268,7 +268,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 throw new UnauthorizedAccessException("The default folder collection couldn't be retrieved!");
             }
 
-            SafetyExtensions.InitNull(ref savedCollectionPaths); // Check for any collections
+            if (savedCollectionPaths == null)
+            {
+                savedCollectionPaths = new List<string>();
+            }
 
             CollectionsContainerViewModel collection;
 

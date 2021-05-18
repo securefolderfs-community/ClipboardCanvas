@@ -147,8 +147,6 @@
     <Compile Include="EventArguments\CollectionPreviewItemEventArgs.cs" />
     <Compile Include="EventArguments\CommonEventArgs.cs" />
     <Compile Include="Extensions\GenericsExtensions.cs" />
-    <Compile Include="Extensions\LinqExtensions.cs" />
-    <Compile Include="Extensions\SafetyExtensions.cs" />
     <Compile Include="Helpers\CollectionsHelpers.cs" />
     <Compile Include="Helpers\Filesystem\FilesystemOperations.cs" />
     <Compile Include="Helpers\IconHelpers.cs" />
@@ -181,7 +179,6 @@
     <Compile Include="EventArguments\CanvasControlEventArgs.cs" />
     <Compile Include="EventArguments\CollectionControlEventArgs.cs" />
     <Compile Include="EventArguments\CollectionsContainerEventArgs.cs" />
-    <Compile Include="ExtensionInterfaces\ICleanup.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Helpers\AdaptiveActionsHelpers.cs" />
     <Compile Include="Helpers\ImagingHelpers.cs" />
