@@ -96,14 +96,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public async Task<SafeWrapperResult> TryPasteData(DataPackageView dataPackage, CancellationToken cancellationToken)
         {
-            if (await InitializeViewModel(dataPackage))
+            SafeWrapperResult result;
+
+            result = await InitializeViewModelAndPaste(dataPackage, cancellationToken);
+            
+            if (!result)
             {
-                return await CanvasViewModel.TryPasteData(dataPackage, cancellationToken);
+                OnErrorOccurredEvent?.Invoke(this, new ErrorOccurredEventArgs(result, result.Details.message));
             }
-
-            SafeWrapperResult result = new SafeWrapperResult(OperationErrorCode.Unauthorized, new InvalidOperationException(), "Couldn't display content for this file");
-            OnErrorOccurredEvent?.Invoke(this, new ErrorOccurredEventArgs(result, result.Details.message));
-
+            
             return result;
         }
 
@@ -151,14 +152,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         /// </summary>
         /// <param name="dataPackage"></param>
         /// <returns></returns>
-        private async Task<bool> InitializeViewModel(DataPackageView dataPackage)
+        private async Task<SafeWrapperResult> InitializeViewModelAndPaste(DataPackageView dataPackage, CancellationToken cancellationToken)
         {
             // Decide content type and initialize view model
 
             // From raw clipboard data
             if (dataPackage.Contains(StandardDataFormats.Bitmap))
             {
-                return InitializeViewModel(() => new ImageCanvasViewModel(_view));
+                // Image
+                InitializeViewModel(() => new ImageCanvasViewModel(_view));
             }
             else if (dataPackage.Contains(StandardDataFormats.Text))
             {
@@ -167,32 +169,44 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 if (!text)
                 {
                     Debugger.Break(); // What!?
-                    return false;
+                    return new SafeWrapperResult(OperationErrorCode.Unauthorized, "Couldn't retrieve clipboard data");
                 }
 
-                // Check if it's a webpage link
-                bool isWebpageLink = Uri.TryCreate(text, UriKind.Absolute, out Uri uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
-                if (StringHelpers.IsWebsiteLink(text))
+                // Check if it's url
+                if (StringHelpers.IsUrl(text))
                 {
-                    // Webpage link
-                    return InitializeViewModel(() => new WebViewCanvasViewModel(_view, WebViewCanvasMode.ReadWebsite));
+                    // The url may point to file
+                    if (StringHelpers.IsUrlFile(text))
+                    {
+                        string ext = Path.GetExtension(text);
+                        if (ImageCanvasViewModel.Extensions.Contains(ext))
+                        {
+                            // Image
+                            InitializeViewModel(() => new ImageCanvasViewModel(_view));
+                        }
+                    }
+                    else
+                    {
+                        // Webpage link
+                        InitializeViewModel(() => new WebViewCanvasViewModel(_view, WebViewCanvasMode.ReadWebsite));
+                    }
                 }
                 else if (StringHelpers.IsHTML(text))
                 {
                     // Html
-                    return InitializeViewModel(() => new WebViewCanvasViewModel(_view, WebViewCanvasMode.ReadHtml));
+                    InitializeViewModel(() => new WebViewCanvasViewModel(_view, WebViewCanvasMode.ReadHtml));
                 }
                 else
                 {
                     if (App.AppSettings.UserSettings.PrioritizeMarkdownOverText)
                     {
                         // Markdown
-                        return InitializeViewModel(() => new MarkdownCanvasViewModel(_view));
+                        InitializeViewModel(() => new MarkdownCanvasViewModel(_view));
                     }
                     else
                     {
                         // Normal text
-                        return InitializeViewModel(() => new TextCanvasViewModel(_view));
+                        InitializeViewModel(() => new TextCanvasViewModel(_view));
                     }
                 }
             }
@@ -213,19 +227,26 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
                     if (contentType == null)
                     {
-                        return false;
+                        return new SafeWrapperResult(OperationErrorCode.NotFound, "Couldn't get content type for provided data");
                     }
 
-                    return InitializeViewModel(contentType);
+                    InitializeViewModel(contentType);
                 }
                 else
                 {
                     // No items
-                    return false;
+                    return new SafeWrapperResult(OperationErrorCode.Unauthorized, "Couldn't retrieve clipboard data");
                 }
             }
 
-            return false;
+            if (CanvasViewModel == null)
+            {
+                return new SafeWrapperResult(OperationErrorCode.Unauthorized, "Couldn't retrieve clipboard data");
+            }
+            else
+            {
+                return await CanvasViewModel.TryPasteData(dataPackage, cancellationToken);
+            }
         }
 
         /// <summary>

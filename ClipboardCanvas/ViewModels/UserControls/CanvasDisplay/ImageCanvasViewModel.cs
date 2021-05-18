@@ -98,31 +98,34 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task<SafeWrapperResult> SetData(DataPackageView dataPackage)
         {
-            // Always won't contain StorageItems since they are handled in SetDataInternal()
-
-            SafeWrapper<RandomAccessStreamReference> bitmap = await SafeWrapperRoutines.SafeWrapAsync(
-                       () => dataPackage.GetBitmapAsync().AsTask());
-
-            if (!bitmap)
+            if (dataPackage.Contains(StandardDataFormats.Bitmap))
             {
-                Debugger.Break();
-                return (SafeWrapperResult)bitmap;
+                SafeWrapper<RandomAccessStreamReference> bitmap = await SafeWrapperRoutines.SafeWrapAsync(
+                           () => dataPackage.GetBitmapAsync().AsTask());
+
+                if (!bitmap)
+                {
+                    Debugger.Break();
+                    return (SafeWrapperResult)bitmap;
+                }
+
+                SafeWrapper<IRandomAccessStreamWithContentType> openedStream = await SafeWrapperRoutines.SafeWrapAsync(
+                    () => bitmap.Result.OpenReadAsync().AsTask());
+
+                if (!openedStream)
+                {
+                    Debugger.Break();
+                    return (SafeWrapperResult)openedStream;
+                }
+
+                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(openedStream.Result);
+
+                _softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+
+                return SafeWrapperResult.S_SUCCESS;
             }
 
-            SafeWrapper<IRandomAccessStreamWithContentType> openedStream = await SafeWrapperRoutines.SafeWrapAsync(
-                () => bitmap.Result.OpenReadAsync().AsTask());
-
-            if (!openedStream)
-            {
-                Debugger.Break();
-                return (SafeWrapperResult)openedStream;
-            }
-
-            BitmapDecoder decoder = await BitmapDecoder.CreateAsync(openedStream.Result);
-
-            _softwareBitmap = await decoder.GetSoftwareBitmapAsync();
-
-            return SafeWrapperResult.S_SUCCESS;
+            return new SafeWrapperResult(OperationErrorCode.Unauthorized, "Couldn't retrieve clipboard data");
         }
 
         public override async Task<SafeWrapperResult> TrySaveData()
@@ -169,6 +172,41 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return result;
         }
 
+        protected override async Task<SafeWrapperResult> SetDataInternal(DataPackageView dataPackage)
+        {
+            if (dataPackage.Contains(StandardDataFormats.StorageItems) && dataPackage.Contains(StandardDataFormats.Text)) // Url to file
+            {
+                SafeWrapper<IReadOnlyList<IStorageItem>> items = await SafeWrapperRoutines.SafeWrapAsync(
+                    () => dataPackage.GetStorageItemsAsync().AsTask());
+
+                if (!items)
+                {
+                    return items;
+                }
+
+                StorageFile imageFile = items.Result.As<IEnumerable<IStorageItem>>().First().As<StorageFile>();
+
+                SafeWrapper<IRandomAccessStreamWithContentType> openedStream = await SafeWrapperRoutines.SafeWrapAsync(
+                    () => imageFile.OpenReadAsync().AsTask());
+
+                if (!openedStream)
+                {
+                    Debugger.Break();
+                    return (SafeWrapperResult)openedStream;
+                }
+
+                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(openedStream.Result);
+
+                _softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+
+                return SafeWrapperResult.S_SUCCESS;
+            }
+            else
+            {
+                return await base.SetDataInternal(dataPackage);
+            }
+        }
+
         protected override async Task<SafeWrapperResult> SetData(StorageFile file)
         {
             SafeWrapperResult result;
@@ -210,13 +248,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
             {
-                if (_dataStream == null) // Data is pasted, load from _softwareBitmap
+                if (_dataStream == null) // Data is pasted as image, load from _softwareBitmap
                 {
                     byte[] buffer = await ImagingHelpers.GetBytesFromSoftwareBitmap(_softwareBitmap, BitmapEncoder.PngEncoderId);
                     ContentImage = await ImagingHelpers.ToBitmapAsync(buffer);
                     Array.Clear(buffer, 0, buffer.Length);
                 }
-                else // Data is read from file, load from data stream
+                else // Data is read from file or pasted from url, load from data stream
                 {
                     BitmapImage image = new BitmapImage();
                     ContentImage = image;

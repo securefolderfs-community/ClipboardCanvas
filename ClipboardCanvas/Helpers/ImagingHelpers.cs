@@ -75,5 +75,17 @@ namespace ClipboardCanvas.Helpers
 
             return array;
         }
+
+        public static async Task<BitmapImage> GetImageFromURL(string url)
+        {
+            using (IRandomAccessStreamWithContentType stream = await RandomAccessStreamReference.CreateFromUri(new Uri(url)).OpenReadAsync())
+            {
+                BitmapImage bitampImage = new BitmapImage();
+
+                bitampImage.SetSource(stream);
+
+                return bitampImage;
+            }
+        }
     }
 }
