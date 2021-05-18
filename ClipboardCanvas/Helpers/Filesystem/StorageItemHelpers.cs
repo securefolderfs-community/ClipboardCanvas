@@ -14,6 +14,11 @@ namespace ClipboardCanvas.Helpers.Filesystem
             SafeWrapper<StorageFile> file = null;
             SafeWrapper<StorageFolder> folder = null;
 
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return default(TOut);
+            }
+
             // Check if path is to .lnk or .url file
             if (path.ToLower().EndsWith(".lnk") || path.ToLower().EndsWith(".url"))
             {

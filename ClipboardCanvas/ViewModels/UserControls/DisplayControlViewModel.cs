@@ -179,18 +179,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async void NavigationControlModel_OnGoToCanvasRequestedEvent(object sender, EventArgs e)
         {
-            if (! await OpenPage(DisplayPageType.CanvasPage))
-            {
-                return;
-            }
-
-            CheckNavigation();
-
-            // We might navigate from home to a canvas that's already filled, so initialize the content
-            if (_currentCollectionContainer.IsFilled)
-            {
-                await _currentCollectionContainer.LoadCanvasFromCollection(PasteCanvasModel, _canvasLoadCancellationTokenSource.Token, false);
-            }
+            await OpenPage(DisplayPageType.CanvasPage);
         }
 
         #endregion
@@ -242,12 +231,14 @@ namespace ClipboardCanvas.ViewModels.UserControls
             _currentCollectionContainer = e.selectedCollection;
         }
 
-        private void CollectionsControlViewModel_OnCollectionOpenRequestedEvent(object sender, CollectionOpenRequestedEventArgs e)
+        private async void CollectionsControlViewModel_OnCollectionOpenRequestedEvent(object sender, CollectionOpenRequestedEventArgs e)
         {
-            Debugger.Break(); // This operation is not implemented
-            return;
+            await OpenPage(DisplayPageType.CanvasPage);
 
-            //await OpenPage(DisplayPageType.CollectionsPreview);
+
+            // TODO: In the future, open collection preview
+            return;
+            //await OpenPage(DisplayPageType.CollectionsPreview); // This operation is not implemented
         }
 
         #endregion
@@ -352,8 +343,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             if (pageType == DisplayPageType.CanvasPage)
             {
-                // Performance optimization: instead of initializing all collections at once,
-                // initialize the one that's being opened
+                _currentCollectionContainer.CheckCanOpenCollection();
                 if (_currentCollectionContainer == null || !_currentCollectionContainer.CanOpenCollection)
                 {
                     // Something went wrong, cannot open CanvasPage
@@ -373,7 +363,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
             // Navigate
             CurrentPageNavigation = new DisplayFrameNavigationDataModel(pageType, _currentCollectionContainer, navigationTransition, simulateNavigation);
 
-            if (_currentCollectionContainer.CanvasInitializing)
+            // Handle event where user opens canvas - and show loading rings if needed
+            if (CurrentPage == DisplayPageType.CanvasPage && _currentCollectionContainer.CanvasInitializing)
             {
                 // Show navigation loading
                 NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = true;
@@ -384,15 +375,37 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 }
                 CheckNavigation();
             }
+            // Handle event when the collection is not initialized
             else if (!_currentCollectionContainer.CanvasInitialized)
             {
+                // Performance optimization: instead of initializing all collections at once,
+                // initialize the one that's being opened
                 await _currentCollectionContainer.InitializeItems();
             }
+            // Handle event where the loading rings were shown and the collection is no longer initializing - hide them
             else
             {
                 NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = false;
                 NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading = false;
                 CheckNavigation();
+            }
+
+            switch (CurrentPage)
+            {
+                case DisplayPageType.CanvasPage:
+                    {
+                        if (!_currentCollectionContainer.CanvasInitializing)
+                        {
+                            CheckNavigation();
+
+                            // We might navigate from home to a canvas that's already filled, so initialize the content
+                            if (_currentCollectionContainer.IsFilled)
+                            {
+                                await _currentCollectionContainer.LoadCanvasFromCollection(PasteCanvasModel, _canvasLoadCancellationTokenSource.Token, false);
+                            }
+                        }
+                        break;
+                    }
             }
 
             return true;

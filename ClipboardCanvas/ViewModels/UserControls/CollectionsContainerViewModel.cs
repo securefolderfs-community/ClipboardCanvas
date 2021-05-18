@@ -194,6 +194,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         private async void RefreshCollection()
         {
             CanvasInitialized = false;
+            await InitializeInnerStorageFolder();
             await InitializeItems();
         }
 
@@ -263,6 +264,18 @@ namespace ClipboardCanvas.ViewModels.UserControls
         #endregion
 
         #region ICollectionContainerModel
+
+        public void CheckCanOpenCollection()
+        {
+            if (StorageItemHelpers.Exists(_collectionFolderPath))
+            {
+                SetCollectionError(false);
+            }
+            else
+            {
+                SetCollectionError(true);
+            }
+        }
 
         public void DangerousSetIndex(int newIndex)
         {

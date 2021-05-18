@@ -37,6 +37,11 @@ namespace ClipboardCanvas.Models
         ICollectionsContainerItemModel CurrentCanvas { get; }
 
         /// <summary>
+        /// Check whether can open collection and updates UI and <see cref="CanOpenCollection"/> if necessary
+        /// </summary>
+        void CheckCanOpenCollection();
+
+        /// <summary>
         /// Sets index of currently selected canvas
         /// <br/><br/>
         /// Note:
