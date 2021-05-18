@@ -174,20 +174,45 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task<SafeWrapperResult> SetDataInternal(DataPackageView dataPackage)
         {
-            if (dataPackage.Contains(StandardDataFormats.StorageItems) && dataPackage.Contains(StandardDataFormats.Text)) // Url to file
+            if (dataPackage.Contains(StandardDataFormats.Text)) // Url to file
             {
-                SafeWrapper<IReadOnlyList<IStorageItem>> items = await SafeWrapperRoutines.SafeWrapAsync(
-                    () => dataPackage.GetStorageItemsAsync().AsTask());
+                SafeWrapper<IRandomAccessStreamWithContentType> openedStream;
 
-                if (!items)
+                if (dataPackage.Contains(StandardDataFormats.StorageItems)) // Url to StorageFile
                 {
-                    return items;
+                    SafeWrapper<IReadOnlyList<IStorageItem>> items = await SafeWrapperRoutines.SafeWrapAsync(
+                        () => dataPackage.GetStorageItemsAsync().AsTask());
+
+                    if (!items)
+                    {
+                        return items;
+                    }
+
+                    StorageFile imageFile = items.Result.As<IEnumerable<IStorageItem>>().First().As<StorageFile>();
+
+                    openedStream = await SafeWrapperRoutines.SafeWrapAsync(
+                        () => imageFile.OpenReadAsync().AsTask());
+
+                    if (!openedStream)
+                    {
+                        Debugger.Break();
+                        return (SafeWrapperResult)openedStream;
+                    }
                 }
+                else
+                {
+                    // Download from url
+                    SafeWrapper<string> url = await SafeWrapperRoutines.SafeWrapAsync(
+                        () => dataPackage.GetTextAsync().AsTask());
 
-                StorageFile imageFile = items.Result.As<IEnumerable<IStorageItem>>().First().As<StorageFile>();
+                    if (!url)
+                    {
+                        return url;
+                    }
 
-                SafeWrapper<IRandomAccessStreamWithContentType> openedStream = await SafeWrapperRoutines.SafeWrapAsync(
-                    () => imageFile.OpenReadAsync().AsTask());
+                    openedStream = await SafeWrapperRoutines.SafeWrapAsync(
+                        async () => await (RandomAccessStreamReference.CreateFromUri(new Uri(url))).OpenReadAsync());
+                }
 
                 if (!openedStream)
                 {
@@ -195,11 +220,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     return (SafeWrapperResult)openedStream;
                 }
 
-                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(openedStream.Result);
+                SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
+                {
+                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(openedStream.Result);
 
-                _softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                    _softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                });
 
-                return SafeWrapperResult.S_SUCCESS;
+                return result;
             }
             else
             {
