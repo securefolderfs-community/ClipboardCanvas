@@ -156,6 +156,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             // Decide content type and initialize view model
 
+            // Discard any left over data if we're already pasting to canvas that is filled
+            DiscardData();
+
             // From raw clipboard data
             if (dataPackage.Contains(StandardDataFormats.Bitmap))
             {
