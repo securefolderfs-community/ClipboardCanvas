@@ -11,14 +11,5 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
     /// </summary>
     public sealed class ImageContentType : BasePastedContentTypeDataModel
     {
-        public override bool Equals(BasePastedContentTypeDataModel other)
-        {
-            if (other is ImageContentType thisOther)
-            {
-                return true;
-            }
-
-            return false;
-        }
     }
 }

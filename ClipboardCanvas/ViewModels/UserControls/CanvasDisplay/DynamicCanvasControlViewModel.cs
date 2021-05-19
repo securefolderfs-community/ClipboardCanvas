@@ -223,7 +223,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     // One item, decide view model for it
                     IStorageItem item = items.First();
 
-                    BasePastedContentTypeDataModel contentType = await BasePastedContentTypeDataModel.GetContentType(item);
+                    BasePastedContentTypeDataModel contentType = await BasePastedContentTypeDataModel.GetContentType(item, null);
 
                     if (contentType == null)
                     {
@@ -263,18 +263,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Decide content type
             BasePastedContentTypeDataModel contentType;
 
-            if (containerItemModel.ContentType != null) // Reuse if not null
-            {
-                contentType = containerItemModel.ContentType;
-            }
-            else
-            {
-                // TODO: Add support for adding previews from extensions
-                contentType = await BasePastedContentTypeDataModel.GetContentType(containerItemModel.File);
-            }
+            // TODO: Add support for adding previews from extensions
+            contentType = await BasePastedContentTypeDataModel.GetContentType(containerItemModel.File, containerItemModel.ContentType);
 
-            // Check if contentType is not null
-            if (contentType == null)
+            // Check if contentType is InvalidContentTypeDataModel
+            if (contentType is InvalidContentTypeDataModel)
             {
                 return false;
             }

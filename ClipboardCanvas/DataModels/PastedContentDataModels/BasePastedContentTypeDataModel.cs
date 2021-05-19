@@ -9,12 +9,23 @@ using Windows.Storage;
 
 namespace ClipboardCanvas.DataModels.PastedContentDataModels
 {
-    public abstract class BasePastedContentTypeDataModel : IEquatable<BasePastedContentTypeDataModel>
+    public abstract class BasePastedContentTypeDataModel
     {
-        public abstract bool Equals(BasePastedContentTypeDataModel other);
-
-        public static async Task<BasePastedContentTypeDataModel> GetContentType(IStorageItem item)
+        public static async Task<BasePastedContentTypeDataModel> GetContentType(IStorageItem item, BasePastedContentTypeDataModel contentType)
         {
+            if (contentType is InvalidContentTypeDataModel invalidContentType)
+            {
+                if (!invalidContentType.needsReinitialization)
+                {
+                    return invalidContentType;
+                }
+            }
+
+            if (contentType != null)
+            {
+                return contentType;
+            }
+
             if (item is StorageFile file)
             {
                 string ext = Path.GetExtension(file.Path);
@@ -78,10 +89,10 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
             else if (item is StorageFolder folder)
             {
                 // TODO: Handle also folders?
-                return null;
+                return new InvalidContentTypeDataModel(false);
             }
 
-            return null;
+            return new InvalidContentTypeDataModel(false);
         }
     }
 }

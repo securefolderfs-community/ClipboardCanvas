@@ -8,14 +8,5 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
 {
     public sealed class TextContentType : BasePastedContentTypeDataModel
     {
-        public override bool Equals(BasePastedContentTypeDataModel other)
-        {
-            if (other is BasePastedContentTypeDataModel thisOther)
-            {
-                return true;
-            }
-
-            return false;
-        }
     }
 }

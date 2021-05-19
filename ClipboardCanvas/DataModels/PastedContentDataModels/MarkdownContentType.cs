@@ -6,16 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClipboardCanvas.DataModels.PastedContentDataModels
 {
-    public class MarkdownContentType : BasePastedContentTypeDataModel
+    public sealed class MarkdownContentType : BasePastedContentTypeDataModel
     {
-        public override bool Equals(BasePastedContentTypeDataModel other)
-        {
-            if (other is BasePastedContentTypeDataModel thisOther)
-            {
-                return true;
-            }
-
-            return false;
-        }
     }
 }
