@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace ClipboardCanvas.Models
+namespace ClipboardCanvas.CanvasExtensions
 {
     /// <summary>
-    /// Interface to mark <see cref="BasePasteCanvasViewModel"/> to implement draggable content
+    /// Interface to mark <see cref="ClipboardCanvas.ViewModels.UserControls.CanvasDisplay.BasePasteCanvasViewModel"/> to implement draggable content
     /// </summary>
-    public interface ICanvasContentDraggable
+    public interface ICanvasContentDraggableExtension
     {
         event EventHandler OnDragStartedEvent;
 

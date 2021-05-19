@@ -24,7 +24,7 @@ using ClipboardCanvas.Helpers.Filesystem;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
-    public sealed class ImageCanvasViewModel : BasePasteCanvasViewModel, ICanvasContentDraggable
+    public sealed class ImageCanvasViewModel : BasePasteCanvasViewModel, ICanvasContentDraggableExtension
     {
         #region Private Members
 

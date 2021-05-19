@@ -19,6 +19,7 @@ using System.Diagnostics;
 using ClipboardCanvas.Helpers;
 using Windows.ApplicationModel.Core;
 using Microsoft.Toolkit.Uwp;
+using ClipboardCanvas.CanvasExtensions;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -354,16 +355,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         private void InitializeExtensionsForViewModel()
         {
-            if (CanvasViewModel is ICanvasContentDraggable draggable)
+            if (CanvasViewModel is ICanvasContentDraggableExtension draggableExtension)
             {
-                draggable.IsDragAvailable = _view?.IsDragAvailable ?? false;
-                draggable.OnDragStartedEvent += CanvasViewModelDraggable_OnDragStartedEvent;
+                draggableExtension.IsDragAvailable = _view?.IsDragAvailable ?? false;
+                draggableExtension.OnDragStartedEvent += CanvasViewModelDraggable_OnDragStartedEvent;
             }
         }
 
         private void UninitializeExtensionsForViewModel()
         {
-            if (CanvasViewModel is ICanvasContentDraggable draggable)
+            if (CanvasViewModel is ICanvasContentDraggableExtension draggable)
             {
                 draggable.OnDragStartedEvent -= CanvasViewModelDraggable_OnDragStartedEvent;
             }
