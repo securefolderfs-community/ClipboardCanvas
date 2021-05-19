@@ -143,9 +143,11 @@
                 x:Name="ErrorText"
                 Grid.Row="1"
                 Grid.ColumnSpan="2"
+                Margin="0,0,0,10"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 x:Load="{x:Bind ViewModel.ErrorTextLoad, Mode=OneWay}"
+                Opacity="0.7"
                 Text="{x:Bind ViewModel.ErrorText, Mode=OneWay}" />
 
             <!--  Large file paste progress  -->
