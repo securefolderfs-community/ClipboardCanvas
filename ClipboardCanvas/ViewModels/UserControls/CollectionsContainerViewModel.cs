@@ -425,7 +425,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             // TODO: save index somewhere to file?
             // Calculate new index
             int newItemsCount = Items.Count;
-            int newIndex = savedIndex - (savedItemsCount - newItemsCount);
+            int newIndex = Math.Max(savedIndex, savedIndex - (savedItemsCount - newItemsCount));
             
             this._currentIndex = Extensions.CollectionExtensions.IndexFitBounds(this.Items.Count, newIndex);
 
