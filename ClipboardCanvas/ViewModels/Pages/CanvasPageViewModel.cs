@@ -25,7 +25,7 @@ using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {
-    public class CanvasPageViewModel : ObservableObject, IDisposable
+    public class CanvasPageViewModel : ObservableObject, IPasteCanvasPageModel, IDisposable
     {
         #region Private Members
 
@@ -407,6 +407,7 @@ namespace ClipboardCanvas.ViewModels.Pages
         public void Dispose()
         {
             UnhookEvents();
+            PasteCanvasModel?.Dispose();
         }
 
         #endregion

@@ -28,13 +28,13 @@ namespace ClipboardCanvas.UserControls
 
         public INavigationToolBarControlModel NavigationToolBarControlModel { get; set; }
 
-        public IPasteCanvasModel PasteCanvasModel
+        public IPasteCanvasPageModel PasteCanvasPageModel
         {
             get
             {
                 if ((DisplayFrame.Content as Page)?.DataContext is CanvasPageViewModel viewModel)
                 {
-                    return viewModel.PasteCanvasModel;
+                    return viewModel;
                 }
 
                 return null;

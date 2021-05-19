@@ -39,7 +39,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         /// <br/><br/>
         /// Note: This might be null depending on the current view
         /// </summary>
-        private IPasteCanvasModel PasteCanvasModel => _view?.PasteCanvasModel;
+        private IPasteCanvasPageModel PasteCanvasPageModel => _view?.PasteCanvasPageModel;
 
         #endregion
 
@@ -55,7 +55,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 if (_CurrentPageNavigation != null /* && value.pageType != CurrentPageType.CanvasPage)*/)
                 {
                     UnhookCanvasControlEvents(); // Unhook events
-                    PasteCanvasModel?.Dispose(); // Dispose stuff
+                    PasteCanvasPageModel?.Dispose(); // Dispose stuff
                 }
 
                 if (SetProperty(ref _CurrentPageNavigation, value/*, comparer: new ComparingExtensions.DefaultEqualityComparer<DisplayFrameNavigationDataModel>()*/))
@@ -124,7 +124,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 _canvasLoadCancellationTokenSource.Dispose();
                 _canvasLoadCancellationTokenSource = new CancellationTokenSource();
 
-                await _currentCollectionContainer.NavigateLast(PasteCanvasModel, _canvasLoadCancellationTokenSource.Token);
+                await _currentCollectionContainer.NavigateLast(PasteCanvasPageModel.PasteCanvasModel, _canvasLoadCancellationTokenSource.Token);
                 CheckNavigation();
                 await SetSuggestedActions();
             }
@@ -138,7 +138,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 _canvasLoadCancellationTokenSource.Dispose();
                 _canvasLoadCancellationTokenSource = new CancellationTokenSource();
 
-                await _currentCollectionContainer.NavigateBack(PasteCanvasModel, _canvasLoadCancellationTokenSource.Token);
+                await _currentCollectionContainer.NavigateBack(PasteCanvasPageModel.PasteCanvasModel, _canvasLoadCancellationTokenSource.Token);
                 CheckNavigation();
                 await SetSuggestedActions();
             }
@@ -152,7 +152,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 _canvasLoadCancellationTokenSource.Dispose();
                 _canvasLoadCancellationTokenSource = new CancellationTokenSource();
 
-                _currentCollectionContainer.NavigateFirst(PasteCanvasModel);
+                _currentCollectionContainer.NavigateFirst(PasteCanvasPageModel.PasteCanvasModel);
                 CheckNavigation();
                 await SetSuggestedActions();
             }
@@ -166,7 +166,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 _canvasLoadCancellationTokenSource.Dispose();
                 _canvasLoadCancellationTokenSource = new CancellationTokenSource();
 
-                await _currentCollectionContainer.NavigateNext(PasteCanvasModel, _canvasLoadCancellationTokenSource.Token);
+                await _currentCollectionContainer.NavigateNext(PasteCanvasPageModel.PasteCanvasModel, _canvasLoadCancellationTokenSource.Token);
                 CheckNavigation();
                 await SetSuggestedActions();
             }
@@ -278,7 +278,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 OpenNewCanvas();
 
                 // Forward the paste operation
-                await PasteCanvasModel.TryPasteData(e.forwardedDataPackage, _canvasLoadCancellationTokenSource.Token);
+                await PasteCanvasPageModel.PasteCanvasModel.TryPasteData(e.forwardedDataPackage, _canvasLoadCancellationTokenSource.Token);
             }
         }
 
@@ -401,7 +401,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                             // We might navigate from home to a canvas that's already filled, so initialize the content
                             if (_currentCollectionContainer.IsFilled)
                             {
-                                await _currentCollectionContainer.LoadCanvasFromCollection(PasteCanvasModel, _canvasLoadCancellationTokenSource.Token, false);
+                                await _currentCollectionContainer.LoadCanvasFromCollection(PasteCanvasPageModel.PasteCanvasModel, _canvasLoadCancellationTokenSource.Token, false);
                             }
                         }
                         break;
@@ -464,13 +464,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 case DisplayPageType.CanvasPage:
                     {
                         // Add suggested actions
-                        if (_currentCollectionContainer.IsFilled && PasteCanvasModel != null)
+                        if (_currentCollectionContainer.IsFilled && PasteCanvasPageModel != null)
                         {
-                            NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(await PasteCanvasModel.GetSuggestedActions());
+                            NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(await PasteCanvasPageModel.PasteCanvasModel.GetSuggestedActions());
                         }
                         else
                         {
-                            NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(SuggestedActionsHelpers.GetActionsForEmptyCanvasPage(PasteCanvasModel));
+                            NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(SuggestedActionsHelpers.GetActionsForEmptyCanvasPage(PasteCanvasPageModel.PasteCanvasModel));
                         }
 
                         break;
@@ -593,31 +593,31 @@ namespace ClipboardCanvas.ViewModels.UserControls
         private void HookCanvasControlEvents()
         {
             UnhookCanvasControlEvents();
-            if (PasteCanvasModel != null)
+            if (PasteCanvasPageModel != null)
             {
-                this.PasteCanvasModel.OnOpenNewCanvasRequestedEvent += PasteCanvasModel_OnOpenNewCanvasRequestedEvent;
-                this.PasteCanvasModel.OnContentLoadedEvent += PasteCanvasModel_OnContentLoadedEvent;
-                this.PasteCanvasModel.OnPasteRequestedEvent += PasteCanvasModel_OnPasteRequestedEvent;
-                this.PasteCanvasModel.OnFileCreatedEvent += PasteCanvasModel_OnFileCreatedEvent;
-                this.PasteCanvasModel.OnFileModifiedEvent += PasteCanvasModel_OnFileModifiedEvent;
-                this.PasteCanvasModel.OnFileDeletedEvent += PasteCanvasModel_OnFileDeletedEvent;
-                this.PasteCanvasModel.OnErrorOccurredEvent += PasteCanvasModel_OnErrorOccurredEvent;
-                this.PasteCanvasModel.OnProgressReportedEvent += PasteCanvasModel_OnProgressReportedEvent;
+                this.PasteCanvasPageModel.PasteCanvasModel.OnOpenNewCanvasRequestedEvent += PasteCanvasModel_OnOpenNewCanvasRequestedEvent;
+                this.PasteCanvasPageModel.PasteCanvasModel.OnContentLoadedEvent += PasteCanvasModel_OnContentLoadedEvent;
+                this.PasteCanvasPageModel.PasteCanvasModel.OnPasteRequestedEvent += PasteCanvasModel_OnPasteRequestedEvent;
+                this.PasteCanvasPageModel.PasteCanvasModel.OnFileCreatedEvent += PasteCanvasModel_OnFileCreatedEvent;
+                this.PasteCanvasPageModel.PasteCanvasModel.OnFileModifiedEvent += PasteCanvasModel_OnFileModifiedEvent;
+                this.PasteCanvasPageModel.PasteCanvasModel.OnFileDeletedEvent += PasteCanvasModel_OnFileDeletedEvent;
+                this.PasteCanvasPageModel.PasteCanvasModel.OnErrorOccurredEvent += PasteCanvasModel_OnErrorOccurredEvent;
+                this.PasteCanvasPageModel.PasteCanvasModel.OnProgressReportedEvent += PasteCanvasModel_OnProgressReportedEvent;
             }
         }
 
         private void UnhookCanvasControlEvents()
         {
-            if (PasteCanvasModel != null)
+            if (PasteCanvasPageModel != null)
             {
-                this.PasteCanvasModel.OnOpenNewCanvasRequestedEvent -= PasteCanvasModel_OnOpenNewCanvasRequestedEvent;
-                this.PasteCanvasModel.OnContentLoadedEvent -= PasteCanvasModel_OnContentLoadedEvent;
-                this.PasteCanvasModel.OnPasteRequestedEvent -= PasteCanvasModel_OnPasteRequestedEvent;
-                this.PasteCanvasModel.OnFileCreatedEvent -= PasteCanvasModel_OnFileCreatedEvent;
-                this.PasteCanvasModel.OnFileModifiedEvent -= PasteCanvasModel_OnFileModifiedEvent;
-                this.PasteCanvasModel.OnFileDeletedEvent -= PasteCanvasModel_OnFileDeletedEvent;
-                this.PasteCanvasModel.OnErrorOccurredEvent -= PasteCanvasModel_OnErrorOccurredEvent;
-                this.PasteCanvasModel.OnProgressReportedEvent -= PasteCanvasModel_OnProgressReportedEvent;
+                this.PasteCanvasPageModel.PasteCanvasModel.OnOpenNewCanvasRequestedEvent -= PasteCanvasModel_OnOpenNewCanvasRequestedEvent;
+                this.PasteCanvasPageModel.PasteCanvasModel.OnContentLoadedEvent -= PasteCanvasModel_OnContentLoadedEvent;
+                this.PasteCanvasPageModel.PasteCanvasModel.OnPasteRequestedEvent -= PasteCanvasModel_OnPasteRequestedEvent;
+                this.PasteCanvasPageModel.PasteCanvasModel.OnFileCreatedEvent -= PasteCanvasModel_OnFileCreatedEvent;
+                this.PasteCanvasPageModel.PasteCanvasModel.OnFileModifiedEvent -= PasteCanvasModel_OnFileModifiedEvent;
+                this.PasteCanvasPageModel.PasteCanvasModel.OnFileDeletedEvent -= PasteCanvasModel_OnFileDeletedEvent;
+                this.PasteCanvasPageModel.PasteCanvasModel.OnErrorOccurredEvent -= PasteCanvasModel_OnErrorOccurredEvent;
+                this.PasteCanvasPageModel.PasteCanvasModel.OnProgressReportedEvent -= PasteCanvasModel_OnProgressReportedEvent;
             }
         }
 

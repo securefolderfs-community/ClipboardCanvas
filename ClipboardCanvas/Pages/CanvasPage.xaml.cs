@@ -33,13 +33,6 @@ namespace ClipboardCanvas.Pages
             AssociatedCollection = navigationDataModel.collectionContainer;
         }
 
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-        {
-            this.ViewModel?.Dispose();
-
-            base.OnNavigatingFrom(e);
-        }
-
         public CanvasPage()
         {
             this.InitializeComponent();
