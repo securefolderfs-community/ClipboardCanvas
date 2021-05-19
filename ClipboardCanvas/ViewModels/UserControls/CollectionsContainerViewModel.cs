@@ -66,11 +66,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
             get => Name;
         }
 
-        private bool _IsLoadingItems;
-        public bool IsLoadingItems
+        private Visibility _IsLoadingItemsVisibility = Visibility.Collapsed;
+        public Visibility IsLoadingItemsVisibility
         {
-            get => _IsLoadingItems;
-            set => SetProperty(ref _IsLoadingItems, value);
+            get => _IsLoadingItemsVisibility;
+            set => SetProperty(ref _IsLoadingItemsVisibility, value);
         }
 
         private string _EditBoxText;
@@ -405,7 +405,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CanvasInitializing = true;
             OnCollectionItemsInitializationStartedEvent?.Invoke(this, new CollectionItemsInitializationStartedEventArgs(this, infoText));
 
-            IsLoadingItems = true;
+            IsLoadingItemsVisibility = Visibility.Visible;
 
             IEnumerable<StorageFile> files = await this._innerStorageFolder.GetFilesAsync();
 
@@ -431,7 +431,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             OnCollectionItemsInitializationFinishedEvent?.Invoke(this, new CollectionItemsInitializationFinishedEventArgs(this));
 
-            IsLoadingItems = false;
+            IsLoadingItemsVisibility = Visibility.Collapsed;
             CanvasInitializing = false;
         }
 
