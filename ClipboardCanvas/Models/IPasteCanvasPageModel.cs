@@ -9,5 +9,7 @@ namespace ClipboardCanvas.Models
     public interface IPasteCanvasPageModel : IDisposable
     {
         IPasteCanvasModel PasteCanvasModel { get; }
+
+        void SetTipText(string text);
     }
 }

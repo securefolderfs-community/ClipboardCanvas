@@ -63,26 +63,46 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <!--  Title text  -->
-                <TextBlock
-                    x:Name="TitleText"
+                <Grid
                     Grid.Row="0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    x:Load="{x:Bind ViewModel.TitleTextLoad, Mode=OneWay}"
-                    AllowDrop="True"
-                    FontSize="32"
-                    FontWeight="Bold"
-                    Text="{x:Bind ViewModel.TitleText, Mode=OneWay}" />
+                    RowSpacing="8">
 
-                <!--  Content Loading progress ring  -->
-                <ProgressRing
-                    x:Name="LoadingRing"
-                    Grid.Row="0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    x:Load="{x:Bind ViewModel.CanvasRingLoad, Mode=OneWay}"
-                    IsActive="True" />
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!--  Title text  -->
+                    <TextBlock
+                        x:Name="TitleText"
+                        Grid.Row="0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        x:Load="{x:Bind ViewModel.TitleTextLoad, Mode=OneWay}"
+                        AllowDrop="True"
+                        FontSize="32"
+                        FontWeight="Bold"
+                        Text="{x:Bind ViewModel.TitleText, Mode=OneWay}" />
+
+                    <!--  Content Loading progress ring  -->
+                    <ProgressRing
+                        x:Name="LoadingRing"
+                        Grid.Row="0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        x:Load="{x:Bind ViewModel.CanvasRingLoad, Mode=OneWay}"
+                        IsActive="True" />
+
+                    <!--  Tip text  -->
+                    <TextBlock
+                        x:Name="TipText"
+                        Grid.Row="1"
+                        x:Load="{x:Bind ViewModel.TipTextLoad, Mode=OneWay}"
+                        Opacity="0.7"
+                        Text="{x:Bind ViewModel.TipText, Mode=OneWay}" />
+                </Grid>
 
                 <!--  The canvas  -->
                 <uc:DynamicCanvasControl
@@ -93,6 +113,7 @@
                     IsDragAvailable="{x:Bind ViewModel.IsDragAvailable, Mode=OneWay}" />
 
                 <!--  TODO: Add teaching tip here: "What's this?"  -->
+                <!--  Pasted as reference hyperlink  -->
                 <HyperlinkButton
                     x:Name="PastedAsReference"
                     Grid.Row="1"

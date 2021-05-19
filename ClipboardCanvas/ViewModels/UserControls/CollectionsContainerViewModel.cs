@@ -334,7 +334,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             else
             {
                 // Otherwise, load existing data from file
-                await LoadCanvasFromCollection(pasteCanvasModel, cancellationToken, true);
+                await LoadCanvasFromCollection(pasteCanvasModel, cancellationToken);
             }
         }
 
@@ -342,7 +342,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             _currentIndex = 0;
 
-            await LoadCanvasFromCollection(pasteCanvasModel, cancellationToken, false);
+            await LoadCanvasFromCollection(pasteCanvasModel, cancellationToken);
         }
 
         public async Task NavigateBack(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken)
@@ -351,10 +351,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             this._currentIndex = Extensions.CollectionExtensions.IndexFitBounds(this.Items.Count, this._currentIndex);
 
-            await LoadCanvasFromCollection(pasteCanvasModel, cancellationToken, false);
+            await LoadCanvasFromCollection(pasteCanvasModel, cancellationToken);
         }
 
-        public async Task LoadCanvasFromCollection(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken, bool navigateNext)
+        public async Task LoadCanvasFromCollection(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken)
         {
             // You can only load existing data
             SafeWrapperResult result = await pasteCanvasModel.TryLoadExistingData(this.Items[_currentIndex], cancellationToken);
@@ -371,16 +371,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 }
 
                 // We must reload items because some were missing
-                await InitItems("Collection is reloaded because some items were missing");
-
-                if (navigateNext)
-                {
-                    _currentIndex = Extensions.CollectionExtensions.IndexFitBounds(this.Items.Count + 1, _currentIndex + 1);
-                }
-                else
-                {
-                    _currentIndex = Extensions.CollectionExtensions.IndexFitBounds(this.Items.Count + 1, _currentIndex - 1);
-                }
+                await InitItems("We've noticed some items went missing. We're reloading the Collection for you.");
 
                 if (!HasNext())
                 {
@@ -402,7 +393,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public void RefreshAddItem(StorageFile file, BasePastedContentTypeDataModel contentType)
         {
-            Items.Add(new CollectionsContainerItemViewModel(file, contentType));
+            AddCanvasItem(file, contentType);
         }
 
         #endregion
@@ -428,7 +419,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             Items.Clear();
             foreach (var item in files)
             {
-                Items.Add(new CollectionsContainerItemViewModel(item));
+                AddCanvasItem(item);
             }
 
             // TODO: save index somewhere to file?
@@ -442,6 +433,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             IsLoadingItems = false;
             CanvasInitializing = false;
+        }
+
+        private void AddCanvasItem(StorageFile file, BasePastedContentTypeDataModel contentType = null)
+        {
+            Items.Add(new CollectionsContainerItemViewModel(file, contentType));
         }
 
         private void SetCollectionError(bool isError)

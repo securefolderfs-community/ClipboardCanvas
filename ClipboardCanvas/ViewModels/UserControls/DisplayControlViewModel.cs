@@ -206,6 +206,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void CollectionsControlViewModel_OnCollectionItemsInitializationStartedEvent(object sender, CollectionItemsInitializationStartedEventArgs e)
         {
+            // Set tip if necessary
+            PasteCanvasPageModel.SetTipText(e.infoText);
+
             // Show navigation loading
             NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = true;
             if (!_currentCollectionContainer.IsOnNewCanvas)
@@ -396,12 +399,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     {
                         if (!_currentCollectionContainer.CanvasInitializing)
                         {
-                            CheckNavigation();
-
                             // We might navigate from home to a canvas that's already filled, so initialize the content
                             if (_currentCollectionContainer.IsFilled)
                             {
-                                await _currentCollectionContainer.LoadCanvasFromCollection(PasteCanvasPageModel.PasteCanvasModel, _canvasLoadCancellationTokenSource.Token, false);
+                                await _currentCollectionContainer.LoadCanvasFromCollection(PasteCanvasPageModel.PasteCanvasModel, _canvasLoadCancellationTokenSource.Token);
                             }
                         }
                         break;

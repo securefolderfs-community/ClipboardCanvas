@@ -73,6 +73,20 @@ namespace ClipboardCanvas.ViewModels.Pages
             set => SetProperty(ref _TitleText, value);
         }
 
+        private string _TipText;
+        public string TipText
+        {
+            get => _TipText;
+            set => SetProperty(ref _TipText, value);
+        }
+
+        private bool _TipTextLoad;
+        public bool TipTextLoad
+        {
+            get => _TipTextLoad;
+            set => SetProperty(ref _TipTextLoad, value);
+        }
+
         private bool _ErrorTextLoad = true;
         public bool ErrorTextLoad
         {
@@ -298,6 +312,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             if (e.showErrorImage)
             {
                 TitleTextLoad = false;
+                TipTextLoad = false;
                 PasteCanvasModel?.DiscardData();
             }
         }
@@ -313,6 +328,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             CanvasRingLoad = false;
             _contentLoaded = true;
             TitleTextLoad = false;
+            TipTextLoad = false;
             ErrorTextLoad = false;
         }
 
@@ -323,12 +339,30 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         #endregion
 
+        #region IPasteCanvasPageModel
+
+        public void SetTipText(string text)
+        {
+            if (!string.IsNullOrWhiteSpace(text))
+            {
+                TipTextLoad = true;
+                TipText = text;
+            }
+            else
+            {
+                TipTextLoad = false;
+            }
+        }
+
+        #endregion
+
         #region Private Helpers
 
         private async Task PrepareForContentStartLoading()
         {
             _contentLoaded = false;
             TitleTextLoad = false;
+            TipTextLoad = false;
 
             // Await a short delay before showing the loading ring
             await Task.Delay(Constants.CanvasContent.SHOW_LOADING_RING_AFTER_TIME);
