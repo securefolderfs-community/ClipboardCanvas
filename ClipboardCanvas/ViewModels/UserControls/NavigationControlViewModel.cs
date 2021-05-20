@@ -172,6 +172,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                         break;
                     }
 
+                case (c: false, s: false, a: false, w: false, k: VirtualKey.Home):
                 case (c: true, s: false, a: false, w: false, k: VirtualKey.Right):
                     {
                         NavigateFirst();
@@ -184,6 +185,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                         break;
                     }
 
+                case (c: false, s: false, a: false, w: false, k: VirtualKey.End):
                 case (c: true, s: false, a: false, w: false, k: VirtualKey.Left):
                     {
                         NavigateLast();

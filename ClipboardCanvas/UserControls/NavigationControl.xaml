@@ -95,6 +95,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <UserControl.KeyboardAccelerators>
+
         <KeyboardAccelerator Key="Up" Modifiers="Control">
             <i:Interaction.Behaviors>
                 <icore:EventTriggerBehavior EventName="Invoked">
@@ -116,6 +117,13 @@
                 </icore:EventTriggerBehavior>
             </i:Interaction.Behaviors>
         </KeyboardAccelerator>
+        <KeyboardAccelerator Key="Home">
+            <i:Interaction.Behaviors>
+                <icore:EventTriggerBehavior EventName="Invoked">
+                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
+                </icore:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+        </KeyboardAccelerator>
         <KeyboardAccelerator Key="Right" Modifiers="Control">
             <i:Interaction.Behaviors>
                 <icore:EventTriggerBehavior EventName="Invoked">
@@ -124,6 +132,13 @@
             </i:Interaction.Behaviors>
         </KeyboardAccelerator>
         <KeyboardAccelerator Key="Left">
+            <i:Interaction.Behaviors>
+                <icore:EventTriggerBehavior EventName="Invoked">
+                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
+                </icore:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+        </KeyboardAccelerator>
+        <KeyboardAccelerator Key="End">
             <i:Interaction.Behaviors>
                 <icore:EventTriggerBehavior EventName="Invoked">
                     <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
