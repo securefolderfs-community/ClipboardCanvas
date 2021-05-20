@@ -30,6 +30,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
     {
         #region Private Members
 
+        private static SafeWrapperResult s_CollectionFolderNotFound => new SafeWrapperResult(OperationErrorCode.NotFound, "The folder associated with this collection was not found.");
+
         private StorageFolder _innerStorageFolder;
 
         private int _currentIndex;
@@ -99,6 +101,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             get => _ErrorIconVisibility;
             set => SetProperty(ref _ErrorIconVisibility, value);
+        }
+
+        private SafeWrapperResult _CollectionErrorInfo;
+        public SafeWrapperResult CollectionErrorInfo
+        {
+            get => _CollectionErrorInfo;
+            set => SetProperty(ref _CollectionErrorInfo, value);
         }
 
         public bool IsFilled => _currentIndex < Items.Count;
@@ -269,11 +278,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             if (StorageItemHelpers.Exists(_collectionFolderPath))
             {
-                SetCollectionError(false);
+                SetCollectionError(SafeWrapperResult.S_SUCCESS);
             }
             else
             {
-                SetCollectionError(true);
+                SetCollectionError(s_CollectionFolderNotFound);
             }
         }
 
@@ -363,7 +372,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             {
                 if (!StorageItemHelpers.Exists(_innerStorageFolder?.Path))
                 {
-                    SetCollectionError(true);
+                    SetCollectionError(s_CollectionFolderNotFound);
 
                     // TODO: Pass error code here in the future
                     OnGoToHomePageRequestedEvent?.Invoke(this, new GoToHomePageRequestedEventArgs());
@@ -440,10 +449,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
             Items.Add(new CollectionsContainerItemViewModel(file, contentType));
         }
 
-        private void SetCollectionError(bool isError)
+        private void SetCollectionError(SafeWrapperResult safeWrapperResult)
         {
-            if (isError)
+            if (!safeWrapperResult)
             {
+                CollectionErrorInfo = safeWrapperResult;
                 ErrorIconVisibility = Visibility.Visible;
                 CanOpenCollection = false;
             }
@@ -488,7 +498,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             if (_innerStorageFolder == null)
             {
                 // Lock the collection and prevent from opening it
-                SetCollectionError(true);
+                SetCollectionError(s_CollectionFolderNotFound);
 
                 return false;
             }

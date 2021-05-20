@@ -17,6 +17,7 @@
     <UserControl.Resources>
         <vc:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <vc:SelectedCollectionsContainerConverter x:Key="SelectedCollectionsContainerConverter" />
+        <vc:SafeWrapperResultToErrorConverter x:Key="SafeWrapperResultToErrorConverter" />
     </UserControl.Resources>
 
     <Grid AllowDrop="True">
@@ -73,42 +74,20 @@
                         <Grid Margin="4,0,4,2">
                             <Grid.RowDefinitions>
                                 <!--  Icon  -->
-                                <RowDefinition Height="8*" />
+                                <RowDefinition Height="9*" />
                                 <!--  Filename  -->
                                 <RowDefinition Height="Auto" />
                                 <!--  Loading progressbar  -->
-                                <RowDefinition />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <!--  Collection name and control  -->
-                            <Grid Grid.Row="1">
-                                <!--  Collection name  -->
-                                <TextBlock
+                            <!--  Icon  -->
+                            <Grid Grid.Row="0">
+                                <FontIcon
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    FontWeight="SemiBold"
-                                    Text="{Binding DisplayName}"
-                                    TextWrapping="Wrap"
-                                    ToolTipService.ToolTip="{Binding DisplayName}"
-                                    Visibility="{Binding IsEditingName, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter='invert'}" />
-
-                                <!--  Collection name edit box  -->
-                                <TextBox
-                                    Grid.Row="1"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Bottom"
-                                    Text="{Binding EditBoxText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                    TextAlignment="Center"
-                                    Visibility="{Binding IsEditingName, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                    <i:Interaction.Behaviors>
-                                        <icore:EventTriggerBehavior EventName="KeyDown">
-                                            <icore:InvokeCommandAction Command="{Binding EditBoxKeyDownCommand}" />
-                                        </icore:EventTriggerBehavior>
-                                        <icore:EventTriggerBehavior EventName="LostFocus">
-                                            <icore:InvokeCommandAction Command="{Binding EditBoxLostFocusCommand}" />
-                                        </icore:EventTriggerBehavior>
-                                    </i:Interaction.Behaviors>
-                                </TextBox>
+                                    FontSize="48"
+                                    Glyph="&#xF12B;" />
 
                                 <!--  Collection Error Warning  -->
                                 <FontIcon
@@ -129,8 +108,7 @@
 
                                                 <!--  Content text  -->
                                                 <TextBlock
-                                                    Width="200"
-                                                    Text="This Collection folder was not found"
+                                                    Text="{Binding CollectionErrorInfo, Converter={StaticResource SafeWrapperResultToErrorConverter}}"
                                                     TextTrimming="WordEllipsis"
                                                     TextWrapping="Wrap" />
                                             </StackPanel>
@@ -139,11 +117,42 @@
                                 </FontIcon>
                             </Grid>
 
+                            <!--  Collection name and control  -->
+                            <Grid Grid.Row="1" Padding="8,0,8,0">
+                                <!--  Collection name  -->
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontWeight="SemiBold"
+                                    Text="{Binding DisplayName}"
+                                    TextTrimming="CharacterEllipsis"
+                                    ToolTipService.ToolTip="{Binding DisplayName}"
+                                    Visibility="{Binding IsEditingName, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter='invert'}" />
+
+                                <!--  Collection name edit box  -->
+                                <TextBox
+                                    Grid.Row="1"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Bottom"
+                                    Text="{Binding EditBoxText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                    TextAlignment="Center"
+                                    Visibility="{Binding IsEditingName, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <i:Interaction.Behaviors>
+                                        <icore:EventTriggerBehavior EventName="KeyDown">
+                                            <icore:InvokeCommandAction Command="{Binding EditBoxKeyDownCommand}" />
+                                        </icore:EventTriggerBehavior>
+                                        <icore:EventTriggerBehavior EventName="LostFocus">
+                                            <icore:InvokeCommandAction Command="{Binding EditBoxLostFocusCommand}" />
+                                        </icore:EventTriggerBehavior>
+                                    </i:Interaction.Behaviors>
+                                </TextBox>
+                            </Grid>
+
                             <!--  Progressbar  -->
                             <ProgressBar
                                 Grid.Row="2"
                                 HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
+                                VerticalAlignment="Center"
                                 IsIndeterminate="True"
                                 Visibility="{Binding IsLoadingItemsVisibility}" />
                         </Grid>

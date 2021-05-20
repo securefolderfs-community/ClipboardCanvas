@@ -29,9 +29,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
     {
         #region Private Members
 
-        private static bool _itemAddedInternally;
+        private static bool s_itemAddedInternally;
 
-        private static int _internalCollectionsCount;
+        private static int s_internalCollectionsCount;
 
         #endregion
 
@@ -201,12 +201,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            if (!_itemAddedInternally && _internalCollectionsCount < Items.Count)
+            if (!s_itemAddedInternally && s_internalCollectionsCount < Items.Count)
             {
                 CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
             }
 
-            _internalCollectionsCount = Items.Count;
+            s_internalCollectionsCount = Items.Count;
         }
 
         private static void Container_OnGoToHomePageRequestedEvent(object sender, GoToHomePageRequestedEventArgs e)
@@ -355,9 +355,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
             container.OnGoToHomePageRequestedEvent += Container_OnGoToHomePageRequestedEvent;
             await container.InitializeInnerStorageFolder();
 
-            _itemAddedInternally = true;
+            s_itemAddedInternally = true;
             Items.Add(container);
-            _itemAddedInternally = false;
+            s_itemAddedInternally = false;
 
             OnCollectionAddedEvent?.Invoke(null, new CollectionAddedEventArgs(container));
 
