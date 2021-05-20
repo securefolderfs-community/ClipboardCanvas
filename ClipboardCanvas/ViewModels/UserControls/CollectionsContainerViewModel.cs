@@ -300,7 +300,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             if (string.IsNullOrEmpty(fileName))
             {
-                fileName = DateTime.Now.ToString("ddMMyyyy HH_mm_ss");
+                fileName = DateTime.Now.ToString("dd.MM.yyyy HH_mm_ss");
             }
 
             if (_innerStorageFolder == null)

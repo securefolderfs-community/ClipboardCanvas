@@ -376,19 +376,18 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             StorageFolder folder = await folderPicker.PickSingleFolderAsync();
 
+            // We retrieve the folder again this time using ToStorageItem<>() because items picked by the FilePicker
+            // or FolderPicker cannot be modified - i.e. Renamed etc.
+            folder = await StorageItemHelpers.ToStorageItem<StorageFolder>(folder?.Path);
+
             if (folder == null)
             {
-                return false; // User didn't pick any folder
+                return false; // User didn't pick any folder or couldn't retrieve the folder after it's been picked
             }
 
             var collection = new CollectionsContainerViewModel(folder);
-            if (await AddCollection(collection))
-            {
-                //collection.StartRename();
-                return true;
-            }
 
-            return false;
+            return await AddCollection(collection);
         }
 
         #endregion
