@@ -195,11 +195,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                         InitializeViewModel(() => new WebViewCanvasViewModel(_view, WebViewCanvasMode.ReadWebsite));
                     }
                 }
-                else if (StringHelpers.IsHTML(text))
-                {
-                    // Html
-                    InitializeViewModel(() => new WebViewCanvasViewModel(_view, WebViewCanvasMode.ReadHtml));
-                }
                 else
                 {
                     if (App.AppSettings.UserSettings.PrioritizeMarkdownOverText)

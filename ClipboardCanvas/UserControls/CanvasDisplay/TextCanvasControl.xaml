@@ -10,6 +10,8 @@
     mc:Ignorable="d">
 
     <Grid>
-        <TextBlock Text="{x:Bind ViewModel.ContentText, Mode=OneWay}" />
+        <ScrollViewer>
+            <TextBlock Text="{x:Bind ViewModel.ContentText, Mode=OneWay}" />
+        </ScrollViewer>
     </Grid>
 </UserControl>
