@@ -416,7 +416,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             IsLoadingItemsVisibility = Visibility.Visible;
 
-            IEnumerable<StorageFile> files = await Task.Run(() => this._innerStorageFolder.GetFilesAsync().AsTask());
+            IEnumerable<StorageFile> files = await Task.Run(async () => await this._innerStorageFolder.GetFilesAsync());
 
             // Sort items from oldest (last canvas) to newest (first canvas)
             files = files.OrderBy((x) => x.DateCreated.DateTime);
