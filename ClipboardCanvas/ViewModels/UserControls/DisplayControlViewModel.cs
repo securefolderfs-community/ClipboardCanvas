@@ -198,10 +198,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void CollectionsControlViewModel_OnCollectionItemsInitializationFinishedEvent(object sender, CollectionItemsInitializationFinishedEventArgs e)
         {
-            // Re-enable navigation after items have loaded
-            NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = false;
-            NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading = false;
-            CheckNavigation();
+            if (!_currentCollectionContainer.CanvasInitializing)
+            {
+                // Re-enable navigation after items have loaded
+                NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = false;
+                NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading = false;
+                CheckNavigation();
+            }
         }
 
         private void CollectionsControlViewModel_OnCollectionItemsInitializationStartedEvent(object sender, CollectionItemsInitializationStartedEventArgs e)
@@ -388,9 +391,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
             // Handle event where the loading rings were shown and the collection is no longer initializing - hide them
             else
             {
-                NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = false;
-                NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading = false;
-                CheckNavigation();
+                if (!_currentCollectionContainer.CanvasInitializing)
+                {
+                    // Re-enable navigation after items have loaded
+                    NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = false;
+                    NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading = false;
+                    CheckNavigation();
+                }
             }
 
             switch (CurrentPage)

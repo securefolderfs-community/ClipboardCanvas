@@ -412,9 +412,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
         private async Task InitItems(string infoText = null)
         {
             CanvasInitializing = true;
-            OnCollectionItemsInitializationStartedEvent?.Invoke(this, new CollectionItemsInitializationStartedEventArgs(this, infoText));
-
             IsLoadingItemsVisibility = Visibility.Visible;
+
+            OnCollectionItemsInitializationStartedEvent?.Invoke(this, new CollectionItemsInitializationStartedEventArgs(this, infoText));
 
             IEnumerable<StorageFile> files = await Task.Run(async () => await this._innerStorageFolder.GetFilesAsync());
 
@@ -438,10 +438,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
             
             this._currentIndex = Extensions.CollectionExtensions.IndexFitBounds(this.Items.Count, newIndex);
 
-            OnCollectionItemsInitializationFinishedEvent?.Invoke(this, new CollectionItemsInitializationFinishedEventArgs(this));
-
             IsLoadingItemsVisibility = Visibility.Collapsed;
             CanvasInitializing = false;
+
+            OnCollectionItemsInitializationFinishedEvent?.Invoke(this, new CollectionItemsInitializationFinishedEventArgs(this));
         }
 
         private void AddCanvasItem(StorageFile file, BasePastedContentTypeDataModel contentType = null)
