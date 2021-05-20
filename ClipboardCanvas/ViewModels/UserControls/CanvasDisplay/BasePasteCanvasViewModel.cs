@@ -63,7 +63,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Protected Properties
 
-        protected SafeWrapperResult CancelledResult => new SafeWrapperResult(OperationErrorCode.InProgress, "The operation was canceled");
+        protected SafeWrapperResult CancelledResult => new SafeWrapperResult(OperationErrorCode.Cancelled, "The operation was canceled");
 
         protected SafeWrapperResult ReferencedFileNotFoundResult => new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "The file referenced was not found");
 
@@ -175,7 +175,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             RaiseOnPasteRequestedEvent(this, new PasteRequestedEventArgs(isFilled, dataPackage));
 
             SafeWrapperResult result;
-            SafeWrapperResult cancelResult = new SafeWrapperResult(OperationErrorCode.InProgress, "The operation was canceled");
+            SafeWrapperResult cancelResult = new SafeWrapperResult(OperationErrorCode.Cancelled, "The operation was canceled");
 
             if (IsDisposed)
             {
@@ -314,7 +314,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             if (!contentAsReference)
             {
-                return new SafeWrapperResult(OperationErrorCode.Unauthorized, new InvalidOperationException(), "Cannot paste file that's not a reference");
+                return new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Cannot paste file that's not a reference");
             }
 
             // Get referenced file

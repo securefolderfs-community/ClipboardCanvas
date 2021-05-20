@@ -35,7 +35,7 @@ namespace ClipboardCanvas.Helpers.Filesystem
                         if (cancellationToken.IsCancellationRequested)
                         {
                             // TODO: Delete copied file there
-                            result = new SafeWrapperResult(OperationErrorCode.InProgress, new Exception(), "The operation was canceled");
+                            result = new SafeWrapperResult(OperationErrorCode.Cancelled, new Exception(), "The operation was canceled");
                             break;
                         }
                     }

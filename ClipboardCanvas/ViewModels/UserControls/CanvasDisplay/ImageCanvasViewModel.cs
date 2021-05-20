@@ -126,7 +126,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return SafeWrapperResult.S_SUCCESS;
             }
 
-            return new SafeWrapperResult(OperationErrorCode.Unauthorized, "Couldn't retrieve clipboard data");
+            return new SafeWrapperResult(OperationErrorCode.AccessUnauthorized, "Couldn't retrieve clipboard data");
         }
 
         public override async Task<SafeWrapperResult> TrySaveData()

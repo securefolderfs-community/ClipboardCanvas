@@ -12,15 +12,15 @@ namespace ClipboardCanvas.Enums
     public enum OperationErrorCode : uint
     {
         Success = 0,
-        Generic = 1,
-        Unauthorized = 2,
-        NotFound = 4,
-        InUse = 8,
-        NameTooLong = 16,
-        AlreadyExists = 32,
-        NotAFolder = 64,
-        NotAFile = 128,
-        InProgress = 256,
-        InvalidArgument = 512
+        UnknownFailed = 1,
+        Cancelled = 2,
+        AccessUnauthorized = 4,
+        NotFound = 8,
+        AlreadyExists = 16,
+        NotAFolder = 32,
+        NotAFile = 64,
+        InProgress = 128,
+        InvalidArgument = 256,
+        InvalidOperation = 512
     }
 }

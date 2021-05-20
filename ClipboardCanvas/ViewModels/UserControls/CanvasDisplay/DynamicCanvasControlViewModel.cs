@@ -89,7 +89,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return await CanvasViewModel?.TryLoadExistingData(itemData, cancellationToken);
             }
 
-            SafeWrapperResult result = new SafeWrapperResult((OperationErrorCode)0x400u, new InvalidOperationException(), "Couldn't display content for this file");
+            SafeWrapperResult result = new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Couldn't display content for this file");
             OnErrorOccurredEvent?.Invoke(this, new ErrorOccurredEventArgs(result, result.Details.message));
 
             return result;
@@ -173,7 +173,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 if (!text)
                 {
                     Debugger.Break(); // What!?
-                    return new SafeWrapperResult(OperationErrorCode.Unauthorized, "Couldn't retrieve clipboard data");
+                    return new SafeWrapperResult(OperationErrorCode.AccessUnauthorized, "Couldn't retrieve clipboard data");
                 }
 
                 // Check if it's url
@@ -234,13 +234,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 else
                 {
                     // No items
-                    return new SafeWrapperResult(OperationErrorCode.Unauthorized, "Couldn't retrieve clipboard data");
+                    return new SafeWrapperResult(OperationErrorCode.AccessUnauthorized, "Couldn't retrieve clipboard data");
                 }
             }
 
             if (CanvasViewModel == null)
             {
-                return new SafeWrapperResult(OperationErrorCode.Unauthorized, "Couldn't retrieve clipboard data");
+                return new SafeWrapperResult(OperationErrorCode.AccessUnauthorized, "Couldn't retrieve clipboard data");
             }
             else
             {
