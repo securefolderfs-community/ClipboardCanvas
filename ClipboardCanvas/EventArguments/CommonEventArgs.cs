@@ -28,10 +28,13 @@ namespace ClipboardCanvas.EventArguments
 
         public readonly string infoText;
 
-        public CollectionItemsInitializationStartedEventArgs(CollectionsContainerViewModel containerViewModel, string infoText)
+        public readonly bool tipWithDelay;
+
+        public CollectionItemsInitializationStartedEventArgs(CollectionsContainerViewModel containerViewModel, string infoText, bool tipWithDelay = false)
         {
             this.containerViewModel = containerViewModel;
             this.infoText = infoText;
+            this.tipWithDelay = tipWithDelay;
         }
     }
 

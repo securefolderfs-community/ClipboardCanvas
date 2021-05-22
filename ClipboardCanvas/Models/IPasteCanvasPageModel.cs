@@ -10,6 +10,6 @@ namespace ClipboardCanvas.Models
     {
         IPasteCanvasModel PasteCanvasModel { get; }
 
-        void SetTipText(string text);
+        void SetTipText(string text, bool withDelay = false);
     }
 }

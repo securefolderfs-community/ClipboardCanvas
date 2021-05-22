@@ -334,10 +334,15 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         #region IPasteCanvasPageModel
 
-        public void SetTipText(string text)
+        public async void SetTipText(string text, bool withDelay = false)
         {
             if (!string.IsNullOrWhiteSpace(text))
             {
+                if (withDelay)
+                {
+                    await Task.Delay(Constants.CanvasContent.SHOW_TIP_TEXT_DELAY);
+                }
+
                 TipTextLoad = true;
                 TipText = text;
             }
@@ -358,7 +363,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             TipTextLoad = false;
 
             // Await a short delay before showing the loading ring
-            await Task.Delay(Constants.CanvasContent.SHOW_LOADING_RING_AFTER_TIME);
+            await Task.Delay(Constants.CanvasContent.SHOW_LOADING_RING_DELAY);
 
             if (!_contentLoaded) // The value might have changed
             {

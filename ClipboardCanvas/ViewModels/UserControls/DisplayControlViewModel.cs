@@ -210,7 +210,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         private void CollectionsControlViewModel_OnCollectionItemsInitializationStartedEvent(object sender, CollectionItemsInitializationStartedEventArgs e)
         {
             // Set tip if necessary
-            PasteCanvasPageModel?.SetTipText(e.infoText);
+            PasteCanvasPageModel?.SetTipText(e.infoText, e.tipWithDelay);
 
             // Show navigation loading
             NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = true;

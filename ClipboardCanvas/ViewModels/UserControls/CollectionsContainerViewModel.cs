@@ -414,7 +414,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CanvasInitializing = true;
             IsLoadingItemsVisibility = Visibility.Visible;
 
-            OnCollectionItemsInitializationStartedEvent?.Invoke(this, new CollectionItemsInitializationStartedEventArgs(this, infoText));
+            OnCollectionItemsInitializationStartedEvent?.Invoke(this, new CollectionItemsInitializationStartedEventArgs(this, infoText, true));
 
             IEnumerable<StorageFile> files = await Task.Run(async () => await this._innerStorageFolder.GetFilesAsync());
 

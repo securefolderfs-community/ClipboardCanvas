@@ -15,7 +15,9 @@
         {
             public const long FALLBACK_TEXTLOAD_MAX_FILESIZE = 1048576L;
 
-            public const int SHOW_LOADING_RING_AFTER_TIME = 100;
+            public const int SHOW_LOADING_RING_DELAY = 100;
+
+            public const int SHOW_TIP_TEXT_DELAY = 400;
         }
 
         public static class FileSystem
