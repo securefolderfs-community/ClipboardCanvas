@@ -19,7 +19,7 @@ namespace ClipboardCanvas.Helpers
 
         public static void UpdateSavedCollectionLocationsSetting()
         {
-            App.AppSettings.CollectionLocationsSettings.SavedCollectionLocations = CollectionsControlViewModel.Items.Where((item) => !item.isDefault).Select((item) => item.DangerousGetCollectionFolder()?.Path).ToList();
+            App.AppSettings.CollectionLocationsSettings.SavedCollectionLocations = CollectionsControlViewModel.Items.Where((item) => !item.isDefault).Select((item) => item.CollectionFolderPath).ToList();
         }
     }
 }

@@ -160,7 +160,7 @@
                             <MenuFlyout>
                                 <MenuFlyoutItem Command="{Binding OpenCollectionLocationCommand}" Text="Open Collection location" />
                                 <MenuFlyoutSeparator />
-                                <MenuFlyoutItem Command="{Binding RefreshCollectionCommand}" Text="Reload Collection" />
+                                <MenuFlyoutItem Command="{Binding ReloadCollectionCommand}" Text="Reload Collection" />
                                 <MenuFlyoutItem Command="{Binding RenameCollectionCommand}" Text="Edit name" />
                                 <MenuFlyoutItem Command="{Binding RemoveCollectionCommand}" Text="Remove Collection" />
                             </MenuFlyout>

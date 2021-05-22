@@ -36,8 +36,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private int _currentIndex;
 
-        private string _collectionFolderPath;
-
         #endregion
 
         #region Public Members
@@ -50,6 +48,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public List<CollectionsContainerItemViewModel> Items { get; private set; }
 
+        public string CollectionFolderPath { get; private set; }
+
         public bool CanOpenCollection { get; private set; } = true;
 
         public bool IsOnNewCanvas => this._currentIndex == Items.Count;
@@ -60,7 +60,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public string Name
         {
-            get => Path.GetFileName(_collectionFolderPath);
+            get => Path.GetFileName(CollectionFolderPath);
         }
 
         public string DisplayName
@@ -136,7 +136,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public ICommand OpenCollectionLocationCommand { get; private set; }
 
-        public ICommand RefreshCollectionCommand { get; private set; }
+        public ICommand ReloadCollectionCommand { get; private set; }
 
         public ICommand RenameCollectionCommand { get; private set; }
 
@@ -164,11 +164,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             if (!string.IsNullOrEmpty(collectionFolderPath))
             {
-                this._collectionFolderPath = collectionFolderPath;
+                this.CollectionFolderPath = collectionFolderPath;
             }
             else
             {
-                this._collectionFolderPath = collectionFolder?.Path;
+                this.CollectionFolderPath = collectionFolder?.Path;
             }
             this._innerStorageFolder = collectionFolder;
             this.isDefault = isDefault;
@@ -179,7 +179,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             // Create commands
             OpenCollectionLocationCommand = new RelayCommand(OpenCollectionLocation);
-            RefreshCollectionCommand = new RelayCommand(RefreshCollection);
+            ReloadCollectionCommand = new RelayCommand(ReloadCollection);
             RenameCollectionCommand = new RelayCommand(RenameCollection);
             RemoveCollectionCommand = new RelayCommand(RemoveCollection);
             EditBoxKeyDownCommand = new RelayCommand<KeyRoutedEventArgs>(EditBoxKeyDown);
@@ -200,7 +200,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             await Launcher.LaunchFolderAsync(_innerStorageFolder);
         }
 
-        private async void RefreshCollection()
+        private async void ReloadCollection()
         {
             CanvasInitialized = false;
             await InitializeInnerStorageFolder();
@@ -247,7 +247,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
                             if (result)
                             {
-                                this._collectionFolderPath = _innerStorageFolder.Path;
+                                this.CollectionFolderPath = _innerStorageFolder.Path;
 
                                 OnPropertyChanged(nameof(DisplayName));
 
@@ -276,7 +276,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public void CheckCanOpenCollection()
         {
-            if (StorageItemHelpers.Exists(_collectionFolderPath))
+            if (StorageItemHelpers.Exists(CollectionFolderPath))
             {
                 SetCollectionError(SafeWrapperResult.S_SUCCESS);
             }
@@ -488,12 +488,15 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task<bool> InitializeInnerStorageFolder()
         {
-            if (_innerStorageFolder != null)
+            if (_innerStorageFolder != null && StorageItemHelpers.Exists(_innerStorageFolder?.Path))
             {
+                // Make sure to update the state if collection path was repaired
+                SetCollectionError(SafeWrapperResult.S_SUCCESS);
+                
                 return true;
             }
 
-            this._innerStorageFolder = await StorageItemHelpers.ToStorageItem<StorageFolder>(this._collectionFolderPath);
+            this._innerStorageFolder = await StorageItemHelpers.ToStorageItem<StorageFolder>(this.CollectionFolderPath);
 
             if (_innerStorageFolder == null)
             {
