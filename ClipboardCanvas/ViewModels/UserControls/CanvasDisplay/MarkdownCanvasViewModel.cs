@@ -17,6 +17,7 @@ using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.EventArguments.CanvasControl;
+using ClipboardCanvas.DataModels.PastedContentDataModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -52,7 +53,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #region Constructor
 
         public MarkdownCanvasViewModel(IDynamicPasteCanvasControlView view, CanvasPreviewMode canvasMode)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, canvasMode)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new MarkdownContentType(), canvasMode)
         {
             this._view = view;
         }

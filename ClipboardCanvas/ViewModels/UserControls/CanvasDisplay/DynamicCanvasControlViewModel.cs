@@ -224,7 +224,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     IStorageItem item = items.First();
 
                     BasePastedContentTypeDataModel contentType = await BasePastedContentTypeDataModel.GetContentType(item, null);
-                    if (contentType == null)
+                    if (contentType is InvalidContentTypeDataModel)
                     {
                         return new SafeWrapperResult(OperationErrorCode.NotFound, "Couldn't get content type for provided data");
                     }
@@ -315,7 +315,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             // Try fallback
-            if (InitializeViewModelForType<FallbackCanvasContentType, FallbackCanvasViewModel>(contentType, () => new FallbackCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview)))
+            if (InitializeViewModelForType<FallbackContentType, FallbackCanvasViewModel>(contentType, () => new FallbackCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview)))
             {
                 return true;
             }

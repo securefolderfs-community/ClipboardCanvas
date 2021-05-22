@@ -67,7 +67,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #region Constructor
 
         public MediaCanvasViewModel(IDynamicPasteCanvasControlView view, CanvasPreviewMode canvasMode)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, canvasMode)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new MediaContentType(), canvasMode)
         {
             this._view = view;
         }
@@ -75,6 +75,18 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #endregion
 
         #region Override
+
+        public override async Task<SafeWrapperResult> TryLoadExistingData(ICollectionsContainerItemModel itemData, CancellationToken cancellationToken)
+        {
+            SafeWrapperResult result = await base.TryLoadExistingData(itemData, cancellationToken);
+
+            if (result)
+            {
+                UpdatePlaybackPosition();
+            }
+
+            return result;
+        }
 
         public override async Task<SafeWrapperResult> TrySaveData()
         {
@@ -115,7 +127,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public void UpdatePlaybackPosition()
         {
-            this._Position = _mediaContentType.savedPosition;
+            if (_Position != null)
+            {
+                this._Position = _mediaContentType.savedPosition;
+            }
         }
 
         #endregion
@@ -132,7 +147,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             base.Dispose();
 
-            ControlView = null;
             ContentMedia?.Dispose();
             ContentMedia = null;
         }

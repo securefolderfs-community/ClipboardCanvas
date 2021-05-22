@@ -18,6 +18,7 @@ using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.Extensions;
+using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.UnsafeNative;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
@@ -41,7 +42,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #region Constructor
 
         public WebViewCanvasViewModel(IDynamicPasteCanvasControlView view, WebViewCanvasMode mode, CanvasPreviewMode canvasMode)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, canvasMode)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new WebViewContentType(mode), canvasMode)
         {
             this._view = view;
             this._mode = mode;

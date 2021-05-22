@@ -51,7 +51,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #region Constructor
 
         public TextCanvasViewModel(IDynamicPasteCanvasControlView view, CanvasPreviewMode canvasMode)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, canvasMode)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new TextContentType(), canvasMode)
         {
             this._view = view;
         }

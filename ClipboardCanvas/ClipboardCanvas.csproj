@@ -135,7 +135,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="DataModels\DisplayFrameNavigationDataModel.cs" />
     <Compile Include="DataModels\PastedContentDataModels\BasePastedContentTypeDataModel.cs" />
-    <Compile Include="DataModels\PastedContentDataModels\FallbackCanvasContentType.cs" />
+    <Compile Include="DataModels\PastedContentDataModels\FallbackContentType.cs" />
     <Compile Include="DataModels\PastedContentDataModels\InvalidContentTypeDataModel.cs" />
     <Compile Include="DataModels\PastedContentDataModels\MarkdownContentType.cs" />
     <Compile Include="DataModels\PastedContentDataModels\WebViewContentType.cs" />

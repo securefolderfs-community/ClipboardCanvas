@@ -37,7 +37,7 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
 
                     if (referenceFile.ReferencedFile == null)
                     {
-                        return null;
+                        return new InvalidContentTypeDataModel(false);
                     }
 
                     file = referenceFile.ReferencedFile;
@@ -87,7 +87,7 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
                 }
 
                 // Use fallback
-                return new FallbackCanvasContentType();
+                return new FallbackContentType();
             }
             else if (item is StorageFolder folder)
             {

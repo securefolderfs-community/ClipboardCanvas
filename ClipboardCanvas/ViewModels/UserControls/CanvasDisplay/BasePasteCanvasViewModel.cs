@@ -115,9 +115,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public BasePasteCanvasViewModel(ISafeWrapperExceptionReporter errorReporter, CanvasPreviewMode canvasMode)
+        public BasePasteCanvasViewModel(ISafeWrapperExceptionReporter errorReporter, BasePastedContentTypeDataModel contentType, CanvasPreviewMode canvasMode)
         {
             this.errorReporter = errorReporter;
+            this.contentType = contentType;
             this.CanvasMode = canvasMode;
         }
 

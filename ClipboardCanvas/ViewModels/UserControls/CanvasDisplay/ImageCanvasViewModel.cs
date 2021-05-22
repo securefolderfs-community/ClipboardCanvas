@@ -21,6 +21,7 @@ using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.Helpers.Filesystem;
+using ClipboardCanvas.DataModels.PastedContentDataModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -67,7 +68,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #region Constructor
 
         public ImageCanvasViewModel(IDynamicPasteCanvasControlView view, CanvasPreviewMode canvasMode)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, canvasMode)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new ImageContentType(), canvasMode)
         {
             this._view = view;
         }

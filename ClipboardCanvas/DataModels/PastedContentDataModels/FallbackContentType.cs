@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClipboardCanvas.DataModels.PastedContentDataModels
 {
-    public class FallbackCanvasContentType : BasePastedContentTypeDataModel
+    public sealed class FallbackContentType : BasePastedContentTypeDataModel
     {
     }
 }

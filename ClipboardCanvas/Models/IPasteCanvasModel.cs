@@ -6,6 +6,7 @@ using System.Threading;
 using System.Collections.Generic;
 using ClipboardCanvas.ViewModels.UserControls;
 using ClipboardCanvas.Enums;
+using ClipboardCanvas.DataModels.PastedContentDataModels;
 
 namespace ClipboardCanvas.Models
 {
