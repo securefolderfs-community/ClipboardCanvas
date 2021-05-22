@@ -109,16 +109,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             _ContentMedia = MediaSource.CreateFromStorageFile(sourceFile);
         }
 
-        public override async Task<SafeWrapperResult> TryLoadExistingData(ICollectionsContainerItemModel itemData, CancellationToken cancellationToken)
+        #endregion
+
+        #region Public Helpers
+
+        public void UpdatePlaybackPosition()
         {
-            SafeWrapperResult result = await base.TryLoadExistingData(itemData, cancellationToken);
-
-            if (result)
-            {
-                this._Position = _mediaContentType.savedPosition;
-            }
-
-            return result;
+            this._Position = _mediaContentType.savedPosition;
         }
 
         #endregion

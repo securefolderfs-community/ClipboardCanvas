@@ -28,6 +28,7 @@ namespace ClipboardCanvas.UserControls.CanvasDisplay
         private void UserControl_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             this.ViewModel.ControlView = this;
+            this.ViewModel.UpdatePlaybackPosition();
         }
     }
 }
