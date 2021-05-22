@@ -19,7 +19,6 @@ using System.Diagnostics;
 using ClipboardCanvas.Helpers;
 using Windows.ApplicationModel.Core;
 using Microsoft.Toolkit.Uwp;
-using ClipboardCanvas.CanvasExtensions;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -40,6 +39,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             get => _CanvasViewModel;
             set => SetProperty(ref _CanvasViewModel, value);
         }
+
+        public CanvasPreviewMode CanvasMode => CanvasViewModel?.CanvasMode ?? CanvasPreviewMode.PreviewOnly;
 
         #endregion
 
@@ -164,7 +165,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (dataPackage.Contains(StandardDataFormats.Bitmap))
             {
                 // Image
-                InitializeViewModel(() => new ImageCanvasViewModel(_view));
+                InitializeViewModel(() => new ImageCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview));
             }
             else if (dataPackage.Contains(StandardDataFormats.Text))
             {
@@ -186,13 +187,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                         if (ImageCanvasViewModel.Extensions.Contains(ext))
                         {
                             // Image
-                            InitializeViewModel(() => new ImageCanvasViewModel(_view));
+                            InitializeViewModel(() => new ImageCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview));
                         }
                     }
                     else
                     {
                         // Webpage link
-                        InitializeViewModel(() => new WebViewCanvasViewModel(_view, WebViewCanvasMode.ReadWebsite));
+                        InitializeViewModel(() => new WebViewCanvasViewModel(_view, WebViewCanvasMode.ReadWebsite, CanvasPreviewMode.InteractionAndPreview));
                     }
                 }
                 else
@@ -200,12 +201,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     if (App.AppSettings.UserSettings.PrioritizeMarkdownOverText)
                     {
                         // Markdown
-                        InitializeViewModel(() => new MarkdownCanvasViewModel(_view));
+                        InitializeViewModel(() => new MarkdownCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview));
                     }
                     else
                     {
                         // Normal text
-                        InitializeViewModel(() => new TextCanvasViewModel(_view));
+                        InitializeViewModel(() => new TextCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview));
                     }
                 }
             }
@@ -285,31 +286,31 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Initialize View Model
 
             // Try for image
-            if (InitializeViewModelForType<ImageContentType, ImageCanvasViewModel>(contentType, () => new ImageCanvasViewModel(_view)))
+            if (InitializeViewModelForType<ImageContentType, ImageCanvasViewModel>(contentType, () => new ImageCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview)))
             {
                 return true;
             }
 
             // Try for text
-            if (InitializeViewModelForType<TextContentType, TextCanvasViewModel>(contentType, () => new TextCanvasViewModel(_view)))
+            if (InitializeViewModelForType<TextContentType, TextCanvasViewModel>(contentType, () => new TextCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview)))
             {
                 return true;
             }
 
             // Try for media
-            if (InitializeViewModelForType<MediaContentType, MediaCanvasViewModel>(contentType, () => new MediaCanvasViewModel(_view)))
+            if (InitializeViewModelForType<MediaContentType, MediaCanvasViewModel>(contentType, () => new MediaCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview)))
             {
                 return true;
             }
 
             // Try for WebView
-            if (InitializeViewModelForType<WebViewContentType, WebViewCanvasViewModel>(contentType, () => new WebViewCanvasViewModel(_view, (contentType as WebViewContentType)?.mode ?? WebViewCanvasMode.Unknown)))
+            if (InitializeViewModelForType<WebViewContentType, WebViewCanvasViewModel>(contentType, () => new WebViewCanvasViewModel(_view, (contentType as WebViewContentType)?.mode ?? WebViewCanvasMode.Unknown, CanvasPreviewMode.InteractionAndPreview)))
             {
                 return true;
             }
 
             // Try for markdown
-            if (InitializeViewModelForType<MarkdownContentType, MarkdownCanvasViewModel>(contentType, () => new MarkdownCanvasViewModel(_view)))
+            if (InitializeViewModelForType<MarkdownContentType, MarkdownCanvasViewModel>(contentType, () => new MarkdownCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview)))
             {
                 return true;
             }
@@ -337,41 +338,17 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             else // Initialize new View Model
             {
-                UninitializeExtensionsForViewModel();
                 UnhookEvents();
                 CanvasViewModel = initializer();
                 HookEvents();
 
-                InitializeExtensionsForViewModel();
-
                 return true;
-            }
-        }
-
-        private void InitializeExtensionsForViewModel()
-        {
-            if (CanvasViewModel is ICanvasContentDraggableExtension draggableExtension)
-            {
-                draggableExtension.IsDragAvailable = _view?.IsDragAvailable ?? false;
-                draggableExtension.OnDragStartedEvent += CanvasViewModelDraggable_OnDragStartedEvent;
-            }
-        }
-
-        private void UninitializeExtensionsForViewModel()
-        {
-            if (CanvasViewModel is ICanvasContentDraggableExtension draggable)
-            {
-                draggable.OnDragStartedEvent -= CanvasViewModelDraggable_OnDragStartedEvent;
             }
         }
 
         #endregion
 
         #region Event Handlers
-
-        private void CanvasViewModelDraggable_OnDragStartedEvent(object sender, EventArgs e)
-        {
-        }
 
         private void CanvasViewModel_OnProgressReportedEvent(object sender, ProgressReportedEventArgs e)
         {
@@ -461,7 +438,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public void Dispose()
         {
-            UninitializeExtensionsForViewModel();
             UnhookEvents();
             CanvasViewModel?.Dispose();
         }

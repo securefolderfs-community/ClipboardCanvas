@@ -11,7 +11,7 @@
 
     <Grid>
         <Image
-            CanDrag="{x:Bind ViewModel.IsDragAvailable, Mode=OneWay}"
+            CanDrag="{x:Bind ViewModel.CanDrag, Mode=OneWay}"
             DragStarting="Image_DragStarting"
             Source="{x:Bind ViewModel.ContentImage, Mode=OneWay}" />
     </Grid>

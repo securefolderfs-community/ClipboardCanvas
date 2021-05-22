@@ -50,8 +50,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public TextCanvasViewModel(IDynamicPasteCanvasControlView view)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter) // TODO: Use custom exception reporter
+        public TextCanvasViewModel(IDynamicPasteCanvasControlView view, CanvasPreviewMode canvasMode)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, canvasMode)
         {
             this._view = view;
         }

@@ -45,13 +45,6 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public IPasteCanvasModel PasteCanvasModel => _view?.PasteCanvasModel;
 
-        private bool _IsDragAvailable = true;
-        public bool IsDragAvailable
-        {
-            get => _IsDragAvailable;
-            private set => SetProperty(ref _IsDragAvailable, value);
-        }
-
         private bool _TitleTextLoad = true;
         public bool TitleTextLoad
         {

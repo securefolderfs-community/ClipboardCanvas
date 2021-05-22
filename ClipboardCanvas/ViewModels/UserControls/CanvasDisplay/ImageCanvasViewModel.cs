@@ -21,11 +21,10 @@ using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.Helpers.Filesystem;
-using ClipboardCanvas.CanvasExtensions;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
-    public sealed class ImageCanvasViewModel : BasePasteCanvasViewModel, ICanvasContentDraggableExtension
+    public sealed class ImageCanvasViewModel : BasePasteCanvasViewModel
     {
         #region Private Members
 
@@ -56,41 +55,21 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             set => SetProperty(ref _ContentImage, value);
         }
 
-        private bool _IsDragAvailable;
-        public bool IsDragAvailable
+        private bool _CanDrag;
+        public bool CanDrag
         {
-            get => _IsDragAvailable;
-            set => SetProperty(ref _IsDragAvailable, value);
+            get => _CanDrag;
+            set => SetProperty(ref _CanDrag, value);
         }
-
-        #endregion
-
-        #region Events
-
-        public event EventHandler OnDragStartedEvent;
 
         #endregion
 
         #region Constructor
 
-        public ImageCanvasViewModel(IDynamicPasteCanvasControlView view)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter) // TODO: Use custom exception reporter
+        public ImageCanvasViewModel(IDynamicPasteCanvasControlView view, CanvasPreviewMode canvasMode)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, canvasMode)
         {
             this._view = view;
-        }
-
-        #endregion
-
-        #region Public Helpers
-
-        public IReadOnlyList<IStorageItem> ProvideDragData()
-        {
-            return new List<IStorageItem>() { sourceFile };
-        }
-
-        public void RaiseOnDragStartedEvent()
-        {
-            OnDragStartedEvent?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion
@@ -293,6 +272,39 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             });
 
             return result;
+        }
+
+        protected override void OnCanvasModeChanged(CanvasPreviewMode canvasMode)
+        {
+            switch (canvasMode)
+            {
+                case CanvasPreviewMode.PreviewOnly:
+                    {
+                        CanDrag = false;
+                        break;
+                    }
+
+                case CanvasPreviewMode.InteractionAndPreview:
+                    {
+                        CanDrag = true;
+                        break;
+                    }
+
+                case CanvasPreviewMode.WriteAndPreview:
+                    {
+                        CanDrag = false;
+                        break;
+                    }
+            }
+        }
+
+        #endregion
+
+        #region Public Helpers
+
+        public IReadOnlyList<IStorageItem> ProvideDragData()
+        {
+            return new List<IStorageItem>() { sourceFile };
         }
 
         #endregion

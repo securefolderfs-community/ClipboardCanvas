@@ -24,7 +24,6 @@ namespace ClipboardCanvas.UserControls.CanvasDisplay
         private void Image_DragStarting(Windows.UI.Xaml.UIElement sender, Windows.UI.Xaml.DragStartingEventArgs args)
         {
             IReadOnlyList<IStorageItem> dragData = ViewModel.ProvideDragData();
-            ViewModel.RaiseOnDragStartedEvent();
 
             args.Data.SetData(StandardDataFormats.StorageItems, dragData);
         }

@@ -73,6 +73,24 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #endregion
 
+        #region Public Properties
+
+        private CanvasPreviewMode _CanvasMode;
+        public CanvasPreviewMode CanvasMode
+        {
+            get => _CanvasMode;
+            protected set
+            {
+                if (_CanvasMode != value)
+                {
+                    _CanvasMode = value;
+                    OnCanvasModeChanged(_CanvasMode);
+                }
+            }
+        }
+
+        #endregion
+
         #region IPasteCanvasEventsModel
 
         public event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
@@ -97,9 +115,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public BasePasteCanvasViewModel(ISafeWrapperExceptionReporter errorReporter)
+        public BasePasteCanvasViewModel(ISafeWrapperExceptionReporter errorReporter, CanvasPreviewMode canvasMode)
         {
             this.errorReporter = errorReporter;
+            this.CanvasMode = canvasMode;
         }
 
         #endregion
@@ -424,6 +443,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             return true;
+        }
+
+        protected virtual void OnCanvasModeChanged(CanvasPreviewMode canvasMode)
+        {
         }
 
         /// <inheritdoc cref="ReportProgress(float, bool, CanvasPageProgressType)"/>

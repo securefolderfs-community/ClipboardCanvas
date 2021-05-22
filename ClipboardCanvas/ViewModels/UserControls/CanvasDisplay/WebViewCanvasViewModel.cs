@@ -40,8 +40,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public WebViewCanvasViewModel(IDynamicPasteCanvasControlView view, WebViewCanvasMode mode)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter)
+        public WebViewCanvasViewModel(IDynamicPasteCanvasControlView view, WebViewCanvasMode mode, CanvasPreviewMode canvasMode)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, canvasMode)
         {
             this._view = view;
             this._mode = mode;

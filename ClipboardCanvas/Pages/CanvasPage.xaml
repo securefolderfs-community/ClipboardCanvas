@@ -109,8 +109,7 @@
                     x:Name="PasteCanvasControl"
                     Grid.Row="0"
                     Background="Transparent"
-                    CollectionContainer="{x:Bind ViewModel.CollectionContainer, Mode=OneWay}"
-                    IsDragAvailable="{x:Bind ViewModel.IsDragAvailable, Mode=OneWay}" />
+                    CollectionContainer="{x:Bind ViewModel.CollectionContainer, Mode=OneWay}" />
 
                 <!--  TODO: Add teaching tip here: "What's this?"  -->
                 <!--  Pasted as reference hyperlink  -->

@@ -51,8 +51,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public MarkdownCanvasViewModel(IDynamicPasteCanvasControlView view)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter)
+        public MarkdownCanvasViewModel(IDynamicPasteCanvasControlView view, CanvasPreviewMode canvasMode)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, canvasMode)
         {
             this._view = view;
         }

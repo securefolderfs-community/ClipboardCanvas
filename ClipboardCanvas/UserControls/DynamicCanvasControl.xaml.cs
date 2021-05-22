@@ -3,7 +3,6 @@
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
-using Windows.UI.Xaml;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -18,8 +17,6 @@ namespace ClipboardCanvas.UserControls
         }
 
         public ICollectionsContainerModel CollectionContainer { get; set; }
-
-        public bool IsDragAvailable { get; set; } = false;
 
         public DynamicCanvasControl()
         {

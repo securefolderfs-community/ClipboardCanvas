@@ -5,11 +5,14 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using System.Threading;
 using System.Collections.Generic;
 using ClipboardCanvas.ViewModels.UserControls;
+using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.Models
 {
     public interface IPasteCanvasModel : IPasteCanvasEventsModel, IDisposable
     {
+        CanvasPreviewMode CanvasMode { get; } // set??
+
         /// <summary>
         /// Attempts to load existing data to display
         /// </summary>
