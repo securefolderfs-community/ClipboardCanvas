@@ -11,7 +11,11 @@
 
     <Grid>
         <ScrollViewer>
-            <TextBlock Text="{x:Bind ViewModel.ContentText, Mode=OneWay}" />
+            <RichTextBlock IsTextSelectionEnabled="True">
+                <Paragraph>
+                    <Run Text="{x:Bind ViewModel.ContentText, Mode=OneWay}" />
+                </Paragraph>
+            </RichTextBlock>
         </ScrollViewer>
     </Grid>
 </UserControl>
