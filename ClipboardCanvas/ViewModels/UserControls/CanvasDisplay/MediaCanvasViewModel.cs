@@ -17,6 +17,8 @@ using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.EventArguments.CanvasControl;
+using ClipboardCanvas.DataModels.PastedContentDataModels;
+using System.Threading;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -25,6 +27,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #region Private Members
 
         private readonly IDynamicPasteCanvasControlView _view;
+
+        private MediaContentType _mediaContentType => contentType as MediaContentType;
+
+        private TimeSpan _Position
+        {
+            get => ControlView.Position;
+            set => ControlView.Position = value;
+        }
 
         #endregion
 
@@ -49,6 +59,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             get => _ContentMedia;
             set => SetProperty(ref _ContentMedia, value);
         }
+
+        public IMediaCanvasControlView ControlView { get; set; }
 
         #endregion
 
@@ -91,14 +103,39 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
+        protected override void OnReferencePasted()
+        {
+            // Change the source
+            _ContentMedia = MediaSource.CreateFromStorageFile(sourceFile);
+        }
+
+        public override async Task<SafeWrapperResult> TryLoadExistingData(ICollectionsContainerItemModel itemData, CancellationToken cancellationToken)
+        {
+            SafeWrapperResult result = await base.TryLoadExistingData(itemData, cancellationToken);
+
+            if (result)
+            {
+                this._Position = _mediaContentType.savedPosition;
+            }
+
+            return result;
+        }
+
         #endregion
 
         #region IDisposable
 
         public override void Dispose()
         {
+            ICollectionsContainerItemModel associatedContainerItem = AssociatedContainer.Items.Where((item) => item.File == associatedFile).FirstOrDefault();
+            if (associatedContainerItem?.ContentType is MediaContentType mediaContentType)
+            {
+                mediaContentType.savedPosition = _Position;
+            }
+
             base.Dispose();
 
+            ControlView = null;
             _ContentMedia?.Dispose();
             ContentMedia = null;
         }

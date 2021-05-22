@@ -129,8 +129,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             this.cancellationToken = cancellationToken;
 
-            DiscardData();
-
             SafeWrapperResult result;
 
             contentType = itemData.ContentType;
@@ -371,6 +369,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             sourceFile = associatedFile;
             contentAsReference = false;
             AssociatedContainer.CurrentCanvas.DangerousUpdateFile(associatedFile);
+
+            if (copyResult)
+            {
+                OnReferencePasted();
+            }
+
             return copyResult;
         }
 
@@ -446,6 +450,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         }
 
         protected virtual void OnCanvasModeChanged(CanvasPreviewMode canvasMode)
+        {
+        }
+
+        protected virtual void OnReferencePasted()
         {
         }
 

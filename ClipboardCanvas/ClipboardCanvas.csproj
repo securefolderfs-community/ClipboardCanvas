@@ -159,6 +159,7 @@
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Models\IPasteCanvasPageModel.cs" />
     <Compile Include="ModelViews\IDynamicPasteCanvasControlView.cs" />
+    <Compile Include="ModelViews\IMediaCanvasControlView.cs" />
     <Compile Include="ReferenceItems\ReferenceFile.cs" />
     <Compile Include="ReferenceItems\ReferenceFileData.cs" />
     <Compile Include="Helpers\SafetyHelpers\SafeWrapperRoutines.cs" />
