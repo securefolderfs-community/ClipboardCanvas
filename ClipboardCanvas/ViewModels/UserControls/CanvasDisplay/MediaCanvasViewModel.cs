@@ -136,7 +136,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             base.Dispose();
 
             ControlView = null;
-            _ContentMedia?.Dispose();
+            ContentMedia?.Dispose();
             ContentMedia = null;
         }
 
