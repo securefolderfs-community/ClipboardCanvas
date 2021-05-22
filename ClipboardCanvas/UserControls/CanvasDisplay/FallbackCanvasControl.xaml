@@ -1,0 +1,70 @@
+﻿<UserControl
+    x:Class="ClipboardCanvas.UserControls.CanvasDisplay.FallbackCanvasControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:ClipboardCanvas.UserControls.CanvasDisplay"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+
+    <Grid
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        RowSpacing="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--  Icon  -->
+        <Viewbox Margin="0,0,0,16" StretchDirection="DownOnly">
+            <Image
+                Grid.Row="0"
+                CanDrag="{x:Bind ViewModel.CanDrag, Mode=OneWay}"
+                DragStarting="Image_DragStarting"
+                Source="{x:Bind ViewModel.FileIcon, Mode=OneWay}" />
+        </Viewbox>
+
+        <!--  Filename  -->
+        <StackPanel
+            Grid.Row="1"
+            Orientation="Horizontal"
+            Spacing="12">
+            <TextBlock Text="Item name: " />
+            <TextBlock Text="{x:Bind ViewModel.FileName, Mode=OneWay}" />
+        </StackPanel>
+
+        <!--  File path  -->
+        <StackPanel
+            Grid.Row="2"
+            Orientation="Horizontal"
+            Spacing="12">
+            <TextBlock Text="Item Path: " />
+            <TextBlock Text="{x:Bind ViewModel.FilePath, Mode=OneWay}" />
+        </StackPanel>
+
+        <!--  Date created  -->
+        <StackPanel
+            Grid.Row="3"
+            Orientation="Horizontal"
+            Spacing="12">
+            <TextBlock Text="Date created: " />
+            <TextBlock Text="{x:Bind ViewModel.DateCreated, Mode=OneWay}" />
+        </StackPanel>
+
+        <!--  Date modified  -->
+        <StackPanel
+            Grid.Row="4"
+            Orientation="Horizontal"
+            Spacing="12">
+            <TextBlock Text="Date modified: " />
+            <TextBlock Text="{x:Bind ViewModel.DateModified, Mode=OneWay}" />
+        </StackPanel>
+
+    </Grid>
+</UserControl>

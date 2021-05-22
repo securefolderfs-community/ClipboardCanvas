@@ -216,7 +216,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
                 if (items.Count > 1)
                 {
-                    // TODO: More than one item, paste all files as reference
+                    // TODO: More than one item, paste in Boundless Canvas
                 }
                 else if (items.Count == 1)
                 {
@@ -224,7 +224,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     IStorageItem item = items.First();
 
                     BasePastedContentTypeDataModel contentType = await BasePastedContentTypeDataModel.GetContentType(item, null);
-
                     if (contentType == null)
                     {
                         return new SafeWrapperResult(OperationErrorCode.NotFound, "Couldn't get content type for provided data");
@@ -311,6 +310,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             // Try for markdown
             if (InitializeViewModelForType<MarkdownContentType, MarkdownCanvasViewModel>(contentType, () => new MarkdownCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview)))
+            {
+                return true;
+            }
+
+            // Try fallback
+            if (InitializeViewModelForType<FallbackCanvasContentType, FallbackCanvasViewModel>(contentType, () => new FallbackCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview)))
             {
                 return true;
             }

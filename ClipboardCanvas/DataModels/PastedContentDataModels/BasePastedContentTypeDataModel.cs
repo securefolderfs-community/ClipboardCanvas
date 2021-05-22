@@ -40,7 +40,8 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
                         return null;
                     }
 
-                    ext = Path.GetExtension(referenceFile.ReferencedFile.Path);
+                    file = referenceFile.ReferencedFile;
+                    ext = Path.GetExtension(file.Path);
                 }
 
                 // Image
@@ -84,7 +85,9 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
                     // Text
                     return new TextContentType();
                 }
-                return null;
+
+                // Use fallback
+                return new FallbackCanvasContentType();
             }
             else if (item is StorageFolder folder)
             {

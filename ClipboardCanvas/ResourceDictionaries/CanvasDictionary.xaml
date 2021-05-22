@@ -27,5 +27,9 @@
     <DataTemplate x:Key="MarkdownCanvasViewModel" x:DataType="vm:MarkdownCanvasViewModel">
         <uc:MarkdownCanvasControl />
     </DataTemplate>
+    <!--  Fallback view  -->
+    <DataTemplate x:Key="FallbackCanvasViewModel" x:DataType="vm:FallbackCanvasViewModel">
+        <uc:FallbackCanvasControl />
+    </DataTemplate>
 
 </ResourceDictionary>
