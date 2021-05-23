@@ -23,15 +23,11 @@ namespace ClipboardCanvas.Helpers
             // TODO: Select the app that opens the file
             AppInfo app = apps.Last();
 
-            RandomAccessStreamReference stream = app.DisplayInfo.GetLogo(new Size(64d, 64d));
+            RandomAccessStreamReference stream = app.DisplayInfo.GetLogo(new Size(256, 256));
 
-            BitmapImage image = new BitmapImage();
-            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(async () =>
-            {
-                image = await ImagingHelpers.ToBitmapAsync((await stream.OpenReadAsync()).AsStreamForRead());
-            });
+            BitmapImage bitmap = await ImagingHelpers.ToBitmapAsync((await stream.OpenReadAsync()).AsStreamForRead());
 
-            return (image, app.DisplayInfo.DisplayName);
+            return (bitmap, app.DisplayInfo.DisplayName);
         }
     }
 }

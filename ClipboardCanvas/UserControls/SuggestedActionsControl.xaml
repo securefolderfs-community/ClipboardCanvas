@@ -60,24 +60,25 @@
                 </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" Spacing="15">
                             <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
-                                <FontIcon
-                                    x:Name="GlyphIcon"
-                                    Margin="0,0,15,0"
+                                <Border Background="Red">
+                                    <FontIcon
+                                        x:Name="GlyphIcon"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Glyph="{Binding GlyphIcon}"
+                                        Visibility="{Binding GlyphIconVisibility}" />
+                                </Border>
+                                <Viewbox
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
-                                    Glyph="{Binding GlyphIcon}"
-                                    Visibility="{Binding GlyphIconVisibility}" />
-                                <Image
-                                    x:Name="IconImage"
-                                    Width="64"
-                                    Height="64"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Source="{Binding IconImage}"
-                                    Stretch="UniformToFill"
-                                    Visibility="{Binding IconImageVisibility}" />
+                                    StretchDirection="DownOnly"
+                                    Visibility="{Binding IconImageVisibility}">
+                                    <Border Background="Red">
+                                        <Image Source="{Binding IconImage}" Stretch="UniformToFill" />
+                                    </Border>
+                                </Viewbox>
                             </Grid>
                             <TextBlock
                                 HorizontalAlignment="Left"

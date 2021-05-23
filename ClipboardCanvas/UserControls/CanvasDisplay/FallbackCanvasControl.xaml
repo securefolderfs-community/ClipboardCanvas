@@ -22,9 +22,11 @@
         </Grid.RowDefinitions>
 
         <!--  Icon  -->
-        <Viewbox Margin="0,0,0,16" StretchDirection="DownOnly">
+        <Viewbox
+            Grid.Row="0"
+            Margin="0,0,0,16"
+            StretchDirection="DownOnly">
             <Image
-                Grid.Row="0"
                 CanDrag="{x:Bind ViewModel.CanDrag, Mode=OneWay}"
                 DragStarting="Image_DragStarting"
                 Source="{x:Bind ViewModel.FileIcon, Mode=OneWay}" />

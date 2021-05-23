@@ -36,8 +36,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
             set => SetProperty(ref _GlyphIcon, value);
         }
 
-        private ImageSource _IconImage;
-        public ImageSource IconImage
+        private BitmapImage _IconImage;
+        public BitmapImage IconImage
         {
             get => _IconImage;
             set => SetProperty(ref _IconImage, value);
