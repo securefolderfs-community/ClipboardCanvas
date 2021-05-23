@@ -52,13 +52,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
             private set
             {
                 // Page switch requested so we need to unhook events
-                if (_CurrentPageNavigation != null /* && value.pageType != CurrentPageType.CanvasPage)*/)
+                if (_CurrentPageNavigation != null)
                 {
                     UnhookCanvasControlEvents(); // Unhook events
                     PasteCanvasPageModel?.Dispose(); // Dispose stuff
                 }
 
-                if (SetProperty(ref _CurrentPageNavigation, value/*, comparer: new ComparingExtensions.DefaultEqualityComparer<DisplayFrameNavigationDataModel>()*/))
+                if (SetProperty(ref _CurrentPageNavigation, value))
                 {
                     _CurrentPageNavigation.simulateNavigation = false;
                     NavigationToolBarControlModel?.NotifyCurrentPageChanged(value);

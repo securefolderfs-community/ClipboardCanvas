@@ -15,11 +15,6 @@
         /// <summary>
         /// The canvas' content can be previewed and modified
         /// </summary>
-        WriteAndPreview = 2,
-
-        /// <summary>
-        /// The canvas' content can be previewed modified and/or interacted with
-        /// </summary>
-        WritePreviewAndInteract = 4
+        WriteAndPreview = 2
     }
 }

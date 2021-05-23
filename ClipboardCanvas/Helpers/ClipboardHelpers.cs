@@ -11,7 +11,7 @@ namespace ClipboardCanvas.Helpers
     {
         public static async Task<SafeWrapper<DataPackageView>> GetClipboardData()
         {
-            SafeWrapper<DataPackageView> dataPackage = await SafeWrapperRoutines.SafeWrapAsync(() => Task.FromResult(Clipboard.GetContent()), StaticExceptionReporters.ClipboardGetDataExceptionReporter);
+            SafeWrapper<DataPackageView> dataPackage = await SafeWrapperRoutines.SafeWrapAsync(() => Task.FromResult(Clipboard.GetContent()), StaticExceptionReporters.DefaultSafeWrapperExceptionReporter);
 
             return dataPackage;
         }

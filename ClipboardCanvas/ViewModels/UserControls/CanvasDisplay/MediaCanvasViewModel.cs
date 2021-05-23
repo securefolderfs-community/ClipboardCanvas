@@ -140,7 +140,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         public override void Dispose()
         {
             ICollectionsContainerItemModel associatedContainerItem = AssociatedContainer.Items.Where((item) => item.File == associatedFile).FirstOrDefault();
-            if (associatedContainerItem?.ContentType is MediaContentType mediaContentType)
+            if (associatedContainerItem?.ContentType is MediaContentType mediaContentType && ControlView != null)
             {
                 mediaContentType.savedPosition = _Position;
             }

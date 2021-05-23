@@ -32,7 +32,7 @@ namespace ClipboardCanvas.UnsafeNative
                 }
             }
 
-            using (var reader = new StreamReader(new MemoryStream(buffer, 0, dwBytesRead), true))
+            using (StreamReader reader = new StreamReader(new MemoryStream(buffer, 0, dwBytesRead), true))
             {
                 str = reader.ReadToEnd();
             }
@@ -49,19 +49,22 @@ namespace ClipboardCanvas.UnsafeNative
                 IntPtr.Zero,
                 CREATE_ALWAYS,
                 (uint)File_Attributes.BackupSemantics, IntPtr.Zero);
+
             if (hStream.ToInt64() == -1)
             {
                 return false;
             }
-            byte[] buff = Encoding.UTF8.GetBytes(str);
+
+            byte[] buffer = Encoding.UTF8.GetBytes(str);
             int dwBytesWritten;
             unsafe
             {
-                fixed (byte* pBuff = buff)
+                fixed (byte* pBuffer = buffer)
                 {
-                    UnsafeNativeApis.WriteFile(hStream, pBuff, buff.Length, &dwBytesWritten, IntPtr.Zero);
+                    UnsafeNativeApis.WriteFile(hStream, pBuffer, buffer.Length, &dwBytesWritten, IntPtr.Zero);
                 }
             }
+
             UnsafeNativeApis.CloseHandle(hStream);
             return true;
         }

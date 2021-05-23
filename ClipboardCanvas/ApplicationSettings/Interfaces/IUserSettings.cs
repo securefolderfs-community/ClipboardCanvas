@@ -8,10 +8,11 @@
         /// Detailed logging helps further investigate an issue by logging exceptions caught by <see cref="ClipboardCanvas.Helpers.SafetyHelpers.SafeWrapperRoutines"/>
         /// </summary>
         bool EnableDetailedLogging { get; set; }
-
+        
+        /// <summary>
+        /// Determines whether to open new canvas on paste
+        /// </summary>
         bool OpenNewCanvasOnPaste { get; set; }
-
-        bool AlwaysOpenNewPageWhenSelectingCollection { get; set; }
 
         /// <summary>
         /// Determines whether items are copied as reference or directly to collection

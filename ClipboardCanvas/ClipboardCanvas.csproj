@@ -163,7 +163,6 @@
     <Compile Include="ReferenceItems\ReferenceFile.cs" />
     <Compile Include="ReferenceItems\ReferenceFileData.cs" />
     <Compile Include="Helpers\SafetyHelpers\SafeWrapperRoutines.cs" />
-    <Compile Include="Helpers\XamlHelpers\SystemTypeToXaml.cs" />
     <Compile Include="Models\IWindowTitleBarControlModel.cs" />
     <Compile Include="ModelViews\ICollectionPreviewPageView.cs" />
     <Compile Include="Pages\CollectionPreviewPage.xaml.cs">
@@ -178,7 +177,6 @@
     <Compile Include="Pages\SettingsPages\SettingsPastingPage.xaml.cs">
       <DependentUpon>SettingsPastingPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ReferenceItems\ReferenceFolder.cs" />
     <Compile Include="UnsafeNative\UnsafeNativeDataModels.cs" />
     <Compile Include="Enums\DisplayPageType.cs" />
     <Compile Include="Enums\OperationStatus.cs" />
@@ -192,7 +190,6 @@
     <Compile Include="Helpers\ClipboardHelpers.cs" />
     <Compile Include="Helpers\Filesystem\DangerousStorageFileExtensions.cs" />
     <Compile Include="Helpers\Filesystem\StorageItemHelpers.cs" />
-    <Compile Include="Helpers\SafetyHelpers\ExceptionReporters\ClipboardGetDataExceptionReporter.cs" />
     <Compile Include="Helpers\SafetyHelpers\ExceptionReporters\DefaultSafeWrapperExceptionReporter.cs" />
     <Compile Include="Helpers\SafetyHelpers\ExceptionReporters\StaticExceptionReporters.cs" />
     <Compile Include="Helpers\SafetyHelpers\ExceptionReporters\ISafeWrapperExceptionReporter.cs" />
@@ -205,7 +202,6 @@
     <Compile Include="Models\ISuggestedActionsControlModel.cs" />
     <Compile Include="Models\ICollectionsContainerItemModel.cs" />
     <Compile Include="Models\ICollectionsContainerModel.cs" />
-    <Compile Include="Models\IDynamicPasteCanvasModel.cs" />
     <Compile Include="Models\IPasteCanvasEventsModel.cs" />
     <Compile Include="Models\IPasteCanvasModel.cs" />
     <Compile Include="Models\INavigationControlModel.cs" />

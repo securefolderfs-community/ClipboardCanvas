@@ -30,7 +30,7 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
             {
                 string ext = Path.GetExtension(file.Path);
 
-                if (ext == Constants.FileSystem.REFERENCE_FILE_EXTENSION)
+                if (ReferenceFile.IsReferenceFile(file))
                 {
                     // Reference File, get the destination file extension
                     ReferenceFile referenceFile = await ReferenceFile.GetFile(file);

@@ -29,12 +29,6 @@ namespace ClipboardCanvas.ApplicationSettings
             set => Set<bool>(value);
         }
 
-        public bool AlwaysOpenNewPageWhenSelectingCollection
-        {
-            get => Get<bool>(true);
-            set => Set<bool>(value);
-        }
-
         public bool AlwaysPasteFilesAsReference
         {
             get => Get<bool>(false);

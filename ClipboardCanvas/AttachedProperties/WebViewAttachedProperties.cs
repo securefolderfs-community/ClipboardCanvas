@@ -4,7 +4,6 @@ using Windows.UI.Xaml.Controls;
 
 namespace ClipboardCanvas.AttachedProperties
 {
-
     public class WebViewNavigationAttachedProperty : BaseAttachedProperty<WebViewNavigationAttachedProperty, string, WebView>
     {
         public override void OnValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)

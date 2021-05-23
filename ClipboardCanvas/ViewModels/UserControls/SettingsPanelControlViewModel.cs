@@ -15,13 +15,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         public SettingsFrameNavigationDataModel CurrentPageNavigation
         {
             get => _CurrentPageNavigation;
-            private set
-            {
-                if (SetProperty(ref _CurrentPageNavigation, value))
-                {
-
-                }
-            }
+            private set => SetProperty(ref _CurrentPageNavigation, value);
         }
 
         #endregion

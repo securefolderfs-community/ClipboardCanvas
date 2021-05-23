@@ -18,7 +18,6 @@ namespace ClipboardCanvas.EventArguments
     {
         public GoToHomePageRequestedEventArgs()
         {
-
         }
     }
 
