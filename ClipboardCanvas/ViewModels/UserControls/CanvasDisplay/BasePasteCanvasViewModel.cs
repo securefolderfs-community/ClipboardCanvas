@@ -414,13 +414,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (file != null)
             {
                 var (icon, appName) = await IconHelpers.GetIconFromFileHandlingApp(Path.GetExtension(file.Path));
-                var action_openFile = new SuggestedActionsControlItemViewModel(
-                    async () =>
-                    {
-                        await AssociatedContainer.CurrentCanvas.OpenFile();
-                    }, $"Open with {appName}", icon);
+                if (icon != null && appName != null)
+                {
+                    var action_openFile = new SuggestedActionsControlItemViewModel(
+                        async () =>
+                        {
+                            await AssociatedContainer.CurrentCanvas.OpenFile();
+                        }, $"Open with {appName}", icon);
 
-                actions.Add(action_openFile);
+                    actions.Add(action_openFile);
+                }
             }
 
             // Open directory

@@ -21,7 +21,12 @@ namespace ClipboardCanvas.Helpers
             IReadOnlyList<AppInfo> apps = await Launcher.FindFileHandlersAsync(fileExtension);
 
             // TODO: Select the app that opens the file
-            AppInfo app = apps.Last();
+            AppInfo app = apps.FirstOrDefault();
+
+            if (app == null)
+            {
+                return (null, null);
+            }
 
             RandomAccessStreamReference stream = app.DisplayInfo.GetLogo(new Size(256, 256));
 

@@ -112,17 +112,32 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public async Task<SafeWrapperResult> TrySaveData()
         {
-            return await CanvasViewModel?.TrySaveData();
+            if (CanvasViewModel == null)
+            {
+                return null;
+            }
+
+            return await CanvasViewModel.TrySaveData();
         }
 
         public async Task<SafeWrapperResult> TryDeleteData()
         {
-            return await CanvasViewModel?.TryDeleteData();
+            if (CanvasViewModel == null)
+            {
+                return null;
+            }
+
+            return await CanvasViewModel.TryDeleteData();
         }
 
         public async Task<SafeWrapperResult> PasteOverrideReference()
         {
-            return await CanvasViewModel?.PasteOverrideReference();
+            if (CanvasViewModel == null)
+            {
+                return null;
+            }
+
+            return await CanvasViewModel.PasteOverrideReference();
         }
 
         public void DiscardData()
@@ -142,7 +157,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return null;
             }
 
-            return await CanvasViewModel?.GetSuggestedActions();
+            return await CanvasViewModel.GetSuggestedActions();
         }
 
         #endregion
