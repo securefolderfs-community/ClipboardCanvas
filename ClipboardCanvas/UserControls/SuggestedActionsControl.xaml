@@ -62,22 +62,18 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Spacing="15">
                             <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
-                                <Border Background="Red">
-                                    <FontIcon
-                                        x:Name="GlyphIcon"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Center"
-                                        Glyph="{Binding GlyphIcon}"
-                                        Visibility="{Binding GlyphIconVisibility}" />
-                                </Border>
+                                <FontIcon
+                                    x:Name="GlyphIcon"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Glyph="{Binding GlyphIcon}"
+                                    Visibility="{Binding GlyphIconVisibility}" />
                                 <Viewbox
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     StretchDirection="DownOnly"
                                     Visibility="{Binding IconImageVisibility}">
-                                    <Border Background="Red">
-                                        <Image Source="{Binding IconImage}" Stretch="UniformToFill" />
-                                    </Border>
+                                    <Image Source="{Binding IconImage}" Stretch="UniformToFill" />
                                 </Viewbox>
                             </Grid>
                             <TextBlock
