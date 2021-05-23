@@ -101,8 +101,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task<SafeWrapperResult> SetData(DataPackageView dataPackage)
         {
-            SafeWrapper<string> text = await SafeWrapperRoutines.SafeWrapAsync(
-                   async () => await dataPackage.GetTextAsync());
+            SafeWrapper<string> text = await SafeWrapperRoutines.SafeWrapAsync(() => dataPackage.GetTextAsync().AsTask());
 
             if (_mode == WebViewCanvasMode.ReadWebsite)
             {

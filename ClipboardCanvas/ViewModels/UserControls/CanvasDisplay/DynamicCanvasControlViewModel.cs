@@ -193,7 +193,17 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     else
                     {
                         // Webpage link
-                        InitializeViewModel(() => new WebViewCanvasViewModel(_view, WebViewCanvasMode.ReadWebsite, CanvasPreviewMode.InteractionAndPreview));
+                        //InitializeViewModel(() => new WebViewCanvasViewModel(_view, WebViewCanvasMode.ReadWebsite, CanvasPreviewMode.InteractionAndPreview));
+                        if (App.AppSettings.UserSettings.PrioritizeMarkdownOverText)
+                        {
+                            // Markdown
+                            InitializeViewModel(() => new MarkdownCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview));
+                        }
+                        else
+                        {
+                            // Normal text
+                            InitializeViewModel(() => new TextCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview));
+                        }
                     }
                 }
                 else

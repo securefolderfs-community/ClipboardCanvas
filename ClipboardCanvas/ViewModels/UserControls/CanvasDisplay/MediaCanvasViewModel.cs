@@ -127,7 +127,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public void UpdatePlaybackPosition()
         {
-            if (_Position != null)
+            if (ControlView != null)
             {
                 this._Position = _mediaContentType.savedPosition;
             }
