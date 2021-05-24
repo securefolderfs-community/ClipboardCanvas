@@ -371,8 +371,11 @@ namespace ClipboardCanvas.ViewModels.Pages
                     await Task.Delay(Constants.CanvasContent.SHOW_TIP_TEXT_DELAY);
                 }
 
-                TipTextLoad = true;
-                TipText = text;
+                if (!_contentLoaded)
+                {
+                    TipTextLoad = true;
+                    TipText = text;
+                }
             }
             else
             {

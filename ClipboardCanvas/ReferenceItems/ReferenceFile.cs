@@ -43,7 +43,7 @@ namespace ClipboardCanvas.ReferenceItems
 
         public static async Task<ReferenceFile> GetFile(StorageFile referenceFile)
         {
-            if (!IsReferenceFile(referenceFile))
+            if (!IsReferenceFile(referenceFile) || !StorageItemHelpers.Exists(referenceFile?.Path))
             {
                 return null;
             }
@@ -72,7 +72,7 @@ namespace ClipboardCanvas.ReferenceItems
 
         public static bool IsReferenceFile(StorageFile file)
         {
-            return file.Path.EndsWith(Constants.FileSystem.REFERENCE_FILE_EXTENSION);
+            return file?.Path.EndsWith(Constants.FileSystem.REFERENCE_FILE_EXTENSION) ?? false;
         }
     }
 }
