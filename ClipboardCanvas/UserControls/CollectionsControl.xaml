@@ -77,7 +77,7 @@
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <Border
-                        Width="270"
+                        Width="260"
                         Height="140"
                         Background="{ThemeResource SubtleBackgroundBrush}"
                         BorderBrush="{ThemeResource SystemAccentColor}"
