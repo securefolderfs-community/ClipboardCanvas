@@ -35,7 +35,7 @@
                 x:Load="{x:Bind ViewModel.CollectionsTitleBarTextLoad, Mode=OneWay}"
                 FontSize="16"
                 FontWeight="SemiLight"
-                Text="Canvas Collections" />
+                Text="Clipboard Canvas" />
 
             <StackPanel
                 x:Name="CanvasTitleBar"

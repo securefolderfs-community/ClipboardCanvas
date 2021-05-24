@@ -20,7 +20,7 @@
         <vc:SafeWrapperResultToErrorConverter x:Key="SafeWrapperResultToErrorConverter" />
     </UserControl.Resources>
 
-    <Grid AllowDrop="True">
+    <Grid AllowDrop="True" RowSpacing="16">
         <i:Interaction.Behaviors>
             <icore:EventTriggerBehavior EventName="DragOver">
                 <icore:InvokeCommandAction Command="{x:Bind ViewModel.DragOverCommand}" />
@@ -30,7 +30,19 @@
             </icore:EventTriggerBehavior>
         </i:Interaction.Behaviors>
 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Margin="5,0,5,0"
+            FontSize="32"
+            FontWeight="Bold"
+            Text="Collections" />
+
         <GridView
+            Grid.Row="1"
             AllowDrop="True"
             CanReorderItems="True"
             IsDoubleTapEnabled="True"
@@ -48,7 +60,7 @@
             <GridView.ItemContainerStyle>
                 <Style TargetType="GridViewItem">
                     <!--  Spacing  -->
-                    <Setter Property="Margin" Value="0,0,10,10" />
+                    <Setter Property="Margin" Value="5,0,5,10" />
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="GridViewItem">
@@ -66,7 +78,7 @@
                 <DataTemplate>
                     <Border
                         Width="270"
-                        Height="150"
+                        Height="140"
                         Background="{ThemeResource SubtleBackgroundBrush}"
                         BorderBrush="{ThemeResource SystemAccentColor}"
                         BorderThickness="{Binding IsSelected, Converter={StaticResource SelectedCollectionsContainerConverter}}"
