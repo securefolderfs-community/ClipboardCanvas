@@ -413,14 +413,27 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (file != null)
             {
-                var (icon, appName) = await IconHelpers.GetIconFromFileHandlingApp(Path.GetExtension(file.Path));
-                if (icon != null && appName != null)
+                if (false)
+                {
+                    var (icon, appName) = await IconHelpers.GetIconFromFileHandlingApp(file as StorageFile, Path.GetExtension(file.Path));
+                    if (icon != null && appName != null)
+                    {
+                        var action_openFile = new SuggestedActionsControlItemViewModel(
+                            async () =>
+                            {
+                                await AssociatedContainer.CurrentCanvas.OpenFile();
+                            }, $"Open with {appName}", icon);
+
+                        actions.Add(action_openFile);
+                    }
+                }
+                else
                 {
                     var action_openFile = new SuggestedActionsControlItemViewModel(
                         async () =>
                         {
                             await AssociatedContainer.CurrentCanvas.OpenFile();
-                        }, $"Open with {appName}", icon);
+                        }, "Open file", "\uE8E5");
 
                     actions.Add(action_openFile);
                 }

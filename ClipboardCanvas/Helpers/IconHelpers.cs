@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
+using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI.Xaml.Media.Imaging;
@@ -16,11 +17,10 @@ namespace ClipboardCanvas.Helpers
 {
     public static class IconHelpers
     {
-        public static async Task<(BitmapImage icon, string appName)> GetIconFromFileHandlingApp(string fileExtension)
+        public static async Task<(BitmapImage icon, string appName)> GetIconFromFileHandlingApp(StorageFile file, string fileExtension)
         {
             IReadOnlyList<AppInfo> apps = await Launcher.FindFileHandlersAsync(fileExtension);
 
-            // TODO: Select the app that opens the file
             AppInfo app = apps.FirstOrDefault();
 
             if (app == null)
