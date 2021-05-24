@@ -1,7 +1,9 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using System;
 using System.Windows.Input;
 using Windows.ApplicationModel;
+using Windows.System;
 
 namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 {
@@ -37,14 +39,15 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         #region Command Implementation
 
-        private void ShowChangelog()
+        private async void ShowChangelog()
         {
-
+            // TODO: Open changelog dialog
+            await Launcher.LaunchUriAsync(new Uri(@"https://github.com/d2dyno1/ClipboardCanvas"));
         }
 
-        private void SubmitFeedback()
+        private async void SubmitFeedback()
         {
-
+            await Launcher.LaunchUriAsync(new Uri(@"https://github.com/d2dyno1/ClipboardCanvas/issues"));
         }
 
         #endregion
