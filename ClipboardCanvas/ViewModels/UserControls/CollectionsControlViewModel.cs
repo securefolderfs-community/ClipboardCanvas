@@ -96,6 +96,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public static event EventHandler<GoToHomePageRequestedEventArgs> OnGoToHomePageRequestedEvent;
 
+        public static event EventHandler<CollectionErrorRaisedEventArgs> OnCollectionErrorRaisedEvent;
+
         #endregion
 
         #region Commands
@@ -207,6 +209,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
 
             s_internalCollectionsCount = Items.Count;
+        }
+
+        private static void Container_OnCollectionErrorRaisedEvent(object sender, CollectionErrorRaisedEventArgs e)
+        {
+            OnCollectionErrorRaisedEvent?.Invoke(sender, e);
         }
 
         private static void Container_OnGoToHomePageRequestedEvent(object sender, GoToHomePageRequestedEventArgs e)
@@ -329,6 +336,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             container.OnRemoveCollectionRequestedEvent -= Container_OnRemoveCollectionRequestedEvent;
             container.OnOpenNewCanvasRequestedEvent -= Container_OnOpenNewCanvasRequestedEvent;
             container.OnGoToHomePageRequestedEvent -= Container_OnGoToHomePageRequestedEvent;
+            container.OnCollectionErrorRaisedEvent -= Container_OnCollectionErrorRaisedEvent;
 
             int index = Items.IndexOf(container);
             container.Dispose();
@@ -353,6 +361,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
             container.OnRemoveCollectionRequestedEvent += Container_OnRemoveCollectionRequestedEvent;
             container.OnOpenNewCanvasRequestedEvent += Container_OnOpenNewCanvasRequestedEvent;
             container.OnGoToHomePageRequestedEvent += Container_OnGoToHomePageRequestedEvent;
+            container.OnCollectionErrorRaisedEvent += Container_OnCollectionErrorRaisedEvent;
+
             await container.InitializeInnerStorageFolder();
 
             s_itemAddedInternally = true;

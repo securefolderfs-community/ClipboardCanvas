@@ -95,7 +95,6 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <UserControl.KeyboardAccelerators>
-
         <KeyboardAccelerator Key="Up" Modifiers="Control">
             <i:Interaction.Behaviors>
                 <icore:EventTriggerBehavior EventName="Invoked">
@@ -236,6 +235,7 @@
                 Grid.ColumnSpan="3"
                 x:Load="{x:Bind ViewModel.GoToCanvasLoad, Mode=OneWay}"
                 Command="{x:Bind ViewModel.GoToCanvasCommand}"
+                IsEnabled="{x:Bind ViewModel.GoToCanvasEnabled, Mode=OneWay}"
                 Style="{StaticResource NavigationButton}"
                 TabIndex="2"
                 ToolTipService.ToolTip="Navigate to Canvas (Ctrl + Up Arrow)">

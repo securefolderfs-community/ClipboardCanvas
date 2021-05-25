@@ -130,6 +130,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public event EventHandler<GoToHomePageRequestedEventArgs> OnGoToHomePageRequestedEvent;
 
+        public event EventHandler<CollectionErrorRaisedEventArgs> OnCollectionErrorRaisedEvent;
+
         #endregion
 
         #region Commands
@@ -462,6 +464,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 ErrorIconVisibility = Visibility.Collapsed;
                 CanOpenCollection = true;
             }
+
+            OnCollectionErrorRaisedEvent?.Invoke(this, new CollectionErrorRaisedEventArgs(safeWrapperResult));
         }
 
         #endregion

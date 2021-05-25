@@ -77,6 +77,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
             private set => SetProperty(ref _GoToCanvasLoad, value);
         }
 
+        private bool _GoToCanvasEnabled = true;
+        public bool GoToCanvasEnabled
+        {
+            get => _GoToCanvasEnabled;
+            set => SetProperty(ref _GoToCanvasEnabled, value);
+        }
+
         #endregion
 
         #region Events

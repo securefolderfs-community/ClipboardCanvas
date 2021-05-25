@@ -1,4 +1,5 @@
-﻿using ClipboardCanvas.ViewModels.UserControls;
+﻿using ClipboardCanvas.Helpers.SafetyHelpers;
+using ClipboardCanvas.ViewModels.UserControls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,16 @@ namespace ClipboardCanvas.EventArguments
         public CollectionItemsInitializationFinishedEventArgs(CollectionsContainerViewModel containerViewModel)
         {
             this.containerViewModel = containerViewModel;
+        }
+    }
+
+    public class CollectionErrorRaisedEventArgs
+    {
+        public readonly SafeWrapperResult result;
+
+        public CollectionErrorRaisedEventArgs(SafeWrapperResult result)
+        {
+            this.result = result;
         }
     }
 }

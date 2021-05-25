@@ -25,6 +25,8 @@ namespace ClipboardCanvas.Models
 
         bool NavigateForwardLoading { get; set; }
 
+        bool GoToCanvasEnabled { get; set; }
+
         void NotifyCurrentPageChanged(DisplayFrameNavigationDataModel navigationDataModel);
     }
 }

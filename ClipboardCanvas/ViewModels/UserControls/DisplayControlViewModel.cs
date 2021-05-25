@@ -186,6 +186,18 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region CollectionsControlViewModel
 
+        private void CollectionsControlViewModel_OnCollectionErrorRaisedEvent(object sender, CollectionErrorRaisedEventArgs e)
+        {
+            if (e.result)
+            {
+                NavigationToolBarControlModel.NavigationControlModel.GoToCanvasEnabled = true;
+            }
+            else
+            {
+                NavigationToolBarControlModel.NavigationControlModel.GoToCanvasEnabled = false;
+            }
+        }
+
         private async void CollectionsControlViewModel_OnGoToHomePageRequestedEvent(object sender, GoToHomePageRequestedEventArgs e)
         {
             await OpenPage(DisplayPageType.HomePage);
@@ -235,6 +247,15 @@ namespace ClipboardCanvas.ViewModels.UserControls
         private void CollectionsControlViewModel_OnCollectionSelectionChangedEvent(object sender, CollectionSelectionChangedEventArgs e)
         {
             _currentCollectionContainer = e.selectedCollection;
+
+            if (_currentCollectionContainer.CanOpenCollection)
+            {
+                NavigationToolBarControlModel.NavigationControlModel.GoToCanvasEnabled = true;
+            }
+            else
+            {
+                NavigationToolBarControlModel.NavigationControlModel.GoToCanvasEnabled = false;
+            }
         }
 
         private async void CollectionsControlViewModel_OnCollectionOpenRequestedEvent(object sender, CollectionOpenRequestedEventArgs e)
@@ -584,6 +605,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CollectionsControlViewModel.OnCollectionItemsInitializationFinishedEvent += CollectionsControlViewModel_OnCollectionItemsInitializationFinishedEvent;
             CollectionsControlViewModel.OnOpenNewCanvasRequestedEvent += CollectionsControlViewModel_OnOpenNewCanvasRequestedEventEvent;
             CollectionsControlViewModel.OnGoToHomePageRequestedEvent += CollectionsControlViewModel_OnGoToHomePageRequestedEvent;
+            CollectionsControlViewModel.OnCollectionErrorRaisedEvent += CollectionsControlViewModel_OnCollectionErrorRaisedEvent;
         }
 
         private void UnhookCollectionsEvents()
@@ -596,6 +618,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CollectionsControlViewModel.OnCollectionItemsInitializationFinishedEvent -= CollectionsControlViewModel_OnCollectionItemsInitializationFinishedEvent;
             CollectionsControlViewModel.OnOpenNewCanvasRequestedEvent -= CollectionsControlViewModel_OnOpenNewCanvasRequestedEventEvent;
             CollectionsControlViewModel.OnGoToHomePageRequestedEvent -= CollectionsControlViewModel_OnGoToHomePageRequestedEvent;
+            CollectionsControlViewModel.OnCollectionErrorRaisedEvent -= CollectionsControlViewModel_OnCollectionErrorRaisedEvent;
         }
 
         private void HookCanvasControlEvents()
