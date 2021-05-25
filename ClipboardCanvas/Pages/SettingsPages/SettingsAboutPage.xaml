@@ -26,7 +26,7 @@
 
                 <Image
                     Grid.RowSpan="2"
-                    Source="/Assets/StoreLogo.png"
+                    Source="/Assets/AppIcon/StoreLogo.png"
                     Stretch="Uniform" />
                 <TextBlock
                     Grid.Column="1"
