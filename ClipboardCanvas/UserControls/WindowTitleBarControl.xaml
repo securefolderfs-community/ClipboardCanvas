@@ -9,7 +9,7 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <Grid x:Name="CustomTitleBar" Padding="15,8,15,0">
+    <Grid x:Name="CustomTitleBar" Padding="15,0,15,0">
 
         <Grid.ColumnDefinitions>
             <!--  Title text  -->
@@ -20,8 +20,21 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
+        <Grid
+            x:Name="DraggableRegion"
+            Grid.ColumnSpan="3"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            x:FieldModifier="public"
+            Background="Transparent"
+            Canvas.ZIndex="2" />
+
         <!--  Title text  -->
-        <Grid x:Name="DraggableTitle" Grid.Column="0">
+        <Grid
+            x:Name="DraggableTitle"
+            Grid.Column="0"
+            Padding="0,8,0,0"
+            Canvas.ZIndex="1">
             <TextBlock
                 x:Name="DefaultTitleBarText"
                 VerticalAlignment="Center"
@@ -62,30 +75,37 @@
         <TextBlock
             x:Name="RestrictedAccess"
             Grid.Column="1"
+            Padding="0,8,0,0"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             x:Load="{x:Bind ViewModel.IsInRestrictedAccess, Mode=OneWay}"
+            Canvas.ZIndex="3"
             FontSize="18"
             FontWeight="Normal"
             Opacity="0.6"
             Tapped="RestrictedAccess_Tapped"
             Text="Restricted Access"
+            ToolTipService.Placement="Bottom"
             ToolTipService.ToolTip="Clipboard Canvas is running in Restricted Access mode, click for more details." />
 
         <!--  TODO: For now the button is hidden  -->
         <!--  Compact overlay button  -->
         <Button
+            x:Name="CompactOverlay"
             Grid.Column="2"
+            Width="48"
+            Height="32"
             Margin="0,0,144,0"
             HorizontalAlignment="Right"
-            VerticalAlignment="Center"
+            VerticalAlignment="Top"
+            x:FieldModifier="public"
             Background="Transparent"
             BorderBrush="Transparent"
+            Canvas.ZIndex="3"
             Command="{x:Bind ViewModel.SwitchApplicationViewCommand}"
+            CornerRadius="0"
             Visibility="Collapsed">
-            <Grid>
-                <FontIcon FontFamily="/Assets/Fonts/CalcMDL2.ttf#Calculator MDL2 Assets" Glyph="&#xEE49;" />
-            </Grid>
+            <FontIcon FontFamily="/Assets/Fonts/CalcMDL2.ttf#Calculator MDL2 Assets" Glyph="&#xEE49;" />
         </Button>
     </Grid>
 </UserControl>

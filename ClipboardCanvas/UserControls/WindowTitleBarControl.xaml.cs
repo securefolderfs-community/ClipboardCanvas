@@ -25,6 +25,7 @@ namespace ClipboardCanvas.UserControls
             this.ViewModel = new WindowTitleBarControlViewModel();
         }
 
+        // TODO: Move to view model??
         private async void RestrictedAccess_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             await FileSystemPermissionHelpers.HandleFileSystemPermissionDialog(ViewModel);

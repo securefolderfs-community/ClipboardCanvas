@@ -28,6 +28,15 @@ namespace ClipboardCanvas
             titleBar.ButtonBackgroundColor = Colors.Transparent;
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
             coreTitleBar.ExtendViewIntoTitleBar = true;
+
+            Window.Current.SetTitleBar(WindowTitleBar.DraggableRegion);
+            coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
+        }
+
+        private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
+        {
+            var coreTitleBar = sender as CoreApplicationViewTitleBar;
+            WindowTitleBar.CompactOverlay.Margin = new Thickness(0, 0, coreTitleBar.SystemOverlayRightInset, 0);
         }
     }
 }
