@@ -7,6 +7,6 @@ namespace ClipboardCanvas.Extensions
     {
         public static bool IsEmpty(this ICollection collection) => collection.Count == 0;
 
-        public static int IndexFitBounds(int itemsCount, int wantedIndex) => wantedIndex < 0 ? 0 : (wantedIndex > itemsCount ? itemsCount - 1 : wantedIndex);
+        public static int IndexFitBounds(int itemsCount, int wantedIndex) => wantedIndex < 0 ? 0 : (wantedIndex > itemsCount ? ( itemsCount == 0 ? 0 : itemsCount - 1) : wantedIndex);
     }
 }

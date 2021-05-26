@@ -86,7 +86,7 @@
             Tapped="RestrictedAccess_Tapped"
             Text="Restricted Access"
             ToolTipService.Placement="Bottom"
-            ToolTipService.ToolTip="Clipboard Canvas is running in Restricted Access mode, click for more details." />
+            ToolTipService.ToolTip="Clipboard Canvas is currently in Restricted Access mode. Click for more details." />
 
         <!--  TODO: For now the button is hidden  -->
         <!--  Compact overlay button  -->
