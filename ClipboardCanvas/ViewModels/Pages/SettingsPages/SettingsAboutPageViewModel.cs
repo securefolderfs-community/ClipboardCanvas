@@ -20,9 +20,11 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         #region Commands
 
-        public ICommand ShowChangelogCommand { get; private set; }
+        public ICommand ShowChangeLogCommand { get; private set; }
 
         public ICommand SubmitFeedbackCommand { get; private set; }
+
+        public ICommand OpenPrivacyPolicyCommand { get; private set; }
 
         #endregion
 
@@ -31,24 +33,31 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
         public SettingsAboutPageViewModel()
         {
             // Create commands
-            ShowChangelogCommand = new RelayCommand(ShowChangelog);
+            ShowChangeLogCommand = new RelayCommand(ShowChangeLog);
             SubmitFeedbackCommand = new RelayCommand(SubmitFeedback);
+            OpenPrivacyPolicyCommand = new RelayCommand(OpenPrivacyPolicy);
         }
 
         #endregion
 
         #region Command Implementation
 
-        private async void ShowChangelog()
+        private async void OpenPrivacyPolicy()
         {
-            // TODO: Open changelog dialog
-            await Launcher.LaunchUriAsync(new Uri(@"https://github.com/d2dyno1/ClipboardCanvas"));
+            await Launcher.LaunchUriAsync(new Uri(@"https://github.com/d2dyno1/ClipboardCanvas/blob/master/Privacy.md"));
         }
 
         private async void SubmitFeedback()
         {
             await Launcher.LaunchUriAsync(new Uri(@"https://github.com/d2dyno1/ClipboardCanvas/issues"));
         }
+
+        private async void ShowChangeLog()
+        {
+            // TODO: Open changelog dialog
+            await Launcher.LaunchUriAsync(new Uri(@"https://github.com/d2dyno1/ClipboardCanvas"));
+        }
+
 
         #endregion
     }

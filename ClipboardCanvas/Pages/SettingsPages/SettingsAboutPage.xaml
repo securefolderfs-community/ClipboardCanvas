@@ -54,8 +54,9 @@
 
             <!--  External links  -->
             <StackPanel Margin="0,8,0,0" Spacing="4">
-                <!--<HyperlinkButton Visibility="Collapsed" Command="{x:Bind ViewModel.ShowChangelogCommand}" Content="Release changelog" />-->
+                <!--<HyperlinkButton Command="{x:Bind ViewModel.ShowChangeLogCommand}" Content="Release change log" />-->
                 <HyperlinkButton Command="{x:Bind ViewModel.SubmitFeedbackCommand}" Content="Submit feedback" />
+                <HyperlinkButton Command="{x:Bind ViewModel.OpenPrivacyPolicyCommand}" Content="Privacy Policy" />
             </StackPanel>
 
         </StackPanel>
