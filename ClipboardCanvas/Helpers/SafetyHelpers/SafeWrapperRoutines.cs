@@ -41,32 +41,32 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
             }
         }
 
-        public static SafeWrapperResult OnSuccess<T>(this SafeWrapper<T> wrapped, Action<T> action)
+        public static SafeWrapper<T2> OnSuccess<T1, T2>(this SafeWrapper<T1> wrapped, Func<SafeWrapper<T1>, T2> func)
         {
-            if (!AssertNotNull(wrapped, action)) return new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentException(), "Passed-in function delegate is null");
+            if (!AssertNotNull(wrapped, func)) return new SafeWrapper<T2>(default(T2), OperationErrorCode.InvalidArgument, new ArgumentException(), "Passed-in function delegate is null");
 
             SafeWrapperResult result = wrapped;
 
             if (result)
             {
-                return SafeWrap(() => action(wrapped.Result));
+                return SafeWrap(() => func(wrapped));
             }
 
-            return result;
+            return new SafeWrapper<T2>(default(T2), result);
         }
 
-        public static SafeWrapperResult OnFailure<T>(this SafeWrapper<T> wrapped, Action<T> action)
+        public static SafeWrapper<T2> OnFailure<T1, T2>(this SafeWrapper<T1> wrapped, Func<SafeWrapper<T1>, T2> func)
         {
-            if (!AssertNotNull(wrapped, action)) return new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentException(), "Passed-in function delegate is null");
+            if (!AssertNotNull(wrapped, func)) return new SafeWrapper<T2>(default(T2), OperationErrorCode.InvalidArgument, new ArgumentException(), "Passed-in function delegate is null");
 
             SafeWrapperResult result = wrapped;
 
             if (!result)
             {
-                return SafeWrap(() => action(wrapped.Result));
+                return SafeWrap(() => func(wrapped));
             }
 
-            return result;
+            return new SafeWrapper<T2>(default(T2), result);
         }
 
         #region Async Functions
@@ -104,9 +104,9 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
             }
         }
 
-        public static async Task<SafeWrapperResult> OnSuccess<T>(this Task<SafeWrapper<T>> wrapped, Func<T, Task> func)
+        public static async Task<SafeWrapper<T2>> OnSuccessAsync<T1, T2>(this Task<SafeWrapper<T1>> wrapped, Func<SafeWrapper<T1>, Task<T2>> func)
         {
-            if (!AssertNotNull(wrapped, func)) return new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentException(), "Passed-in function delegate is null");
+            if (!AssertNotNull(wrapped, func)) return new SafeWrapper<T2>(default(T2), OperationErrorCode.InvalidArgument, new ArgumentException(), "Passed-in function delegate is null");
 
             SafeWrapperResult result = await wrapped;
 
@@ -115,12 +115,12 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
                 return await SafeWrapAsync(() => func(wrapped.Result));
             }
 
-            return result;
+            return new SafeWrapper<T2>(default(T2), result);
         }
 
-        public static async Task<SafeWrapperResult> OnFailure<T>(this Task<SafeWrapper<T>> wrapped, Func<T, Task> func)
+        public static async Task<SafeWrapper<T2>> OnFailureAsync<T1, T2>(this Task<SafeWrapper<T1>> wrapped, Func<SafeWrapper<T1>, Task<T2>> func)
         {
-            if (!AssertNotNull(wrapped, func)) return new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentException(), "Passed-in function delegate is null");
+            if (!AssertNotNull(wrapped, func)) return new SafeWrapper<T2>(default(T2), OperationErrorCode.InvalidArgument, new ArgumentException(), "Passed-in function delegate is null");
 
             SafeWrapperResult result = await wrapped;
 
@@ -129,7 +129,7 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
                 return await SafeWrapAsync(() => func(wrapped.Result));
             }
 
-            return result;
+            return new SafeWrapper<T2>(default(T2), result);
         }
 
         #endregion

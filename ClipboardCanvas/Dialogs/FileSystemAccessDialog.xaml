@@ -1,0 +1,31 @@
+﻿<ContentDialog
+    x:Class="ClipboardCanvas.Dialogs.FileSystemAccessDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:ClipboardCanvas.Dialogs"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Clipboard Canvas requires permissions"
+    CornerRadius="4"
+    DefaultButton="Primary"
+    PrimaryButtonText="Restart Application"
+    SecondaryButtonText="Continue in Restricted Access"
+    mc:Ignorable="d">
+
+    <StackPanel Spacing="24">
+        <TextBlock Text="Clipboard Canvas requires permission to access the file system to be able to save items to collections anywhere on the drive." TextWrapping="WrapWholeWords" />
+
+        <StackPanel>
+            <TextBlock Text="You can enable this permission by going to settings, after which the app needs to be restarted." TextWrapping="WrapWholeWords" />
+            <HyperlinkButton
+                Padding="0,4,0,4"
+                Command="{x:Bind ViewModel.OpenSettingsCommand}"
+                Content="Open Settings" />
+        </StackPanel>
+
+        <TextBlock
+            Opacity="0.6"
+            Text="You can continue in Restricted Access mode with access limited to application's directory."
+            TextWrapping="WrapWholeWords" />
+    </StackPanel>
+</ContentDialog>

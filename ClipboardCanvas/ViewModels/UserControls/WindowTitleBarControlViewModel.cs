@@ -38,6 +38,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
             private set => SetProperty(ref _CurrentCollectionText, value);
         }
 
+        private bool _IsInRestrictedAccess;
+        public bool IsInRestrictedAccess
+        {
+            get => _IsInRestrictedAccess;
+            set => SetProperty(ref _IsInRestrictedAccess, value);
+        }
+
         #endregion
 
         #region Events

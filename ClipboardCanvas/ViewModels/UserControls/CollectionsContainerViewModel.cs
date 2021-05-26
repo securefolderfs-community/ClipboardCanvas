@@ -307,7 +307,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             if (_innerStorageFolder == null)
             {
-                throw new UnauthorizedAccessException("The folder associated with this collection does not exist!");
+                return new SafeWrapper<StorageFile>(null, s_CollectionFolderNotFound);
             }
 
             string newFileName = $"{fileName}{extension}";
@@ -455,6 +455,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             if (!safeWrapperResult)
             {
+                if (App.IsInRestrictedAccessMode && safeWrapperResult.ErrorCode == OperationErrorCode.AccessUnauthorized)
+                {
+                    safeWrapperResult = new SafeWrapperResult(safeWrapperResult.ErrorCode, safeWrapperResult.Exception, "Couldn't access this Collection because Clipboard Canvas is in Restricted Access mode.");
+                }
+
                 CollectionErrorInfo = safeWrapperResult;
                 ErrorIconVisibility = Visibility.Visible;
                 CanOpenCollection = false;
@@ -500,12 +505,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 return true;
             }
 
-            this._innerStorageFolder = await StorageItemHelpers.ToStorageItem<StorageFolder>(this.CollectionFolderPath);
+            SafeWrapper<StorageFolder> result = await StorageItemHelpers.ToStorageItemWithError<StorageFolder>(this.CollectionFolderPath);
+            _innerStorageFolder = result.Result;
 
-            if (_innerStorageFolder == null)
+            if (!result)
             {
                 // Lock the collection and prevent from opening it
-                SetCollectionError(s_CollectionFolderNotFound);
+                SetCollectionError(result);
 
                 return false;
             }

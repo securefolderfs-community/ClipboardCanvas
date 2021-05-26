@@ -52,6 +52,8 @@ namespace ClipboardCanvas.UserControls
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             // Initialize the rest when the view is loaded
+            await FileSystemPermissionHelpers.HandleFileSystemPermissionDialog(WindowTitleBarControlModel);
+
             await this.ViewModel.InitializeAfterLoad();
         }
     }

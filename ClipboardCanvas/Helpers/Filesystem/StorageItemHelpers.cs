@@ -4,6 +4,8 @@ using System;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
+using ClipboardCanvas.Enums;
+using static ClipboardCanvas.UnsafeNative.UnsafeNativeDataModels;
 
 namespace ClipboardCanvas.Helpers.Filesystem
 {
@@ -11,24 +13,29 @@ namespace ClipboardCanvas.Helpers.Filesystem
     {
         public static async Task<TOut> ToStorageItem<TOut>(string path) where TOut : IStorageItem
         {
+            return (await ToStorageItemWithError<TOut>(path)).Result;
+        }
+
+        public static async Task<SafeWrapper<TOut>> ToStorageItemWithError<TOut>(string path) where TOut : IStorageItem
+        {
             SafeWrapper<StorageFile> file = null;
             SafeWrapper<StorageFolder> folder = null;
 
             if (string.IsNullOrWhiteSpace(path))
             {
-                return default(TOut);
+                return new SafeWrapper<TOut>(default, OperationErrorCode.InvalidArgument, new ArgumentException(), "Provided path is either empty or null.");
             }
 
             // Check if path is to .lnk or .url file
             if (path.ToLower().EndsWith(".lnk") || path.ToLower().EndsWith(".url"))
             {
-                throw new UnauthorizedAccessException("Function ToStorageItem<TOut>() does not support converting from .lnk nor .url files");
+                throw new UnauthorizedAccessException("Function ToStorageItem<TOut>() does not support converting from .lnk nor .url files.");
             }
 
             // Check if exists
             if (!Exists(path))
             {
-                return default(TOut);
+                return new SafeWrapper<TOut>(default, OperationErrorCode.NotFound, new System.IO.FileNotFoundException(), "Couldn't resolve item associated with path.");
             }
 
             if (typeof(IStorageFile).IsAssignableFrom(typeof(TOut)))
@@ -59,14 +66,15 @@ namespace ClipboardCanvas.Helpers.Filesystem
 
             if (file != null && file)
             {
-                return (TOut)(IStorageItem)file.Result;
+                return file as SafeWrapper<TOut>;
             }
             else if (folder != null && folder)
             {
-                return (TOut)(IStorageItem)folder.Result;
+                return folder as SafeWrapper<TOut>;
             }
 
-            return default(TOut);
+            return file as SafeWrapper<TOut> ?? (folder as SafeWrapper<TOut> ?? new SafeWrapper<TOut>(default, OperationErrorCode.UnknownFailed, "The operation to get file/folder failed all attempts."));
+
 
             async Task GetFile()
             {

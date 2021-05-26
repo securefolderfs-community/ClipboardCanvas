@@ -9,22 +9,22 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <Grid x:Name="CustomTitleBar" Padding="15,0,15,0">
+    <Grid x:Name="CustomTitleBar" Padding="15,8,15,0">
 
         <Grid.ColumnDefinitions>
             <!--  Title text  -->
             <ColumnDefinition />
+            <!--  Restricted access  -->
+            <ColumnDefinition />
             <!--  Compact overlay  -->
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
         <!--  Title text  -->
-        <Grid
-            x:Name="DraggableTitle"
-            Grid.Column="0"
-            Padding="0,10,0,0">
+        <Grid x:Name="DraggableTitle" Grid.Column="0">
             <TextBlock
                 x:Name="DefaultTitleBarText"
+                VerticalAlignment="Center"
                 x:Load="{x:Bind ViewModel.DefaultTitleBarTextLoad, Mode=OneWay}"
                 FontSize="16"
                 FontWeight="SemiLight"
@@ -32,6 +32,7 @@
 
             <TextBlock
                 x:Name="CollectionsTitleBarText"
+                VerticalAlignment="Center"
                 x:Load="{x:Bind ViewModel.CollectionsTitleBarTextLoad, Mode=OneWay}"
                 FontSize="16"
                 FontWeight="SemiLight"
@@ -57,10 +58,24 @@
             </StackPanel>
         </Grid>
 
+        <!--  Restricted Access title text  -->
+        <TextBlock
+            x:Name="RestrictedAccess"
+            Grid.Column="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            x:Load="{x:Bind ViewModel.IsInRestrictedAccess, Mode=OneWay}"
+            FontSize="18"
+            FontWeight="Normal"
+            Opacity="0.6"
+            Tapped="RestrictedAccess_Tapped"
+            Text="Restricted Access"
+            ToolTipService.ToolTip="Clipboard Canvas is running in Restricted Access mode, click for more details." />
+
         <!--  TODO: For now the button is hidden  -->
         <!--  Compact overlay button  -->
         <Button
-            Grid.Column="1"
+            Grid.Column="2"
             Margin="0,0,144,0"
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
