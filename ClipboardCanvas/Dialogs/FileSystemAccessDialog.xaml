@@ -16,7 +16,7 @@
         <TextBlock Text="Clipboard Canvas requires permission to access the file system to be able to save items to collections anywhere on the drive." TextWrapping="WrapWholeWords" />
 
         <StackPanel>
-            <TextBlock Text="You can enable this permission by going to settings, after which the app needs to be restarted." TextWrapping="WrapWholeWords" />
+            <TextBlock Text="You can grant this permission by heading to settings, after which the app will be closed." TextWrapping="WrapWholeWords" />
             <HyperlinkButton
                 Padding="0,4,0,4"
                 Command="{x:Bind ViewModel.OpenSettingsCommand}"

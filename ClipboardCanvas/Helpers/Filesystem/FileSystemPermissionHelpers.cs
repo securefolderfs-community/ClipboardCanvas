@@ -3,6 +3,7 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,14 +17,14 @@ namespace ClipboardCanvas.Helpers.Filesystem
     {
         public static async Task HandleFileSystemPermissionDialog(IWindowTitleBarControlModel windowTitleBar)
         {
-            FileSystemAccessDialog fileSystemAccessDialog = new FileSystemAccessDialog();
+            string testForFolderOnFS = Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+            SafeWrapper<StorageFolder> testFolderResult = await StorageItemHelpers.ToStorageItemWithError<StorageFolder>(testForFolderOnFS);
 
-            SafeWrapper<StorageLibrary> result = await SafeWrapperRoutines.SafeWrapAsync(() => StorageLibrary.GetLibraryAsync(KnownLibraryId.Music).AsTask());
-
-            if (!result)
+            if (!testFolderResult)
             {
                 App.IsInRestrictedAccessMode = true;
 
+                FileSystemAccessDialog fileSystemAccessDialog = new FileSystemAccessDialog();
                 ContentDialogResult dialogResult = await fileSystemAccessDialog.ShowAsync();
 
                 if (dialogResult == ContentDialogResult.Primary)
