@@ -160,11 +160,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return await Task.FromResult(new SafeWrapper<StorageFile>(associatedFile, SafeWrapperResult.S_SUCCESS));
         }
 
-        public override async Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions()
-        {
-            return await Task.FromResult<IEnumerable<SuggestedActionsControlItemViewModel>>(null);
-        }
-
         protected override void OnCanvasModeChanged(CanvasPreviewMode canvasMode)
         {
             switch (canvasMode)

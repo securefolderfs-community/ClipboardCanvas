@@ -43,7 +43,7 @@ namespace ClipboardCanvas.ReferenceItems
 
         public static async Task<ReferenceFile> GetFile(StorageFile referenceFile)
         {
-            if (!IsReferenceFile(referenceFile) || !StorageItemHelpers.Exists(referenceFile?.Path))
+            if (!IsReferenceFile(referenceFile))
             {
                 return null;
             }
