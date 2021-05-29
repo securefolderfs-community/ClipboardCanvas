@@ -1,4 +1,5 @@
 ﻿using ClipboardCanvas.Enums;
+using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 using System;
@@ -37,7 +38,7 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
 
                     if (referenceFile.ReferencedFile == null)
                     {
-                        return new InvalidContentTypeDataModel(false);
+                        return new InvalidContentTypeDataModel(referenceFile.LastError, false);
                     }
 
                     file = referenceFile.ReferencedFile;
@@ -91,11 +92,11 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
             }
             else if (item is StorageFolder folder)
             {
-                // TODO: Handle also folders?
-                return new InvalidContentTypeDataModel(false);
+                // TODO: Handle also folders
+                return new InvalidContentTypeDataModel(new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Displaying content for folders is not yet supported."), false);
             }
 
-            return new InvalidContentTypeDataModel(false);
+            return new InvalidContentTypeDataModel(new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Couldn't display content for this file"), false);
         }
     }
 }

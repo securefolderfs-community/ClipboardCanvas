@@ -17,6 +17,8 @@ namespace ClipboardCanvas.ReferenceItems
     {
         private readonly StorageFile _innerFile;
 
+        public SafeWrapperResult LastError { get; private set; } = SafeWrapperResult.S_SUCCESS;
+
         public StorageFile ReferencedFile { get; private set; }
 
         public ReferenceFileData ReferenceFileData { get; private set; }
@@ -60,11 +62,14 @@ namespace ClipboardCanvas.ReferenceItems
                 return new ReferenceFile(referenceFile, null);
             }
 
-            StorageFile file = await StorageItemHelpers.ToStorageItem<StorageFile>(referenceFileData.path);
+            SafeWrapper<StorageFile> file = await StorageItemHelpers.ToStorageItemWithError<StorageFile>(referenceFileData.path);
 
-            if (file == null)
+            if (!file)
             {
-                return new ReferenceFile(referenceFile, null);
+                return new ReferenceFile(referenceFile, null)
+                {
+                    LastError = (SafeWrapperResult)file
+                };
             }
 
             return new ReferenceFile(referenceFile, file);

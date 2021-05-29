@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ClipboardCanvas.Helpers.SafetyHelpers;
 
 namespace ClipboardCanvas.DataModels.PastedContentDataModels
 {
     public sealed class InvalidContentTypeDataModel : BasePastedContentTypeDataModel
     {
+        public readonly SafeWrapperResult error;
+
         public readonly bool needsReinitialization;
 
-        public InvalidContentTypeDataModel(bool needsReinitialization)
+        public InvalidContentTypeDataModel(SafeWrapperResult error, bool needsReinitialization)
         {
+            this.error = error;
             this.needsReinitialization = needsReinitialization;
         }
     }

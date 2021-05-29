@@ -85,15 +85,17 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public async Task<SafeWrapperResult> TryLoadExistingData(ICollectionsContainerItemModel itemData, CancellationToken cancellationToken)
         {
-            if (await InitializeViewModel(itemData))
+            SafeWrapperResult result = await InitializeViewModel(itemData);
+
+            if (result)
             {
                 return await CanvasViewModel?.TryLoadExistingData(itemData, cancellationToken);
             }
-
-            SafeWrapperResult result = new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Couldn't display content for this file");
-            OnErrorOccurredEvent?.Invoke(this, new ErrorOccurredEventArgs(result, result.Details.message));
-
-            return result;
+            else
+            {
+                OnErrorOccurredEvent?.Invoke(this, new ErrorOccurredEventArgs(result, result.Details.message));
+                return result;
+            }
         }
 
         public async Task<SafeWrapperResult> TryPasteData(DataPackageView dataPackage, CancellationToken cancellationToken)
@@ -280,7 +282,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         /// <summary>
         /// Initialize View Model from existing data
         /// </summary>
-        private async Task<bool> InitializeViewModel(ICollectionsContainerItemModel containerItemModel)
+        private async Task<SafeWrapperResult> InitializeViewModel(ICollectionsContainerItemModel containerItemModel)
         {
             DiscardData();
 
@@ -291,9 +293,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             contentType = await BasePastedContentTypeDataModel.GetContentType(containerItemModel.File, containerItemModel.ContentType);
 
             // Check if contentType is InvalidContentTypeDataModel
-            if (contentType is InvalidContentTypeDataModel)
+            if (contentType is InvalidContentTypeDataModel invalidContentType)
             {
-                return false;
+                return invalidContentType.error;
             }
 
             // If containerItemModel.ContentType was null, assign it to reuse it later
@@ -302,7 +304,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 containerItemModel.ContentType = contentType;
             }
 
-            return InitializeViewModel(contentType);
+            return InitializeViewModel(contentType) ? SafeWrapperResult.S_SUCCESS : new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Couldn't display content for this file");
         }
 
         private bool InitializeViewModel(BasePastedContentTypeDataModel contentType)

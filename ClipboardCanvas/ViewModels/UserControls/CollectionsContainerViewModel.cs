@@ -455,11 +455,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             if (!safeWrapperResult)
             {
-                if (App.IsInRestrictedAccessMode && safeWrapperResult.ErrorCode == OperationErrorCode.AccessUnauthorized)
-                {
-                    safeWrapperResult = new SafeWrapperResult(safeWrapperResult.ErrorCode, safeWrapperResult.Exception, "Couldn't access this Collection because Clipboard Canvas is in Restricted Access mode.");
-                }
-
                 CollectionErrorInfo = safeWrapperResult;
                 ErrorIconVisibility = Visibility.Visible;
                 CanOpenCollection = false;
