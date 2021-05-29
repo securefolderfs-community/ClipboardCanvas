@@ -11,6 +11,8 @@
             public const string COLLECTION_LOCATIONS_FILENAME = "saved_collections.json";
 
             public const string CANVAS_SETTINGS_FILENAME = "canvas_settings.json";
+
+            public const string APPLICATION_SETTINGS_FILENAME = "application_settings.json";
         }
 
         public static class CanvasContent

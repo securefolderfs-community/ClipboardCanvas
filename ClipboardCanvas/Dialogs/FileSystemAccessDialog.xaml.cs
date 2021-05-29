@@ -1,4 +1,5 @@
 ﻿using ClipboardCanvas.ViewModels;
+using ClipboardCanvas.ViewModels.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.IO;

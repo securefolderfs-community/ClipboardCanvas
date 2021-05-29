@@ -415,7 +415,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 if (false)
                 {
-                    var (icon, appName) = await IconHelpers.GetIconFromFileHandlingApp(file as StorageFile, Path.GetExtension(file.Path));
+                    var (icon, appName) = await ApplicationHelpers.GetIconFromFileHandlingApp(file as StorageFile, Path.GetExtension(file.Path));
                     if (icon != null && appName != null)
                     {
                         var action_openFile = new SuggestedActionsControlItemViewModel(

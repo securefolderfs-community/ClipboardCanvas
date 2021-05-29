@@ -11,6 +11,7 @@ using Windows.UI.Xaml;
 using System;
 using Windows.UI.Xaml.Controls;
 using System.Diagnostics;
+using ClipboardCanvas.Helpers;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -52,7 +53,9 @@ namespace ClipboardCanvas.UserControls
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             // Initialize the rest when the view is loaded
-            await FileSystemPermissionHelpers.HandleFileSystemPermissionDialog(WindowTitleBarControlModel);
+            await InitialDialogChecksHelpers.HandleFileSystemPermissionDialog(WindowTitleBarControlModel);
+
+            await InitialDialogChecksHelpers.CheckVersionAndShowDialog();
 
             await this.ViewModel.InitializeAfterLoad();
         }

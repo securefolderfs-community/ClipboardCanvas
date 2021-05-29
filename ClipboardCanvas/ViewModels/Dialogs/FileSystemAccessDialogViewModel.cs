@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace ClipboardCanvas.ViewModels
+namespace ClipboardCanvas.ViewModels.Dialogs
 {
     public class FileSystemAccessDialogViewModel : ObservableObject
     {

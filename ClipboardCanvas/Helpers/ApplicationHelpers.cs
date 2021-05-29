@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace ClipboardCanvas.Helpers
 {
-    public static class IconHelpers
+    public static class ApplicationHelpers
     {
         public static async Task<(BitmapImage icon, string appName)> GetIconFromFileHandlingApp(StorageFile file, string fileExtension)
         {
@@ -33,6 +33,16 @@ namespace ClipboardCanvas.Helpers
             BitmapImage bitmap = await ImagingHelpers.ToBitmapAsync((await stream.OpenReadAsync()).AsStreamForRead());
 
             return (bitmap, app.DisplayInfo.DisplayName);
+        }
+
+        public static bool IsVersionDifferentThan(string versionToCompareWith, string otherVersion)
+        {
+            Version version1 = new Version(versionToCompareWith);
+            Version version2 = new Version(otherVersion);
+
+            int numResult = version1.CompareTo(version2);
+
+            return numResult != 0;
         }
     }
 }

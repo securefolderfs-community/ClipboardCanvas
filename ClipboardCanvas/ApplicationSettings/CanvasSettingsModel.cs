@@ -15,10 +15,14 @@ namespace ClipboardCanvas.ApplicationSettings
 
         #endregion
 
+        #region ICanvasSettings
+
         public bool MediaCanvas_IsLoopingEnabled
         {
             get => Get(false);
             set => Set(value);
         }
+
+        #endregion
     }
 }

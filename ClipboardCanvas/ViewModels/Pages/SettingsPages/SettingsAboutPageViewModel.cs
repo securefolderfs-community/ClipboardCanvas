@@ -13,7 +13,7 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         public string VersionNumber
         {
-            get => $"{Package.Current.Id.Version.Major}.{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}.{Package.Current.Id.Version.Revision}";
+            get => App.AppVersion;
         }
 
         #endregion

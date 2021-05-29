@@ -5,6 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using ClipboardCanvas.Dialogs;
 using ClipboardCanvas.Helpers.Filesystem;
+using ClipboardCanvas.Helpers;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -28,7 +29,7 @@ namespace ClipboardCanvas.UserControls
         // TODO: Move to view model??
         private async void RestrictedAccess_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            await FileSystemPermissionHelpers.HandleFileSystemPermissionDialog(ViewModel);
+            await InitialDialogChecksHelpers.HandleFileSystemPermissionDialog(ViewModel);
         }
     }
 }

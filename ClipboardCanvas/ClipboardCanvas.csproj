@@ -135,9 +135,11 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ApplicationSettings\ApplicationSettingsModel.cs" />
     <Compile Include="ApplicationSettings\BaseJsonSettingsModel.cs" />
     <Compile Include="ApplicationSettings\CanvasSettingsModel.cs" />
     <Compile Include="ApplicationSettings\CollectionLocationsSettingsModel.cs" />
+    <Compile Include="ApplicationSettings\Interfaces\IApplicationSettings.cs" />
     <Compile Include="ApplicationSettings\Interfaces\ICanvasSettings.cs" />
     <Compile Include="ApplicationSettings\Interfaces\ICollectionLocationsSettings.cs" />
     <Compile Include="ApplicationSettings\Interfaces\IUserSettings.cs" />
@@ -160,6 +162,9 @@
     <Compile Include="Dialogs\FileSystemAccessDialog.xaml.cs">
       <DependentUpon>FileSystemAccessDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\UpdateChangeLogDialog.xaml.cs">
+      <DependentUpon>UpdateChangeLogDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Enums\CanvasPageProgressType.cs" />
     <Compile Include="Enums\CanvasPreviewMode.cs" />
     <Compile Include="Enums\SettingsPageType.cs" />
@@ -169,8 +174,8 @@
     <Compile Include="Extensions\GenericsExtensions.cs" />
     <Compile Include="Helpers\CollectionsHelpers.cs" />
     <Compile Include="Helpers\Filesystem\FilesystemOperations.cs" />
-    <Compile Include="Helpers\Filesystem\FileSystemPermissionHelpers.cs" />
-    <Compile Include="Helpers\IconHelpers.cs" />
+    <Compile Include="Helpers\InitialDialogChecksHelpers.cs" />
+    <Compile Include="Helpers\ApplicationHelpers.cs" />
     <Compile Include="Helpers\SafetyHelpers\SafeWrapperResult.cs" />
     <Compile Include="Helpers\StringHelpers.cs" />
     <Compile Include="Logging\ExceptionLogger.cs" />
@@ -282,7 +287,8 @@
     <Compile Include="ValueConverters\ImplicitDataTemplateConverter.cs" />
     <Compile Include="ValueConverters\SafeWrapperResultToErrorConverter.cs" />
     <Compile Include="ValueConverters\SelectedCollectionsContainerConverter.cs" />
-    <Compile Include="ViewModels\FileSystemAccessDialogViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\FileSystemAccessDialogViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\UpdateChangeLogDialogViewModel.cs" />
     <Compile Include="ViewModels\Pages\CanvasPageViewModel.cs" />
     <Compile Include="ViewModels\Pages\CollectionPreviewPageViewModel.cs" />
     <Compile Include="ViewModels\Pages\HomePageViewModel.cs" />
@@ -307,6 +313,7 @@
     <Compile Include="ViewModels\UserControls\NavigationControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\NavigationToolBarControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SettingsPanelControlViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\UpdateChangeLogItemViewModel.cs" />
     <Compile Include="ViewModels\UserControls\WindowTitleBarControlViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -375,6 +382,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Dialogs\FileSystemAccessDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\UpdateChangeLogDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
