@@ -5,8 +5,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.Pages.SettingsPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vc="using:ClipboardCanvas.ValueConverters"
     Background="Transparent"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <vc:BooleanInvertConverter x:Key="BooleanInvertConverter" />
+    </Page.Resources>
 
     <Grid Padding="20,8,20,20">
         <StackPanel Spacing="12">
@@ -16,8 +21,21 @@
                 Text="Pasting" />
 
             <StackPanel Spacing="12">
-                <!--  TODO: Add teaching tooltip here  -->
-                <ToggleSwitch Header="Always paste files as reference" IsOn="{x:Bind ViewModel.AlwaysPasteFilesAsReference, Mode=TwoWay}" />
+                <StackPanel>
+                    <!--  TODO: Add teaching tooltip here  -->
+                    <ToggleSwitch
+                        Header="Always paste files as reference"
+                        IsEnabled="{x:Bind ViewModel.IsInRestrictedAccessMode, Converter={StaticResource BooleanInvertConverter}}"
+                        IsOn="{x:Bind ViewModel.AlwaysPasteFilesAsReference, Mode=TwoWay}" />
+
+                    <TextBlock
+                        x:Name="RestrictedAccessLimitationsInfo"
+                        x:Load="{x:Bind ViewModel.IsInRestrictedAccessMode}"
+                        Foreground="Yellow"
+                        Text="Cannot enable this setting while in Restricted Access mode."
+                        TextWrapping="WrapWholeWords" />
+
+                </StackPanel>
 
                 <ToggleSwitch Header="Prioritize markdown format over raw text format" IsOn="{x:Bind ViewModel.PrioritizeMarkdownOverText, Mode=TwoWay}" />
             </StackPanel>

@@ -8,7 +8,7 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         public bool AlwaysPasteFilesAsReference
         {
-            get => App.AppSettings.UserSettings.AlwaysPasteFilesAsReference;
+            get => App.IsInRestrictedAccessMode ? false : App.AppSettings.UserSettings.AlwaysPasteFilesAsReference;
             set
             {
                 if (value != App.AppSettings.UserSettings.AlwaysPasteFilesAsReference)
@@ -32,6 +32,11 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
                     OnPropertyChanged(nameof(PrioritizeMarkdownOverText));
                 }
             }
+        }
+
+        public bool IsInRestrictedAccessMode
+        {
+            get => App.IsInRestrictedAccessMode;
         }
 
         #endregion
