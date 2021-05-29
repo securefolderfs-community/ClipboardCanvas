@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using ClipboardCanvas.Dialogs;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Windows.Input;
@@ -54,8 +55,9 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         private async void ShowChangeLog()
         {
-            // TODO: Open changelog dialog
-            await Launcher.LaunchUriAsync(new Uri(@"https://github.com/d2dyno1/ClipboardCanvas"));
+            UpdateChangeLogDialog updateChangeLogDialog = new UpdateChangeLogDialog();
+
+            await updateChangeLogDialog.ShowAsync();
         }
 
 

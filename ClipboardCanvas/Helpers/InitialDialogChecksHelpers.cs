@@ -30,8 +30,6 @@ namespace ClipboardCanvas.Helpers
             }
             else
             {
-                return;
-
                 // Compare two versions
                 if (ApplicationHelpers.IsVersionDifferentThan(lastVersion, currentVersion))
                 {

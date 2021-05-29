@@ -23,6 +23,7 @@ namespace ClipboardCanvas.Logging
 
         public async void Log(string message)
         {
+#if !DEBUG
             if (_destinationFile == null || string.IsNullOrEmpty(message))
             {
                 return;
@@ -39,6 +40,7 @@ namespace ClipboardCanvas.Logging
             catch (Exception)
             {
             }
+#endif
         }
     }
 }

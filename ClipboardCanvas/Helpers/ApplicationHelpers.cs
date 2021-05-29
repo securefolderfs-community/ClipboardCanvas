@@ -44,5 +44,21 @@ namespace ClipboardCanvas.Helpers
 
             return numResult != 0;
         }
+
+        public static bool IsVersionBiggerThan(string version1, string version2)
+        {
+            Version vVersion1 = new Version(version1);
+            Version vVersion2 = new Version(version2);
+
+            return vVersion1 > vVersion2;
+        }
+
+        public static bool IsVersionSmallerThan(string version1, string version2)
+        {
+            Version vVersion1 = new Version(version1);
+            Version vVersion2 = new Version(version2);
+
+            return vVersion1 < vVersion2;
+        }
     }
 }
