@@ -136,7 +136,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="ApplicationSettings\BaseJsonSettingsModel.cs" />
+    <Compile Include="ApplicationSettings\CanvasSettingsModel.cs" />
     <Compile Include="ApplicationSettings\CollectionLocationsSettingsModel.cs" />
+    <Compile Include="ApplicationSettings\Interfaces\ICanvasSettings.cs" />
     <Compile Include="ApplicationSettings\Interfaces\ICollectionLocationsSettings.cs" />
     <Compile Include="ApplicationSettings\Interfaces\IUserSettings.cs" />
     <Compile Include="ApplicationSettings\SettingsInstance.cs" />

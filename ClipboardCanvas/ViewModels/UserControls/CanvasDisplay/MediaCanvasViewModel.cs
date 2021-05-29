@@ -36,6 +36,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             set => ControlView.Position = value;
         }
 
+        private bool _IsLoopingEnabled
+        {
+            get => ControlView.IsLoopingEnabled;
+            set => ControlView.IsLoopingEnabled = value;
+        }
+
         #endregion
 
         #region Protected Members
@@ -82,7 +88,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (result)
             {
-                UpdatePlaybackPosition();
+                UpdateMediaControl();
             }
 
             return result;
@@ -125,11 +131,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Public Helpers
 
-        public void UpdatePlaybackPosition()
+        public void UpdateMediaControl()
         {
-            if (ControlView != null)
+            if (ControlView != null && _mediaContentType != null)
             {
                 this._Position = _mediaContentType.savedPosition;
+                this._IsLoopingEnabled = App.AppSettings.CanvasSettings.MediaCanvas_IsLoopingEnabled;
             }
         }
 
@@ -139,10 +146,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public override void Dispose()
         {
-            ICollectionsContainerItemModel associatedContainerItem = AssociatedContainer.Items.Where((item) => item.File == associatedFile).FirstOrDefault();
-            if (associatedContainerItem?.ContentType is MediaContentType mediaContentType && ControlView != null)
+            if (ControlView != null)
             {
-                mediaContentType.savedPosition = _Position;
+                ICollectionsContainerItemModel associatedContainerItem = AssociatedContainer.Items.Where((item) => item.File == associatedFile).FirstOrDefault();
+                if (associatedContainerItem?.ContentType is MediaContentType mediaContentType)
+                {
+                    mediaContentType.savedPosition = _Position;
+                }
+
+                App.AppSettings.CanvasSettings.MediaCanvas_IsLoopingEnabled = _IsLoopingEnabled;
             }
 
             base.Dispose();

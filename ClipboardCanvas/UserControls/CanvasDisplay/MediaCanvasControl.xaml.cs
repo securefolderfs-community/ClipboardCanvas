@@ -20,6 +20,12 @@ namespace ClipboardCanvas.UserControls.CanvasDisplay
             set => MediaPlayerContent.MediaPlayer.PlaybackSession.Position = value;
         }
 
+        public bool IsLoopingEnabled
+        {
+            get => MediaPlayerContent.MediaPlayer.IsLoopingEnabled;
+            set => MediaPlayerContent.MediaPlayer.IsLoopingEnabled = value;
+        }
+
         public MediaCanvasControl()
         {
             this.InitializeComponent();
@@ -28,7 +34,7 @@ namespace ClipboardCanvas.UserControls.CanvasDisplay
         private void UserControl_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             this.ViewModel.ControlView = this;
-            this.ViewModel.UpdatePlaybackPosition();
+            this.ViewModel.UpdateMediaControl();
         }
     }
 }
