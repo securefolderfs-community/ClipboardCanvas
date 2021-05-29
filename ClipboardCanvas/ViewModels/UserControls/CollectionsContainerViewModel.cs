@@ -278,7 +278,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public void CheckCanOpenCollection()
         {
-            if (StorageItemHelpers.Exists(CollectionFolderPath))
+            if (App.IsInRestrictedAccessMode && !isDefault)
+            {
+                SetCollectionError(s_CollectionFolderNotFound);
+            }
+            else if (StorageItemHelpers.Exists(CollectionFolderPath))
             {
                 SetCollectionError(SafeWrapperResult.S_SUCCESS);
             }
