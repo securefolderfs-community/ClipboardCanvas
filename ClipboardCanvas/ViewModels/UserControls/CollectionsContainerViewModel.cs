@@ -23,6 +23,7 @@ using ClipboardCanvas.Enums;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.EventArguments.CollectionsContainer;
+using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -31,6 +32,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
         #region Private Members
 
         private static SafeWrapperResult s_CollectionFolderNotFound => new SafeWrapperResult(OperationErrorCode.NotFound, "The folder associated with this collection was not found.");
+
+        private static SafeWrapperResult s_RestrictedAccessUnauthorized => StaticExceptionReporters.DefaultSafeWrapperExceptionReporter.GetStatusResult(new UnauthorizedAccessException());
 
         private StorageFolder _innerStorageFolder;
 
@@ -280,7 +283,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             if (App.IsInRestrictedAccessMode && !isDefault)
             {
-                SetCollectionError(s_CollectionFolderNotFound);
+                SetCollectionError(s_RestrictedAccessUnauthorized);
             }
             else if (StorageItemHelpers.Exists(CollectionFolderPath))
             {
