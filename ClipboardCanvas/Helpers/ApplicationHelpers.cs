@@ -31,41 +31,5 @@ namespace ClipboardCanvas.Helpers
 
             return (bitmap, app.DisplayInfo.DisplayName);
         }
-
-        public static bool IsVersionDifferentThan(string versionToCompareWith, string otherVersion)
-        {
-            Version version1 = new Version(versionToCompareWith);
-            Version version2 = new Version(otherVersion);
-
-            int numResult = version1.CompareTo(version2);
-
-            return numResult != 0;
-        }
-
-        public static bool IsVersionBiggerThan(string version1, string version2)
-        {
-            version1 = version1.Replace("v", string.Empty);
-            version2 = version2.Replace("v", string.Empty);
-
-            try
-            {
-                Version vVersion1 = new Version(version1);
-                Version vVersion2 = new Version(version2);
-
-                return vVersion1 > vVersion2;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public static bool IsVersionSmallerThan(string version1, string version2)
-        {
-            Version vVersion1 = new Version(version1);
-            Version vVersion2 = new Version(version2);
-
-            return vVersion1 < vVersion2;
-        }
     }
 }

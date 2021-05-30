@@ -29,7 +29,7 @@ namespace ClipboardCanvas.UserControls
         // TODO: Move to view model??
         private async void RestrictedAccess_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            await InitialDialogChecksHelpers.HandleFileSystemPermissionDialog(ViewModel);
+            await InitialApplicationChecksHelpers.HandleFileSystemPermissionDialog(ViewModel);
         }
     }
 }

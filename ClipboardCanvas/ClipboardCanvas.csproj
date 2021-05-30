@@ -174,10 +174,11 @@
     <Compile Include="Extensions\GenericsExtensions.cs" />
     <Compile Include="Helpers\CollectionsHelpers.cs" />
     <Compile Include="Helpers\Filesystem\FilesystemOperations.cs" />
-    <Compile Include="Helpers\InitialDialogChecksHelpers.cs" />
+    <Compile Include="Helpers\InitialApplicationChecksHelpers.cs" />
     <Compile Include="Helpers\ApplicationHelpers.cs" />
     <Compile Include="Helpers\SafetyHelpers\SafeWrapperResult.cs" />
     <Compile Include="Helpers\StringHelpers.cs" />
+    <Compile Include="Helpers\VersionHelpers.cs" />
     <Compile Include="Logging\ExceptionLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Models\IPasteCanvasPageModel.cs" />

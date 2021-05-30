@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace ClipboardCanvas.Helpers
 {
-    public static class InitialDialogChecksHelpers
+    public static class InitialApplicationChecksHelpers
     {
         public static async Task CheckVersionAndShowDialog()
         {
@@ -31,7 +31,7 @@ namespace ClipboardCanvas.Helpers
             else
             {
                 // Compare two versions
-                if (ApplicationHelpers.IsVersionDifferentThan(lastVersion, currentVersion))
+                if (VersionHelpers.IsVersionDifferentThan(lastVersion, currentVersion))
                 {
                     UpdateChangeLogDialog updateChangeLogDialog = new UpdateChangeLogDialog();
                     
