@@ -1,12 +1,9 @@
-﻿using Microsoft.Toolkit.Uwp;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
-using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -47,10 +44,20 @@ namespace ClipboardCanvas.Helpers
 
         public static bool IsVersionBiggerThan(string version1, string version2)
         {
-            Version vVersion1 = new Version(version1);
-            Version vVersion2 = new Version(version2);
+            version1 = version1.Replace("v", string.Empty);
+            version2 = version2.Replace("v", string.Empty);
 
-            return vVersion1 > vVersion2;
+            try
+            {
+                Version vVersion1 = new Version(version1);
+                Version vVersion2 = new Version(version2);
+
+                return vVersion1 > vVersion2;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public static bool IsVersionSmallerThan(string version1, string version2)

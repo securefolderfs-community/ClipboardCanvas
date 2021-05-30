@@ -5,15 +5,16 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.Dialogs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uwptuc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     CornerRadius="4"
     DefaultButton="Primary"
-    PrimaryButtonText="Nice!"
     Loaded="ContentDialog_Loaded"
+    PrimaryButtonText="Nice!"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid RowSpacing="16">
         <Grid.RowDefinitions>
-            <RowDefinition />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
@@ -44,12 +45,8 @@
                 Text="Fetching data from GitHub" />
         </StackPanel>
 
-        <ListView Grid.Row="1" ItemsSource="{x:Bind ViewModel.Items}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid />
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <ScrollViewer Grid.Row="1">
+            <uwptuc:MarkdownTextBlock Background="Transparent" Text="{x:Bind ViewModel.UpdateMarkdownInfoText, Mode=OneWay}" />
+        </ScrollViewer>
     </Grid>
 </ContentDialog>

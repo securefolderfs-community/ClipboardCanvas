@@ -60,7 +60,6 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
             await updateChangeLogDialog.ShowAsync();
         }
 
-
         #endregion
     }
 }

@@ -313,7 +313,6 @@
     <Compile Include="ViewModels\UserControls\NavigationControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\NavigationToolBarControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SettingsPanelControlViewModel.cs" />
-    <Compile Include="ViewModels\UserControls\UpdateChangeLogItemViewModel.cs" />
     <Compile Include="ViewModels\UserControls\WindowTitleBarControlViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
