@@ -201,6 +201,18 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     if (StringHelpers.IsUrlFile(text))
                     {
                         string ext = Path.GetExtension(text);
+                        char? illegalChar = null;
+                        if (ext.Contains("?"))
+                        {
+                            illegalChar = '?';
+                        }
+
+                        if (illegalChar != null)
+                        {
+                            int illegalCharIndex = ext.IndexOf((char)illegalChar);
+                            ext = ext.Substring(0, illegalCharIndex);
+                        }
+
                         if (ImageCanvasViewModel.Extensions.Contains(ext))
                         {
                             // Image
