@@ -200,24 +200,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     // The url may point to file
                     if (StringHelpers.IsUrlFile(text))
                     {
-                        string ext = Path.GetExtension(text);
-                        char? illegalChar = null;
-                        if (ext.Contains("?"))
-                        {
-                            illegalChar = '?';
-                        }
-
-                        if (illegalChar != null)
-                        {
-                            int illegalCharIndex = ext.IndexOf((char)illegalChar);
-                            ext = ext.Substring(0, illegalCharIndex);
-                        }
-
-                        if (ImageCanvasViewModel.Extensions.Contains(ext))
-                        {
-                            // Image
-                            InitializeViewModel(() => new ImageCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview));
-                        }
+                        // Image
+                        InitializeViewModel(() => new ImageCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview));
                     }
                     else
                     {
