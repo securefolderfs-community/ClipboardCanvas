@@ -8,12 +8,20 @@ namespace ClipboardCanvas.Helpers
 {
     public static class VersionHelpers
     {
-        public static bool IsVersionDifferentThan(string versionToCompareWith, string otherVersion)
+        public static bool IsVersionEqualTo(string version1, string version2)
         {
-            Version version1 = new Version(versionToCompareWith);
-            Version version2 = new Version(otherVersion);
+            Version vVersion1 = new Version(version1);
+            Version vVersion2 = new Version(version2);
 
-            return version1 != version2;
+            return vVersion1 == vVersion2;
+        }
+
+        public static bool IsVersionDifferentThan(string version1, string version2)
+        {
+            Version vVersion1 = new Version(version1);
+            Version vVersion2 = new Version(version2);
+
+            return vVersion1 != vVersion2;
         }
 
         public static bool IsVersionBiggerThan(string version1, string version2)

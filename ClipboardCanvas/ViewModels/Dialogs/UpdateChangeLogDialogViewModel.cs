@@ -1,6 +1,7 @@
 ﻿using ClipboardCanvas.Helpers;
 using ClipboardCanvas.ViewModels.UserControls;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.Input;
 using Octokit;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Windows.System;
 
 namespace ClipboardCanvas.ViewModels.Dialogs
 {
@@ -45,16 +48,41 @@ namespace ClipboardCanvas.ViewModels.Dialogs
 
         #endregion
 
+        #region Commands
+
+        public ICommand OpenReleasesOnGitHubCommand { get; private set; }
+
+        #endregion
+
+        #region Constructor
+
+        public UpdateChangeLogDialogViewModel()
+        {
+            // Create commands
+            OpenReleasesOnGitHubCommand = new RelayCommand(OpenReleasesOnGitHub);
+        }
+
+        #endregion
+
+        #region Command Implementation
+
+        private async void OpenReleasesOnGitHub()
+        {
+            await Launcher.LaunchUriAsync(new Uri(@"https://github.com/d2dyno1/ClipboardCanvas/releases"));
+        }
+
+        #endregion
+
         #region Public Helpers
 
-        public async Task LoadUpdateDataFromGitHub()
+        public async Task LoadUpdateDataFromGitHub(bool onlyCompareCurrent = false)
         {
             IsLoadingData = true;
             string currentVersion = App.AppVersion;
 
             try
             {
-                string owner = "d2dyno";
+                string owner = "d2dyno1";
                 string repositoryName = "ClipboardCanvas";
 
                 // Get all releases
@@ -71,13 +99,31 @@ namespace ClipboardCanvas.ViewModels.Dialogs
 
                     if (!item.Draft)
                     {
-                        if (VersionHelpers.IsVersionBiggerThan(itemVersion, currentVersion))
+                        if (onlyCompareCurrent)
                         {
-                            preparedReleases.Add((item.Name, item.Body));
+                            if (await ApplicationHelpers.IsStoreUpdateAvailable())
+                            {
+                                // TODO: Show update available dialog
+                            }
+                            else
+                            {
+                                if (VersionHelpers.IsVersionEqualTo(itemVersion, currentVersion))
+                                {
+                                    preparedReleases.Add((item.Name, item.Body));
+                                    break;
+                                }
+                            }
                         }
-                        else if (VersionHelpers.IsVersionSmallerThan(itemVersion, currentVersion))
+                        else
                         {
-                            break;
+                            if (VersionHelpers.IsVersionBiggerThan(itemVersion, currentVersion))
+                            {
+                                preparedReleases.Add((item.Name, item.Body));
+                            }
+                            else if (VersionHelpers.IsVersionSmallerThan(itemVersion, currentVersion))
+                            {
+                                break;
+                            }
                         }
                     }
                 }

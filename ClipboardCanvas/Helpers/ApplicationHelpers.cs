@@ -5,10 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Foundation;
+using Windows.Services.Store;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI.Xaml.Media.Imaging;
+using ClipboardCanvas.Extensions;
 
 namespace ClipboardCanvas.Helpers
 {
@@ -30,6 +32,20 @@ namespace ClipboardCanvas.Helpers
             BitmapImage bitmap = await ImagingHelpers.ToBitmapAsync((await stream.OpenReadAsync()).AsStreamForRead());
 
             return (bitmap, app.DisplayInfo.DisplayName);
+        }
+
+        public static async Task<bool> IsStoreUpdateAvailable()
+        {
+            try
+            {
+                IReadOnlyList<StorePackageUpdate> updates = await StoreContext.GetDefault().GetAppAndOptionalStorePackageUpdatesAsync();
+
+                return !updates.IsEmpty();
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
