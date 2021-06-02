@@ -4,6 +4,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Windows.Input;
 using Windows.ApplicationModel;
+using Windows.Storage;
 using Windows.System;
 
 namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
@@ -21,6 +22,8 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         #region Commands
 
+        public ICommand OpenLogLocationCommand { get; private set; }
+
         public ICommand ShowChangeLogCommand { get; private set; }
 
         public ICommand SubmitFeedbackCommand { get; private set; }
@@ -34,6 +37,7 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
         public SettingsAboutPageViewModel()
         {
             // Create commands
+            OpenLogLocationCommand = new RelayCommand(OpenLogLocation);
             ShowChangeLogCommand = new RelayCommand(ShowChangeLog);
             SubmitFeedbackCommand = new RelayCommand(SubmitFeedback);
             OpenPrivacyPolicyCommand = new RelayCommand(OpenPrivacyPolicy);
@@ -58,6 +62,11 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
             UpdateChangeLogDialog updateChangeLogDialog = new UpdateChangeLogDialog();
 
             await updateChangeLogDialog.ShowAsync();
+        }
+
+        private async void OpenLogLocation()
+        {
+            await Launcher.LaunchFolderAsync(ApplicationData.Current.LocalFolder);
         }
 
         #endregion

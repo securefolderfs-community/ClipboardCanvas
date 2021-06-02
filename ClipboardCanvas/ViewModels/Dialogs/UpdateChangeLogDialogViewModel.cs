@@ -160,7 +160,7 @@ namespace ClipboardCanvas.ViewModels.Dialogs
                 _UpdateMarkdownInfoText += $"Version {currentVersion}";
                 _UpdateMarkdownInfoText += "\n---";
                 _UpdateMarkdownInfoText += "\n";
-                _UpdateMarkdownInfoText += $"Clipboard Canvas is on version {currentVersion}";
+                _UpdateMarkdownInfoText += $"Clipboard Canvas has been updated to version {currentVersion}";
                 _UpdateMarkdownInfoText += "\n";
                 _UpdateMarkdownInfoText += "\n";
                 _UpdateMarkdownInfoText += "\n";
