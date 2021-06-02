@@ -193,54 +193,64 @@ namespace ClipboardCanvas.ViewModels.Pages
             {
                 deferral = e.GetDeferral();
 
-                SafeWrapper<IReadOnlyList<IStorageItem>> draggedItems = await SafeWrapperRoutines.SafeWrapAsync(async () =>
-                    await e.DataView.GetStorageItemsAsync());
-
-                if (draggedItems)
+                if (e.DataView.Contains(StandardDataFormats.Text))
                 {
-                    if (CollectionContainer.IsOnNewCanvas)
+                    e.AcceptedOperation = DataPackageOperation.Copy;
+                    TitleText = DRAG_TITLE_TEXT;
+                }
+                else if (e.DataView.Contains(StandardDataFormats.StorageItems))
+                {
+                    SafeWrapper<IReadOnlyList<IStorageItem>> draggedItems = await SafeWrapperRoutines.SafeWrapAsync(async () =>
+                        await e.DataView.GetStorageItemsAsync());
+
+                    if (draggedItems)
                     {
-                        e.AcceptedOperation = DataPackageOperation.Copy;
-                        TitleText = DRAG_TITLE_TEXT;
-                        return;
-                    }
-                    else
-                    {
-                        bool canPaste = true;
-
-                        foreach (var item in draggedItems.Result)
-                        {
-                            if (ReferenceFile.IsReferenceFile(CollectionContainer.CurrentCanvas.File))
-                            {
-                                ReferenceFile referenceFile = await ReferenceFile.GetFile(CollectionContainer.CurrentCanvas.File);
-
-                                if (referenceFile.ReferencedFile?.Path == item.Path)
-                                {
-                                    canPaste = false;
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                if (item.Path == CollectionContainer.CurrentCanvas.File.Path)
-                                {
-                                    canPaste = false;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (canPaste)
+                        if (CollectionContainer.IsOnNewCanvas)
                         {
                             e.AcceptedOperation = DataPackageOperation.Copy;
                             TitleText = DRAG_TITLE_TEXT;
                             return;
                         }
+                        else
+                        {
+                            bool canPaste = true;
+
+                            foreach (var item in draggedItems.Result)
+                            {
+                                if (ReferenceFile.IsReferenceFile(CollectionContainer.CurrentCanvas.File))
+                                {
+                                    ReferenceFile referenceFile = await ReferenceFile.GetFile(CollectionContainer.CurrentCanvas.File);
+
+                                    if (referenceFile.ReferencedFile?.Path == item.Path)
+                                    {
+                                        canPaste = false;
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    if (item.Path == CollectionContainer.CurrentCanvas.File.Path)
+                                    {
+                                        canPaste = false;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (canPaste)
+                            {
+                                e.AcceptedOperation = DataPackageOperation.Copy;
+                                TitleText = DRAG_TITLE_TEXT;
+                                return;
+                            }
+                        }
                     }
                 }
-
-                e.AcceptedOperation = DataPackageOperation.None;
-                TitleText = DEFAULT_TITLE_TEXT;
+                else
+                {
+                    e.AcceptedOperation = DataPackageOperation.None;
+                    TitleText = DEFAULT_TITLE_TEXT;
+                }
             }
             finally
             {
