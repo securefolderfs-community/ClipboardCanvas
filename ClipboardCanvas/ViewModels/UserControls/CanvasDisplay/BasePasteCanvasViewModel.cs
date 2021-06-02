@@ -491,7 +491,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected virtual async Task<SafeWrapperResult> SetDataInternal(DataPackageView dataPackage)
         {
-            if (dataPackage.Contains(StandardDataFormats.StorageItems))
+            if (dataPackage.Contains(StandardDataFormats.StorageItems)
+                && !dataPackage.Contains(StandardDataFormats.ApplicationLink)
+                && !dataPackage.Contains(StandardDataFormats.Bitmap)
+                && !dataPackage.Contains(StandardDataFormats.Html)
+                && !dataPackage.Contains(StandardDataFormats.Rtf)
+                && !dataPackage.Contains(StandardDataFormats.Text)
+                && !dataPackage.Contains(StandardDataFormats.UserActivityJsonArray)
+                && !dataPackage.Contains(StandardDataFormats.WebLink))
             {
                 SafeWrapper<IReadOnlyList<IStorageItem>> items = await SafeWrapperRoutines.SafeWrapAsync(
                     () => dataPackage.GetStorageItemsAsync().AsTask());
