@@ -237,10 +237,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region INavigationToolBarControlModel
 
-        public void NotifyCurrentPageChanged(DisplayFrameNavigationDataModel navigationDataModel)
+        public void NotifyCurrentPageChanged(DisplayPageType pageType)
         {
-            _currentPage = navigationDataModel.pageType;
-            switch (navigationDataModel.pageType)
+            _currentPage = pageType;
+            switch (_currentPage)
             {
                 case DisplayPageType.HomePage:
                     {

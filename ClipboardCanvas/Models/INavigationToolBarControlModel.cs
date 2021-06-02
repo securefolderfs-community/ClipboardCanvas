@@ -1,4 +1,5 @@
 ﻿using ClipboardCanvas.DataModels.Navigation;
+using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.Models
 {
@@ -8,6 +9,6 @@ namespace ClipboardCanvas.Models
 
         ISuggestedActionsControlModel SuggestedActionsControlModel { get; }
 
-        void NotifyCurrentPageChanged(DisplayFrameNavigationDataModel navigationDataModel);
+        void NotifyCurrentPageChanged(DisplayPageType pageType);
     }
 }

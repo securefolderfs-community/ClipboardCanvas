@@ -58,7 +58,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 if (SetProperty(ref _CurrentPageNavigation, value))
                 {
                     _CurrentPageNavigation.simulateNavigation = false;
-                    NavigationToolBarControlModel?.NotifyCurrentPageChanged(value);
+                    NavigationToolBarControlModel?.NotifyCurrentPageChanged(CurrentPage);
 
                     // Hook events if the page navigated is canvas page
                     if (_CurrentPageNavigation != null && _CurrentPageNavigation.pageType == DisplayPageType.CanvasPage)
@@ -66,7 +66,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                         HookCanvasControlEvents();
                     }
 
-                    OnPageNavigated(_CurrentPageNavigation);
+                    OnPageNavigated();
                 }
             }
         }
@@ -342,7 +342,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 HookCanvasControlEvents();
             }
 
-            NavigationToolBarControlModel.NotifyCurrentPageChanged(CurrentPageNavigation);
+            NavigationToolBarControlModel.NotifyCurrentPageChanged(CurrentPage);
 
             UpdateTitleBar();
             CheckNavigation();
@@ -374,7 +374,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     // TODO: Inform the user about the error
                     if (CurrentPageNavigation == null)
                     {
-                        // Avoid unexpected exceptions
+                        // Avoid unwanted exceptions
                         CurrentPageNavigation = new DisplayFrameNavigationDataModel(DisplayPageType.HomePage,
                             new DisplayFrameNavigationParameterDataModel( _currentCollectionContainer));
                     }
@@ -473,10 +473,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     true);
         }
 
-        private async void OnPageNavigated(DisplayFrameNavigationDataModel navigationDataModel)
+        private async void OnPageNavigated()
         {
             UpdateTitleBar();
-
             await SetSuggestedActions();
         }
 

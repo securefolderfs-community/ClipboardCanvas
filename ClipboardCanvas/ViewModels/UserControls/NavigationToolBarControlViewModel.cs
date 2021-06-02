@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.DataModels.Navigation;
+using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -71,9 +72,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region INavigationToolBarControlModel
 
-        public void NotifyCurrentPageChanged(DisplayFrameNavigationDataModel navigationDataModel)
+        public void NotifyCurrentPageChanged(DisplayPageType pageType)
         {
-            NavigationControlModel?.NotifyCurrentPageChanged(navigationDataModel);
+            NavigationControlModel?.NotifyCurrentPageChanged(pageType);
         }
 
         #endregion

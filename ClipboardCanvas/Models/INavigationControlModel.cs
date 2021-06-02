@@ -1,5 +1,6 @@
 ﻿using System;
 using ClipboardCanvas.DataModels.Navigation;
+using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.Models
 {
@@ -27,6 +28,6 @@ namespace ClipboardCanvas.Models
 
         bool GoToCanvasEnabled { get; set; }
 
-        void NotifyCurrentPageChanged(DisplayFrameNavigationDataModel navigationDataModel);
+        void NotifyCurrentPageChanged(DisplayPageType pageType);
     }
 }
