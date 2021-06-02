@@ -2,7 +2,7 @@
 using Windows.UI.Xaml.Media.Animation;
 using ClipboardCanvas.Enums;
 
-namespace ClipboardCanvas.DataModels
+namespace ClipboardCanvas.DataModels.Navigation
 {
     public class SettingsFrameNavigationDataModel : IEquatable<SettingsFrameNavigationDataModel>
     {

@@ -11,8 +11,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Controls;
 
-// TODO: Is that the right namespace?
-namespace ClipboardCanvas.MVVM
+namespace ClipboardCanvas.Services
 {
     public class DefaultDialogService : IDialogService
     {

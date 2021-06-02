@@ -150,7 +150,8 @@
     <Compile Include="AttachedProperties\FrameAttachedProperties.cs" />
     <Compile Include="AttachedProperties\WebViewAttachedProperties.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="DataModels\DisplayFrameNavigationDataModel.cs" />
+    <Compile Include="DataModels\Navigation\DisplayFrameNavigationDataModel.cs" />
+    <Compile Include="DataModels\Navigation\DisplayFrameNavigationParameterDataModel.cs" />
     <Compile Include="DataModels\PastedContentDataModels\BasePastedContentTypeDataModel.cs" />
     <Compile Include="DataModels\PastedContentDataModels\FallbackContentType.cs" />
     <Compile Include="DataModels\PastedContentDataModels\InvalidContentTypeDataModel.cs" />
@@ -159,7 +160,7 @@
     <Compile Include="DataModels\PastedContentDataModels\ImageContentType.cs" />
     <Compile Include="DataModels\PastedContentDataModels\MediaContentType.cs" />
     <Compile Include="DataModels\PastedContentDataModels\TextContentType.cs" />
-    <Compile Include="DataModels\SettingsFrameNavigationDataModel.cs" />
+    <Compile Include="DataModels\Navigation\SettingsFrameNavigationDataModel.cs" />
     <Compile Include="Dialogs\FileSystemAccessDialog.xaml.cs">
       <DependentUpon>FileSystemAccessDialog.xaml</DependentUpon>
     </Compile>
@@ -185,7 +186,7 @@
     <Compile Include="Models\IPasteCanvasPageModel.cs" />
     <Compile Include="ModelViews\IDynamicPasteCanvasControlView.cs" />
     <Compile Include="ModelViews\IMediaCanvasControlView.cs" />
-    <Compile Include="MVVM\DefaultDialogService.cs" />
+    <Compile Include="Services\DefaultDialogService.cs" />
     <Compile Include="ReferenceItems\ReferenceFile.cs" />
     <Compile Include="ReferenceItems\ReferenceFileData.cs" />
     <Compile Include="Helpers\SafetyHelpers\SafeWrapperRoutines.cs" />

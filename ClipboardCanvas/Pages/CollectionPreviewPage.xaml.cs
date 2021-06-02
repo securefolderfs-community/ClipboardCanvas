@@ -4,6 +4,7 @@ using Windows.UI.Xaml.Navigation;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
+using ClipboardCanvas.DataModels.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -26,8 +27,8 @@ namespace ClipboardCanvas.Pages
         {
             base.OnNavigatedTo(e);
 
-            DisplayFrameNavigationDataModel navigationDataModel = e.Parameter as DisplayFrameNavigationDataModel;
-            AssociatedCollection = navigationDataModel.collectionContainer;
+            DisplayFrameNavigationParameterDataModel navigationParameter = e.Parameter as DisplayFrameNavigationParameterDataModel;
+            AssociatedCollection = navigationParameter.collectionContainer;
         }
 
         public CollectionPreviewPage()

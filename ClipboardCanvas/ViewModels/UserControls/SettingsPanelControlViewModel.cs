@@ -1,9 +1,10 @@
-﻿using ClipboardCanvas.DataModels;
-using ClipboardCanvas.Enums;
+﻿using System.Windows.Input;
+using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-using System.Windows.Input;
-using Windows.UI.Xaml.Controls;
+
+using ClipboardCanvas.Enums;
+using ClipboardCanvas.DataModels.Navigation;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {

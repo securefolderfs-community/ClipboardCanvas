@@ -201,7 +201,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Event Handlers
 
-        private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private static void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (!s_itemAddedInternally && s_internalCollectionsCount < Items.Count)
             {

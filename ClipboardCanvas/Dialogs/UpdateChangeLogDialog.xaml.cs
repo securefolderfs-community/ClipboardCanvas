@@ -18,8 +18,6 @@ namespace ClipboardCanvas.Dialogs
         public UpdateChangeLogDialog()
         {
             this.InitializeComponent();
-
-            //this.ViewModel = new UpdateChangeLogDialogViewModel();
         }
 
         public new Task<ContentDialogResult> ShowAsync() => base.ShowAsync().AsTask();

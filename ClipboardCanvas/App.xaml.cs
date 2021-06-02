@@ -1,6 +1,6 @@
 ﻿using ClipboardCanvas.ApplicationSettings;
 using ClipboardCanvas.Logging;
-using ClipboardCanvas.MVVM;
+using ClipboardCanvas.Services;
 using ClipboardCanvas.ViewModels.Dialogs;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
@@ -39,7 +39,7 @@ namespace ClipboardCanvas
 
         public static ILogger ExceptionLogger = new ExceptionLogger();
 
-        public static bool IsInRestrictedAccessMode { get; set; } = false;
+        public static bool IsInRestrictedAccessMode = false;
 
         public static string AppVersion = $"{Package.Current.Id.Version.Major}.{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}.{Package.Current.Id.Version.Revision}";
 

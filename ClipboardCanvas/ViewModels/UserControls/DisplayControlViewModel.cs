@@ -1,22 +1,19 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System.Threading;
+using Windows.UI.ViewManagement;
 using System.Diagnostics;
+using Windows.UI.Xaml.Media.Animation;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
-using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Helpers;
-using ClipboardCanvas.Extensions;
-using Windows.UI.ViewManagement;
-using System.Collections;
-using System.Collections.Generic;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.EventArguments.CollectionControl;
-using Windows.UI.Xaml.Media.Animation;
+using ClipboardCanvas.DataModels.Navigation;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -378,7 +375,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     if (CurrentPageNavigation == null)
                     {
                         // Avoid unexpected exceptions
-                        CurrentPageNavigation = new DisplayFrameNavigationDataModel(DisplayPageType.HomePage, _currentCollectionContainer);
+                        CurrentPageNavigation = new DisplayFrameNavigationDataModel(DisplayPageType.HomePage,
+                            new DisplayFrameNavigationParameterDataModel( _currentCollectionContainer));
                     }
 
                     return false;
@@ -388,7 +386,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             NavigationTransitionInfo navigationTransition = new DrillInNavigationTransitionInfo();
 
             // Navigate
-            CurrentPageNavigation = new DisplayFrameNavigationDataModel(pageType, _currentCollectionContainer, navigationTransition, simulateNavigation);
+            CurrentPageNavigation = new DisplayFrameNavigationDataModel(pageType, new DisplayFrameNavigationParameterDataModel(_currentCollectionContainer), navigationTransition, simulateNavigation);
 
             // Handle event where user opens canvas - and show loading rings if needed
             if (CurrentPage == DisplayPageType.CanvasPage && _currentCollectionContainer.CanvasInitializing)
@@ -470,8 +468,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             CurrentPageNavigation = new DisplayFrameNavigationDataModel(
                     CurrentPageNavigation.pageType,
-                    CurrentPageNavigation.collectionContainer,
-                    CurrentPageNavigation.transitionInfo, true);
+                    CurrentPageNavigation.parameter,
+                    CurrentPageNavigation.transitionInfo,
+                    true);
         }
 
         private async void OnPageNavigated(DisplayFrameNavigationDataModel navigationDataModel)

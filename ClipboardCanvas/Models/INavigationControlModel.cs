@@ -1,5 +1,5 @@
-﻿using ClipboardCanvas.DataModels;
-using System;
+﻿using System;
+using ClipboardCanvas.DataModels.Navigation;
 
 namespace ClipboardCanvas.Models
 {

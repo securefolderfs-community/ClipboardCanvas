@@ -2,9 +2,9 @@
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 
-using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
+using ClipboardCanvas.DataModels.Navigation;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {

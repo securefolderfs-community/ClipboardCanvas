@@ -1,4 +1,4 @@
-﻿using ClipboardCanvas.DataModels;
+﻿using ClipboardCanvas.DataModels.Navigation;
 
 namespace ClipboardCanvas.Models
 {

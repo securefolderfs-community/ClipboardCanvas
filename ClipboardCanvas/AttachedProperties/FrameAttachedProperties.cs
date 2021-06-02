@@ -1,10 +1,10 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Pages;
 using ClipboardCanvas.Pages.SettingsPages;
+using ClipboardCanvas.DataModels.Navigation;
 
 namespace ClipboardCanvas.AttachedProperties
 {
@@ -12,28 +12,26 @@ namespace ClipboardCanvas.AttachedProperties
     {
         public override void OnValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            if (sender is not Frame frame || e.NewValue is not DisplayFrameNavigationDataModel navigationDataModel)
-            {
-                return;
-            }
+            DisplayFrameNavigationDataModel navigationDataModel = e.NewValue as DisplayFrameNavigationDataModel;
+            Frame frame = sender as Frame;
 
             switch (navigationDataModel.pageType)
             {
                 case DisplayPageType.HomePage:
                     {
-                        frame.Navigate(typeof(HomePage), navigationDataModel, navigationDataModel.transitionInfo);
+                        frame.Navigate(typeof(HomePage), navigationDataModel.parameter, navigationDataModel.transitionInfo);
                         break;
                     }
 
                 case DisplayPageType.CanvasPage:
                     {
-                        frame.Navigate(typeof(CanvasPage), navigationDataModel, navigationDataModel.transitionInfo);
+                        frame.Navigate(typeof(CanvasPage), navigationDataModel.parameter, navigationDataModel.transitionInfo);
                         break;
                     }
 
                 case DisplayPageType.CollectionsPreview:
                     {
-                        frame.Navigate(typeof(CollectionPreviewPage), navigationDataModel, navigationDataModel.transitionInfo);
+                        frame.Navigate(typeof(CollectionPreviewPage), navigationDataModel.parameter, navigationDataModel.transitionInfo);
                         break;
                     }
             }
