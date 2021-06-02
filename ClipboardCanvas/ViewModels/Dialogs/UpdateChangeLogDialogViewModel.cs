@@ -4,6 +4,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Octokit;
 using System;
+using ClipboardCanvas.Extensions;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -79,6 +80,7 @@ namespace ClipboardCanvas.ViewModels.Dialogs
         {
             IsLoadingData = true;
             string currentVersion = App.AppVersion;
+            List<(string Name, string Body)> preparedReleases = null;
 
             try
             {
@@ -89,7 +91,7 @@ namespace ClipboardCanvas.ViewModels.Dialogs
                 GitHubClient client = new GitHubClient(new ProductHeaderValue(owner));
                 IReadOnlyList<Release> releases = await client.Repository.Release.GetAll(owner, repositoryName);
 
-                List<(string Name, string Body)> preparedReleases = new List<(string Name, string Body)>();
+                preparedReleases = new List<(string Name, string Body)>();
 
                 // Prepare releases
                 foreach (var item in releases)
@@ -152,13 +154,13 @@ namespace ClipboardCanvas.ViewModels.Dialogs
                 App.ExceptionLogger.Log(e.Message);
             }
 
-            if (!_dataFetchedSuccessfully)
+            if (!_dataFetchedSuccessfully || preparedReleases.IsEmpty())
             {
                 // Getting data failed, display fallback update info
-                _UpdateMarkdownInfoText += $"Update {currentVersion}";
+                _UpdateMarkdownInfoText += $"Version {currentVersion}";
                 _UpdateMarkdownInfoText += "\n---";
                 _UpdateMarkdownInfoText += "\n";
-                _UpdateMarkdownInfoText += $"Clipboard Canvas has been updated to version {currentVersion}.";
+                _UpdateMarkdownInfoText += $"Clipboard Canvas is on version {currentVersion}";
                 _UpdateMarkdownInfoText += "\n";
                 _UpdateMarkdownInfoText += "\n";
                 _UpdateMarkdownInfoText += "\n";
