@@ -25,6 +25,7 @@
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm|arm64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+	<Win32Resource>MiddleClickScrolling-CursorType.res</Win32Resource>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -373,6 +374,7 @@
     <Content Include="Assets\AppIcon\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\AppIcon\Wide310x150Logo.scale-400.png" />
     <Content Include="Assets\ClipboardCanvasPreviewImage.png" />
+    <Content Include="Resources\MiddleClickScrolling-CursorType.res" />
     <None Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>

@@ -5,12 +5,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.UserControls.CanvasDisplay"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tui="using:Microsoft.Toolkit.Uwp.UI"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
 
     <Grid>
-        <ScrollViewer>
+        <ScrollViewer tui:ScrollViewerExtensions.EnableMiddleClickScrolling="True">
             <RichTextBlock IsTextSelectionEnabled="True">
                 <Paragraph>
                     <Run Text="{x:Bind ViewModel.ContentText, Mode=OneWay}" />
