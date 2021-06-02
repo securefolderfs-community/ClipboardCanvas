@@ -25,7 +25,7 @@
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm|arm64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-	<Win32Resource>MiddleClickScrolling-CursorType.res</Win32Resource>
+    <Win32Resource>Resources\MiddleClickScrolling-CursorType.res</Win32Resource>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -185,6 +185,7 @@
     <Compile Include="Models\IPasteCanvasPageModel.cs" />
     <Compile Include="ModelViews\IDynamicPasteCanvasControlView.cs" />
     <Compile Include="ModelViews\IMediaCanvasControlView.cs" />
+    <Compile Include="MVVM\DefaultDialogService.cs" />
     <Compile Include="ReferenceItems\ReferenceFile.cs" />
     <Compile Include="ReferenceItems\ReferenceFileData.cs" />
     <Compile Include="Helpers\SafetyHelpers\SafeWrapperRoutines.cs" />
@@ -290,6 +291,8 @@
     <Compile Include="ValueConverters\SafeWrapperResultToErrorConverter.cs" />
     <Compile Include="ValueConverters\SelectedCollectionsContainerConverter.cs" />
     <Compile Include="ViewModels\Dialogs\FileSystemAccessDialogViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\IDialog.cs" />
+    <Compile Include="ViewModels\Dialogs\IDialogService.cs" />
     <Compile Include="ViewModels\Dialogs\UpdateChangeLogDialogViewModel.cs" />
     <Compile Include="ViewModels\Pages\CanvasPageViewModel.cs" />
     <Compile Include="ViewModels\Pages\CollectionPreviewPageViewModel.cs" />

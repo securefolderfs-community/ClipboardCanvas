@@ -1,5 +1,7 @@
 ﻿using ClipboardCanvas.ApplicationSettings;
 using ClipboardCanvas.Logging;
+using ClipboardCanvas.MVVM;
+using ClipboardCanvas.ViewModels.Dialogs;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
@@ -40,6 +42,8 @@ namespace ClipboardCanvas
         public static bool IsInRestrictedAccessMode { get; set; } = false;
 
         public static string AppVersion = $"{Package.Current.Id.Version.Major}.{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}.{Package.Current.Id.Version.Revision}";
+
+        public static IDialogService DialogService = new DefaultDialogService();
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code

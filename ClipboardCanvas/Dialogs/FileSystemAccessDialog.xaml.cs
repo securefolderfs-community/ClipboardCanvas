@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -19,7 +20,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace ClipboardCanvas.Dialogs
 {
-    public sealed partial class FileSystemAccessDialog : ContentDialog
+    public sealed partial class FileSystemAccessDialog : ContentDialog, IDialog<FileSystemAccessDialogViewModel>
     {
         public FileSystemAccessDialogViewModel ViewModel
         {
@@ -27,11 +28,11 @@ namespace ClipboardCanvas.Dialogs
             set => DataContext = value;
         }
 
+        public new Task<ContentDialogResult> ShowAsync() => base.ShowAsync().AsTask();
+
         public FileSystemAccessDialog()
         {
             this.InitializeComponent();
-
-            this.ViewModel = new FileSystemAccessDialogViewModel();
         }
     }
 }

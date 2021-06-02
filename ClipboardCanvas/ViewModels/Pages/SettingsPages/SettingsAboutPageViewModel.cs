@@ -1,4 +1,5 @@
 ﻿using ClipboardCanvas.Dialogs;
+using ClipboardCanvas.ViewModels.Dialogs;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
@@ -59,9 +60,7 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         private async void ShowChangeLog()
         {
-            UpdateChangeLogDialog updateChangeLogDialog = new UpdateChangeLogDialog();
-
-            await updateChangeLogDialog.ShowAsync();
+            await App.DialogService.ShowDialog(new UpdateChangeLogDialogViewModel());
         }
 
         private async void OpenLogLocation()

@@ -2,6 +2,7 @@
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
+using ClipboardCanvas.ViewModels.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -53,8 +54,7 @@ namespace ClipboardCanvas.Helpers
             {
                 App.IsInRestrictedAccessMode = true;
 
-                FileSystemAccessDialog fileSystemAccessDialog = new FileSystemAccessDialog();
-                ContentDialogResult dialogResult = await fileSystemAccessDialog.ShowAsync();
+                ContentDialogResult dialogResult = await App.DialogService.ShowDialog(new FileSystemAccessDialogViewModel());
 
                 if (dialogResult == ContentDialogResult.Primary)
                 {

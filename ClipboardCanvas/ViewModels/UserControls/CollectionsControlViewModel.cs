@@ -381,10 +381,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public static async Task<bool> AddCollectionViaUi()
         {
-            FolderPicker folderPicker = new FolderPicker();
-            folderPicker.FileTypeFilter.Add("*");
-
-            StorageFolder folder = await folderPicker.PickSingleFolderAsync();
+            StorageFolder folder = await App.DialogService.PickSingleFolder();
 
             // We retrieve the folder again this time using ToStorageItem<>() because items picked by the FilePicker
             // or FolderPicker cannot be modified - i.e. Renamed etc.
