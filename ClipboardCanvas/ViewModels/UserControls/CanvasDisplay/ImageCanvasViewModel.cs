@@ -129,7 +129,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (!result)
             {
                 const int WINCODEC_ERR_UNSUPPORTEDOPERATION = unchecked((int)0x88982F81);
-                int hresult = result.Details.innerException.HResult;
+                int hresult = result.Exception.HResult;
 
                 result = SafeWrapperRoutines.SafeWrap(async () =>
                 {

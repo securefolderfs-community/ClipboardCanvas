@@ -23,6 +23,7 @@ using Windows.Storage;
 using System.Linq;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.ReferenceItems;
+using System.Runtime.CompilerServices;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {
@@ -174,6 +175,8 @@ namespace ClipboardCanvas.ViewModels.Pages
             bool win = e.KeyboardAccelerator.Modifiers.HasFlag(VirtualKeyModifiers.Windows);
             VirtualKey vkey = e.KeyboardAccelerator.Key;
             uint uVkey = (uint)e.KeyboardAccelerator.Key;
+
+            e.Handled = true;
 
             switch (c: ctrl, s: shift, a: alt, w: win, k: vkey)
             {
@@ -432,9 +435,9 @@ namespace ClipboardCanvas.ViewModels.Pages
                 result = await PasteCanvasModel.TryPasteData(dataPackage, DynamicCanvasControlViewModel.CanvasPasteCancellationTokenSource.Token);
             }
 
-            if (result == null)
+            if (result.Exception is ObjectDisposedException)
             {
-                // The last instance was probably disposed
+                // The last instance was disposed
                 // That's probably because user tried pasting data to a filled canvas, so new canvas was opened and this disposed
                 return;
             }

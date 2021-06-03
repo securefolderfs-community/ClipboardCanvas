@@ -93,7 +93,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             else
             {
-                OnErrorOccurredEvent?.Invoke(this, new ErrorOccurredEventArgs(result, result.Details.message));
+                OnErrorOccurredEvent?.Invoke(this, new ErrorOccurredEventArgs(result, result.Message));
                 return result;
             }
         }
@@ -106,7 +106,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             
             if (!result)
             {
-                OnErrorOccurredEvent?.Invoke(this, new ErrorOccurredEventArgs(result, result.Details.message));
+                OnErrorOccurredEvent?.Invoke(this, new ErrorOccurredEventArgs(result, result.Message));
             }
             
             return result;

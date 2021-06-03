@@ -402,7 +402,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     result = await pasteCanvasModel.TryLoadExistingData(this.Items[_currentIndex], cancellationToken);
                 }
             }
-            else if (result.Details.errorCode == OperationErrorCode.InvalidOperation)
+            else if (result.ErrorCode == OperationErrorCode.InvalidOperation)
             {
                 // View Model wasn't found
                 // Cannot display content for this file. - i.e. canvas display doesn't exists for this file

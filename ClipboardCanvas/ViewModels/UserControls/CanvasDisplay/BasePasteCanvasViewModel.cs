@@ -197,12 +197,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (IsDisposed)
             {
-                return null;
+                return new SafeWrapperResult(OperationErrorCode.InvalidOperation, new ObjectDisposedException(nameof(BasePasteCanvasViewModel)), "The canvas has been already disposed of.");
             }
             if (isFilled)
             {
                 result = new SafeWrapperResult(OperationErrorCode.AlreadyExists, new InvalidOperationException(), "Content has been already pasted.");
-                RaiseOnErrorOccurredEvent(this, new ErrorOccurredEventArgs(result, result.Details.message));
+                RaiseOnErrorOccurredEvent(this, new ErrorOccurredEventArgs(result, result.Message));
 
                 return result;
             }
@@ -392,19 +392,19 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public virtual async Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions()
         {
+            List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
+
             if (associatedFile == null)
             {
-                return null;
+                return actions;
             }
-
-            List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
 
             // Open file
             IStorageFile file;
             if (contentAsReference)
             {
                 ReferenceFile referenceFile = await ReferenceFile.GetFile(associatedFile);
-                file = referenceFile.ReferencedFile;
+                file = referenceFile?.ReferencedFile;
             }
             else
             {
