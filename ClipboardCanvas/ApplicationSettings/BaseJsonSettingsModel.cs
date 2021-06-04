@@ -1,14 +1,11 @@
-﻿using ClipboardCanvas.Extensions;
-using ClipboardCanvas.Helpers;
-using ClipboardCanvas.UnsafeNative;
+﻿using System;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Collections.Generic;
+using Windows.Storage;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using Windows.Storage;
+using ClipboardCanvas.UnsafeNative;
 
 namespace ClipboardCanvas.ApplicationSettings
 {
@@ -60,6 +57,7 @@ namespace ClipboardCanvas.ApplicationSettings
 
         protected virtual async void Initialize()
         {
+            // Create the file
             await ApplicationData.Current.LocalFolder.CreateFileAsync(settingsPath.Replace(ApplicationData.Current.LocalFolder.Path, string.Empty), CreationCollisionOption.OpenIfExists);
         }
 
@@ -231,6 +229,7 @@ namespace ClipboardCanvas.ApplicationSettings
             {
                 Debug.WriteLine(ex);
                 Debugger.Break();
+
                 return false;
             }
         }
