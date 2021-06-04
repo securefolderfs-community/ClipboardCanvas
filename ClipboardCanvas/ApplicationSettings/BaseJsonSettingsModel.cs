@@ -1,4 +1,5 @@
-﻿using ClipboardCanvas.Helpers;
+﻿using ClipboardCanvas.Extensions;
+using ClipboardCanvas.Helpers;
 using ClipboardCanvas.UnsafeNative;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -15,17 +16,40 @@ namespace ClipboardCanvas.ApplicationSettings
     {
         #region Protected Members
 
-        protected Dictionary<string, object> serializableSettings;
+        protected readonly string settingsPath;
 
-        protected string settingsPath;
+        protected readonly bool isCachingEnabled;
+
+        protected Dictionary<string, object> settingsCache;
 
         #endregion
 
         #region Constructor
 
+        /// <inheritdoc cref="BaseJsonSettingsModel(string, bool)"/>
         public BaseJsonSettingsModel(string settingsPath)
+            : this(settingsPath, false)
+        {
+        }
+
+        /// <summary>
+        /// Initializes new instance of <see cref="BaseJsonSettingsModel"/> and calls <see cref="Initialize"/> function.
+        /// </summary>
+        /// <param name="settingsPath">The path to settings file.</param>
+        /// <param name="isCachingEnabled">Determines whether settings should be cached.
+        /// Use is recommended when settings are accessed frequently to improve performance.
+        /// <br/>
+        /// <br/>
+        /// If true, settings won't be flushed until value and <see cref="settingsCache"/> value is different.
+        /// <br/>
+        /// If false, settings are always accessed and flushed upon read, write.</param>
+        public BaseJsonSettingsModel(string settingsPath, bool isCachingEnabled)
         {
             this.settingsPath = settingsPath;
+            this.isCachingEnabled = isCachingEnabled;
+
+            // Create new instance of the cache
+            this.settingsCache = new Dictionary<string, object>();
 
             Initialize();
         }
@@ -41,18 +65,25 @@ namespace ClipboardCanvas.ApplicationSettings
 
         public virtual object ExportSettings()
         {
-            return serializableSettings;
+            return settingsCache;
         }
 
         public virtual void ImportSettings(object import)
         {
             try
             {
-                serializableSettings = (Dictionary<string, object>)import;
+                // Try convert
+                settingsCache = (Dictionary<string, object>)import;
+
+                // Serialize
+                string serialized = JsonConvert.SerializeObject(settingsCache, Formatting.Indented);
+
+                // Write to file
+                UnsafeNativeHelpers.WriteStringToFile(settingsPath, serialized);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Debug.WriteLine(ex);
                 Debugger.Break();
             }
         }
@@ -65,43 +96,74 @@ namespace ClipboardCanvas.ApplicationSettings
         {
             try
             {
+                // Check if caching is enabled
+                if (isCachingEnabled)
+                {
+                    // If the cache contains the setting...
+                    if (settingsCache.ContainsKey(propertyName))
+                    {
+                        TValue settingValue;
+
+                        // Get the object
+                        object settingObject = settingsCache[propertyName];
+
+                        // Check if it's a JToken object
+                        if (settingObject is JToken jtoken)
+                        {
+                            // Get the value from JToken
+                            settingValue = jtoken.ToObject<TValue>();
+                        }
+                        else
+                        {
+                            // Otherwise, it is TValue, get the value
+                            settingValue = (TValue)settingObject;
+                        }
+
+                        // Return the setting and exit this function
+                        return settingValue;
+                    }
+
+                    // Cache miss, the cache doesn't contain the setting, continue, to update the cache
+                }
+
+                // Read all settings from file
                 string settingsData = UnsafeNativeHelpers.ReadStringFromFile(settingsPath);
 
+                // If there are existing settings...
                 if (!string.IsNullOrEmpty(settingsData))
                 {
-                    serializableSettings = JsonConvert.DeserializeObject<Dictionary<string, object>>(settingsData);
+                    // Deserialize them and update the cache
+                    settingsCache = JsonConvert.DeserializeObject<Dictionary<string, object>>(settingsData);
                 }
 
-                if (serializableSettings == null)
-                    serializableSettings = new Dictionary<string, object>();
-
-                if (!serializableSettings.ContainsKey(propertyName))
+                // If it doesn't have this setting...
+                if (!settingsCache.ContainsKey(propertyName))
                 {
-                    serializableSettings.Add(propertyName, defaultValue);
+                    // Add it to cache
+                    settingsCache.Add(propertyName, defaultValue);
 
-                    // Serialize
-                    UnsafeNativeHelpers.WriteStringToFile(settingsPath, JsonConvert.SerializeObject(serializableSettings, Formatting.Indented));
+                    // Serialize with updated value
+                    string serialized = JsonConvert.SerializeObject(settingsCache, Formatting.Indented);
+
+                    // Write to file
+                    UnsafeNativeHelpers.WriteStringToFile(settingsPath, serialized);
                 }
 
-                object valueObject = serializableSettings[propertyName];
-
-                if (valueObject == null)
+                // Get the value object
+                object valueObject = settingsCache[propertyName];
+                if (valueObject is JToken jtoken2)
                 {
-                    return defaultValue;
-                }
-
-                if (valueObject is JToken jtoken)
-                {
-                    return jtoken.ToObject<TValue>();
+                    return jtoken2.ToObject<TValue>();
                 }
 
                 return (TValue)valueObject;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Debug.WriteLine(ex);
                 Debugger.Break();
-                return default(TValue);
+
+                return default;
             }
         }
 
@@ -109,25 +171,68 @@ namespace ClipboardCanvas.ApplicationSettings
         {
             try
             {
-                if (!serializableSettings.ContainsKey(propertyName))
+                // Check if caching is enabled
+                if (isCachingEnabled)
                 {
-                    serializableSettings.Add(propertyName, value);
+                    // If cache contains the setting...
+                    if (settingsCache.ContainsKey(propertyName))
+                    {
+                        TValue settingValue;
+
+                        // Get the object
+                        object settingObject = settingsCache[propertyName];
+
+                        // Check if it's a JToken object
+                        if (settingObject is JToken jtoken)
+                        {
+                            // Get the value from JToken
+                            settingValue = jtoken.ToObject<TValue>();
+                        }
+                        else
+                        {
+                            // Otherwise, it is TValue, get the value
+                            settingValue = (TValue)settingObject;
+                        }
+
+                        // Compare the setting and the new value
+                        if (EqualityComparer<TValue>.Default.Equals(value, settingValue))
+                        {
+                            // Both are equal meaning the cache doesn't have to be reloaded, return
+                            return false;
+                        }
+
+                        // The values aren't equal, continue, to update the file and cache
+                    }
+
+                    // The value doesn't exist, continue, to update the file and cache
+                }
+
+                // If cache doesn't contain the setting...
+                if (!settingsCache.ContainsKey(propertyName))
+                {
+                    // Add the setting
+                    settingsCache.Add(propertyName, value);
                 }
                 else
                 {
-                    serializableSettings[propertyName] = value;
+                    // Otherwise, update the setting's value
+                    settingsCache[propertyName] = value;
                 }
 
                 // Serialize
-                UnsafeNativeHelpers.WriteStringToFile(settingsPath, JsonConvert.SerializeObject(serializableSettings, Formatting.Indented));
+                string serialized = JsonConvert.SerializeObject(settingsCache, Formatting.Indented);
+
+                // Write to file
+                UnsafeNativeHelpers.WriteStringToFile(settingsPath, serialized);
+
+                return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Debug.WriteLine(ex);
                 Debugger.Break();
                 return false;
             }
-            return true;
         }
 
         #endregion
