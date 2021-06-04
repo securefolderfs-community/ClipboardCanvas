@@ -11,5 +11,7 @@ namespace ClipboardCanvas.ModelViews
         TimeSpan Position { get; set; }
 
         bool IsLoopingEnabled { get; set; }
+
+        public double Volume { get; set; }
     }
 }

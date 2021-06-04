@@ -23,6 +23,12 @@ namespace ClipboardCanvas.ApplicationSettings
             set => Set(value);
         }
 
+        public double MediaCanvas_UniversalVolume
+        {
+            get => Get(100.0d);
+            set => Set(value);
+        }
+
         #endregion
     }
 }

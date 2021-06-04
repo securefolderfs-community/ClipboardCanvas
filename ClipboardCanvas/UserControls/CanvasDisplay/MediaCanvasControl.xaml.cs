@@ -26,6 +26,12 @@ namespace ClipboardCanvas.UserControls.CanvasDisplay
             set => MediaPlayerContent.MediaPlayer.IsLoopingEnabled = value;
         }
 
+        public double Volume
+        {
+            get => MediaPlayerContent.MediaPlayer.Volume;
+            set => MediaPlayerContent.MediaPlayer.Volume = value;
+        }
+
         public MediaCanvasControl()
         {
             this.InitializeComponent();
