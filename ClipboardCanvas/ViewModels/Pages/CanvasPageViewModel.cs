@@ -169,14 +169,13 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private async void DefaultKeyboardAcceleratorInvoked(KeyboardAcceleratorInvokedEventArgs e)
         {
+            e.Handled = true;
             bool ctrl = e.KeyboardAccelerator.Modifiers.HasFlag(VirtualKeyModifiers.Control);
             bool shift = e.KeyboardAccelerator.Modifiers.HasFlag(VirtualKeyModifiers.Shift);
             bool alt = e.KeyboardAccelerator.Modifiers.HasFlag(VirtualKeyModifiers.Menu);
             bool win = e.KeyboardAccelerator.Modifiers.HasFlag(VirtualKeyModifiers.Windows);
             VirtualKey vkey = e.KeyboardAccelerator.Key;
             uint uVkey = (uint)e.KeyboardAccelerator.Key;
-
-            e.Handled = true;
 
             switch (c: ctrl, s: shift, a: alt, w: win, k: vkey)
             {
