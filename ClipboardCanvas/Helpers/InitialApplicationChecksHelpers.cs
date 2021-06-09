@@ -34,10 +34,8 @@ namespace ClipboardCanvas.Helpers
                 // Compare two versions
                 if (VersionHelpers.IsVersionDifferentThan(lastVersion, currentVersion))
                 {
-                    UpdateChangeLogDialog updateChangeLogDialog = new UpdateChangeLogDialog();
-                    
                     // Show the update dialog
-                    await updateChangeLogDialog.ShowAsync();
+                    await App.DialogService.ShowDialog(new UpdateChangeLogDialogViewModel());
 
                     // Update the last version number to be the current number
                     App.AppSettings.ApplicationSettings.LastVersionNumber = currentVersion;

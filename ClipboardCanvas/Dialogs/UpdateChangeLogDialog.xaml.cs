@@ -25,7 +25,7 @@ namespace ClipboardCanvas.Dialogs
         // TODO: Move to view model
         private async void ContentDialog_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            await ViewModel.LoadUpdateDataFromGitHub(true);
+            await ViewModel?.LoadUpdateDataFromGitHub(true);
         }
     }
 }
