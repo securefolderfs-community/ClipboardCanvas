@@ -179,11 +179,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
-        public override async Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions()
-        {
-            return await Task.FromResult<IEnumerable<SuggestedActionsControlItemViewModel>>(null);
-        }
-
         #endregion
 
         #region IDisposable

@@ -103,17 +103,10 @@ namespace ClipboardCanvas.ViewModels.Dialogs
                     {
                         if (onlyCompareCurrent)
                         {
-                            if (await ApplicationHelpers.IsStoreUpdateAvailable())
+                            if (VersionHelpers.IsVersionEqualTo(itemVersion, currentVersion))
                             {
-                                // TODO: Show update available dialog
-                            }
-                            else
-                            {
-                                if (VersionHelpers.IsVersionEqualTo(itemVersion, currentVersion))
-                                {
-                                    preparedReleases.Add((item.Name, item.Body));
-                                    break;
-                                }
+                                preparedReleases.Add((item.Name, item.Body));
+                                break;
                             }
                         }
                         else
