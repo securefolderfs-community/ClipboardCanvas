@@ -42,6 +42,7 @@
             Text="Collections" />
 
         <GridView
+            x:Name="CollectionsGrid"
             Grid.Row="1"
             AllowDrop="True"
             CanReorderItems="True"
@@ -170,11 +171,27 @@
                         </Grid>
                         <Border.ContextFlyout>
                             <MenuFlyout>
-                                <MenuFlyoutItem Command="{Binding OpenCollectionLocationCommand}" Text="Open Collection location" />
+                                <MenuFlyoutItem Command="{Binding OpenCollectionLocationCommand}" Text="Open Collection location">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE838;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
                                 <MenuFlyoutSeparator />
-                                <MenuFlyoutItem Command="{Binding ReloadCollectionCommand}" Text="Reload Collection" />
-                                <MenuFlyoutItem Command="{Binding RenameCollectionCommand}" Text="Edit name" />
-                                <MenuFlyoutItem Command="{Binding RemoveCollectionCommand}" Text="Remove Collection" />
+                                <MenuFlyoutItem Command="{Binding ReloadCollectionCommand}" Text="Reload Collection">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE72C;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Command="{Binding RenameCollectionCommand}" Text="Edit name">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8AC;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Command="{Binding RemoveCollectionCommand}" Text="Remove Collection">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE738;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
                             </MenuFlyout>
                         </Border.ContextFlyout>
                     </Border>

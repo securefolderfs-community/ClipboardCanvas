@@ -140,7 +140,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (!StorageItemHelpers.Exists(associatedFile.Path))
             {
                 // We don't invoke OnErrorOccurredEvent here because we want to discard this canvas immediately and not show the error
-                return new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "Canvas not found");
+                return new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "Canvas not found.");
             }
 
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
