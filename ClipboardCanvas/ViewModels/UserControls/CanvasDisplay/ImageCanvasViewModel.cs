@@ -29,7 +29,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
     {
         #region Private Members
 
-        private readonly IDynamicPasteCanvasControlView _view;
+        private readonly IDynamicCanvasControlView _view;
 
         private Stream _dataStream;
 
@@ -67,7 +67,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public ImageCanvasViewModel(IDynamicPasteCanvasControlView view, CanvasPreviewMode canvasMode)
+        public ImageCanvasViewModel(IDynamicCanvasControlView view, CanvasPreviewMode canvasMode)
             : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new ImageContentType(), canvasMode)
         {
             this._view = view;

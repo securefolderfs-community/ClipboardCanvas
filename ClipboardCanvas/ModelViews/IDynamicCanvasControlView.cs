@@ -2,7 +2,7 @@
 
 namespace ClipboardCanvas.ModelViews
 {
-    public interface IDynamicPasteCanvasControlView
+    public interface IDynamicCanvasControlView
     {
         ICollectionsContainerModel CollectionContainer { get; }
     }

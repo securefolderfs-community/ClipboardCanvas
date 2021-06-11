@@ -26,7 +26,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
     {
         #region Private Members
 
-        private readonly IDynamicPasteCanvasControlView _view;
+        private readonly IDynamicCanvasControlView _view;
 
         private MediaContentType _mediaContentType => contentType as MediaContentType;
 
@@ -78,7 +78,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public MediaCanvasViewModel(IDynamicPasteCanvasControlView view, CanvasPreviewMode canvasMode)
+        public MediaCanvasViewModel(IDynamicCanvasControlView view, CanvasPreviewMode canvasMode)
             : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new MediaContentType(), canvasMode)
         {
             this._view = view;

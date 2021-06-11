@@ -1,10 +1,8 @@
-﻿using ClipboardCanvas.Helpers.Filesystem;
+﻿using ClipboardCanvas.Enums;
+using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -59,7 +57,10 @@ namespace ClipboardCanvas.ReferenceItems
         {
             if (referenceFileData == null || string.IsNullOrEmpty(referenceFileData.path))
             {
-                return new ReferenceFile(referenceFile, null);
+                return new ReferenceFile(referenceFile, null)
+                {
+                    LastError = new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentNullException(), "The Reference File data is corrupt.")
+                };
             }
 
             SafeWrapper<StorageFile> file = await StorageItemHelpers.ToStorageItemWithError<StorageFile>(referenceFileData.path);

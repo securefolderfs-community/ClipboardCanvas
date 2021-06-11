@@ -26,7 +26,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
     {
         #region Private Members
 
-        private readonly IDynamicPasteCanvasControlView _view;
+        private readonly IDynamicCanvasControlView _view;
 
         private StorageItemThumbnail _thumbnail;
 
@@ -86,7 +86,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public FallbackCanvasViewModel(IDynamicPasteCanvasControlView view, CanvasPreviewMode canvasMode)
+        public FallbackCanvasViewModel(IDynamicCanvasControlView view, CanvasPreviewMode canvasMode)
             : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new FallbackContentType(), canvasMode)
         {
             this._view = view;

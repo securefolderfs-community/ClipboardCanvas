@@ -3,12 +3,13 @@
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
+using Windows.UI.Xaml;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace ClipboardCanvas.UserControls
 {
-    public sealed partial class DynamicCanvasControl : UserControl, IDynamicPasteCanvasControlView
+    public sealed partial class DynamicCanvasControl : UserControl, IDynamicCanvasControlView
     {
         public DynamicCanvasControlViewModel ViewModel
         {

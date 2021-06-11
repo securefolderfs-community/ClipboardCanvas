@@ -25,7 +25,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
     {
         #region Private Members
 
-        private readonly IDynamicPasteCanvasControlView _view;
+        private readonly IDynamicCanvasControlView _view;
 
         #endregion
 
@@ -52,7 +52,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public MarkdownCanvasViewModel(IDynamicPasteCanvasControlView view, CanvasPreviewMode canvasMode)
+        public MarkdownCanvasViewModel(IDynamicCanvasControlView view, CanvasPreviewMode canvasMode)
             : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new MarkdownContentType(), canvasMode)
         {
             this._view = view;

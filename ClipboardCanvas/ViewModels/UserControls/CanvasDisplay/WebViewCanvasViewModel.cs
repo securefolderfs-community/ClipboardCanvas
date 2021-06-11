@@ -27,9 +27,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
     {
         #region Private Members
 
-        private readonly IDynamicPasteCanvasControlView _view;
+        private readonly IDynamicCanvasControlView _view;
 
         private readonly WebViewCanvasMode _mode;
+
+        private bool _webViewNeedsUpdate;
+
+        private bool _webViewIsLoaded;
 
         #endregion
 
@@ -41,7 +45,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public WebViewCanvasViewModel(IDynamicPasteCanvasControlView view, WebViewCanvasMode mode, CanvasPreviewMode canvasMode)
+        public WebViewCanvasViewModel(IDynamicCanvasControlView view, WebViewCanvasMode mode, CanvasPreviewMode canvasMode)
             : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new WebViewContentType(mode), canvasMode)
         {
             this._view = view;
@@ -63,19 +67,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             set => SetProperty(ref _ContentWebViewLoad, value);
         }
 
-        private string _TextHtml;
-        public string TextHtml
-        {
-            get => _TextHtml;
-            set => SetProperty(ref _TextHtml, value);
-        }
+        public string TextHtml { get; private set; }
 
-        private string _Source;
-        public string Source
-        {
-            get => _Source;
-            set => SetProperty(ref _Source, value);
-        }
+        public string Source { get; private set; }
+
+        public IWebViewCanvasControlView ControlView { get; set; }
 
         #endregion
 
@@ -105,11 +101,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (_mode == WebViewCanvasMode.ReadWebsite)
             {
-                _Source = text;
+                Source = text;
             }
             else
             {
-                _TextHtml = text;
+                TextHtml = text;
             }
 
             return text;
@@ -137,11 +133,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (_mode == WebViewCanvasMode.ReadWebsite)
             {
-                _Source = text;
+                Source = text;
             }
             else
             {
-                _TextHtml = text;
+                TextHtml = text;
             }
 
             return await Task.FromResult(text);
@@ -165,18 +161,48 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()
         {
-            this.ContentWebViewLoad = true;
+            ContentWebViewLoad = true;
 
-            if (_mode == WebViewCanvasMode.ReadWebsite)
+            if (!_webViewIsLoaded)
             {
-                OnPropertyChanged(nameof(Source));
+                _webViewNeedsUpdate = true;
             }
             else
             {
-                OnPropertyChanged(nameof(TextHtml));
+                if (_mode == WebViewCanvasMode.ReadWebsite)
+                {
+                    ControlView.NavigateToSource(Source);
+                }
+                else
+                {
+                    ControlView.NavigateToHtml(TextHtml);
+                }
             }
 
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
+        }
+
+        #endregion
+
+        #region Public Helpers
+
+        public void NotifyWebViewLoaded()
+        {
+            _webViewIsLoaded = true;
+
+            if (_webViewNeedsUpdate)
+            {
+                _webViewNeedsUpdate = false;
+
+                if (_mode == WebViewCanvasMode.ReadWebsite)
+                {
+                    ControlView.NavigateToSource(Source);
+                }
+                else
+                {
+                    ControlView.NavigateToHtml(TextHtml);
+                }
+            }
         }
 
         #endregion

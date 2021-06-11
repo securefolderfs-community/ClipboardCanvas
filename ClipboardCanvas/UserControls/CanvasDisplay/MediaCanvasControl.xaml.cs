@@ -1,4 +1,5 @@
-﻿using ClipboardCanvas.ModelViews;
+﻿using ClipboardCanvas.Models;
+using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 using System;
 using Windows.UI.Xaml.Controls;

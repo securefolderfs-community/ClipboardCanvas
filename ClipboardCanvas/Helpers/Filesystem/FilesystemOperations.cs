@@ -17,19 +17,19 @@ namespace ClipboardCanvas.Helpers.Filesystem
             byte[] buffer = new byte[Constants.FileSystem.COPY_FILE_BUFFER_SIZE];
             SafeWrapperResult result = SafeWrapperResult.S_SUCCESS;
 
-            using (IRandomAccessStreamWithContentType sourceStream = await source.OpenReadAsync())
+            using (Stream sourceStream = (await source.OpenReadAsync()).AsStreamForRead())
             {
-                using (IRandomAccessStream destinationStream = await destination.OpenAsync(FileAccessMode.ReadWrite))
+                using (Stream destinationStream = (await destination.OpenAsync(FileAccessMode.ReadWrite)).AsStreamForWrite())
                 {
                     long totalBytes = 0L;
                     int currentBlockSize = 0;
 
-                    while ((currentBlockSize = await sourceStream.AsStream().ReadAsync(buffer, 0, buffer.Length)) > 0)
+                    while ((currentBlockSize = await sourceStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
                     {
                         totalBytes += currentBlockSize;
                         float percentage = (float)totalBytes * 100.0f / (float)fileSize;
 
-                        await destinationStream.AsStreamForWrite().WriteAsync(buffer, 0, currentBlockSize);
+                        await destinationStream.WriteAsync(buffer, 0, currentBlockSize);
                         progressReportDelegate?.Invoke(percentage);
 
                         if (cancellationToken.IsCancellationRequested)

@@ -26,7 +26,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
     {
         #region Private Members
 
-        private readonly IDynamicPasteCanvasControlView _view;
+        private readonly IDynamicCanvasControlView _view;
 
         #endregion
 
@@ -74,7 +74,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public DynamicCanvasControlViewModel(IDynamicPasteCanvasControlView view)
+        public DynamicCanvasControlViewModel(IDynamicCanvasControlView view)
         {
             this._view = view;
         }

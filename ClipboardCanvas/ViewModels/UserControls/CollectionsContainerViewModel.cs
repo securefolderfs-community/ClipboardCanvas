@@ -427,25 +427,33 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             IEnumerable<StorageFile> files = await Task.Run(async () => await this._innerStorageFolder.GetFilesAsync());
 
-            // Sort items from oldest (last canvas) to newest (first canvas)
-            files = files.OrderBy((x) => x.DateCreated.DateTime);
-
-            // Save indexes for later
-            int savedIndex = _currentIndex;
-            int savedItemsCount = Items.Count;
-
-            Items.Clear();
-            foreach (var item in files)
+            if (!files.IsEmpty())
             {
-                AddCanvasItem(item);
-            }
+                // Sort items from oldest (last canvas) to newest (first canvas)
+                files = files.OrderBy((x) => x.DateCreated.DateTime);
 
-            // TODO: save index somewhere to file?
-            // Calculate new index
-            int newItemsCount = Items.Count;
-            int newIndex = Math.Max(savedIndex, savedIndex - (savedItemsCount - newItemsCount));
-            
-            this._currentIndex = Extensions.CollectionExtensions.IndexFitBounds(this.Items.Count, newIndex);
+                // Save indexes for later
+                int savedIndex = _currentIndex;
+                int savedItemsCount = Items.Count;
+
+                Items.Clear();
+                foreach (var item in files)
+                {
+                    AddCanvasItem(item);
+                }
+
+                // TODO: save index somewhere to file?
+                // Calculate new index
+                int newItemsCount = Items.Count;
+                int newIndex = Math.Max(savedIndex, savedIndex - (savedItemsCount - newItemsCount));
+
+                this._currentIndex = Extensions.CollectionExtensions.IndexFitBounds(this.Items.Count, newIndex);
+            }
+            else
+            {
+                Items.Clear();
+                this._currentIndex = 0;
+            }
 
             IsLoadingItemsVisibility = Visibility.Collapsed;
             CanvasInitializing = false;

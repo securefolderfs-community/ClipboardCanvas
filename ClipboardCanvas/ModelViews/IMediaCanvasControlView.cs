@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClipboardCanvas.ModelViews
 {
@@ -12,6 +8,6 @@ namespace ClipboardCanvas.ModelViews
 
         bool IsLoopingEnabled { get; set; }
 
-        public double Volume { get; set; }
+        double Volume { get; set; }
     }
 }
