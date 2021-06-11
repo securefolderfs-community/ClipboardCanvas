@@ -1,9 +1,7 @@
-﻿using System.IO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Diagnostics;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Media.Core;
 using Windows.Storage;
@@ -13,10 +11,6 @@ using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.ModelViews;
-using ClipboardCanvas.Helpers.Filesystem;
-using ClipboardCanvas.ReferenceItems;
-using ClipboardCanvas.Helpers;
-using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using System.Threading;
 
@@ -29,6 +23,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         private readonly IDynamicCanvasControlView _view;
 
         private MediaContentType _mediaContentType => contentType as MediaContentType;
+
+        #endregion
+
+        #region Protected Members
+
+        protected override ICollectionsContainerModel AssociatedContainer => _view?.CollectionContainer;
+
+        #endregion
+
+        #region Private Properties
 
         private TimeSpan __Position
         {
@@ -50,12 +54,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #endregion
 
-        #region Protected Members
-
-        protected override ICollectionsContainerModel AssociatedContainer => _view?.CollectionContainer;
-
-        #endregion
-
         #region Public Properties
 
         public static List<string> Extensions => new List<string>() {
@@ -70,6 +68,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             get => _ContentMedia;
             set => SetProperty(ref _ContentMedia, value);
+        }
+
+        private bool _ContentMediaLoad;
+        public bool ContentMediaLoad
+        {
+            get => _ContentMediaLoad;
+            set => SetProperty(ref _ContentMediaLoad, value);
         }
 
         public IMediaCanvasControlView ControlView { get; set; }
@@ -122,6 +127,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()
         {
+            ContentMediaLoad = true;
             ContentMedia = MediaSource.CreateFromStorageFile(sourceFile);
 
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
@@ -153,7 +159,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public override void Dispose()
         {
-            if (ControlView != null)
+            if (ControlView != null && ContentMediaLoad)
             {
                 ICollectionsContainerItemModel associatedContainerItem = AssociatedContainer.Items.Where((item) => item.File == associatedFile).FirstOrDefault();
                 if (associatedContainerItem?.ContentType is MediaContentType mediaContentType)

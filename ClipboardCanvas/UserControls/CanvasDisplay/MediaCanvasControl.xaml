@@ -13,6 +13,7 @@
     <Grid>
         <MediaPlayerElement
             x:Name="MediaPlayerContent"
+            x:Load="{x:Bind ViewModel.ContentMediaLoad, Mode=OneWay}"
             AreTransportControlsEnabled="True"
             AutoPlay="True"
             Foreground="Transparent"
