@@ -235,6 +235,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             {
                 case VirtualKey.Escape:
                     {
+                        // Cancel
                         IsEditingName = false;
 
                         break;
@@ -242,38 +243,16 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
                 case VirtualKey.Enter:
                     {
-                        string newName = EditBoxText;
-
-                        CheckRenameCollectionRequestedEventArgs args = new CheckRenameCollectionRequestedEventArgs(this, newName);
-                        OnCheckRenameCollectionRequestedEvent?.Invoke(this, args);
-
-                        if (args.canRename)
-                        {
-                            SafeWrapperResult result = await FilesystemOperations.RenameItemAsync(_innerStorageFolder, newName, NameCollisionOption.FailIfExists);
-
-                            if (result)
-                            {
-                                this.CollectionFolderPath = _innerStorageFolder.Path;
-
-                                OnPropertyChanged(nameof(DisplayName));
-
-                                // Also update settings
-                                CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
-                                CollectionsHelpers.UpdateLastSelectedCollectionSetting(this);
-                            }
-                        }
-
-                        IsEditingName = false;
+                        await ConfirmRename();
 
                         break;
                     }
             }
         }
 
-        private void EditBoxLostFocus(RoutedEventArgs e)
+        private async void EditBoxLostFocus(RoutedEventArgs e)
         {
-            // Cancel rename
-            IsEditingName = false;
+            await ConfirmRename();
         }
 
         #endregion
@@ -418,6 +397,32 @@ namespace ClipboardCanvas.ViewModels.UserControls
         #endregion
 
         #region Private Helpers
+
+        private async Task ConfirmRename()
+        {
+            string newName = EditBoxText;
+
+            CheckRenameCollectionRequestedEventArgs args = new CheckRenameCollectionRequestedEventArgs(this, newName);
+            OnCheckRenameCollectionRequestedEvent?.Invoke(this, args);
+
+            if (args.canRename)
+            {
+                SafeWrapperResult result = await FilesystemOperations.RenameItemAsync(_innerStorageFolder, newName, NameCollisionOption.FailIfExists);
+
+                if (result)
+                {
+                    this.CollectionFolderPath = _innerStorageFolder.Path;
+
+                    OnPropertyChanged(nameof(DisplayName));
+
+                    // Also update settings
+                    CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
+                    CollectionsHelpers.UpdateLastSelectedCollectionSetting(this);
+                }
+            }
+
+            IsEditingName = false;
+        }
 
         private async Task InitItems(string infoText = null)
         {

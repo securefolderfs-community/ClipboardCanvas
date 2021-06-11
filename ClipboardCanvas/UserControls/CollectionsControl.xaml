@@ -47,15 +47,14 @@
             Grid.Row="1"
             AllowDrop="True"
             CanReorderItems="True"
-            IsDoubleTapEnabled="True"
             IsItemClickEnabled="True"
             ItemsSource="{x:Bind vm:CollectionsControlViewModel.Items}"
             ReorderMode="Enabled"
             SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
             SelectionMode="Single">
             <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="DoubleTapped">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DoubleTappedCommand}" />
+                <icore:EventTriggerBehavior EventName="ItemClick">
+                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.ItemClickCommand}" />
                 </icore:EventTriggerBehavior>
             </i:Interaction.Behaviors>
             <!--  Remove Reveal Highlight Effect  -->

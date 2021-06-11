@@ -38,6 +38,8 @@
         public static class Collections
         {
             public const string DEFAULT_COLLECTION_TOKEN = "$DEFAULT_COLLECTION$";
+
+            public const int DOUBLE_CLICK_DELAY_MILISECONDS = 300;
         }
     }
 }

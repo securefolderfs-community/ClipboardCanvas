@@ -6,22 +6,18 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.UI.Xaml;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.UI.Xaml.Controls;
+using System.Linq;
 using Windows.Storage;
-using Windows.UI.Xaml.Input;
 
 using ClipboardCanvas.EventArguments;
-using ClipboardCanvas.Models;
-using System.Linq;
-using Windows.Storage.Pickers;
-using System.IO;
-using ClipboardCanvas.Extensions;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.EventArguments.CollectionControl;
 using ClipboardCanvas.EventArguments.CollectionsContainer;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
-using Windows.UI.Xaml;
-using Windows.ApplicationModel.DataTransfer;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -32,6 +28,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
         private static bool s_itemAddedInternally;
 
         private static int s_internalCollectionsCount;
+
+        private DoubleClickWrapper _collectionDoubleClickWrapper;
 
         #endregion
 
@@ -106,7 +104,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public ICommand DropCommand { get; private set; }
 
-        public ICommand DoubleTappedCommand { get; private set; }
+        public ICommand ItemClickCommand { get; private set; }
 
         #endregion
 
@@ -116,10 +114,14 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             HookEvents();
 
+            _collectionDoubleClickWrapper = new DoubleClickWrapper(
+                () => OnCollectionOpenRequestedEvent?.Invoke(this, new CollectionOpenRequestedEventArgs(SelectedItem)),
+                TimeSpan.FromMilliseconds(Constants.Collections.DOUBLE_CLICK_DELAY_MILISECONDS));
+
             // Create commands
             DragOverCommand = new RelayCommand<DragEventArgs>(DragOver);
             DropCommand = new RelayCommand<DragEventArgs>(Drop);
-            DoubleTappedCommand = new RelayCommand<DoubleTappedRoutedEventArgs>(DoubleTapped);
+            ItemClickCommand = new RelayCommand<ItemClickEventArgs>(ItemClick);
         }
 
         #endregion
@@ -192,9 +194,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        private void DoubleTapped(DoubleTappedRoutedEventArgs e)
+        private void ItemClick(ItemClickEventArgs e)
         {
-            OnCollectionOpenRequestedEvent?.Invoke(this, new CollectionOpenRequestedEventArgs(SelectedItem));
+            _collectionDoubleClickWrapper.Click();
         }
 
         #endregion
@@ -418,6 +420,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public void Dispose()
         {
+            _collectionDoubleClickWrapper?.Dispose();
             UnhookEvents();
         }
 
