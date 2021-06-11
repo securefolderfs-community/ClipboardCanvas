@@ -75,7 +75,7 @@
                                         <VisualState x:Name="Disabled">
                                             <Storyboard>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SubtleBackgroundBrush}" />
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource NavigationButtonDisabledBackgroundBrush}" />
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushDisabled}" />
@@ -155,7 +155,7 @@
 
     <Border
         Width="300"
-        BorderBrush="{ThemeResource SubtleBackgroundBrush}"
+        BorderBrush="{ThemeResource NavigationButtonsBorderBrush}"
         BorderThickness="2,0,2,0">
         <Grid>
             <Grid.ColumnDefinitions>

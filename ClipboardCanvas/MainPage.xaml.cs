@@ -1,5 +1,5 @@
-﻿using Windows.ApplicationModel.Core;
-using Windows.UI;
+﻿using ClipboardCanvas.Helpers;
+using Windows.ApplicationModel.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -13,6 +13,10 @@ namespace ClipboardCanvas
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        public static ApplicationViewTitleBar TitleBar { get; private set; }
+
+        public static CoreApplicationViewTitleBar CoreTitleBar { get; private set; }
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -22,21 +26,20 @@ namespace ClipboardCanvas
 
         private void Initialize()
         {
-            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            TitleBar = ApplicationView.GetForCurrentView().TitleBar;
+            CoreTitleBar = CoreApplication.GetCurrentView().TitleBar;
 
-            titleBar.ButtonBackgroundColor = Colors.Transparent;
-            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-            coreTitleBar.ExtendViewIntoTitleBar = true;
-
+            CoreTitleBar.ExtendViewIntoTitleBar = true;
             Window.Current.SetTitleBar(WindowTitleBar.DraggableRegion);
-            coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
+
+            ThemeHelper.Initialize();
+
+            CoreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
         }
 
         private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
         {
-            var coreTitleBar = sender as CoreApplicationViewTitleBar;
-            WindowTitleBar.CompactOverlay.Margin = new Thickness(0, 0, coreTitleBar.SystemOverlayRightInset, 0);
+            WindowTitleBar.CompactOverlay.Margin = new Thickness(0, 0, sender.SystemOverlayRightInset, 0);
         }
     }
 }
