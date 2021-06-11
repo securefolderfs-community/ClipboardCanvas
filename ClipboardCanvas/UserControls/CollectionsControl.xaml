@@ -95,7 +95,28 @@
                             </Grid.RowDefinitions>
 
                             <!--  Icon  -->
-                            <Grid Grid.Row="0">
+                            <Grid
+                                Grid.Row="0"
+                                HorizontalAlignment="Stretch"
+                                Background="Transparent">
+                                <ToolTipService.ToolTip>
+                                    <ToolTip>
+                                        <StackPanel Spacing="8">
+                                            <!--  Title  -->
+                                            <TextBlock
+                                                FontSize="16"
+                                                FontWeight="SemiBold"
+                                                Text="{Binding DisplayName}"
+                                                TextTrimming="CharacterEllipsis" />
+
+                                            <!--  Content text  -->
+                                            <TextBlock
+                                                Text="Double click to open this Collection.&#x0a;Right click for more options."
+                                                TextTrimming="WordEllipsis"
+                                                TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </ToolTip>
+                                </ToolTipService.ToolTip>
                                 <FontIcon
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
