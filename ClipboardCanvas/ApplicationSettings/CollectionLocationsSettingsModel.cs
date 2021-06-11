@@ -10,7 +10,8 @@ namespace ClipboardCanvas.ApplicationSettings
         #region Constructor
 
         public CollectionLocationsSettingsModel()
-            : base(Path.Combine(ApplicationData.Current.LocalFolder.Path, Constants.LocalSettings.SETTINGS_FOLDERNAME, Constants.LocalSettings.COLLECTION_LOCATIONS_FILENAME))
+            : base(Path.Combine(ApplicationData.Current.LocalFolder.Path, Constants.LocalSettings.SETTINGS_FOLDERNAME, Constants.LocalSettings.COLLECTION_LOCATIONS_FILENAME),
+                  isCachingEnabled: true)
         {
         }
 

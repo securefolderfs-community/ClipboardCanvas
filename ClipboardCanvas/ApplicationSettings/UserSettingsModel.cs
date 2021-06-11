@@ -9,7 +9,8 @@ namespace ClipboardCanvas.ApplicationSettings
         #region Constructor
 
         public UserSettingsModel() 
-            : base(Path.Combine(ApplicationData.Current.LocalFolder.Path, Constants.LocalSettings.SETTINGS_FOLDERNAME, Constants.LocalSettings.USER_SETTINGS_FILENAME))
+            : base(Path.Combine(ApplicationData.Current.LocalFolder.Path, Constants.LocalSettings.SETTINGS_FOLDERNAME, Constants.LocalSettings.USER_SETTINGS_FILENAME),
+                  isCachingEnabled: true)
         {
         }
 
