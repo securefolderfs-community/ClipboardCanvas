@@ -69,6 +69,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         public event EventHandler<ErrorOccurredEventArgs> OnErrorOccurredEvent;
 
         public event EventHandler<ProgressReportedEventArgs> OnProgressReportedEvent;
+        
+        public event EventHandler<TipTextUpdateRequestedEventArgs> OnTipTextUpdateRequestedEvent;
 
         #endregion
 
@@ -378,6 +380,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Event Handlers
 
+        private void CanvasViewModel_OnTipTextUpdateRequestedEvent(object sender, TipTextUpdateRequestedEventArgs e)
+        {
+            OnTipTextUpdateRequestedEvent?.Invoke(sender, e);
+        }
+
         private void CanvasViewModel_OnProgressReportedEvent(object sender, ProgressReportedEventArgs e)
         {
             OnProgressReportedEvent?.Invoke(sender, e);
@@ -388,22 +395,22 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             OnErrorOccurredEvent?.Invoke(sender, e);
         }
 
-        private void PasteCanvasControlModel_OnFileDeletedEvent(object sender, FileDeletedEventArgs e)
+        private void CanvasViewModel_OnFileDeletedEvent(object sender, FileDeletedEventArgs e)
         {
             OnFileDeletedEvent?.Invoke(sender, e);
         }
 
-        private void PasteCanvasControlModel_OnFileModifiedEvent(object sender, FileModifiedEventArgs e)
+        private void CanvasViewModel_OnFileModifiedEvent(object sender, FileModifiedEventArgs e)
         {
             OnFileModifiedEvent?.Invoke(sender, e);
         }
 
-        private void PasteCanvasControlModel_OnFileCreatedEvent(object sender, FileCreatedEventArgs e)
+        private void CanvasViewModel_OnFileCreatedEvent(object sender, FileCreatedEventArgs e)
         {
             OnFileCreatedEvent?.Invoke(sender, e);
         }
 
-        private void PasteCanvasControlModel_OnPasteRequestedEvent(object sender, PasteRequestedEventArgs e)
+        private void CanvasViewModel_OnPasteRequestedEvent(object sender, PasteRequestedEventArgs e)
         {
             OnPasteRequestedEvent?.Invoke(sender, e);
         }
@@ -413,12 +420,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             OnContentStartedLoadingEvent?.Invoke(sender, e);
         }
 
-        private void PasteCanvasControlModel_OnContentLoadedEvent(object sender, ContentLoadedEventArgs e)
+        private void CanvasViewModel_OnContentLoadedEvent(object sender, ContentLoadedEventArgs e)
         {
             OnContentLoadedEvent?.Invoke(sender, e);
         }
 
-        private void PasteCanvasControlModel_OnOpenNewCanvasRequestedEvent(object sender, OpenNewCanvasRequestedEventArgs e)
+        private void CanvasViewModel_OnOpenNewCanvasRequestedEvent(object sender, OpenNewCanvasRequestedEventArgs e)
         {
             OnOpenNewCanvasRequestedEvent?.Invoke(sender, e);
         }
@@ -432,15 +439,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             UnhookEvents();
             if (CanvasViewModel != null)
             {
-                CanvasViewModel.OnOpenNewCanvasRequestedEvent += PasteCanvasControlModel_OnOpenNewCanvasRequestedEvent;
-                CanvasViewModel.OnContentLoadedEvent += PasteCanvasControlModel_OnContentLoadedEvent;
+                CanvasViewModel.OnOpenNewCanvasRequestedEvent += CanvasViewModel_OnOpenNewCanvasRequestedEvent;
+                CanvasViewModel.OnContentLoadedEvent += CanvasViewModel_OnContentLoadedEvent;
                 CanvasViewModel.OnContentStartedLoadingEvent += CanvasViewModel_OnContentStartedLoadingEvent;
-                CanvasViewModel.OnPasteRequestedEvent += PasteCanvasControlModel_OnPasteRequestedEvent;
-                CanvasViewModel.OnFileCreatedEvent += PasteCanvasControlModel_OnFileCreatedEvent;
-                CanvasViewModel.OnFileModifiedEvent += PasteCanvasControlModel_OnFileModifiedEvent;
-                CanvasViewModel.OnFileDeletedEvent += PasteCanvasControlModel_OnFileDeletedEvent;
+                CanvasViewModel.OnPasteRequestedEvent += CanvasViewModel_OnPasteRequestedEvent;
+                CanvasViewModel.OnFileCreatedEvent += CanvasViewModel_OnFileCreatedEvent;
+                CanvasViewModel.OnFileModifiedEvent += CanvasViewModel_OnFileModifiedEvent;
+                CanvasViewModel.OnFileDeletedEvent += CanvasViewModel_OnFileDeletedEvent;
                 CanvasViewModel.OnErrorOccurredEvent += CanvasViewModel_OnErrorOccurredEvent;
                 CanvasViewModel.OnProgressReportedEvent += CanvasViewModel_OnProgressReportedEvent;
+                CanvasViewModel.OnTipTextUpdateRequestedEvent += CanvasViewModel_OnTipTextUpdateRequestedEvent;
             }
         }
 
@@ -448,15 +456,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             if (CanvasViewModel != null)
             {
-                CanvasViewModel.OnOpenNewCanvasRequestedEvent -= PasteCanvasControlModel_OnOpenNewCanvasRequestedEvent;
-                CanvasViewModel.OnContentLoadedEvent -= PasteCanvasControlModel_OnContentLoadedEvent;
+                CanvasViewModel.OnOpenNewCanvasRequestedEvent -= CanvasViewModel_OnOpenNewCanvasRequestedEvent;
+                CanvasViewModel.OnContentLoadedEvent -= CanvasViewModel_OnContentLoadedEvent;
                 CanvasViewModel.OnContentStartedLoadingEvent -= CanvasViewModel_OnContentStartedLoadingEvent;
-                CanvasViewModel.OnPasteRequestedEvent -= PasteCanvasControlModel_OnPasteRequestedEvent;
-                CanvasViewModel.OnFileCreatedEvent -= PasteCanvasControlModel_OnFileCreatedEvent;
-                CanvasViewModel.OnFileModifiedEvent -= PasteCanvasControlModel_OnFileModifiedEvent;
-                CanvasViewModel.OnFileDeletedEvent -= PasteCanvasControlModel_OnFileDeletedEvent;
+                CanvasViewModel.OnPasteRequestedEvent -= CanvasViewModel_OnPasteRequestedEvent;
+                CanvasViewModel.OnFileCreatedEvent -= CanvasViewModel_OnFileCreatedEvent;
+                CanvasViewModel.OnFileModifiedEvent -= CanvasViewModel_OnFileModifiedEvent;
+                CanvasViewModel.OnFileDeletedEvent -= CanvasViewModel_OnFileDeletedEvent;
                 CanvasViewModel.OnErrorOccurredEvent -= CanvasViewModel_OnErrorOccurredEvent;
                 CanvasViewModel.OnProgressReportedEvent -= CanvasViewModel_OnProgressReportedEvent;
+                CanvasViewModel.OnTipTextUpdateRequestedEvent -= CanvasViewModel_OnTipTextUpdateRequestedEvent;
             }
         }
 

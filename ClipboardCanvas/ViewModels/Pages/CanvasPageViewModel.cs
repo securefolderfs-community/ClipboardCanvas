@@ -293,6 +293,11 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         #region Event Handlers
 
+        private async void PasteCanvasModel_OnTipTextUpdateRequestedEvent(object sender, TipTextUpdateRequestedEventArgs e)
+        {
+            await SetTipText(e.infoText, e.tipShowDelay);
+        }
+
         private void PasteCanvasModel_OnProgressReportedEvent(object sender, ProgressReportedEventArgs e)
         {
             switch (e.progressType)
@@ -374,13 +379,18 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         #region IPasteCanvasPageModel
 
-        public async void SetTipText(string text, bool withDelay = false)
+        public async Task SetTipText(string text)
+        {
+            await SetTipText(text, TimeSpan.Zero);
+        }
+
+        public async Task SetTipText(string text, TimeSpan tipShowDelay)
         {
             if (!string.IsNullOrWhiteSpace(text))
             {
-                if (withDelay)
+                if (tipShowDelay != TimeSpan.Zero)
                 {
-                    await Task.Delay(Constants.CanvasContent.SHOW_TIP_TEXT_DELAY);
+                    await Task.Delay(tipShowDelay);
                 }
 
                 if (!_contentLoaded)
@@ -460,6 +470,7 @@ namespace ClipboardCanvas.ViewModels.Pages
                 PasteCanvasModel.OnContentStartedLoadingEvent += PasteCanvasModel_OnContentStartedLoadingEvent;
                 PasteCanvasModel.OnErrorOccurredEvent += PasteCanvasModel_OnErrorOccurredEvent;
                 PasteCanvasModel.OnProgressReportedEvent += PasteCanvasModel_OnProgressReportedEvent;
+                PasteCanvasModel.OnTipTextUpdateRequestedEvent += PasteCanvasModel_OnTipTextUpdateRequestedEvent;
             }
         }
 
@@ -472,6 +483,7 @@ namespace ClipboardCanvas.ViewModels.Pages
                 PasteCanvasModel.OnContentStartedLoadingEvent -= PasteCanvasModel_OnContentStartedLoadingEvent;
                 PasteCanvasModel.OnErrorOccurredEvent -= PasteCanvasModel_OnErrorOccurredEvent;
                 PasteCanvasModel.OnProgressReportedEvent -= PasteCanvasModel_OnProgressReportedEvent;
+                PasteCanvasModel.OnTipTextUpdateRequestedEvent -= PasteCanvasModel_OnTipTextUpdateRequestedEvent;
             }
         }
 

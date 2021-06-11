@@ -429,7 +429,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CanvasInitializing = true;
             IsLoadingItemsVisibility = Visibility.Visible;
 
-            OnCollectionItemsInitializationStartedEvent?.Invoke(this, new CollectionItemsInitializationStartedEventArgs(this, infoText, true));
+            OnCollectionItemsInitializationStartedEvent?.Invoke(this, new CollectionItemsInitializationStartedEventArgs(this, infoText, TimeSpan.FromMilliseconds(Constants.CanvasContent.COLLECTION_RELOADING_TIP_DELAY)));
 
             IEnumerable<StorageFile> files = await Task.Run(async () => await this._innerStorageFolder.GetFilesAsync());
 

@@ -111,6 +111,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public event EventHandler<ProgressReportedEventArgs> OnProgressReportedEvent;
 
+        public event EventHandler<TipTextUpdateRequestedEventArgs> OnTipTextUpdateRequestedEvent;
+
         #endregion
 
         #region Constructor
@@ -290,13 +292,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             else
             {
-                if (!sourceFile.Path.SequenceEqual(associatedFile.Path)) // Make sure we don't copy to the same path smh
+                if (!sourceFile.Path.SequenceEqual(associatedFile.Path)) // Make sure we don't copy to the same path
                 {
                     // If pasting a file not raw data from clipboard...
 
+                    // Signify that the file is being pasted
+                    RaiseOnTipTextUpdateRequestedEvent(this, new TipTextUpdateRequestedEventArgs("The file is being pasted, please wait.", TimeSpan.FromMilliseconds(Constants.CanvasContent.FILE_PASTING_TIP_DELAY)));
+
                     // Copy to collection
                     SafeWrapperResult copyResult = await FilesystemOperations.CopyFileAsync(sourceFile, associatedFile, ReportProgress, cancellationToken);
-
+                    
                     return copyResult;
                 }
 
@@ -631,10 +636,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         protected void RaiseOnFileModifiedEvent(object s, FileModifiedEventArgs e) => OnFileModifiedEvent?.Invoke(s, e);
 
         protected void RaiseOnFileDeletedEvent(object s, FileDeletedEventArgs e) => OnFileDeletedEvent?.Invoke(s, e);
-
+        
         protected void RaiseOnErrorOccurredEvent(object s, ErrorOccurredEventArgs e) => OnErrorOccurredEvent?.Invoke(s, e);
 
         protected void RaiseOnProgressReportedEvent(object s, ProgressReportedEventArgs e) => OnProgressReportedEvent?.Invoke(s, e);
+
+        protected void RaiseOnTipTextUpdateRequestedEvent(object s, TipTextUpdateRequestedEventArgs e) => OnTipTextUpdateRequestedEvent?.Invoke(s, e);
 
         #endregion
 

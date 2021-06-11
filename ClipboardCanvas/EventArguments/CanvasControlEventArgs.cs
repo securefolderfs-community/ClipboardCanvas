@@ -121,4 +121,22 @@ namespace ClipboardCanvas.EventArguments.CanvasControl
             this.progressType = progressType;
         }
     }
+
+    public class TipTextUpdateRequestedEventArgs : EventArgs
+    {
+        public readonly string infoText;
+
+        public readonly TimeSpan tipShowDelay;
+
+        public TipTextUpdateRequestedEventArgs(string infoText)
+            : this(infoText, TimeSpan.Zero)
+        {
+        }
+
+        public TipTextUpdateRequestedEventArgs(string infoText, TimeSpan tipShowDelay)
+        {
+            this.infoText = infoText;
+            this.tipShowDelay = tipShowDelay;
+        }
+    }
 }

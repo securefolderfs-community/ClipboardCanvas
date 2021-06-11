@@ -21,7 +21,9 @@
 
             public const int SHOW_LOADING_RING_DELAY = 100;
 
-            public const int SHOW_TIP_TEXT_DELAY = 400;
+            public const int COLLECTION_RELOADING_TIP_DELAY = 400;
+
+            public const int FILE_PASTING_TIP_DELAY = 150;
         }
 
         public static class FileSystem

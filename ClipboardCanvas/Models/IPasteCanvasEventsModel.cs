@@ -23,5 +23,7 @@ namespace ClipboardCanvas.Models
         event EventHandler<ErrorOccurredEventArgs> OnErrorOccurredEvent;
 
         event EventHandler<ProgressReportedEventArgs> OnProgressReportedEvent;
+
+        event EventHandler<TipTextUpdateRequestedEventArgs> OnTipTextUpdateRequestedEvent;
     }
 }
