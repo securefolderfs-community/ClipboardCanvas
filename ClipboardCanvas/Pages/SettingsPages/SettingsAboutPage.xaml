@@ -24,10 +24,13 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <Image
+                <Viewbox
                     Grid.RowSpan="2"
-                    Source="/Assets/AppIcon/StoreLogo.png"
-                    Stretch="Uniform" />
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    StretchDirection="DownOnly">
+                    <Image Source="/Assets/AppIcon/Square150x150Logo.scale-400.png" Stretch="Uniform" />
+                </Viewbox>
                 <TextBlock
                     Grid.Column="1"
                     Padding="12,2,0,0"

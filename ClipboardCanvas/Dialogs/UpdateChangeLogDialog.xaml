@@ -27,10 +27,11 @@
 
         <StackPanel Orientation="Horizontal" Spacing="8">
             <Viewbox
+                Width="50"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 StretchDirection="DownOnly">
-                <Image Source="/Assets/AppIcon/StoreLogo.png" Stretch="Fill" />
+                <Image Source="/Assets/AppIcon/Square150x150Logo.scale-400.png" Stretch="Uniform" />
             </Viewbox>
             <TextBlock
                 VerticalAlignment="Center"
