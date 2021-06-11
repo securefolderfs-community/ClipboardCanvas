@@ -185,7 +185,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             // Create commands
             OpenCollectionLocationCommand = new RelayCommand(OpenCollectionLocation);
             ReloadCollectionCommand = new RelayCommand(ReloadCollection);
-            RenameCollectionCommand = new RelayCommand(RenameCollection);
+            RenameCollectionCommand = new RelayCommand<Action>(RenameCollection);
             RemoveCollectionCommand = new RelayCommand(RemoveCollection);
             EditBoxKeyDownCommand = new RelayCommand<KeyRoutedEventArgs>(EditBoxKeyDown);
             EditBoxLostFocusCommand = new RelayCommand<RoutedEventArgs>(EditBoxLostFocus);
@@ -212,7 +212,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             await InitializeItems();
         }
 
-        private void RenameCollection()
+        private void RenameCollection(Action textBoxFocusAction)
         {
             if (isDefault || !CanOpenCollection)
             {
@@ -221,6 +221,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             EditBoxText = DisplayName;
             IsEditingName = true;
+            textBoxFocusAction?.Invoke();
         }
 
         private void RemoveCollection()

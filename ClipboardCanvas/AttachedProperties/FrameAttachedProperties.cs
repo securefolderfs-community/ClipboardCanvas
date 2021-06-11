@@ -42,10 +42,8 @@ namespace ClipboardCanvas.AttachedProperties
     {
         public override void OnValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            if (sender is not Frame frame || e.NewValue is not SettingsFrameNavigationDataModel navigationDataModel)
-            {
-                return;
-            }
+            SettingsFrameNavigationDataModel navigationDataModel = e.NewValue as SettingsFrameNavigationDataModel;
+            Frame frame = sender as Frame;
 
             switch (navigationDataModel.pageType)
             {
