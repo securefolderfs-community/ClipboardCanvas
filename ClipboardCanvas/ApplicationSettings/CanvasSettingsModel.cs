@@ -20,13 +20,13 @@ namespace ClipboardCanvas.ApplicationSettings
 
         public bool MediaCanvas_IsLoopingEnabled
         {
-            get => Get(false);
+            get => Get<bool>(false);
             set => Set(value);
         }
 
         public double MediaCanvas_UniversalVolume
         {
-            get => Get(1.0d);
+            get => Get<double>(1.0d);
             set => Set(value);
         }
 

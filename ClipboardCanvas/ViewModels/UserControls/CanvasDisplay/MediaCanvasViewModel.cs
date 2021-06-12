@@ -161,8 +161,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             if (ControlView != null && ContentMediaLoad)
             {
-                ICollectionsContainerItemModel associatedContainerItem = AssociatedContainer.Items.Where((item) => item.File == associatedFile).FirstOrDefault();
-                if (associatedContainerItem?.ContentType is MediaContentType mediaContentType)
+                if (AssociatedContainerCanvas?.ContentType is MediaContentType mediaContentType)
                 {
                     mediaContentType.savedPosition = __Position;
                 }

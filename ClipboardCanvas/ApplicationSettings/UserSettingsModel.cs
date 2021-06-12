@@ -1,6 +1,6 @@
-﻿using ClipboardCanvas.ApplicationSettings.Interfaces;
+﻿using Windows.Storage;
 using System.IO;
-using Windows.Storage;
+using ClipboardCanvas.ApplicationSettings.Interfaces;
 
 namespace ClipboardCanvas.ApplicationSettings
 {
@@ -39,6 +39,12 @@ namespace ClipboardCanvas.ApplicationSettings
         public bool PrioritizeMarkdownOverText
         {
             get => Get<bool>(false);
+            set => Set<bool>(value);
+        }
+
+        public bool ShowDeleteConfirmationDialog
+        {
+            get => Get<bool>(true);
             set => Set<bool>(value);
         }
 

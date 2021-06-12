@@ -24,6 +24,7 @@ using System.Linq;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.ReferenceItems;
 using System.Runtime.CompilerServices;
+using ClipboardCanvas.ViewModels.ContextMenu;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {
@@ -46,6 +47,13 @@ namespace ClipboardCanvas.ViewModels.Pages
         public ICollectionsContainerModel CollectionContainer => _view?.AssociatedCollection;
 
         public IPasteCanvasModel PasteCanvasModel => _view?.PasteCanvasModel;
+
+        private List<BaseMenuFlyoutItemViewModel> _CanvasContextMenuItems;
+        public List<BaseMenuFlyoutItemViewModel> CanvasContextMenuItems
+        {
+            get => _CanvasContextMenuItems;
+            set => SetProperty(ref _CanvasContextMenuItems, value);
+        }
 
         private bool _TitleTextLoad = true;
         public bool TitleTextLoad
@@ -360,7 +368,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             await PrepareForContentStartLoading();
         }
 
-        private void PasteCanvasModel_OnContentLoadedEvent(object sender, ContentLoadedEventArgs e)
+        private async void PasteCanvasModel_OnContentLoadedEvent(object sender, ContentLoadedEventArgs e)
         {
             PastedAsReferenceLoad = e.pastedByReference;
             CanvasRingLoad = false;
@@ -368,6 +376,8 @@ namespace ClipboardCanvas.ViewModels.Pages
             TitleTextLoad = false;
             TipTextLoad = false;
             ErrorTextLoad = false;
+
+            this.CanvasContextMenuItems = await PasteCanvasModel.GetContextMenuItems();
         }
 
         private async void PasteCanvasModel_OnPasteRequestedEvent(object sender, PasteRequestedEventArgs e)

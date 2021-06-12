@@ -148,6 +148,7 @@
     <Compile Include="ApplicationSettings\UserSettingsModel.cs" />
     <Compile Include="AttachedProperties\BaseAttachedProperty.cs" />
     <Compile Include="AttachedProperties\FrameAttachedProperties.cs" />
+    <Compile Include="AttachedProperties\MenuFlyoutAttachedProperties.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DataModels\Navigation\DisplayFrameNavigationDataModel.cs" />
     <Compile Include="DataModels\Navigation\DisplayFrameNavigationParameterDataModel.cs" />
@@ -160,12 +161,16 @@
     <Compile Include="DataModels\PastedContentDataModels\MediaContentType.cs" />
     <Compile Include="DataModels\PastedContentDataModels\TextContentType.cs" />
     <Compile Include="DataModels\Navigation\SettingsFrameNavigationDataModel.cs" />
+    <Compile Include="Dialogs\DeleteConfirmationDialog.xaml.cs">
+      <DependentUpon>DeleteConfirmationDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\FileSystemAccessDialog.xaml.cs">
       <DependentUpon>FileSystemAccessDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\UpdateChangeLogDialog.xaml.cs">
       <DependentUpon>UpdateChangeLogDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Enums\CanvasNavigationDirection.cs" />
     <Compile Include="Enums\CanvasPageProgressType.cs" />
     <Compile Include="Enums\CanvasPreviewMode.cs" />
     <Compile Include="Enums\SettingsPageType.cs" />
@@ -174,9 +179,11 @@
     <Compile Include="EventArguments\CommonEventArgs.cs" />
     <Compile Include="Exceptions\ReferencedFileNotFoundException.cs" />
     <Compile Include="Extensions\GenericsExtensions.cs" />
+    <Compile Include="Extensions\SafetyExtensions.cs" />
     <Compile Include="Helpers\CollectionsHelpers.cs" />
     <Compile Include="Helpers\DoubleClickWrapper.cs" />
     <Compile Include="Helpers\Filesystem\FilesystemOperations.cs" />
+    <Compile Include="Helpers\FlyoutHelpers.cs" />
     <Compile Include="Helpers\InitialApplicationChecksHelpers.cs" />
     <Compile Include="Helpers\ApplicationHelpers.cs" />
     <Compile Include="Helpers\SafetyHelpers\SafeWrapperResult.cs" />
@@ -295,9 +302,15 @@
     <Compile Include="ValueConverters\ImplicitDataTemplateConverter.cs" />
     <Compile Include="ValueConverters\SafeWrapperResultToErrorConverter.cs" />
     <Compile Include="ValueConverters\SelectedCollectionsContainerConverter.cs" />
+    <Compile Include="ViewModels\ContextMenu\BaseMenuFlyoutItemViewModel.cs" />
+    <Compile Include="ViewModels\ContextMenu\MenuFlyoutItemViewModel.cs" />
+    <Compile Include="ViewModels\ContextMenu\MenuFlyoutSeparatorViewModel.cs" />
+    <Compile Include="ViewModels\ContextMenu\MenuFlyoutSubItemViewModel.cs" />
+    <Compile Include="ViewModels\ContextMenu\MenuFlyoutToggleItemViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\DeleteConfirmationDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\FileSystemAccessDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\IDialog.cs" />
-    <Compile Include="ViewModels\Dialogs\IDialogService.cs" />
+    <Compile Include="Services\IDialogService.cs" />
     <Compile Include="ViewModels\Dialogs\UpdateChangeLogDialogViewModel.cs" />
     <Compile Include="ViewModels\Pages\CanvasPageViewModel.cs" />
     <Compile Include="ViewModels\Pages\CollectionPreviewPageViewModel.cs" />
@@ -391,6 +404,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Dialogs\DeleteConfirmationDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\FileSystemAccessDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

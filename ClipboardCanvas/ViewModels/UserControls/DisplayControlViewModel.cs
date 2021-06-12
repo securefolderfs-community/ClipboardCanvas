@@ -280,9 +280,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
             // TODO: Implement this
         }
 
-        private void PasteCanvasModel_OnFileDeletedEvent(object sender, FileDeletedEventArgs e)
+        private async void PasteCanvasModel_OnFileDeletedEvent(object sender, FileDeletedEventArgs e)
         {
-            // TODO: Implement this
+            await _currentCollectionContainer.LoadCanvasFromCollection(PasteCanvasPageModel.PasteCanvasModel, _canvasLoadCancellationTokenSource.Token);
         }
 
         private void PasteCanvasModel_OnFileModifiedEvent(object sender, FileModifiedEventArgs e)
@@ -429,6 +429,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
                             // We might navigate from home to a canvas that's already filled, so initialize the content
                             if (_currentCollectionContainer.IsFilled)
                             {
+                                _canvasLoadCancellationTokenSource.Cancel();
+                                _canvasLoadCancellationTokenSource.Dispose();
+                                _canvasLoadCancellationTokenSource = new CancellationTokenSource();
+
                                 await _currentCollectionContainer.LoadCanvasFromCollection(PasteCanvasPageModel.PasteCanvasModel, _canvasLoadCancellationTokenSource.Token);
                             }
                         }

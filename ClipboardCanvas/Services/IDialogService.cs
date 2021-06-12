@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using ClipboardCanvas.ViewModels.Dialogs;
+using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 
-namespace ClipboardCanvas.ViewModels.Dialogs
+namespace ClipboardCanvas.Services
 {
     public interface IDialogService
     {

@@ -1,10 +1,12 @@
-﻿using ClipboardCanvas.DataModels.PastedContentDataModels;
-using ClipboardCanvas.Helpers.SafetyHelpers;
-using ClipboardCanvas.ViewModels.UserControls;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+
+using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.Helpers.SafetyHelpers;
+using ClipboardCanvas.ViewModels.UserControls;
+using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.Models
 {
@@ -25,6 +27,8 @@ namespace ClipboardCanvas.Models
         bool CanvasInitializing { get; }
 
         string Name { get; }
+
+        int CurrentIndex { get; }
 
         /// <summary>
         /// Gets whether current canvas is new unfilled or canvas is not new with already existing content - filled
@@ -104,11 +108,16 @@ namespace ClipboardCanvas.Models
         Task LoadCanvasFromCollection(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Adds item to the collection to refresh it with newly created canvas
+        /// Silently adds item to the collection instead of refreshing
         /// </summary>
         /// <param name="file"></param>
         /// <param name="contentType"></param>
         void RefreshAddItem(StorageFile file, BasePastedContentTypeDataModel contentType);
+
+        /// <summary>
+        /// Silently removes an item from the collection to prevent from reloading it
+        /// </summary>
+        void RefreshRemoveItem(CollectionsContainerItemViewModel collectionsContainerItem);
 
         /// <summary>
         /// Initializes collection's items

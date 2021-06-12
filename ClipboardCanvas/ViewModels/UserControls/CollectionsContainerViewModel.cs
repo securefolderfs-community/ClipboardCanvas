@@ -1,7 +1,6 @@
 ﻿using System;
 using Windows.Storage;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -21,7 +20,6 @@ using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Extensions;
-using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.EventArguments.CollectionsContainer;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.Exceptions;
@@ -38,7 +36,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private StorageFolder _innerStorageFolder;
 
-        private int _currentIndex;
+        private CanvasNavigationDirection _canvasNavigationDirection;
 
         #endregion
 
@@ -56,7 +54,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public bool CanOpenCollection { get; private set; } = true;
 
-        public bool IsOnNewCanvas => this._currentIndex == Items.Count;
+        public bool IsOnNewCanvas => this.CurrentIndex == Items.Count;
 
         public bool CanvasInitialized { get; private set; }
 
@@ -66,6 +64,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             get => Path.GetFileName(CollectionFolderPath);
         }
+
+        public int CurrentIndex { get; private set; }
 
         public string DisplayName
         {
@@ -114,9 +114,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
             set => SetProperty(ref _CollectionErrorInfo, value);
         }
 
-        public bool IsFilled => _currentIndex < Items.Count;
+        public bool IsFilled => CurrentIndex < Items.Count;
 
-        public ICollectionsContainerItemModel CurrentCanvas => Items.Count == _currentIndex ? null : this.Items[_currentIndex];
+        public ICollectionsContainerItemModel CurrentCanvas => Items.Count == CurrentIndex ? null : this.Items[CurrentIndex];
 
         #endregion
 
@@ -280,7 +280,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public void DangerousSetIndex(int newIndex)
         {
-            this._currentIndex = newIndex;
+            this.CurrentIndex = newIndex;
         }
 
         public IStorageFolder DangerousGetCollectionFolder()
@@ -313,21 +313,23 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public bool HasBack()
         {
-            return _currentIndex > 0;
+            return CurrentIndex > 0;
         }
 
         public void NavigateFirst(IPasteCanvasModel pasteCanvasModel)
         {
-            _currentIndex = Items.Count;
+            CurrentIndex = Items.Count;
+            _canvasNavigationDirection = CanvasNavigationDirection.Forward;
 
             OnOpenNewCanvasRequestedEvent?.Invoke(this, new OpenNewCanvasRequestedEventArgs());
         }
 
         public async Task NavigateNext(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken)
         {
-            _currentIndex++;
+            CurrentIndex++;
+            _canvasNavigationDirection = CanvasNavigationDirection.Forward;
 
-            if (_currentIndex == Items.Count)
+            if (CurrentIndex == Items.Count)
             {
                 // Open new canvas if _currentIndex exceeds the _items size
                 OnOpenNewCanvasRequestedEvent?.Invoke(this, new OpenNewCanvasRequestedEventArgs());
@@ -341,16 +343,16 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task NavigateLast(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken)
         {
-            _currentIndex = 0;
+            CurrentIndex = 0;
+            _canvasNavigationDirection = CanvasNavigationDirection.Backward;
 
             await LoadCanvasFromCollection(pasteCanvasModel, cancellationToken);
         }
 
         public async Task NavigateBack(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken)
         {
-            _currentIndex--;
-
-            this._currentIndex = Extensions.CollectionExtensions.IndexFitBounds(this.Items.Count, this._currentIndex);
+            CurrentIndex--;
+            _canvasNavigationDirection = CanvasNavigationDirection.Backward;
 
             await LoadCanvasFromCollection(pasteCanvasModel, cancellationToken);
         }
@@ -358,39 +360,62 @@ namespace ClipboardCanvas.ViewModels.UserControls
         public async Task LoadCanvasFromCollection(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken)
         {
             // You can only load existing data
-            SafeWrapperResult result = await pasteCanvasModel.TryLoadExistingData(this.Items[_currentIndex], cancellationToken);
 
-            if (result == OperationErrorCode.NotFound && result.Exception is not ReferencedFileNotFoundException) // A canvas is missing, meaning we need to reload all other items
+            if (_canvasNavigationDirection == CanvasNavigationDirection.Forward && CurrentIndex == Items.Count)
             {
-                if (!StorageHelpers.Exists(_innerStorageFolder?.Path))
-                {
-                    SetCollectionError(s_CollectionFolderNotFound);
-
-                    // TODO: Pass error code here in the future
-                    OnGoToHomePageRequestedEvent?.Invoke(this, new GoToHomePageRequestedEventArgs());
-                    return;
-                }
-
-                // We must reload items because some were missing
-                await InitItems("We've noticed some items went missing. We're reloading the Collection for you.");
-
-                if (!HasNext())
-                {
-                    // Doesn't have next, so we're on new canvas - open new canvas
-                    OnOpenNewCanvasRequestedEvent?.Invoke(this, new OpenNewCanvasRequestedEventArgs());
-                }
-                else
-                {
-                    // Load canvas again
-                    result = await pasteCanvasModel.TryLoadExistingData(this.Items[_currentIndex], cancellationToken);
-                }
-
+                OnOpenNewCanvasRequestedEvent?.Invoke(this, new OpenNewCanvasRequestedEventArgs());
                 return;
             }
-            else if (result.ErrorCode == OperationErrorCode.InvalidOperation)
+            else
             {
-                // View Model wasn't found
-                // Cannot display content for this file. - i.e. canvas display doesn't exists for this file
+                CurrentIndex = Extensions.CollectionExtensions.IndexFitBounds(this.Items.Count, this.CurrentIndex);
+
+                SafeWrapperResult result = await pasteCanvasModel.TryLoadExistingData(this.Items[CurrentIndex], cancellationToken);
+
+                if (result == OperationErrorCode.NotFound && result.Exception is not ReferencedFileNotFoundException) // A canvas is missing, meaning we need to reload all other items
+                {
+                    if (!StorageHelpers.Exists(_innerStorageFolder?.Path))
+                    {
+                        SetCollectionError(s_CollectionFolderNotFound);
+
+                        // TODO: Pass error code here in the future
+                        OnGoToHomePageRequestedEvent?.Invoke(this, new GoToHomePageRequestedEventArgs());
+                        return;
+                    }
+
+                    // We must reload items because some were missing
+                    await InitItems("We've noticed some items went missing. We're reloading the Collection for you.");
+
+                    if (_canvasNavigationDirection == CanvasNavigationDirection.Forward)
+                    {
+                        if (!HasNext())
+                        {
+                            // Doesn't have next, so we're on new canvas - open new canvas
+                            OnOpenNewCanvasRequestedEvent?.Invoke(this, new OpenNewCanvasRequestedEventArgs());
+                        }
+                        else
+                        {
+                            CurrentIndex++;
+                        }
+                    }
+                    else
+                    {
+                        if (HasBack())
+                        {
+                            CurrentIndex--;
+                        }
+                    }
+
+                    // Load canvas again
+                    result = await pasteCanvasModel.TryLoadExistingData(this.Items[CurrentIndex], cancellationToken);
+
+                    return;
+                }
+                else if (result.ErrorCode == OperationErrorCode.InvalidOperation)
+                {
+                    // View Model wasn't found
+                    // Cannot display content for this file. - i.e. canvas display doesn't exists for this file
+                }
             }
 
             OnCheckCanvasPageNavigationRequestedEvent?.Invoke(this, new CheckCanvasPageNavigationRequestedEventArgs(true));
@@ -399,6 +424,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
         public void RefreshAddItem(StorageFile file, BasePastedContentTypeDataModel contentType)
         {
             AddCanvasItem(file, contentType);
+        }
+
+        public void RefreshRemoveItem(CollectionsContainerItemViewModel collectionsContainerItem)
+        {
+            RemoveCanvasItem(collectionsContainerItem);
         }
 
         #endregion
@@ -446,7 +476,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 files = files.OrderBy((x) => x.DateCreated.DateTime);
 
                 // Save indexes for later
-                int savedIndex = _currentIndex;
+                int savedIndex = CurrentIndex;
                 int savedItemsCount = Items.Count;
 
                 Items.Clear();
@@ -460,12 +490,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 int newItemsCount = Items.Count;
                 int newIndex = Math.Max(savedIndex, savedIndex - (savedItemsCount - newItemsCount));
 
-                this._currentIndex = Extensions.CollectionExtensions.IndexFitBounds(this.Items.Count, newIndex);
+                this.CurrentIndex = Extensions.CollectionExtensions.IndexFitBounds(this.Items.Count + 1, newIndex); // Increase the Items.Count by one to account for new canvas being always Items.Count
             }
             else
             {
                 Items.Clear();
-                this._currentIndex = 0;
+                this.CurrentIndex = 0;
             }
 
             IsLoadingItemsVisibility = Visibility.Collapsed;
@@ -477,6 +507,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
         private void AddCanvasItem(StorageFile file, BasePastedContentTypeDataModel contentType = null)
         {
             Items.Add(new CollectionsContainerItemViewModel(file, contentType));
+        }
+
+        private void RemoveCanvasItem(CollectionsContainerItemViewModel collectionsContainerItem)
+        {
+            Items.Remove(collectionsContainerItem);
         }
 
         private void SetCollectionError(SafeWrapperResult safeWrapperResult)

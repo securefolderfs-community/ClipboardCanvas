@@ -19,6 +19,7 @@ using System.Diagnostics;
 using ClipboardCanvas.Helpers;
 using Windows.ApplicationModel.Core;
 using Microsoft.Toolkit.Uwp;
+using ClipboardCanvas.ViewModels.ContextMenu;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -162,6 +163,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             return await CanvasViewModel.GetSuggestedActions();
+        }
+
+        public async Task<List<BaseMenuFlyoutItemViewModel>> GetContextMenuItems()
+        {
+            if (CanvasViewModel == null)
+            {
+                return null;
+            }
+
+            return await CanvasViewModel.GetContextMenuItems();
         }
 
         #endregion

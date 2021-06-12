@@ -27,5 +27,10 @@
         /// Determines whether to favor markdown or .txt files when pasting items
         /// </summary>
         public bool PrioritizeMarkdownOverText { get; set; }
+
+        /// <summary>
+        /// Determines whether to show delete confirmation dialog when deleting canvases
+        /// </summary>
+        public bool ShowDeleteConfirmationDialog { get; set; }
     }
 }

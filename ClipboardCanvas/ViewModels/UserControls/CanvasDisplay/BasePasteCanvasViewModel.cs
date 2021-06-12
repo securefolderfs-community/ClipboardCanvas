@@ -21,6 +21,10 @@ using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Extensions;
+using ClipboardCanvas.ViewModels.ContextMenu;
+using Microsoft.Toolkit.Mvvm.Input;
+using ClipboardCanvas.ViewModels.Dialogs;
+using Windows.UI.Xaml.Controls;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -31,11 +35,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
     {
         #region Protected Members
 
+        protected BasePastedContentTypeDataModel contentType;
+
         protected readonly ISafeWrapperExceptionReporter errorReporter;
 
         protected CancellationToken cancellationToken;
-
-        protected BasePastedContentTypeDataModel contentType;
 
         /// <summary>
         /// The file that's associated with the canvas, use is not recommended. Use <see cref="associatedFile"/> instead.
@@ -66,6 +70,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         protected SafeWrapperResult CancelledResult => new SafeWrapperResult(OperationErrorCode.Cancelled, "The operation was canceled");
 
         protected SafeWrapperResult ReferencedFileNotFoundResult => new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "The file referenced was not found");
+
+        protected CollectionsContainerItemViewModel AssociatedContainerCanvas => AssociatedContainer.Items.Where((item) => item.File == associatedFile).FirstOrDefault();
 
         protected abstract ICollectionsContainerModel AssociatedContainer { get; }
 
@@ -320,14 +326,32 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public virtual async Task<SafeWrapperResult> TryDeleteData()
         {
-            DiscardData();
+            bool deletePermanently = false;
+
+            if (App.AppSettings.UserSettings.ShowDeleteConfirmationDialog)
+            {
+                DeleteConfirmationDialogViewModel deleteConfirmationDialogViewModel = new DeleteConfirmationDialogViewModel(Path.GetFileName(associatedFile.Path));
+                ContentDialogResult dialogOption = await App.DialogService.ShowDialog(deleteConfirmationDialogViewModel);
+
+                if (dialogOption == ContentDialogResult.Primary)
+                {
+                    deletePermanently = deleteConfirmationDialogViewModel.PermanentlyDelete;
+                }
+                else
+                {
+                    return CancelledResult;
+                }
+            }
 
             SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(
-                () => associatedFile?.DeleteAsync(StorageDeleteOption.PermanentDelete).AsTask(), errorReporter);
+                () => associatedFile?.DeleteAsync(deletePermanently ? StorageDeleteOption.PermanentDelete : StorageDeleteOption.Default).AsTask(), errorReporter);
 
             if (result)
             {
+                AssociatedContainer.RefreshRemoveItem(AssociatedContainerCanvas);
                 RaiseOnFileDeletedEvent(this, new FileDeletedEventArgs(associatedFile, AssociatedContainer));
+
+                DiscardData();
             }
 
             return result;
@@ -387,6 +411,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         public virtual void DiscardData()
         {
             Dispose();
+            IsDisposed = false;
         }
 
         public virtual void OpenNewCanvas()
@@ -454,6 +479,21 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             actions.Add(action_openInFileExplorer);
 
             return actions;
+        }
+
+        public async Task<List<BaseMenuFlyoutItemViewModel>> GetContextMenuItems()
+        {
+            List<BaseMenuFlyoutItemViewModel> items = new List<BaseMenuFlyoutItemViewModel>();
+
+            // Delete item
+            items.Add(new MenuFlyoutItemViewModel()
+            {
+                Command = new AsyncRelayCommand(TryDeleteData),
+                IconGlyph = "\uE74D",
+                Text = "Delete file"
+            });
+
+            return await Task.FromResult(items);
         }
 
         #endregion

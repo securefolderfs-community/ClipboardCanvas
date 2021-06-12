@@ -6,7 +6,6 @@
     xmlns:local="using:ClipboardCanvas.Dialogs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Clipboard Canvas requires permissions"
-    CornerRadius="4"
     DefaultButton="Primary"
     PrimaryButtonText="Restart Application"
     SecondaryButtonText="Continue in Restricted Access"

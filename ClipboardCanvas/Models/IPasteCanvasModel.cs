@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using ClipboardCanvas.ViewModels.UserControls;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.ViewModels.ContextMenu;
 
 namespace ClipboardCanvas.Models
 {
@@ -59,8 +60,13 @@ namespace ClipboardCanvas.Models
         /// <summary>
         /// Gets suggested actions based on this canvas
         /// </summary>
-        /// <param name="collectionContainer"></param>
         /// <returns></returns>
         Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions();
+
+        /// <summary>
+        /// Gets context menu items available for the canvas
+        /// </summary>
+        /// <returns></returns>
+        Task<List<BaseMenuFlyoutItemViewModel>> GetContextMenuItems();
     }
 }

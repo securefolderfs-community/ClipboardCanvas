@@ -20,6 +20,20 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
             }
         }
 
+        public bool ShowDeleteConfirmationDialog
+        {
+            get => App.AppSettings.UserSettings.ShowDeleteConfirmationDialog;
+            set
+            {
+                if (value != App.AppSettings.UserSettings.ShowDeleteConfirmationDialog)
+                {
+                    App.AppSettings.UserSettings.ShowDeleteConfirmationDialog = value;
+
+                    OnPropertyChanged(nameof(ShowDeleteConfirmationDialog));
+                }
+            }
+        }
+
         #endregion
     }
 }
