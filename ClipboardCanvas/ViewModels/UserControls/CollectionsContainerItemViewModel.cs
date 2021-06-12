@@ -43,6 +43,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
             if (ReferenceFile.IsReferenceFile(File))
             {
                 ReferenceFile referenceFile = await ReferenceFile.GetFile(File);
+
+                if (referenceFile.ReferencedFile == null)
+                {
+                    return;
+                }
+
                 await Launcher.LaunchFileAsync(referenceFile.ReferencedFile);
             }
             else
@@ -62,22 +68,28 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
                 if (referenceFile.ReferencedFile == null)
                 {
-                    return;
+                    folder = await StorageHelpers.ToStorageItem<StorageFolder>(Path.GetDirectoryName(File.Path));
+                    fileToSelect = File;
                 }
-
-                folder = await StorageItemHelpers.ToStorageItem<StorageFolder>(Path.GetDirectoryName(referenceFile.ReferencedFile.Path));
-                fileToSelect = referenceFile.ReferencedFile;
+                else
+                {
+                    folder = await StorageHelpers.ToStorageItem<StorageFolder>(Path.GetDirectoryName(referenceFile.ReferencedFile.Path));
+                    fileToSelect = referenceFile.ReferencedFile;
+                }
             }
             else
             {
-                folder = await StorageItemHelpers.ToStorageItem<StorageFolder>(Path.GetDirectoryName(File.Path));
+                folder = await StorageHelpers.ToStorageItem<StorageFolder>(Path.GetDirectoryName(File.Path));
                 fileToSelect = File;
             }
 
-            FolderLauncherOptions launcherOptions = new FolderLauncherOptions();
-            launcherOptions.ItemsToSelect.Add(fileToSelect);
+            if (folder != null)
+            {
+                FolderLauncherOptions launcherOptions = new FolderLauncherOptions();
+                launcherOptions.ItemsToSelect.Add(fileToSelect);
 
-            await Launcher.LaunchFolderAsync(folder, launcherOptions);
+                await Launcher.LaunchFolderAsync(folder, launcherOptions);
+            }
         }
 
         public void DangerousUpdateFile(StorageFile file)

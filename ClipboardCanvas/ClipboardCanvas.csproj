@@ -219,7 +219,7 @@
     <Compile Include="Helpers\SafetyHelpers\SafeWrapperResultDetails.cs" />
     <Compile Include="Helpers\ClipboardHelpers.cs" />
     <Compile Include="Helpers\Filesystem\DangerousStorageFileExtensions.cs" />
-    <Compile Include="Helpers\Filesystem\StorageItemHelpers.cs" />
+    <Compile Include="Helpers\Filesystem\StorageHelpers.cs" />
     <Compile Include="Helpers\SafetyHelpers\ExceptionReporters\DefaultSafeWrapperExceptionReporter.cs" />
     <Compile Include="Helpers\SafetyHelpers\ExceptionReporters\StaticExceptionReporters.cs" />
     <Compile Include="Helpers\SafetyHelpers\ExceptionReporters\ISafeWrapperExceptionReporter.cs" />

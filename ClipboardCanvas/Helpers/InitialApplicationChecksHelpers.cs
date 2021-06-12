@@ -46,7 +46,7 @@ namespace ClipboardCanvas.Helpers
         public static async Task HandleFileSystemPermissionDialog(IWindowTitleBarControlModel windowTitleBar)
         {
             string testForFolderOnFS = Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
-            SafeWrapper<StorageFolder> testFolderResult = await StorageItemHelpers.ToStorageItemWithError<StorageFolder>(testForFolderOnFS);
+            SafeWrapper<StorageFolder> testFolderResult = await StorageHelpers.ToStorageItemWithError<StorageFolder>(testForFolderOnFS);
 
             if (!testFolderResult)
             {

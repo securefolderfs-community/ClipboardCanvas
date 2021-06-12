@@ -9,7 +9,7 @@ using static ClipboardCanvas.UnsafeNative.UnsafeNativeDataModels;
 
 namespace ClipboardCanvas.Helpers.Filesystem
 {
-    public static class StorageItemHelpers
+    public static class StorageHelpers
     {
         public static async Task<TOut> ToStorageItem<TOut>(string path) where TOut : IStorageItem
         {

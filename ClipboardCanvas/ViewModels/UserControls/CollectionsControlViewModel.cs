@@ -396,7 +396,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             // We retrieve the folder again this time using ToStorageItem<>() because items picked by the FilePicker
             // or FolderPicker cannot be modified - i.e. Renamed etc.
-            folder = await StorageItemHelpers.ToStorageItem<StorageFolder>(folder?.Path);
+            folder = await StorageHelpers.ToStorageItem<StorageFolder>(folder?.Path);
 
             if (folder == null)
             {

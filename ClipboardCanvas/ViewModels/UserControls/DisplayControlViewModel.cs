@@ -176,9 +176,14 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region CollectionsControlViewModel
 
-        private void CollectionsControlViewModel_OnCheckCanvasPageNavigationRequestedEvent(object sender, CheckCanvasPageNavigationRequestedEventArgs e)
+        private async void CollectionsControlViewModel_OnCheckCanvasPageNavigationRequestedEvent(object sender, CheckCanvasPageNavigationRequestedEventArgs e)
         {
             CheckCanvasPageNavigation();
+            
+            if (e.alsoRefreshActions)
+            {
+                await SetSuggestedActions();
+            }
         }
 
         private void CollectionsControlViewModel_OnCollectionErrorRaisedEvent(object sender, CollectionErrorRaisedEventArgs e)

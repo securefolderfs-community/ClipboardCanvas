@@ -51,7 +51,7 @@ namespace ClipboardCanvas.ReferenceItems
                 return null;
             }
             // The file does not exist
-            if (!StorageItemHelpers.Exists(referenceFile.Path))
+            if (!StorageHelpers.Exists(referenceFile.Path))
             {
                 return new ReferenceFile(referenceFile, null)
                 {
@@ -74,7 +74,7 @@ namespace ClipboardCanvas.ReferenceItems
                 };
             }
 
-            SafeWrapper<StorageFile> file = await StorageItemHelpers.ToStorageItemWithError<StorageFile>(referenceFileData.path);
+            SafeWrapper<StorageFile> file = await StorageHelpers.ToStorageItemWithError<StorageFile>(referenceFileData.path);
 
             if (!file)
             {

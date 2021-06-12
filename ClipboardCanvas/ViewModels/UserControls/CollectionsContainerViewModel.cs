@@ -268,7 +268,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             {
                 SetCollectionError(s_RestrictedAccessUnauthorized);
             }
-            else if (StorageItemHelpers.Exists(CollectionFolderPath))
+            else if (StorageHelpers.Exists(CollectionFolderPath))
             {
                 SetCollectionError(SafeWrapperResult.S_SUCCESS);
             }
@@ -362,7 +362,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             if (result == OperationErrorCode.NotFound && result.Exception is not ReferencedFileNotFoundException) // A canvas is missing, meaning we need to reload all other items
             {
-                if (!StorageItemHelpers.Exists(_innerStorageFolder?.Path))
+                if (!StorageHelpers.Exists(_innerStorageFolder?.Path))
                 {
                     SetCollectionError(s_CollectionFolderNotFound);
 
@@ -393,7 +393,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 // Cannot display content for this file. - i.e. canvas display doesn't exists for this file
             }
 
-            OnCheckCanvasPageNavigationRequestedEvent?.Invoke(this, new CheckCanvasPageNavigationRequestedEventArgs());
+            OnCheckCanvasPageNavigationRequestedEvent?.Invoke(this, new CheckCanvasPageNavigationRequestedEventArgs(true));
         }
 
         public void RefreshAddItem(StorageFile file, BasePastedContentTypeDataModel contentType)
@@ -520,7 +520,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task<bool> InitializeInnerStorageFolder()
         {
-            if (_innerStorageFolder != null && StorageItemHelpers.Exists(_innerStorageFolder?.Path))
+            if (_innerStorageFolder != null && StorageHelpers.Exists(_innerStorageFolder?.Path))
             {
                 // Make sure to update the state if collection path was repaired
                 SetCollectionError(SafeWrapperResult.S_SUCCESS);
@@ -528,7 +528,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 return true;
             }
 
-            SafeWrapper<StorageFolder> result = await StorageItemHelpers.ToStorageItemWithError<StorageFolder>(this.CollectionFolderPath);
+            SafeWrapper<StorageFolder> result = await StorageHelpers.ToStorageItemWithError<StorageFolder>(this.CollectionFolderPath);
             _innerStorageFolder = result.Result;
 
             if (!result)

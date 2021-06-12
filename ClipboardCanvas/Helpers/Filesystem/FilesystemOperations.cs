@@ -13,7 +13,7 @@ namespace ClipboardCanvas.Helpers.Filesystem
     {
         public static async Task<SafeWrapperResult> CopyFileAsync(IStorageFile source, IStorageFile destination, Action<float> progressReportDelegate, CancellationToken cancellationToken)
         {
-            long fileSize = await StorageItemHelpers.GetFileSize(source);
+            long fileSize = await StorageHelpers.GetFileSize(source);
             byte[] buffer = new byte[Constants.FileSystem.COPY_FILE_BUFFER_SIZE];
             SafeWrapperResult result = SafeWrapperResult.S_SUCCESS;
 

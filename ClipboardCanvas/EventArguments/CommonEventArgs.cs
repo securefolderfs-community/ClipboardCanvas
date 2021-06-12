@@ -65,8 +65,11 @@ namespace ClipboardCanvas.EventArguments
 
     public class CheckCanvasPageNavigationRequestedEventArgs : EventArgs
     {
-        public CheckCanvasPageNavigationRequestedEventArgs()
+        public readonly bool alsoRefreshActions;
+
+        public CheckCanvasPageNavigationRequestedEventArgs(bool alsoRefreshActions = false)
         {
+            this.alsoRefreshActions = alsoRefreshActions;
         }
     }
 }
