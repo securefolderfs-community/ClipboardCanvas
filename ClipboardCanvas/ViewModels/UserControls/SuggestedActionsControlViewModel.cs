@@ -178,12 +178,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public void RemoveAllActions()
         {
-            for (int i = 0; i < Items.Count; i++)
-            {
-                Items[i].Dispose();
-                Items.RemoveAt(i);
-            }
-
+            Items.DisposeClear();
             CheckAnyActionsExist();
         }
 

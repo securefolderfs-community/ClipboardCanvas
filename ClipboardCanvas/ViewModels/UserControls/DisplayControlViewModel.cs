@@ -14,6 +14,7 @@ using ClipboardCanvas.Helpers;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.EventArguments.CollectionControl;
 using ClipboardCanvas.DataModels.Navigation;
+using System.Runtime.CompilerServices;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -122,8 +123,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 _canvasLoadCancellationTokenSource = new CancellationTokenSource();
 
                 await _currentCollectionContainer.NavigateLast(PasteCanvasPageModel.PasteCanvasModel, _canvasLoadCancellationTokenSource.Token);
-                CheckNavigation();
-                await SetSuggestedActions();
             }
         }
 
@@ -136,12 +135,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 _canvasLoadCancellationTokenSource = new CancellationTokenSource();
 
                 await _currentCollectionContainer.NavigateBack(PasteCanvasPageModel.PasteCanvasModel, _canvasLoadCancellationTokenSource.Token);
-                CheckNavigation();
-                await SetSuggestedActions();
             }
         }
 
-        private async void NavigationControlModel_OnNavigateFirstRequestedEvent(object sender, EventArgs e)
+        private void NavigationControlModel_OnNavigateFirstRequestedEvent(object sender, EventArgs e)
         {
             if (CurrentPage == DisplayPageType.CanvasPage && _currentCollectionContainer.HasNext())
             {
@@ -150,8 +147,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 _canvasLoadCancellationTokenSource = new CancellationTokenSource();
 
                 _currentCollectionContainer.NavigateFirst(PasteCanvasPageModel.PasteCanvasModel);
-                CheckNavigation();
-                await SetSuggestedActions();
             }
         }
 
@@ -164,8 +159,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 _canvasLoadCancellationTokenSource = new CancellationTokenSource();
 
                 await _currentCollectionContainer.NavigateNext(PasteCanvasPageModel.PasteCanvasModel, _canvasLoadCancellationTokenSource.Token);
-                CheckNavigation();
-                await SetSuggestedActions();
             }
         }
 
@@ -212,7 +205,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 // Re-enable navigation after items have loaded
                 NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = false;
                 NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading = false;
-                CheckNavigation();
             }
         }
 
@@ -228,7 +220,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 // Also show loading for forward button if not on new canvas
                 NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading = true;
             }
-            CheckNavigation();
         }
 
         private void CollectionsControlViewModel_OnCollectionAddedEvent(object sender, CollectionAddedEventArgs e)
@@ -308,7 +299,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async void PasteCanvasModel_OnContentLoadedEvent(object sender, ContentLoadedEventArgs e)
         {
-            CheckNavigation();
+            CheckCanvasPageNavigation();
 
             await SetSuggestedActions();
         }
@@ -344,9 +335,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             NavigationToolBarControlModel.NotifyCurrentPageChanged(CurrentPage);
 
-            UpdateTitleBar();
-            CheckNavigation();
-            await SetSuggestedActions();
+            //UpdateTitleBar();
+            CheckCanvasPageNavigation();
         }
 
         #endregion
@@ -367,7 +357,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             if (pageType == DisplayPageType.CanvasPage)
             {
-                _currentCollectionContainer.CheckCanOpenCollection();
                 if (_currentCollectionContainer == null || !_currentCollectionContainer.CanOpenCollection)
                 {
                     // Something went wrong, cannot open CanvasPage
@@ -398,7 +387,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     // Also show loading for forward button if not on new canvas
                     NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading = true;
                 }
-                CheckNavigation();
+                CheckCanvasPageNavigation();
             }
             // Handle event when the collection is not initialized
             else if (!_currentCollectionContainer.CanvasInitialized)
@@ -415,7 +404,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     // Re-enable navigation after items have loaded
                     NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = false;
                     NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading = false;
-                    CheckNavigation();
+                    CheckCanvasPageNavigation();
                 }
             }
 
@@ -438,8 +427,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
             return true;
         }
 
-        private void CheckNavigation()
+        private void CheckCanvasPageNavigation()
         {
+            if (CurrentPage != DisplayPageType.CanvasPage)
+            {
+                return;
+            }
+
             if (_currentCollectionContainer != null)
             {
                 if (NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading)
@@ -476,6 +470,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         private async void OnPageNavigated()
         {
             UpdateTitleBar();
+            CheckCanvasPageNavigation();
             await SetSuggestedActions();
         }
 
