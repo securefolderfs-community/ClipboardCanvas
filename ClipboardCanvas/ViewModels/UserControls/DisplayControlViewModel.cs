@@ -357,6 +357,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             if (pageType == DisplayPageType.CanvasPage)
             {
+                _currentCollectionContainer.CheckCollectionAvailability();
                 if (_currentCollectionContainer == null || !_currentCollectionContainer.CanOpenCollection)
                 {
                     // Something went wrong, cannot open CanvasPage

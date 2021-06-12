@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Windows.UI.Xaml;
 
 namespace ClipboardCanvas.Helpers
@@ -16,8 +15,6 @@ namespace ClipboardCanvas.Helpers
         private Action _doubleClickAction;
 
         private bool _canExecute;
-
-        private bool _isDoubleClick;
 
         public DoubleClickWrapper(Action doubleClickAction, TimeSpan timeBetweenClicks)
         {
@@ -45,17 +42,11 @@ namespace ClipboardCanvas.Helpers
 
             if (_canExecute)
             {
-                _isDoubleClick = true;
                 _doubleClickAction?.Invoke();
-            }
-
-            if (!_isDoubleClick)
-            {
-                _canExecute = true;
             }
             else
             {
-                _canExecute = false;
+                _canExecute = true;
             }
         }
 

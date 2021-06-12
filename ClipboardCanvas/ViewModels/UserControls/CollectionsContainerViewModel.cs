@@ -259,7 +259,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region ICollectionContainerModel
 
-        public void CheckCanOpenCollection()
+        public void CheckCollectionAvailability()
         {
             if (App.IsInRestrictedAccessMode && !isDefault)
             {
