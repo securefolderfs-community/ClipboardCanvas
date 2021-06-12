@@ -24,6 +24,7 @@ using ClipboardCanvas.Extensions;
 using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.EventArguments.CollectionsContainer;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
+using ClipboardCanvas.Exceptions;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -134,6 +135,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
         public event EventHandler<GoToHomePageRequestedEventArgs> OnGoToHomePageRequestedEvent;
 
         public event EventHandler<CollectionErrorRaisedEventArgs> OnCollectionErrorRaisedEvent;
+
+        public event EventHandler<CheckCanvasPageNavigationRequestedEventArgs> OnCheckCanvasPageNavigationRequestedEvent;
 
         #endregion
 
@@ -357,7 +360,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             // You can only load existing data
             SafeWrapperResult result = await pasteCanvasModel.TryLoadExistingData(this.Items[_currentIndex], cancellationToken);
 
-            if (result == OperationErrorCode.NotFound) // A canvas is missing, meaning we need to reload all other items
+            if (result == OperationErrorCode.NotFound && result.Exception is not ReferencedFileNotFoundException) // A canvas is missing, meaning we need to reload all other items
             {
                 if (!StorageItemHelpers.Exists(_innerStorageFolder?.Path))
                 {
@@ -381,12 +384,16 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     // Load canvas again
                     result = await pasteCanvasModel.TryLoadExistingData(this.Items[_currentIndex], cancellationToken);
                 }
+
+                return;
             }
             else if (result.ErrorCode == OperationErrorCode.InvalidOperation)
             {
                 // View Model wasn't found
                 // Cannot display content for this file. - i.e. canvas display doesn't exists for this file
             }
+
+            OnCheckCanvasPageNavigationRequestedEvent?.Invoke(this, new CheckCanvasPageNavigationRequestedEventArgs());
         }
 
         public void RefreshAddItem(StorageFile file, BasePastedContentTypeDataModel contentType)

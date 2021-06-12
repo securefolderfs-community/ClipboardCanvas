@@ -53,13 +53,20 @@ namespace ClipboardCanvas.EventArguments
         }
     }
 
-    public class CollectionErrorRaisedEventArgs
+    public class CollectionErrorRaisedEventArgs : EventArgs
     {
         public readonly SafeWrapperResult result;
 
         public CollectionErrorRaisedEventArgs(SafeWrapperResult result)
         {
             this.result = result;
+        }
+    }
+
+    public class CheckCanvasPageNavigationRequestedEventArgs : EventArgs
+    {
+        public CheckCanvasPageNavigationRequestedEventArgs()
+        {
         }
     }
 }

@@ -8,6 +8,7 @@ using Windows.Storage;
 using System.Threading;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
@@ -20,7 +21,6 @@ using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Extensions;
-using System.Linq;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {

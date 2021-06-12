@@ -1,8 +1,10 @@
 ﻿using ClipboardCanvas.Enums;
+using ClipboardCanvas.Exceptions;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using Newtonsoft.Json;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -43,9 +45,18 @@ namespace ClipboardCanvas.ReferenceItems
 
         public static async Task<ReferenceFile> GetFile(StorageFile referenceFile)
         {
+            // The file is not a Reference File
             if (!IsReferenceFile(referenceFile))
             {
                 return null;
+            }
+            // The file does not exist
+            if (!StorageItemHelpers.Exists(referenceFile.Path))
+            {
+                return new ReferenceFile(referenceFile, null)
+                {
+                    LastError = new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "Couldn't resolve item associated with path.")
+                };
             }
 
             ReferenceFileData referenceFileData = await ReadData(referenceFile);
@@ -67,10 +78,21 @@ namespace ClipboardCanvas.ReferenceItems
 
             if (!file)
             {
-                return new ReferenceFile(referenceFile, null)
+                if (file == OperationErrorCode.NotFound)
                 {
-                    LastError = (SafeWrapperResult)file
-                };
+                    // If NotFound, use custom exception for LoadCanvasFromCollection()
+                    return new ReferenceFile(referenceFile, null)
+                    {
+                        LastError = new SafeWrapperResult(OperationErrorCode.NotFound, new ReferencedFileNotFoundException(), "The file referenced could not be found.")
+                    };
+                }
+                else
+                {
+                    return new ReferenceFile(referenceFile, null)
+                    {
+                        LastError = (SafeWrapperResult)file
+                    };
+                }
             }
 
             return new ReferenceFile(referenceFile, file);

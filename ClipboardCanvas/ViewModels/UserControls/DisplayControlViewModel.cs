@@ -176,6 +176,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region CollectionsControlViewModel
 
+        private void CollectionsControlViewModel_OnCheckCanvasPageNavigationRequestedEvent(object sender, CheckCanvasPageNavigationRequestedEventArgs e)
+        {
+            CheckCanvasPageNavigation();
+        }
+
         private void CollectionsControlViewModel_OnCollectionErrorRaisedEvent(object sender, CollectionErrorRaisedEventArgs e)
         {
             if (e.result)
@@ -396,6 +401,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 // Performance optimization: instead of initializing all collections at once,
                 // initialize the one that's being opened
                 await _currentCollectionContainer.InitializeItems();
+                CheckCanvasPageNavigation();
             }
             // Handle event where the loading rings were shown and the collection is no longer initializing - hide them
             else
@@ -600,6 +606,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CollectionsControlViewModel.OnOpenNewCanvasRequestedEvent += CollectionsControlViewModel_OnOpenNewCanvasRequestedEventEvent;
             CollectionsControlViewModel.OnGoToHomePageRequestedEvent += CollectionsControlViewModel_OnGoToHomePageRequestedEvent;
             CollectionsControlViewModel.OnCollectionErrorRaisedEvent += CollectionsControlViewModel_OnCollectionErrorRaisedEvent;
+            CollectionsControlViewModel.OnCheckCanvasPageNavigationRequestedEvent += CollectionsControlViewModel_OnCheckCanvasPageNavigationRequestedEvent;
         }
 
         private void UnhookCollectionsEvents()
@@ -613,6 +620,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CollectionsControlViewModel.OnOpenNewCanvasRequestedEvent -= CollectionsControlViewModel_OnOpenNewCanvasRequestedEventEvent;
             CollectionsControlViewModel.OnGoToHomePageRequestedEvent -= CollectionsControlViewModel_OnGoToHomePageRequestedEvent;
             CollectionsControlViewModel.OnCollectionErrorRaisedEvent -= CollectionsControlViewModel_OnCollectionErrorRaisedEvent;
+            CollectionsControlViewModel.OnCheckCanvasPageNavigationRequestedEvent -= CollectionsControlViewModel_OnCheckCanvasPageNavigationRequestedEvent;
         }
 
         private void HookCanvasControlEvents()
