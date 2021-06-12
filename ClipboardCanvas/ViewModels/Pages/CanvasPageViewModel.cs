@@ -156,18 +156,18 @@ namespace ClipboardCanvas.ViewModels.Pages
             HookEvents();
 
             // Create commands
-            DefaultKeyboardAcceleratorInvokedCommand = new RelayCommand<KeyboardAcceleratorInvokedEventArgs>(DefaultKeyboardAcceleratorInvoked);
-            DragEnterCommand = new RelayCommand<DragEventArgs>(DragEnter);
+            DefaultKeyboardAcceleratorInvokedCommand = new AsyncRelayCommand<KeyboardAcceleratorInvokedEventArgs>(DefaultKeyboardAcceleratorInvoked);
+            DragEnterCommand = new AsyncRelayCommand<DragEventArgs>(DragEnter);
             DragLeaveCommand = new RelayCommand<DragEventArgs>(DragLeave);
-            DropCommand = new RelayCommand<DragEventArgs>(Drop);
-            OverrideReferenceCommand = new RelayCommand(OverrideReference);
+            DropCommand = new AsyncRelayCommand<DragEventArgs>(Drop);
+            OverrideReferenceCommand = new AsyncRelayCommand(OverrideReference);
         }
 
         #endregion
 
         #region Command Implementation
 
-        private async void DefaultKeyboardAcceleratorInvoked(KeyboardAcceleratorInvokedEventArgs e)
+        private async Task DefaultKeyboardAcceleratorInvoked(KeyboardAcceleratorInvokedEventArgs e)
         {
             e.Handled = true;
             bool ctrl = e.KeyboardAccelerator.Modifiers.HasFlag(VirtualKeyModifiers.Control);
@@ -187,7 +187,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             }
         }
 
-        private async void DragEnter(DragEventArgs e)
+        private async Task DragEnter(DragEventArgs e)
         {
             DragOperationDeferral deferral = null;
 
@@ -266,13 +266,13 @@ namespace ClipboardCanvas.ViewModels.Pages
             TitleText = DEFAULT_TITLE_TEXT;
         }
 
-        private async void Drop(DragEventArgs e)
+        private async Task Drop(DragEventArgs e)
         {
             DataPackageView dataPackage = e.DataView;
             await PasteDataInternal(dataPackage);
         }
 
-        private async void OverrideReference()
+        private async Task OverrideReference()
         {
             OverrideReferenceEnabled = false;
             SafeWrapperResult result = await PasteCanvasModel.PasteOverrideReference();

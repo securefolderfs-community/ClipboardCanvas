@@ -3,6 +3,7 @@ using ClipboardCanvas.ViewModels.Dialogs;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.ApplicationModel;
 using Windows.Storage;
@@ -38,32 +39,32 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
         public SettingsAboutPageViewModel()
         {
             // Create commands
-            OpenLogLocationCommand = new RelayCommand(OpenLogLocation);
-            ShowChangeLogCommand = new RelayCommand(ShowChangeLog);
-            SubmitFeedbackCommand = new RelayCommand(SubmitFeedback);
-            OpenPrivacyPolicyCommand = new RelayCommand(OpenPrivacyPolicy);
+            OpenLogLocationCommand = new AsyncRelayCommand(OpenLogLocation);
+            ShowChangeLogCommand = new AsyncRelayCommand(ShowChangeLog);
+            SubmitFeedbackCommand = new AsyncRelayCommand(SubmitFeedback);
+            OpenPrivacyPolicyCommand = new AsyncRelayCommand(OpenPrivacyPolicy);
         }
 
         #endregion
 
         #region Command Implementation
 
-        private async void OpenPrivacyPolicy()
+        private async Task OpenPrivacyPolicy()
         {
             await Launcher.LaunchUriAsync(new Uri(@"https://github.com/d2dyno1/ClipboardCanvas/blob/master/Privacy.md"));
         }
 
-        private async void SubmitFeedback()
+        private async Task SubmitFeedback()
         {
             await Launcher.LaunchUriAsync(new Uri(@"https://github.com/d2dyno1/ClipboardCanvas/issues"));
         }
 
-        private async void ShowChangeLog()
+        private async Task ShowChangeLog()
         {
             await App.DialogService.ShowDialog(new UpdateChangeLogDialogViewModel());
         }
 
-        private async void OpenLogLocation()
+        private async Task OpenLogLocation()
         {
             await Launcher.LaunchFolderAsync(ApplicationData.Current.LocalFolder);
         }

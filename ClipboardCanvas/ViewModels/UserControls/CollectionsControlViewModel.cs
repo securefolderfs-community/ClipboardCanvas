@@ -121,8 +121,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 TimeSpan.FromMilliseconds(Constants.Collections.DOUBLE_CLICK_DELAY_MILISECONDS));
 
             // Create commands
-            DragOverCommand = new RelayCommand<DragEventArgs>(DragOver);
-            DropCommand = new RelayCommand<DragEventArgs>(Drop);
+            DragOverCommand = new AsyncRelayCommand<DragEventArgs>(DragOver);
+            DropCommand = new AsyncRelayCommand<DragEventArgs>(Drop);
             ItemClickCommand = new RelayCommand<ItemClickEventArgs>(ItemClick);
         }
 
@@ -130,7 +130,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Command Implementation
 
-        private async void DragOver(DragEventArgs e)
+        private async Task DragOver(DragEventArgs e)
         {
             DragOperationDeferral deferral = null;
 
@@ -162,7 +162,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        private async void Drop(DragEventArgs e)
+        private async Task Drop(DragEventArgs e)
         {
             DragOperationDeferral deferral = null;
 

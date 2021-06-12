@@ -31,9 +31,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public SettingsPanelControlViewModel()
         {
-            ItemInvokedCommand = new RelayCommand<NavigationViewItemInvokedEventArgs>(ItemInvoked);
-
             CurrentPageNavigation = new SettingsFrameNavigationDataModel(SettingsPageType.General);
+
+            // Create commands
+            ItemInvokedCommand = new RelayCommand<NavigationViewItemInvokedEventArgs>(ItemInvoked);
         }
 
         #endregion

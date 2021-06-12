@@ -60,14 +60,14 @@ namespace ClipboardCanvas.ViewModels.Dialogs
         public UpdateChangeLogDialogViewModel()
         {
             // Create commands
-            OpenReleasesOnGitHubCommand = new RelayCommand(OpenReleasesOnGitHub);
+            OpenReleasesOnGitHubCommand = new AsyncRelayCommand(OpenReleasesOnGitHub);
         }
 
         #endregion
 
         #region Command Implementation
 
-        private async void OpenReleasesOnGitHub()
+        private async Task OpenReleasesOnGitHub()
         {
             await Launcher.LaunchUriAsync(new Uri(@"https://github.com/d2dyno1/ClipboardCanvas/releases"));
         }

@@ -22,14 +22,14 @@ namespace ClipboardCanvas.ViewModels.Dialogs
         public FileSystemAccessDialogViewModel()
         {
             // Create commands
-            OpenSettingsCommand = new RelayCommand(OpenSettings);
+            OpenSettingsCommand = new AsyncRelayCommand(OpenSettings);
         }
 
         #endregion
 
         #region Command Implementation
 
-        private async void OpenSettings()
+        private async Task OpenSettings()
         {
             await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:privacy-broadfilesystemaccess"));
         }

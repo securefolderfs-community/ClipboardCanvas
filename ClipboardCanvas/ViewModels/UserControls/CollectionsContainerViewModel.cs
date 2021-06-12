@@ -186,19 +186,19 @@ namespace ClipboardCanvas.ViewModels.UserControls
             OnPropertyChanged(nameof(DisplayName));
 
             // Create commands
-            OpenCollectionLocationCommand = new RelayCommand(OpenCollectionLocation);
-            ReloadCollectionCommand = new RelayCommand(ReloadCollection);
+            OpenCollectionLocationCommand = new AsyncRelayCommand(OpenCollectionLocation);
+            ReloadCollectionCommand = new AsyncRelayCommand(ReloadCollection);
             RenameCollectionCommand = new RelayCommand<Action>(RenameCollection);
             RemoveCollectionCommand = new RelayCommand(RemoveCollection);
-            EditBoxKeyDownCommand = new RelayCommand<KeyRoutedEventArgs>(EditBoxKeyDown);
-            EditBoxLostFocusCommand = new RelayCommand<RoutedEventArgs>(EditBoxLostFocus);
+            EditBoxKeyDownCommand = new AsyncRelayCommand<KeyRoutedEventArgs>(EditBoxKeyDown);
+            EditBoxLostFocusCommand = new AsyncRelayCommand<RoutedEventArgs>(EditBoxLostFocus);
         }
 
         #endregion
 
         #region Command Implementation
 
-        private async void OpenCollectionLocation()
+        private async Task OpenCollectionLocation()
         {
             if (!CanOpenCollection)
             {
@@ -208,7 +208,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             await Launcher.LaunchFolderAsync(_innerStorageFolder);
         }
 
-        private async void ReloadCollection()
+        private async Task ReloadCollection()
         {
             CanvasInitialized = false;
             await InitializeInnerStorageFolder();
@@ -232,7 +232,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             OnRemoveCollectionRequestedEvent?.Invoke(this, new RemoveCollectionRequestedEventArgs(this));
         }
 
-        private async void EditBoxKeyDown(KeyRoutedEventArgs e)
+        private async Task EditBoxKeyDown(KeyRoutedEventArgs e)
         {
             switch (e.Key)
             {
@@ -253,7 +253,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        private async void EditBoxLostFocus(RoutedEventArgs e)
+        private async Task EditBoxLostFocus(RoutedEventArgs e)
         {
             await ConfirmRename();
         }
