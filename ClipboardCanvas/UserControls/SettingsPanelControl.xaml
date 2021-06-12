@@ -19,20 +19,20 @@
                 <ResourceDictionary x:Key="Light">
                     <AcrylicBrush
                         x:Key="PanelBackground"
-                        Windows10version1903:TintLuminosityOpacity="0.25"
+                        Windows10version1903:TintLuminosityOpacity="0.40"
                         BackgroundSource="Backdrop"
                         FallbackColor="{ThemeResource SolidBackgroundAcrylic}"
                         TintColor="{ThemeResource SolidBackgroundAcrylic}"
-                        TintOpacity="0.25" />
+                        TintOpacity="0.50" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
                     <AcrylicBrush
                         x:Key="PanelBackground"
-                        Windows10version1903:TintLuminosityOpacity="0.25"
+                        Windows10version1903:TintLuminosityOpacity="0.30"
                         BackgroundSource="Backdrop"
                         FallbackColor="{ThemeResource SolidBackgroundAcrylic}"
                         TintColor="{ThemeResource SolidBackgroundAcrylic}"
-                        TintOpacity="0.25" />
+                        TintOpacity="0.30" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
