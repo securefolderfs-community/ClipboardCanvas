@@ -181,7 +181,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 CollectionsContainerViewModel collection;
                 foreach (var item in items.Result)
                 {
-                    collection = new CollectionsContainerViewModel(item as StorageFolder);
+                    // We retrieve the folder again this time using ToStorageItem<>() because items received cannot be modified - i.e. Renamed etc.
+                    StorageFolder folder = await StorageHelpers.ToStorageItem<StorageFolder>(item.Path);
+
+                    collection = new CollectionsContainerViewModel(folder);
 
                     await AddCollection(collection, true);
                 }
