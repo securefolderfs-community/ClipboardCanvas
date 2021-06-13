@@ -1,4 +1,5 @@
 ﻿using ClipboardCanvas.Dialogs;
+using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
@@ -9,10 +10,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
-using Windows.UI.Xaml.Controls;
 
 namespace ClipboardCanvas.Helpers
 {
@@ -52,9 +51,9 @@ namespace ClipboardCanvas.Helpers
             {
                 App.IsInRestrictedAccessMode = true;
 
-                ContentDialogResult dialogResult = await App.DialogService.ShowDialog(new FileSystemAccessDialogViewModel());
+                DialogResult dialogResult = await App.DialogService.ShowDialog(new FileSystemAccessDialogViewModel());
 
-                if (dialogResult == ContentDialogResult.Primary)
+                if (dialogResult == DialogResult.Primary)
                 {
                     // Restart the app
                     await CoreApplication.RequestRestartAsync(string.Empty);

@@ -1,15 +1,10 @@
-﻿using ClipboardCanvas.Dialogs;
+﻿using ClipboardCanvas.Enums;
 using ClipboardCanvas.ViewModels.Dialogs;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Windows.UI.Xaml.Controls;
 
 namespace ClipboardCanvas.Services
 {
@@ -42,7 +37,7 @@ namespace ClipboardCanvas.Services
             return dialog;
         }
 
-        public async Task<ContentDialogResult> ShowDialog<TViewModel>(TViewModel viewModel)
+        public async Task<DialogResult> ShowDialog<TViewModel>(TViewModel viewModel)
         {
             IDialog<TViewModel> dialog = GetDialog(viewModel);
 

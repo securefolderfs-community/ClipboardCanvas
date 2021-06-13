@@ -173,6 +173,7 @@
     <Compile Include="Enums\CanvasNavigationDirection.cs" />
     <Compile Include="Enums\CanvasPageProgressType.cs" />
     <Compile Include="Enums\CanvasPreviewMode.cs" />
+    <Compile Include="Enums\DialogResult.cs" />
     <Compile Include="Enums\SettingsPageType.cs" />
     <Compile Include="Enums\WebViewCanvasMode.cs" />
     <Compile Include="EventArguments\CollectionPreviewItemEventArgs.cs" />
@@ -181,6 +182,7 @@
     <Compile Include="Extensions\GenericsExtensions.cs" />
     <Compile Include="Extensions\SafetyExtensions.cs" />
     <Compile Include="Helpers\CollectionsHelpers.cs" />
+    <Compile Include="Helpers\DialogHelpers.cs" />
     <Compile Include="Helpers\DoubleClickWrapper.cs" />
     <Compile Include="Helpers\Filesystem\FilesystemOperations.cs" />
     <Compile Include="Helpers\FlyoutHelpers.cs" />

@@ -2,12 +2,12 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using System.Threading;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Microsoft.Toolkit.Mvvm.Input;
 using System.Linq;
 
 using ClipboardCanvas.DataModels.PastedContentDataModels;
@@ -22,9 +22,7 @@ using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.ViewModels.ContextMenu;
-using Microsoft.Toolkit.Mvvm.Input;
 using ClipboardCanvas.ViewModels.Dialogs;
-using Windows.UI.Xaml.Controls;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -331,9 +329,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (App.AppSettings.UserSettings.ShowDeleteConfirmationDialog)
             {
                 DeleteConfirmationDialogViewModel deleteConfirmationDialogViewModel = new DeleteConfirmationDialogViewModel(Path.GetFileName(associatedFile.Path));
-                ContentDialogResult dialogOption = await App.DialogService.ShowDialog(deleteConfirmationDialogViewModel);
+                DialogResult dialogOption = await App.DialogService.ShowDialog(deleteConfirmationDialogViewModel);
 
-                if (dialogOption == ContentDialogResult.Primary)
+                if (dialogOption == DialogResult.Primary)
                 {
                     deletePermanently = deleteConfirmationDialogViewModel.PermanentlyDelete;
                 }

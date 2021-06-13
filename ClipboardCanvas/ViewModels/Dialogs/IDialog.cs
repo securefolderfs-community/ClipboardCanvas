@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using ClipboardCanvas.Enums;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
 
 namespace ClipboardCanvas.ViewModels.Dialogs
 {
@@ -11,6 +7,6 @@ namespace ClipboardCanvas.ViewModels.Dialogs
     {
         TViewModel ViewModel { get; set; }
 
-        Task<ContentDialogResult> ShowAsync();
+        Task<DialogResult> ShowAsync();
     }
 }
