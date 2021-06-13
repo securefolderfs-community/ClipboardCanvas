@@ -3,6 +3,10 @@ Clipboard Canvas gives users an enhanced clipboard experience. Clipboard Canvas 
 
 ![Clipboard Canvas](ClipboardCanvas/Assets/ClipboardCanvasPreviewImage.png)
 
+# Get Clipboard Canvas
+- [Microsoft Store](https://www.microsoft.com/pl-pl/p/clipboard-canvas-preview/9nn2nzg8rltb#activetab=pivot:overviewtab)
+- [Releases](https://github.com/d2dyno1/ClipboardCanvas/releases)
+
 # Features
 
 - Automatically save content to your hard drive
