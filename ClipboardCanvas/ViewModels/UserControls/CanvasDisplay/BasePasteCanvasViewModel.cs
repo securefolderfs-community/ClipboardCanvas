@@ -33,11 +33,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
     {
         #region Protected Members
 
-        protected BasePastedContentTypeDataModel contentType;
-
         protected readonly ISafeWrapperExceptionReporter errorReporter;
 
         protected CancellationToken cancellationToken;
+
+        protected BasePastedContentTypeDataModel contentType;
 
         /// <summary>
         /// The file that's associated with the canvas, use is not recommended. Use <see cref="associatedFile"/> instead.
@@ -69,7 +69,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected SafeWrapperResult ReferencedFileNotFoundResult => new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "The file referenced was not found");
 
-        protected CollectionsContainerItemViewModel AssociatedContainerCanvas => AssociatedContainer.Items.Where((item) => item.File == associatedFile).FirstOrDefault();
+        protected ICollectionsContainerItemModel AssociatedContainerCanvas => AssociatedContainer?.CurrentCanvas;
 
         protected abstract ICollectionsContainerModel AssociatedContainer { get; }
 
@@ -659,6 +659,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected abstract Task<SafeWrapperResult> TryFetchDataToView();
 
+        #endregion
+
         #region Event Raisers
 
         protected void RaiseOnOpenNewCanvasRequestedEvent(object s, OpenNewCanvasRequestedEventArgs e) => OnOpenNewCanvasRequestedEvent?.Invoke(s, e);
@@ -680,8 +682,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         protected void RaiseOnProgressReportedEvent(object s, ProgressReportedEventArgs e) => OnProgressReportedEvent?.Invoke(s, e);
 
         protected void RaiseOnTipTextUpdateRequestedEvent(object s, TipTextUpdateRequestedEventArgs e) => OnTipTextUpdateRequestedEvent?.Invoke(s, e);
-
-        #endregion
 
         #endregion
 

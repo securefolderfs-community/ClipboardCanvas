@@ -14,7 +14,7 @@ using ClipboardCanvas.Helpers;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.EventArguments.CollectionControl;
 using ClipboardCanvas.DataModels.Navigation;
-using System.Runtime.CompilerServices;
+using ClipboardCanvas.DataModels.PastedContentDataModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -309,6 +309,17 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async void PasteCanvasModel_OnContentLoadedEvent(object sender, ContentLoadedEventArgs e)
         {
+            if (CurrentPage == DisplayPageType.CanvasPage
+                && ( _currentCollectionContainer.CurrentCanvas?.ContentType is TextContentType
+                || _currentCollectionContainer.CurrentCanvas?.ContentType is MarkdownContentType))
+            {
+                WindowTitleBarControlModel.ShowTitleUnderline = true;
+            }
+            else
+            {
+                WindowTitleBarControlModel.ShowTitleUnderline = false;
+            }
+
             CheckCanvasPageNavigation();
 
             await SetSuggestedActions();
@@ -485,6 +496,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async void OnPageNavigated()
         {
+            WindowTitleBarControlModel.ShowTitleUnderline = false;
+
             UpdateTitleBar();
             CheckCanvasPageNavigation();
             await SetSuggestedActions();

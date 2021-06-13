@@ -3,6 +3,7 @@
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
             <Color x:Key="SolidBackgroundAcrylic">#E0E0E0</Color>
+            <SolidColorBrush x:Key="TitleBarSeparatorColor">#FFc7c7c7</SolidColorBrush>
             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush">#F3F3F3</SolidColorBrush>
             <SolidColorBrush x:Key="SubtleBackgroundBrush">#B3FFFFFF</SolidColorBrush>
             <SolidColorBrush x:Key="NavigationButtonDisabledBackgroundBrush">#20FFFFFF</SolidColorBrush>
@@ -10,6 +11,7 @@
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
             <Color x:Key="SolidBackgroundAcrylic">#2E2E2E</Color>
+            <SolidColorBrush x:Key="TitleBarSeparatorColor">#6FFFFFFF</SolidColorBrush>
             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush">#201F1E</SolidColorBrush>
             <SolidColorBrush x:Key="SubtleBackgroundBrush">#0FFFFFFF</SolidColorBrush>
             <SolidColorBrush x:Key="NavigationButtonDisabledBackgroundBrush">#0FFFFFFF</SolidColorBrush>

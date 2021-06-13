@@ -14,11 +14,18 @@
         <Grid.ColumnDefinitions>
             <!--  Title text  -->
             <ColumnDefinition />
-            <!--  Restricted access  -->
+            <!--  Restricted Access  -->
             <ColumnDefinition />
             <!--  Compact overlay  -->
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <!--  Main content  -->
+            <RowDefinition />
+            <!--  Title text underline  -->
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
         <Grid
             x:Name="DraggableRegion"
@@ -87,6 +94,17 @@
             Text="Restricted Access"
             ToolTipService.Placement="Bottom"
             ToolTipService.ToolTip="Clipboard Canvas is currently in Restricted Access mode. Click for more details." />
+
+        <!--  Underline  -->
+        <Grid
+            x:Name="TitleUnderline"
+            Grid.Row="1"
+            Width="240"
+            Height="6"
+            HorizontalAlignment="Left"
+            x:Load="{x:Bind ViewModel.ShowTitleUnderline, Mode=OneWay}"
+            BorderBrush="{ThemeResource TitleBarSeparatorColor}"
+            BorderThickness="0,0,0,0.5" />
 
         <!--  TODO: For now the button is hidden  -->
         <!--  Compact overlay button  -->

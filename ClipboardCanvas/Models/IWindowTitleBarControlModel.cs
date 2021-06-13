@@ -6,6 +6,8 @@ namespace ClipboardCanvas.Models
     {
         bool IsInRestrictedAccess { get; set; }
 
+        bool ShowTitleUnderline { get; set; }
+
         event EventHandler OnSwitchApplicationViewRequestedEvent;
 
         void SetTitleBarForDefaultView();

@@ -426,7 +426,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             AddCanvasItem(file, contentType);
         }
 
-        public void RefreshRemoveItem(CollectionsContainerItemViewModel collectionsContainerItem)
+        public void RefreshRemoveItem(ICollectionsContainerItemModel collectionsContainerItem)
         {
             RemoveCanvasItem(collectionsContainerItem);
         }
@@ -509,9 +509,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
             Items.Add(new CollectionsContainerItemViewModel(file, contentType));
         }
 
-        private void RemoveCanvasItem(CollectionsContainerItemViewModel collectionsContainerItem)
+        private void RemoveCanvasItem(ICollectionsContainerItemModel collectionsContainerItem)
         {
-            Items.Remove(collectionsContainerItem);
+            Items.Remove(collectionsContainerItem as CollectionsContainerItemViewModel);
         }
 
         private void SetCollectionError(SafeWrapperResult safeWrapperResult)

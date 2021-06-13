@@ -45,6 +45,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
             set => SetProperty(ref _IsInRestrictedAccess, value);
         }
 
+        private bool _ShowTitleUnderline;
+        public bool ShowTitleUnderline
+        {
+            get => _ShowTitleUnderline;
+            set => SetProperty(ref _ShowTitleUnderline, value);
+        }
+
         #endregion
 
         #region Events

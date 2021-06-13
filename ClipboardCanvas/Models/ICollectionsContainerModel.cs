@@ -117,7 +117,7 @@ namespace ClipboardCanvas.Models
         /// <summary>
         /// Silently removes an item from the collection to prevent from reloading it
         /// </summary>
-        void RefreshRemoveItem(CollectionsContainerItemViewModel collectionsContainerItem);
+        void RefreshRemoveItem(ICollectionsContainerItemModel collectionsContainerItem);
 
         /// <summary>
         /// Initializes collection's items
