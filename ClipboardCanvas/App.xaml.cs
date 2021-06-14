@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -55,7 +56,7 @@ namespace ClipboardCanvas
             this.Suspending += OnSuspending;
             this.UnhandledException += App_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-
+            AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
 #if !DEBUG
             AppCenter.Start("c7fb111e-c2ba-4c4e-80f9-a919c9939224", typeof(Analytics), typeof(Crashes));
 #endif
@@ -64,6 +65,8 @@ namespace ClipboardCanvas
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e) => LogException(e.Exception);
 
         private void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e) => LogException(e.Exception);
+
+        private void CurrentDomain_FirstChanceException(object sender, FirstChanceExceptionEventArgs e) => LogException(e.Exception);
 
         private void LogException(Exception e)
         {
@@ -131,9 +134,8 @@ namespace ClipboardCanvas
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             SystemInformation.Instance.TrackAppUse(e);
-
-            // Do not repeat app initialization when the Window already has content,
-            // just ensure that the window is active
+                // Do not repeat app initialization when the Window already has content,
+                // just ensure that the window is active
             if (Window.Current.Content is not Frame rootFrame)
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
@@ -153,11 +155,8 @@ namespace ClipboardCanvas
 
             if (e.PrelaunchActivated == false)
             {
-                bool canEnablePrelaunch = ApiInformation.IsMethodPresent("Windows.ApplicationModel.Core.CoreApplication", "EnablePrelaunch");
-                if (canEnablePrelaunch)
-                {
-                    CoreApplication.EnablePrelaunch(true);
-                }
+                CoreApplication.EnablePrelaunch(true);
+                
 
                 if (rootFrame.Content == null)
                 {
