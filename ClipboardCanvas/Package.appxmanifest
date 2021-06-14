@@ -7,7 +7,8 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
   xmlns:iot2="http://schemas.microsoft.com/appx/manifest/iot/windows10/2"  
-  IgnorableNamespaces="uap mp rescap desktop4 iot2">
+  xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
+  IgnorableNamespaces="uap mp rescap desktop4 iot2 uap5">
 
   <Identity
     Name="3515d2dyno.ClipboardCanvas"
@@ -43,7 +44,7 @@
         Description="Clipboard Canvas gives users an enhanced clipboard experience. Clipboard Canvas enables you to paste content worry free increasing your productivity."
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\AppIcon\Wide310x150Logo.png" Square71x71Logo="Assets\AppIcon\SmallTile.png" Square310x310Logo="Assets\AppIcon\LargeTile.png"/>
-        <uap:SplashScreen Image="Assets\AppIcon\SplashScreen.png" />
+        <uap:SplashScreen Image="Assets\AppIcon\SplashScreen.png" uap5:Optional="true"/>
       </uap:VisualElements>
     </Application>
   </Applications>
