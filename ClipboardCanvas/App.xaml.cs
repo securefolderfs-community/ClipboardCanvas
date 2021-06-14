@@ -56,7 +56,11 @@ namespace ClipboardCanvas
             this.Suspending += OnSuspending;
             this.UnhandledException += App_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-            AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
+
+            if (Constants.Debugging.FIRST_CHANCE_EXCEPTION_DEBUGGING)
+            {
+                AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
+            }
 #if !DEBUG
             AppCenter.Start("c7fb111e-c2ba-4c4e-80f9-a919c9939224", typeof(Analytics), typeof(Crashes));
 #endif
