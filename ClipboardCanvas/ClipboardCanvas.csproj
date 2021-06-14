@@ -402,7 +402,6 @@
     <Content Include="Assets\ClipboardCanvasPreviewImage.png" />
     <Content Include="Resources\MiddleClickScrolling-CursorType.res" />
     <None Include="Package.StoreAssociation.xml" />
-    <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

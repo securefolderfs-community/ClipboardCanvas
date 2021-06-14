@@ -43,5 +43,10 @@
 
             public const int DOUBLE_CLICK_DELAY_MILISECONDS = 300;
         }
+
+        public static class Debugging
+        {
+            public const bool FIRST_CHANCE_EXCEPTION_DEBUGGING = false;
+        }
     }
 }
