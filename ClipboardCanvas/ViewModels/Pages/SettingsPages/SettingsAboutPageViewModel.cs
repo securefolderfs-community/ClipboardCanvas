@@ -1,13 +1,12 @@
-﻿using ClipboardCanvas.Dialogs;
-using ClipboardCanvas.ViewModels.Dialogs;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Windows.ApplicationModel;
 using Windows.Storage;
 using Windows.System;
+using ClipboardCanvas.ViewModels.Dialogs;
+using ClipboardCanvas.Services;
 
 namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 {

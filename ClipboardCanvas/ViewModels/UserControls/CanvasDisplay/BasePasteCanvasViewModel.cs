@@ -23,6 +23,7 @@ using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.ViewModels.Dialogs;
+using ClipboardCanvas.Services;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {

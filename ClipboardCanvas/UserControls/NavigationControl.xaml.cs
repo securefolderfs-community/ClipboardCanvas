@@ -1,4 +1,6 @@
 ﻿using ClipboardCanvas.ViewModels.UserControls;
+using System.ComponentModel;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -9,15 +11,22 @@ namespace ClipboardCanvas.UserControls
     {
         public NavigationControlViewModel ViewModel
         {
-            get => (NavigationControlViewModel)DataContext;
-            set => DataContext = value;
+            get => (NavigationControlViewModel)GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
         }
+
+        public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+          "ViewModel",
+          typeof(NavigationControlViewModel),
+          typeof(NavigationControl),
+          null
+        );
 
         public NavigationControl()
         {
             this.InitializeComponent();
 
-            this.ViewModel = new NavigationControlViewModel();
+            // TODO: Use AttachedViewModel and set there DataContext?
         }
     }
 }

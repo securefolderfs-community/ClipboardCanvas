@@ -366,12 +366,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void UpdateViewForCompactOverlayMode()
         {
-            Debugger.Break(); // TODO: Improve Compact Overlay mode
         }
 
         private void UpdateViewForDefaultMode()
         {
-
         }
 
         private async Task<bool> OpenPage(DisplayPageType pageType, bool simulateNavigation = false)

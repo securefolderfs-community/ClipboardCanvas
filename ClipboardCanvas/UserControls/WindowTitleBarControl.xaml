@@ -122,7 +122,7 @@
             Canvas.ZIndex="3"
             Command="{x:Bind ViewModel.SwitchApplicationViewCommand}"
             CornerRadius="0"
-            Visibility="Collapsed">
+            Visibility="Visible">
             <FontIcon FontFamily="/Assets/Fonts/CalcMDL2.ttf#Calculator MDL2 Assets" Glyph="&#xEE49;" />
         </Button>
     </Grid>

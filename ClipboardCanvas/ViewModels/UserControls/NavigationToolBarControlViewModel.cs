@@ -4,7 +4,6 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
-using ClipboardCanvas.DataModels.Navigation;
 using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.ViewModels.UserControls
@@ -19,9 +18,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Public Properties
 
-        public INavigationControlModel NavigationControlModel => _view?.NavigationControlModel;
+        public INavigationControlModel NavigationControlModel { get; set; } = new NavigationControlViewModel();
 
-        public ISuggestedActionsControlModel SuggestedActionsControlModel => _view?.SuggestedActionsControlModel;
+        public ISuggestedActionsControlModel SuggestedActionsControlModel { get; set; } = new SuggestedActionsControlViewModel();
 
         private bool _IsSettingsPaneOpened;
         public bool IsSettingsPaneOpened

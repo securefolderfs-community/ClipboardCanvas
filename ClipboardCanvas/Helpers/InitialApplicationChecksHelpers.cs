@@ -1,17 +1,14 @@
-﻿using ClipboardCanvas.Dialogs;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.Storage;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ViewModels.Dialogs;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
-using Windows.Storage;
+using ClipboardCanvas.Services;
 
 namespace ClipboardCanvas.Helpers
 {

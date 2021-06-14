@@ -4,7 +4,7 @@ namespace ClipboardCanvas.ModelViews
 {
     public interface INavigationToolBarControlView
     {
-        INavigationControlModel NavigationControlModel { get; }
+        //INavigationControlModel NavigationControlModel { get; }
 
         ISuggestedActionsControlModel SuggestedActionsControlModel { get; }
     }

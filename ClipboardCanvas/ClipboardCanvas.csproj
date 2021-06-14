@@ -149,6 +149,7 @@
     <Compile Include="AttachedProperties\BaseAttachedProperty.cs" />
     <Compile Include="AttachedProperties\FrameAttachedProperties.cs" />
     <Compile Include="AttachedProperties\MenuFlyoutAttachedProperties.cs" />
+    <Compile Include="AttachedProperties\ViewModelAttachedProperties.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DataModels\Navigation\DisplayFrameNavigationDataModel.cs" />
     <Compile Include="DataModels\Navigation\DisplayFrameNavigationParameterDataModel.cs" />
@@ -302,6 +303,8 @@
     <Compile Include="ValueConverters\BooleanToVisibilityConverter.cs" />
     <Compile Include="ValueConverters\ControlToFocusActionConverter.cs" />
     <Compile Include="ValueConverters\ImplicitDataTemplateConverter.cs" />
+    <Compile Include="ValueConverters\InterfaceToNavigationControlViewModelConverter.cs" />
+    <Compile Include="ValueConverters\InterfaceToSuggestedActionsControlViewModelConverter.cs" />
     <Compile Include="ValueConverters\SafeWrapperResultToErrorConverter.cs" />
     <Compile Include="ValueConverters\SelectedCollectionsContainerConverter.cs" />
     <Compile Include="ViewModels\ContextMenu\BaseMenuFlyoutItemViewModel.cs" />

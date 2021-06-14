@@ -214,7 +214,6 @@
                     IsActive="True" />
             </Grid>
 
-
             <!--  Go to home button  -->
             <Button
                 x:Name="GoToHome"
