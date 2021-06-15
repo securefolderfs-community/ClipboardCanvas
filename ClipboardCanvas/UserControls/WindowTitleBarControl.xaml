@@ -38,29 +38,20 @@
 
         <!--  Title text  -->
         <Grid
-            x:Name="DraggableTitle"
             Grid.Column="0"
             Padding="0,8,0,0"
             Canvas.ZIndex="1">
             <TextBlock
-                x:Name="DefaultTitleBarText"
+                x:Name="StandardTitleBar"
                 VerticalAlignment="Center"
-                x:Load="{x:Bind ViewModel.DefaultTitleBarTextLoad, Mode=OneWay}"
+                x:Load="{x:Bind ViewModel.StandardTitleBarLoad, Mode=OneWay}"
                 FontSize="16"
                 FontWeight="SemiLight"
-                Text="Clipboard Canvas" />
-
-            <TextBlock
-                x:Name="CollectionsTitleBarText"
-                VerticalAlignment="Center"
-                x:Load="{x:Bind ViewModel.CollectionsTitleBarTextLoad, Mode=OneWay}"
-                FontSize="16"
-                FontWeight="SemiLight"
-                Text="Clipboard Canvas" />
+                Text="{x:Bind ViewModel.StandardTitleBarText, Mode=OneWay}" />
 
             <StackPanel
-                x:Name="CanvasTitleBar"
-                x:Load="{x:Bind ViewModel.CanvasTitleBarTextLoad, Mode=OneWay}"
+                x:Name="TwoSideTitleBar"
+                x:Load="{x:Bind ViewModel.TwoSideTitleBarLoad, Mode=OneWay}"
                 Orientation="Horizontal"
                 Spacing="4">
                 <TextBlock
@@ -68,13 +59,13 @@
                     VerticalAlignment="Center"
                     FontSize="16"
                     FontWeight="SemiLight"
-                    Text="Current Collection:" />
+                    Text="{x:Bind ViewModel.TitleBarFirstSideText, Mode=OneWay}" />
                 <TextBlock
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     FontSize="16"
                     FontWeight="SemiBold"
-                    Text="{x:Bind ViewModel.CurrentCollectionText, Mode=OneWay}" />
+                    Text="{x:Bind ViewModel.TitleBarSecondSideText, Mode=OneWay}" />
             </StackPanel>
         </Grid>
 

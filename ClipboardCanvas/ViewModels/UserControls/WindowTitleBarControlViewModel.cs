@@ -10,32 +10,39 @@ namespace ClipboardCanvas.ViewModels.UserControls
     {
         #region Public Properties
 
-        private bool _DefaultTitleBarTextLoad;
-        public bool DefaultTitleBarTextLoad
+        private bool _StandardTitleBarLoad;
+        public bool StandardTitleBarLoad
         {
-            get => _DefaultTitleBarTextLoad;
-            private set => SetProperty(ref _DefaultTitleBarTextLoad, value);
+            get => _StandardTitleBarLoad;
+            set => SetProperty(ref _StandardTitleBarLoad, value);
         }
 
-        private bool _CollectionsTitleBarTextLoad;
-        public bool CollectionsTitleBarTextLoad
+        private string _StandardTitleBarText;
+        public string StandardTitleBarText
         {
-            get => _CollectionsTitleBarTextLoad;
-            set => SetProperty(ref _CollectionsTitleBarTextLoad, value);
+            get => _StandardTitleBarText;
+            set => SetProperty(ref _StandardTitleBarText, value);
         }
 
-        private bool _CanvasTitleBarTextLoad;
-        public bool CanvasTitleBarTextLoad
+        private bool _TwoSideTitleBarLoad;
+        public bool TwoSideTitleBarLoad
         {
-            get => _CanvasTitleBarTextLoad;
-            private set => SetProperty(ref _CanvasTitleBarTextLoad, value);
+            get => _TwoSideTitleBarLoad;
+            private set => SetProperty(ref _TwoSideTitleBarLoad, value);
         }
 
-        private string _CurrentCollectionText;
-        public string CurrentCollectionText
+        private string _TitleBarFirstSideText;
+        public string TitleBarFirstSideText
         {
-            get => _CurrentCollectionText;
-            private set => SetProperty(ref _CurrentCollectionText, value);
+            get => _TitleBarFirstSideText;
+            private set => SetProperty(ref _TitleBarFirstSideText, value);
+        }
+
+        private string _TitleBarSecondSideText;
+        public string TitleBarSecondSideText
+        {
+            get => _TitleBarSecondSideText;
+            set => SetProperty(ref _TitleBarSecondSideText, value);
         }
 
         private bool _IsInRestrictedAccess;
@@ -89,24 +96,25 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public void SetTitleBarForDefaultView()
         {
-            DefaultTitleBarTextLoad = true;
-            CollectionsTitleBarTextLoad = false;
-            CanvasTitleBarTextLoad = false;
+            StandardTitleBarText = "Clipboard Canvas";
+            StandardTitleBarLoad = true;
+            TwoSideTitleBarLoad = false;
         }
 
         public void SetTitleBarForCollectionsView()
         {
-            DefaultTitleBarTextLoad = false;
-            CollectionsTitleBarTextLoad = true;
-            CanvasTitleBarTextLoad = false;
+            StandardTitleBarText = "Clipboard Canvas";
+            StandardTitleBarLoad = true;
+            TwoSideTitleBarLoad = false;
         }
 
         public void SetTitleBarForCanvasView(string collectionName)
         {
-            DefaultTitleBarTextLoad = false;
-            CollectionsTitleBarTextLoad = false;
-            CanvasTitleBarTextLoad = true;
-            CurrentCollectionText = collectionName;
+            TwoSideTitleBarLoad = true;
+            TitleBarFirstSideText = "Current Collection:";
+            TitleBarSecondSideText = collectionName;
+
+            StandardTitleBarLoad = false;
         }
 
         #endregion

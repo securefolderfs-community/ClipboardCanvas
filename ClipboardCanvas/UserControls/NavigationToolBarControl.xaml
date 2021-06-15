@@ -49,8 +49,8 @@
 
             <!--  Toolbar size modes  -->
 
-            <!--  Minimum size mode  -->
-            <DataTemplate x:Key="ToolBar_Small_SizeMode" x:DataType="vm:NavigationToolBarControlViewModel">
+            <!--  Medium size mode  -->
+            <DataTemplate x:Key="ToolBar_Medium_SizeMode" x:DataType="vm:NavigationToolBarControlViewModel">
                 <Border>
                     <!--  Navigation  -->
                     <uc:NavigationControl
@@ -61,7 +61,7 @@
             </DataTemplate>
 
             <!--  Medium and large size mode  -->
-            <DataTemplate x:Key="ToolBar_MediumLarge_SizeMode" x:DataType="vm:NavigationToolBarControlViewModel">
+            <DataTemplate x:Key="ToolBar_Large_SizeMode" x:DataType="vm:NavigationToolBarControlViewModel">
                 <Border
                     Height="80"
                     Padding="20,0,20,0"
@@ -117,7 +117,7 @@
                         <AdaptiveTrigger MinWindowWidth="{StaticResource LargeWindowThreshold}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MainContentPresenter.ContentTemplate" Value="{StaticResource ToolBar_MediumLarge_SizeMode}" />
+                        <Setter Target="MainContentPresenter.ContentTemplate" Value="{StaticResource ToolBar_Large_SizeMode}" />
                     </VisualState.Setters>
                 </VisualState>
                 <!--  Medium window  -->
@@ -126,16 +126,16 @@
                         <AdaptiveTrigger MinWindowWidth="{StaticResource MediumWindowThreshold}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MainContentPresenter.ContentTemplate" Value="{StaticResource ToolBar_MediumLarge_SizeMode}" />
+                        <Setter Target="MainContentPresenter.ContentTemplate" Value="{StaticResource ToolBar_Medium_SizeMode}" />
                     </VisualState.Setters>
                 </VisualState>
                 <!--  Small window  -->
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="{StaticResource MinimumWindowThreshold}" />
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource SmallWindowThreshold}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MainContentPresenter.ContentTemplate" Value="{StaticResource ToolBar_Small_SizeMode}" />
+                        <Setter Target="MainContentPresenter.ContentTemplate" Value="{StaticResource ToolBar_Medium_SizeMode}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

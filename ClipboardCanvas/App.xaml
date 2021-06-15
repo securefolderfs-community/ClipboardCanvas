@@ -17,7 +17,7 @@
 
                 <!--  Window size thresholds  -->
                 <ResourceDictionary>
-                    <x:Double x:Key="MinimumWindowThreshold">0</x:Double>
+                    <x:Double x:Key="SmallWindowThreshold">0</x:Double>
                     <x:Double x:Key="MediumWindowThreshold">641</x:Double>
                     <x:Double x:Key="LargeWindowThreshold">1008</x:Double>
                 </ResourceDictionary>
