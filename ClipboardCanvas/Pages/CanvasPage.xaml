@@ -112,7 +112,10 @@
                     Background="Transparent"
                     CollectionContainer="{x:Bind ViewModel.CollectionContainer, Mode=OneWay}">
                     <uc:DynamicCanvasControl.ContextFlyout>
-                        <MenuFlyout ap:FlyoutItemsSourceAttachedProperty.Value="{x:Bind ViewModel.CanvasContextMenuItems, Mode=OneWay}" />
+                        <MenuFlyout
+                            x:Name="CanvasContextMenu"
+                            ap:FlyoutItemsSourceAttachedProperty.Value="{x:Bind ViewModel.CanvasContextMenuItems, Mode=OneWay}"
+                            Opening="CanvasContextMenu_Opening" />
                     </uc:DynamicCanvasControl.ContextFlyout>
                 </uc:DynamicCanvasControl>
 

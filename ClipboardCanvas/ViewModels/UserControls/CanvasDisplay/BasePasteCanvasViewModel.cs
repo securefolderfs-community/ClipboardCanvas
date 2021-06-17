@@ -94,6 +94,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
         }
 
+        public List<BaseMenuFlyoutItemViewModel> ContextMenuItems { get; protected set; }
+
         #endregion
 
         #region IPasteCanvasEventsModel
@@ -188,6 +190,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             isFilled = true;
 
+            RefreshContextMenuItems();
             RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, isFilled, contentAsReference));
 
             return result;
@@ -278,6 +281,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 }
 
                 isFilled = true;
+                RefreshContextMenuItems();
                 RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, isFilled, contentAsReference));
             }
 
@@ -349,8 +353,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 AssociatedContainer.RefreshRemoveItem(AssociatedContainerCanvas);
                 RaiseOnFileDeletedEvent(this, new FileDeletedEventArgs(associatedFile, AssociatedContainer));
-
-                DiscardData();
             }
 
             return result;
@@ -401,6 +403,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (copyResult)
             {
+                RefreshContextMenuItems();
                 OnReferencePasted();
             }
 
@@ -480,19 +483,29 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return actions;
         }
 
-        public async Task<List<BaseMenuFlyoutItemViewModel>> GetContextMenuItems()
+        protected void RefreshContextMenuItems()
         {
+            ContextMenuItems.DisposeClear();
+
             List<BaseMenuFlyoutItemViewModel> items = new List<BaseMenuFlyoutItemViewModel>();
+
+            // Copy item
+            items.Add(new MenuFlyoutItemViewModel()
+            {
+                Command = new RelayCommand(SetFileToClipboard),
+                IconGlyph = "\uE8C8",
+                Text = "Copy file"
+            });
 
             // Delete item
             items.Add(new MenuFlyoutItemViewModel()
             {
                 Command = new AsyncRelayCommand(TryDeleteData),
                 IconGlyph = "\uE74D",
-                Text = "Delete file"
+                Text = contentAsReference ? "Delete reference" : "Delete file"
             });
 
-            return await Task.FromResult(items);
+            ContextMenuItems = items;
         }
 
         #endregion
@@ -516,6 +529,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected virtual void OnReferencePasted()
         {
+        }
+
+        protected virtual void SetFileToClipboard()
+        {
+            DataPackage dataPackage = new DataPackage();
+            dataPackage.SetStorageItems(new List<IStorageItem>() { sourceFile });
+
+            Clipboard.SetContent(dataPackage);
         }
 
         /// <inheritdoc cref="ReportProgress(float, bool, CanvasPageProgressType)"/>

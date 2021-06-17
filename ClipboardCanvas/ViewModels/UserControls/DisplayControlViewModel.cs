@@ -15,6 +15,7 @@ using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.EventArguments.CollectionControl;
 using ClipboardCanvas.DataModels.Navigation;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.Helpers.SafetyHelpers;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -303,7 +304,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 OpenNewCanvas();
 
                 // Forward the paste operation
-                await PasteCanvasPageModel.PasteCanvasModel.TryPasteData(e.forwardedDataPackage, _canvasLoadCancellationTokenSource.Token);
+                SafeWrapperResult result = await PasteCanvasPageModel.PasteCanvasModel.TryPasteData(e.forwardedDataPackage, _canvasLoadCancellationTokenSource.Token);
             }
         }
 

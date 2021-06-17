@@ -16,6 +16,11 @@ namespace ClipboardCanvas.Models
         CanvasPreviewMode CanvasMode { get; } // set??
 
         /// <summary>
+        /// Context menu options available for the canvas
+        /// </summary>
+        List<BaseMenuFlyoutItemViewModel> ContextMenuItems { get; }
+
+        /// <summary>
         /// Attempts to load existing data to display
         /// </summary>
         /// <param name="itemData"></param>
@@ -62,11 +67,5 @@ namespace ClipboardCanvas.Models
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions();
-
-        /// <summary>
-        /// Gets context menu items available for the canvas
-        /// </summary>
-        /// <returns></returns>
-        Task<List<BaseMenuFlyoutItemViewModel>> GetContextMenuItems();
     }
 }

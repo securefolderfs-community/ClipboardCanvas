@@ -44,5 +44,10 @@ namespace ClipboardCanvas.Pages
         {
             Flyout.ShowAttachedFlyout(PastedAsReference);
         }
+
+        private void CanvasContextMenu_Opening(object sender, object e)
+        {
+            ViewModel.CanvasContextMenuOpeningCommand.Execute(null);
+        }
     }
 }

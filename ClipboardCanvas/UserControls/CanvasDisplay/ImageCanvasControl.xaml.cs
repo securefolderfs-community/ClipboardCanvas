@@ -25,7 +25,7 @@ namespace ClipboardCanvas.UserControls.CanvasDisplay
         {
             IReadOnlyList<IStorageItem> dragData = ViewModel.ProvideDragData();
 
-            args.Data.SetData(StandardDataFormats.StorageItems, dragData);
+            args.Data.SetStorageItems(dragData);
         }
     }
 }

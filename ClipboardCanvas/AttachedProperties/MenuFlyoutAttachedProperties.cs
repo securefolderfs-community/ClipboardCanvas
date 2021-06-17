@@ -1,8 +1,8 @@
-﻿using ClipboardCanvas.Helpers;
-using ClipboardCanvas.ViewModels.ContextMenu;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using ClipboardCanvas.Helpers;
+using ClipboardCanvas.ViewModels.ContextMenu;
 
 namespace ClipboardCanvas.AttachedProperties
 {

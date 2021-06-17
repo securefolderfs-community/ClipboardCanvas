@@ -2,6 +2,11 @@
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
+using System.Threading;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.EventArguments;
@@ -9,16 +14,8 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Enums;
-using System.Collections.Generic;
-using Windows.Storage;
-using System.IO;
-using System.Threading;
-using System.Linq;
 using ClipboardCanvas.EventArguments.CanvasControl;
-using System.Diagnostics;
 using ClipboardCanvas.Helpers;
-using Windows.ApplicationModel.Core;
-using Microsoft.Toolkit.Uwp;
 using ClipboardCanvas.ViewModels.ContextMenu;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
@@ -42,6 +39,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         }
 
         public CanvasPreviewMode CanvasMode => CanvasViewModel?.CanvasMode ?? CanvasPreviewMode.PreviewOnly;
+
+        public List<BaseMenuFlyoutItemViewModel> ContextMenuItems => CanvasViewModel?.ContextMenuItems;
 
         #endregion
 
@@ -163,16 +162,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             return await CanvasViewModel.GetSuggestedActions();
-        }
-
-        public async Task<List<BaseMenuFlyoutItemViewModel>> GetContextMenuItems()
-        {
-            if (CanvasViewModel == null)
-            {
-                return null;
-            }
-
-            return await CanvasViewModel.GetContextMenuItems();
         }
 
         #endregion

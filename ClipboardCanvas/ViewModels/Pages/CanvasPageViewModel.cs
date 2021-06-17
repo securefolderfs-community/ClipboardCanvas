@@ -51,8 +51,17 @@ namespace ClipboardCanvas.ViewModels.Pages
         private List<BaseMenuFlyoutItemViewModel> _CanvasContextMenuItems;
         public List<BaseMenuFlyoutItemViewModel> CanvasContextMenuItems
         {
-            get => _CanvasContextMenuItems;
-            set => SetProperty(ref _CanvasContextMenuItems, value);
+            get
+            {
+                if (_contentLoaded)
+                {
+                    return PasteCanvasModel.ContextMenuItems;
+                }
+                else
+                {
+                    return _CanvasContextMenuItems;
+                }
+            }
         }
 
         private bool _TitleTextLoad = true;
@@ -153,6 +162,8 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public ICommand OverrideReferenceCommand { get; private set; }
 
+        public ICommand CanvasContextMenuOpeningCommand { get; private set; }
+
         #endregion
 
         #region Constructor
@@ -160,6 +171,8 @@ namespace ClipboardCanvas.ViewModels.Pages
         public CanvasPageViewModel(ICanvasPageView view)
         {
             this._view = view;
+
+            _CanvasContextMenuItems = new List<BaseMenuFlyoutItemViewModel>();
 
             HookEvents();
 
@@ -169,6 +182,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             DragLeaveCommand = new RelayCommand<DragEventArgs>(DragLeave);
             DropCommand = new AsyncRelayCommand<DragEventArgs>(Drop);
             OverrideReferenceCommand = new AsyncRelayCommand(OverrideReference);
+            CanvasContextMenuOpeningCommand = new RelayCommand(CanvasContextMenuOpening);
         }
 
         #endregion
@@ -297,6 +311,12 @@ namespace ClipboardCanvas.ViewModels.Pages
             OverrideReferenceEnabled = true;
         }
 
+        private void CanvasContextMenuOpening()
+        {
+            // Always refresh all context menu items
+            OnPropertyChanged(nameof(CanvasContextMenuItems));
+        }
+
         #endregion
 
         #region Event Handlers
@@ -376,8 +396,6 @@ namespace ClipboardCanvas.ViewModels.Pages
             TitleTextLoad = false;
             TipTextLoad = false;
             ErrorTextLoad = false;
-
-            this.CanvasContextMenuItems = await PasteCanvasModel.GetContextMenuItems();
         }
 
         private async void PasteCanvasModel_OnPasteRequestedEvent(object sender, PasteRequestedEventArgs e)

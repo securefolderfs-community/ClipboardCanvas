@@ -12,6 +12,11 @@ namespace ClipboardCanvas.Extensions
 
         public static void DisposeClear<T>(this ICollection<T> collection)
         {
+            if (collection == null)
+            {
+                return;
+            }
+
             for (int i = 0; i < collection.Count(); i++)
             {
                 T item = collection.ElementAt(i);
