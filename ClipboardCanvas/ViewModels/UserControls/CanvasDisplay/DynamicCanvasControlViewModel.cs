@@ -164,6 +164,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return await CanvasViewModel.GetSuggestedActions();
         }
 
+        public bool SetDataToClipboard(SetClipboardDataSourceType dataSourceSetType)
+        {
+            return CanvasViewModel?.SetDataToClipboard(dataSourceSetType) ?? false;
+        }
+
         #endregion
 
         #region Private Helpers

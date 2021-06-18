@@ -25,6 +25,13 @@
                 </icore:EventTriggerBehavior>
             </i:Interaction.Behaviors>
         </KeyboardAccelerator>
+        <KeyboardAccelerator Key="C" Modifiers="Control">
+            <i:Interaction.Behaviors>
+                <icore:EventTriggerBehavior EventName="Invoked">
+                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
+                </icore:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+        </KeyboardAccelerator>
     </Page.KeyboardAccelerators>
 
     <Border>

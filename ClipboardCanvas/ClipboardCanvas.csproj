@@ -175,6 +175,7 @@
     <Compile Include="Enums\CanvasPageProgressType.cs" />
     <Compile Include="Enums\CanvasPreviewMode.cs" />
     <Compile Include="Enums\DialogResult.cs" />
+    <Compile Include="Enums\SetClipboardDataSourceType.cs" />
     <Compile Include="Enums\SettingsPageType.cs" />
     <Compile Include="Enums\WebViewCanvasMode.cs" />
     <Compile Include="EventArguments\CollectionPreviewItemEventArgs.cs" />

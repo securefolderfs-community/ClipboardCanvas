@@ -67,5 +67,12 @@ namespace ClipboardCanvas.Models
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions();
+
+        /// <summary>
+        /// Sets the data to clipboard determined by <paramref name="dataSourceSetType"/>
+        /// </summary>
+        /// <param name="dataSourceSetType"></param>
+        /// <returns></returns>
+        bool SetDataToClipboard(SetClipboardDataSourceType dataSourceSetType);
     }
 }

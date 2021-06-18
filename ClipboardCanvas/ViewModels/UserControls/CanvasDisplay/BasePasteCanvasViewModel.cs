@@ -483,6 +483,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return actions;
         }
 
+        public virtual bool SetDataToClipboard(SetClipboardDataSourceType dataSourceSetType)
+        {
+            DataPackage dataPackage = new DataPackage();
+            dataPackage.SetStorageItems(new List<IStorageItem>() { sourceFile });
+
+            Clipboard.SetContent(dataPackage);
+
+            return true;
+        }
+
         protected void RefreshContextMenuItems()
         {
             ContextMenuItems.DisposeClear();
@@ -492,7 +502,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Copy item
             items.Add(new MenuFlyoutItemViewModel()
             {
-                Command = new RelayCommand(SetFileToClipboard),
+                Command = new RelayCommand(() => SetDataToClipboard(SetClipboardDataSourceType.FromContextMenu)),
                 IconGlyph = "\uE8C8",
                 Text = "Copy file"
             });
@@ -529,14 +539,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected virtual void OnReferencePasted()
         {
-        }
-
-        protected virtual void SetFileToClipboard()
-        {
-            DataPackage dataPackage = new DataPackage();
-            dataPackage.SetStorageItems(new List<IStorageItem>() { sourceFile });
-
-            Clipboard.SetContent(dataPackage);
         }
 
         /// <inheritdoc cref="ReportProgress(float, bool, CanvasPageProgressType)"/>

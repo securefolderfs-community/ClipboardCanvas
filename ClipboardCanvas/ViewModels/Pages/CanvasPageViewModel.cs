@@ -206,6 +206,12 @@ namespace ClipboardCanvas.ViewModels.Pages
                         await PasteDataInternal();
                         break;
                     }
+
+                case (c: true, s: false, a: false, w: false, k: VirtualKey.C):
+                    {
+                        PasteCanvasModel?.SetDataToClipboard(SetClipboardDataSourceType.FromKeyboardAccelerator);
+                        break;
+                    }
             }
         }
 
