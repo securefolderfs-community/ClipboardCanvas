@@ -408,17 +408,18 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
                     // Load canvas again
                     result = await pasteCanvasModel.TryLoadExistingData(this.Items[CurrentIndex], cancellationToken);
-
-                    return;
                 }
                 else if (result.ErrorCode == OperationErrorCode.InvalidOperation)
                 {
                     // View Model wasn't found
                     // Cannot display content for this file. - i.e. canvas display doesn't exists for this file
                 }
-            }
 
-            OnCheckCanvasPageNavigationRequestedEvent?.Invoke(this, new CheckCanvasPageNavigationRequestedEventArgs(true));
+                if (!result)
+                {
+                    OnCheckCanvasPageNavigationRequestedEvent?.Invoke(this, new CheckCanvasPageNavigationRequestedEventArgs(true));
+                }
+            }
         }
 
         public void RefreshAddItem(StorageFile file, BasePastedContentTypeDataModel contentType)

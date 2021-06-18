@@ -499,6 +499,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             List<BaseMenuFlyoutItemViewModel> items = new List<BaseMenuFlyoutItemViewModel>();
 
+            // May occur when quickly switching between canvases
+            if (AssociatedContainer == null)
+            {
+                ContextMenuItems = items;
+            }
+
             // Open item
             items.Add(new MenuFlyoutItemViewModel()
             {
