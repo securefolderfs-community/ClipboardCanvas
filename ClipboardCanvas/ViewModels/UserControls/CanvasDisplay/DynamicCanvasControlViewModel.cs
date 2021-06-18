@@ -58,7 +58,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         
         public event EventHandler<ContentStartedLoadingEventArgs> OnContentStartedLoadingEvent;
 
-        public event EventHandler<PasteRequestedEventArgs> OnPasteRequestedEvent;
+        public event EventHandler<PasteInitiatedEventArgs> OnPasteInitiatedEvent;
 
         public event EventHandler<FileCreatedEventArgs> OnFileCreatedEvent;
 
@@ -415,9 +415,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             OnFileCreatedEvent?.Invoke(sender, e);
         }
 
-        private void CanvasViewModel_OnPasteRequestedEvent(object sender, PasteRequestedEventArgs e)
+        private void CanvasViewModel_OnPasteInitiatedEvent(object sender, PasteInitiatedEventArgs e)
         {
-            OnPasteRequestedEvent?.Invoke(sender, e);
+            OnPasteInitiatedEvent?.Invoke(sender, e);
         }
 
         private void CanvasViewModel_OnContentStartedLoadingEvent(object sender, ContentStartedLoadingEventArgs e)
@@ -447,7 +447,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 CanvasViewModel.OnOpenNewCanvasRequestedEvent += CanvasViewModel_OnOpenNewCanvasRequestedEvent;
                 CanvasViewModel.OnContentLoadedEvent += CanvasViewModel_OnContentLoadedEvent;
                 CanvasViewModel.OnContentStartedLoadingEvent += CanvasViewModel_OnContentStartedLoadingEvent;
-                CanvasViewModel.OnPasteRequestedEvent += CanvasViewModel_OnPasteRequestedEvent;
+                CanvasViewModel.OnPasteInitiatedEvent += CanvasViewModel_OnPasteInitiatedEvent;
                 CanvasViewModel.OnFileCreatedEvent += CanvasViewModel_OnFileCreatedEvent;
                 CanvasViewModel.OnFileModifiedEvent += CanvasViewModel_OnFileModifiedEvent;
                 CanvasViewModel.OnFileDeletedEvent += CanvasViewModel_OnFileDeletedEvent;
@@ -464,7 +464,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 CanvasViewModel.OnOpenNewCanvasRequestedEvent -= CanvasViewModel_OnOpenNewCanvasRequestedEvent;
                 CanvasViewModel.OnContentLoadedEvent -= CanvasViewModel_OnContentLoadedEvent;
                 CanvasViewModel.OnContentStartedLoadingEvent -= CanvasViewModel_OnContentStartedLoadingEvent;
-                CanvasViewModel.OnPasteRequestedEvent -= CanvasViewModel_OnPasteRequestedEvent;
+                CanvasViewModel.OnPasteInitiatedEvent -= CanvasViewModel_OnPasteInitiatedEvent;
                 CanvasViewModel.OnFileCreatedEvent -= CanvasViewModel_OnFileCreatedEvent;
                 CanvasViewModel.OnFileModifiedEvent -= CanvasViewModel_OnFileModifiedEvent;
                 CanvasViewModel.OnFileDeletedEvent -= CanvasViewModel_OnFileDeletedEvent;

@@ -59,10 +59,15 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task OpenContainingFolder()
         {
+            await OpenContainingFolder(true);
+        }
+
+        public async Task OpenContainingFolder(bool checkForReference)
+        {
             IStorageFolder folder;
             IStorageFile fileToSelect;
 
-            if (ReferenceFile.IsReferenceFile(File))
+            if (checkForReference && ReferenceFile.IsReferenceFile(File))
             {
                 ReferenceFile referenceFile = await ReferenceFile.GetFile(File);
 
@@ -86,7 +91,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
             if (folder != null)
             {
                 FolderLauncherOptions launcherOptions = new FolderLauncherOptions();
-                launcherOptions.ItemsToSelect.Add(fileToSelect);
+
+                if (File != null)
+                {
+                    launcherOptions.ItemsToSelect.Add(fileToSelect);
+                }
 
                 await Launcher.LaunchFolderAsync(folder, launcherOptions);
             }

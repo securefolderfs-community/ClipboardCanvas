@@ -296,7 +296,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             _currentCollectionContainer.RefreshAddItem(e.file, e.contentType);
         }
 
-        private async void PasteCanvasModel_OnPasteRequestedEvent(object sender, PasteRequestedEventArgs e)
+        private async void PasteCanvasModel_OnPasteInitiatedEvent(object sender, PasteInitiatedEventArgs e)
         {
             if (e.isFilled)
             {
@@ -347,13 +347,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             await CollectionsControlViewModel.ReloadAllCollections();
             await OpenPage(DisplayPageType.CanvasPage);
-
-            // We must hook them here because only now it is not null
-            // Hook events if the page navigated is canvas page
-            if (CurrentPageNavigation != null && CurrentPage == DisplayPageType.CanvasPage)
-            {
-                HookCanvasControlEvents();
-            }
 
             NavigationToolBarControlModel.NotifyCurrentPageChanged(CurrentPage);
 
@@ -651,7 +644,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             {
                 this.PasteCanvasPageModel.PasteCanvasModel.OnOpenNewCanvasRequestedEvent += PasteCanvasModel_OnOpenNewCanvasRequestedEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnContentLoadedEvent += PasteCanvasModel_OnContentLoadedEvent;
-                this.PasteCanvasPageModel.PasteCanvasModel.OnPasteRequestedEvent += PasteCanvasModel_OnPasteRequestedEvent;
+                this.PasteCanvasPageModel.PasteCanvasModel.OnPasteInitiatedEvent += PasteCanvasModel_OnPasteInitiatedEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnFileCreatedEvent += PasteCanvasModel_OnFileCreatedEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnFileModifiedEvent += PasteCanvasModel_OnFileModifiedEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnFileDeletedEvent += PasteCanvasModel_OnFileDeletedEvent;
@@ -666,7 +659,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             {
                 this.PasteCanvasPageModel.PasteCanvasModel.OnOpenNewCanvasRequestedEvent -= PasteCanvasModel_OnOpenNewCanvasRequestedEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnContentLoadedEvent -= PasteCanvasModel_OnContentLoadedEvent;
-                this.PasteCanvasPageModel.PasteCanvasModel.OnPasteRequestedEvent -= PasteCanvasModel_OnPasteRequestedEvent;
+                this.PasteCanvasPageModel.PasteCanvasModel.OnPasteInitiatedEvent -= PasteCanvasModel_OnPasteInitiatedEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnFileCreatedEvent -= PasteCanvasModel_OnFileCreatedEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnFileModifiedEvent -= PasteCanvasModel_OnFileModifiedEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnFileDeletedEvent -= PasteCanvasModel_OnFileDeletedEvent;

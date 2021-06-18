@@ -106,7 +106,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public event EventHandler<ContentStartedLoadingEventArgs> OnContentStartedLoadingEvent;
 
-        public event EventHandler<PasteRequestedEventArgs> OnPasteRequestedEvent;
+        public event EventHandler<PasteInitiatedEventArgs> OnPasteInitiatedEvent;
 
         public event EventHandler<FileCreatedEventArgs> OnFileCreatedEvent;
 
@@ -200,7 +200,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             this.cancellationToken = cancellationToken;
 
-            RaiseOnPasteRequestedEvent(this, new PasteRequestedEventArgs(isFilled, dataPackage));
+            RaiseOnPasteInitiatedEvent(this, new PasteInitiatedEventArgs(isFilled, dataPackage));
 
             SafeWrapperResult result;
             SafeWrapperResult cancelResult = new SafeWrapperResult(OperationErrorCode.Cancelled, "The operation was canceled");
@@ -493,11 +493,22 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return true;
         }
 
-        protected void RefreshContextMenuItems()
+        protected virtual void RefreshContextMenuItems()
         {
             ContextMenuItems.DisposeClear();
 
             List<BaseMenuFlyoutItemViewModel> items = new List<BaseMenuFlyoutItemViewModel>();
+
+            // Open item
+            items.Add(new MenuFlyoutItemViewModel()
+            {
+                Command = new AsyncRelayCommand(AssociatedContainer.CurrentCanvas.OpenFile),
+                IconGlyph = "\uE8E5",
+                Text = "Open file"
+            });
+
+            // Separator
+            items.Add(new MenuFlyoutSeparatorViewModel());
 
             // Copy item
             items.Add(new MenuFlyoutItemViewModel()
@@ -506,6 +517,25 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 IconGlyph = "\uE8C8",
                 Text = "Copy file"
             });
+
+            // Open containing folder
+            items.Add(new MenuFlyoutItemViewModel()
+            {
+                Command = new AsyncRelayCommand(AssociatedContainer.CurrentCanvas.OpenContainingFolder),
+                IconGlyph = "\uE838",
+                Text = "Open containing folder"
+            });
+
+            // Open reference containing folder
+            if (contentAsReference)
+            {
+                items.Add(new MenuFlyoutItemViewModel()
+                {
+                    Command = new AsyncRelayCommand(() => AssociatedContainer.CurrentCanvas.OpenContainingFolder(checkForReference: false)),
+                    IconGlyph = "\uE838",
+                    Text = "Open reference containing folder"
+                });
+            }
 
             // Delete item
             items.Add(new MenuFlyoutItemViewModel()
@@ -693,7 +723,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected void RaiseOnContentStartedLoadingEvent(object s, ContentStartedLoadingEventArgs e) => OnContentStartedLoadingEvent?.Invoke(s, e);
 
-        protected void RaiseOnPasteRequestedEvent(object s, PasteRequestedEventArgs e) => OnPasteRequestedEvent?.Invoke(s, e);
+        protected void RaiseOnPasteInitiatedEvent(object s, PasteInitiatedEventArgs e) => OnPasteInitiatedEvent?.Invoke(s, e);
 
         protected void RaiseOnFileCreatedEvent(object s, FileCreatedEventArgs e) => OnFileCreatedEvent?.Invoke(s, e);
 

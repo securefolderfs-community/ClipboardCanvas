@@ -12,7 +12,7 @@ namespace ClipboardCanvas.Models
 
         event EventHandler<ContentStartedLoadingEventArgs> OnContentStartedLoadingEvent;
 
-        event EventHandler<PasteRequestedEventArgs> OnPasteRequestedEvent;
+        event EventHandler<PasteInitiatedEventArgs> OnPasteInitiatedEvent;
 
         event EventHandler<FileCreatedEventArgs> OnFileCreatedEvent;
 
