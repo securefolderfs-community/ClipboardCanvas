@@ -42,8 +42,9 @@ namespace ClipboardCanvas.Models
         /// <summary>
         /// Attempts to delete the file and discard data
         /// </summary>
+        /// <param name="hideConfirmation">Hides the delete confirmation dialog, overrides <see cref="ApplicationSettings.Interfaces.IUserSettings.ShowDeleteConfirmationDialog"/> if necessary</param>
         /// <returns></returns>
-        Task<SafeWrapperResult> TryDeleteData();
+        Task<SafeWrapperResult> TryDeleteData(bool hideConfirmation = false);
 
         /// <summary>
         /// Overrides the reference and pastes the file to the collection

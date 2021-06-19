@@ -183,7 +183,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             
             if (e.alsoRefreshActions)
             {
-                await SetSuggestedActions();
+                await SetSuggestedActions(e.error);
             }
         }
 
@@ -495,54 +495,65 @@ namespace ClipboardCanvas.ViewModels.UserControls
             await SetSuggestedActions();
         }
 
-        private async Task SetSuggestedActions()
+        private async Task SetSuggestedActions(SafeWrapperResult fromError = null)
         {
             if (NavigationToolBarControlModel == null)
             {
                 return;
             }
 
-            bool checkAgain = false;
-            do
+            if (fromError != null)
             {
-                switch (CurrentPage)
+                // Reference File is corrupted
+                if (fromError == OperationErrorCode.InvalidArgument)
                 {
-                    case DisplayPageType.CanvasPage:
-                        {
-                            // Add suggested actions
-                            if (_currentCollectionContainer.IsFilled && PasteCanvasPageModel != null)
-                            {
-                                NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(await PasteCanvasPageModel.PasteCanvasModel.GetSuggestedActions());
-
-                                // Check again, the state might have changed
-                                if (_currentCollectionContainer.IsOnNewCanvas)
-                                {
-                                    // The state changed
-                                    checkAgain = true;
-                                    break;
-                                }
-
-                                checkAgain = false;
-                            }
-                            else
-                            {
-                                NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(SuggestedActionsHelpers.GetActionsForEmptyCanvasPage(PasteCanvasPageModel.PasteCanvasModel));
-                            }
-
-                            break;
-                        }
-
-                    case DisplayPageType.HomePage:
-                        {
-                            NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(SuggestedActionsHelpers.GetActionsForUnselectedCollection());
-
-                            checkAgain = false;
-
-                            break;
-                        }
+                    NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(SuggestedActionsHelpers.GetActionsForInvalidReference(PasteCanvasPageModel.PasteCanvasModel));
                 }
             }
-            while (checkAgain);
+            else
+            {
+                bool checkAgain = false;
+                do
+                {
+                    switch (CurrentPage)
+                    {
+                        case DisplayPageType.CanvasPage:
+                            {
+                                // Add suggested actions
+                                if (_currentCollectionContainer.IsFilled && PasteCanvasPageModel != null)
+                                {
+                                    NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(await PasteCanvasPageModel.PasteCanvasModel.GetSuggestedActions());
+
+                                    // Check again, the state might have changed
+                                    if (_currentCollectionContainer.IsOnNewCanvas)
+                                    {
+                                        // The state changed
+                                        checkAgain = true;
+                                        break;
+                                    }
+
+                                    checkAgain = false;
+                                }
+                                else
+                                {
+                                    NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(SuggestedActionsHelpers.GetActionsForEmptyCanvasPage(PasteCanvasPageModel.PasteCanvasModel));
+                                }
+
+                                break;
+                            }
+
+                        case DisplayPageType.HomePage:
+                            {
+                                NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(SuggestedActionsHelpers.GetActionsForUnselectedCollection());
+
+                                checkAgain = false;
+
+                                break;
+                            }
+                    }
+                }
+                while (checkAgain);
+            }
         }
 
         private void UpdateTitleBar()

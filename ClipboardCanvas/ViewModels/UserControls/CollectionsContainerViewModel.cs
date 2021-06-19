@@ -417,7 +417,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
                 if (!result)
                 {
-                    OnCheckCanvasPageNavigationRequestedEvent?.Invoke(this, new CheckCanvasPageNavigationRequestedEventArgs(true));
+                    SafeWrapperResult passedError = result == OperationErrorCode.InvalidArgument ? result : null; // Set result not null if reference file is invalid
+                    OnCheckCanvasPageNavigationRequestedEvent?.Invoke(this, new CheckCanvasPageNavigationRequestedEventArgs(true, passedError));
                 }
             }
         }

@@ -26,6 +26,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         private readonly IDynamicCanvasControlView _view;
 
+        private StorageFile _associatedFile;
+
         #endregion
 
         #region Public Properties
@@ -37,6 +39,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             get => _CanvasViewModel;
             set => SetProperty(ref _CanvasViewModel, value);
         }
+
+        public ICollectionsContainerModel AssociatedContainer => _view?.CollectionContainer;
+        
+        public ICollectionsContainerItemModel AssociatedContainerCanvas => AssociatedContainer?.CurrentCanvas;
 
         public CanvasPreviewMode CanvasMode => CanvasViewModel?.CanvasMode ?? CanvasPreviewMode.PreviewOnly;
 
@@ -87,6 +93,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public async Task<SafeWrapperResult> TryLoadExistingData(ICollectionsContainerItemModel itemData, CancellationToken cancellationToken)
         {
+            this._associatedFile = itemData.File;
+
             SafeWrapperResult result = await InitializeViewModel(itemData);
 
             if (result)
@@ -124,14 +132,23 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return await CanvasViewModel.TrySaveData();
         }
 
-        public async Task<SafeWrapperResult> TryDeleteData()
+        public async Task<SafeWrapperResult> TryDeleteData(bool hideConfirmation = false)
         {
             if (CanvasViewModel == null)
             {
-                return null;
+                // The canvas is null, delete the reference file manually
+                SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(_associatedFile, hideConfirmation);
+
+                if (result)
+                {
+                    AssociatedContainer.RefreshRemoveItem(AssociatedContainerCanvas);
+                    OnFileDeletedEvent?.Invoke(this, new FileDeletedEventArgs(_associatedFile, AssociatedContainer));
+                }
+
+                return result;
             }
 
-            return await CanvasViewModel.TryDeleteData();
+            return await CanvasViewModel.TryDeleteData(hideConfirmation);
         }
 
         public async Task<SafeWrapperResult> PasteOverrideReference()

@@ -67,9 +67,12 @@ namespace ClipboardCanvas.EventArguments
     {
         public readonly bool alsoRefreshActions;
 
-        public CheckCanvasPageNavigationRequestedEventArgs(bool alsoRefreshActions = false)
+        public readonly SafeWrapperResult error;
+
+        public CheckCanvasPageNavigationRequestedEventArgs(bool alsoRefreshActions = false, SafeWrapperResult error = null)
         {
             this.alsoRefreshActions = alsoRefreshActions;
+            this.error = error;
         }
     }
 }

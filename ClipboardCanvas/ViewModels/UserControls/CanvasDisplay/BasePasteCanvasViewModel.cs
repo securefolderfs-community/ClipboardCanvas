@@ -327,27 +327,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public abstract Task<SafeWrapperResult> TrySaveData();
 
-        public virtual async Task<SafeWrapperResult> TryDeleteData()
+        public virtual async Task<SafeWrapperResult> TryDeleteData(bool hideConfirmation = false)
         {
-            bool deletePermanently = false;
-
-            if (App.AppSettings.UserSettings.ShowDeleteConfirmationDialog)
-            {
-                DeleteConfirmationDialogViewModel deleteConfirmationDialogViewModel = new DeleteConfirmationDialogViewModel(Path.GetFileName(associatedFile.Path));
-                DialogResult dialogOption = await App.DialogService.ShowDialog(deleteConfirmationDialogViewModel);
-
-                if (dialogOption == DialogResult.Primary)
-                {
-                    deletePermanently = deleteConfirmationDialogViewModel.PermanentlyDelete;
-                }
-                else
-                {
-                    return CancelledResult;
-                }
-            }
-
-            SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(
-                () => associatedFile?.DeleteAsync(deletePermanently ? StorageDeleteOption.PermanentDelete : StorageDeleteOption.Default).AsTask(), errorReporter);
+            SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(associatedFile, hideConfirmation);
 
             if (result)
             {
@@ -546,7 +528,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Delete item
             items.Add(new MenuFlyoutItemViewModel()
             {
-                Command = new AsyncRelayCommand(TryDeleteData),
+                Command = new AsyncRelayCommand(() => TryDeleteData()),
                 IconGlyph = "\uE74D",
                 Text = contentAsReference ? "Delete reference" : "Delete file"
             });

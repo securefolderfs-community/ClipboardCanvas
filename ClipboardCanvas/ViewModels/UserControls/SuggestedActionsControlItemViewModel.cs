@@ -54,6 +54,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Constructor
 
+        // TODO: Pass ICommand and not action
         public SuggestedActionsControlItemViewModel(Action executeAction, string displayText, string glyphIcon)
             : this(executeAction, displayText)
         {

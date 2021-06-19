@@ -183,6 +183,7 @@
     <Compile Include="Exceptions\ReferencedFileNotFoundException.cs" />
     <Compile Include="Extensions\GenericsExtensions.cs" />
     <Compile Include="Extensions\SafetyExtensions.cs" />
+    <Compile Include="Helpers\CanvasHelpers.cs" />
     <Compile Include="Helpers\CollectionsHelpers.cs" />
     <Compile Include="Helpers\DialogHelpers.cs" />
     <Compile Include="Helpers\DoubleClickWrapper.cs" />

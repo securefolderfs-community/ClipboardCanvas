@@ -1,29 +1,31 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using System;
-using System.Threading.Tasks;
-using ClipboardCanvas.Helpers.SafetyHelpers;
-using ClipboardCanvas.Models;
-using ClipboardCanvas.UnsafeNative;
-using ClipboardCanvas.ViewModels.UserControls;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.System;
-using Windows.ApplicationModel;
-using System.Linq;
-using Windows.Foundation;
-using Windows.Storage.Streams;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.ApplicationModel.Core;
-using Microsoft.Toolkit.Uwp;
-using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 using System.Threading;
-using ClipboardCanvas.ReferenceItems;
-using Windows.Storage;
+
+using ClipboardCanvas.Helpers.SafetyHelpers;
+using ClipboardCanvas.ViewModels.UserControls;
+using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
+using ClipboardCanvas.Models;
 
 namespace ClipboardCanvas.Helpers
 {
     public static class SuggestedActionsHelpers
     {
+        public static IEnumerable<SuggestedActionsControlItemViewModel> GetActionsForInvalidReference(IPasteCanvasModel pasteCanvasModel)
+        {
+            List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
+
+            var action_deleteReference = new SuggestedActionsControlItemViewModel(
+                async () =>
+                {
+                    await pasteCanvasModel.TryDeleteData(true);
+                }, "Remove Reference", "\uE738");
+
+            actions.Add(action_deleteReference);
+
+            return actions;
+        }
+
         public static IEnumerable<SuggestedActionsControlItemViewModel> GetActionsForEmptyCanvasPage(IPasteCanvasModel pasteCanvasControlModel)
         {
             List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
