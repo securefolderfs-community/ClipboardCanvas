@@ -1,6 +1,8 @@
 ﻿using ClipboardCanvas.Enums;
+using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.Dialogs;
+using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -31,8 +33,7 @@ namespace ClipboardCanvas.Helpers
                 }
             }
 
-            SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(
-                () => file?.DeleteAsync(deletePermanently ? StorageDeleteOption.PermanentDelete : StorageDeleteOption.Default).AsTask());
+            SafeWrapperResult result = await FilesystemOperations.DeleteItem(file);
 
             return result;
         }

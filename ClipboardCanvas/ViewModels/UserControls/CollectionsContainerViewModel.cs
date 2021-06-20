@@ -447,7 +447,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             if (args.canRename)
             {
-                SafeWrapperResult result = await FilesystemOperations.RenameItemAsync(_innerStorageFolder, newName, NameCollisionOption.FailIfExists);
+                SafeWrapperResult result = await FilesystemOperations.RenameItem(_innerStorageFolder, newName, NameCollisionOption.FailIfExists);
 
                 if (result)
                 {

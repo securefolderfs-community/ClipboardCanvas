@@ -331,7 +331,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(associatedFile, hideConfirmation);
 
-            if (result)
+            if (result != OperationErrorCode.Cancelled && !AssertNoError(result))
+            {
+                return result;
+            }
+            else if (result != OperationErrorCode.Cancelled)
             {
                 AssociatedContainer.RefreshRemoveItem(AssociatedContainerCanvas);
                 RaiseOnFileDeletedEvent(this, new FileDeletedEventArgs(associatedFile, AssociatedContainer));
@@ -358,7 +362,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             // Delete reference file
-            await associatedFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
+            SafeWrapperResult deletionResult = await FilesystemOperations.DeleteItem(associatedFile, true);
+            if (!AssertNoError(deletionResult))
+            {
+                return deletionResult;
+            }
 
             string extension = Path.GetExtension(referencedFile.Path);
             string fileName = Path.GetFileNameWithoutExtension(referencedFile.Path);
@@ -544,7 +552,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             if (result == null || !result)
             {
-                RaiseOnErrorOccurredEvent(this, new ErrorOccurredEventArgs(result, result?.Details?.message));
+                RaiseOnErrorOccurredEvent(this, new ErrorOccurredEventArgs(result, result?.Message));
                 return false;
             }
 

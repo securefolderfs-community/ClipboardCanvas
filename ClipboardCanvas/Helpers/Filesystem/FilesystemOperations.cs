@@ -45,9 +45,22 @@ namespace ClipboardCanvas.Helpers.Filesystem
             return result;
         }
 
-        public static async Task<SafeWrapperResult> RenameItemAsync(IStorageItem item, string newName, NameCollisionOption collision = NameCollisionOption.GenerateUniqueName)
+        public static async Task<SafeWrapperResult> RenameItem(IStorageItem item, string newName, NameCollisionOption collision = NameCollisionOption.GenerateUniqueName)
         {
             SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(async () => await item.RenameAsync(newName, collision).AsTask());
+            return result;
+        }
+
+        public static async Task<SafeWrapperResult> DeleteItem(IStorageItem item, bool permanently = false)
+        {
+            if (item == null)
+            {
+                return new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentNullException(), "The provided storage item is null.");
+            }
+
+            SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(
+               () => item.DeleteAsync(permanently ? StorageDeleteOption.PermanentDelete : StorageDeleteOption.Default).AsTask());
+
             return result;
         }
     }

@@ -139,7 +139,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 // The canvas is null, delete the reference file manually
                 SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(_associatedFile, hideConfirmation);
 
-                if (result)
+                if (result != OperationErrorCode.Cancelled && !result)
+                {
+                    OnErrorOccurredEvent?.Invoke(this, new ErrorOccurredEventArgs(result, result?.Message));
+                    return result;
+                }
+                else if (result != OperationErrorCode.Cancelled)
                 {
                     AssociatedContainer.RefreshRemoveItem(AssociatedContainerCanvas);
                     OnFileDeletedEvent?.Invoke(this, new FileDeletedEventArgs(_associatedFile, AssociatedContainer));
