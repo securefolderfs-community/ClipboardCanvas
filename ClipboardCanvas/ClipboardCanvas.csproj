@@ -148,9 +148,11 @@
     <Compile Include="ApplicationSettings\UserSettingsModel.cs" />
     <Compile Include="AttachedProperties\BaseAttachedProperty.cs" />
     <Compile Include="AttachedProperties\FrameAttachedProperties.cs" />
+    <Compile Include="AttachedProperties\InAppNotificationAttachedProperties.cs" />
     <Compile Include="AttachedProperties\MenuFlyoutAttachedProperties.cs" />
     <Compile Include="AttachedProperties\ViewModelAttachedProperties.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="DataModels\InAppNotificationDisplayOptionsDataModel.cs" />
     <Compile Include="DataModels\Navigation\DisplayFrameNavigationDataModel.cs" />
     <Compile Include="DataModels\Navigation\DisplayFrameNavigationParameterDataModel.cs" />
     <Compile Include="DataModels\PastedContentDataModels\BasePastedContentTypeDataModel.cs" />
@@ -175,11 +177,13 @@
     <Compile Include="Enums\CanvasPageProgressType.cs" />
     <Compile Include="Enums\CanvasPreviewMode.cs" />
     <Compile Include="Enums\DialogResult.cs" />
+    <Compile Include="Enums\InAppNotificationButtonType.cs" />
     <Compile Include="Enums\SetClipboardDataSourceType.cs" />
     <Compile Include="Enums\SettingsPageType.cs" />
     <Compile Include="Enums\WebViewCanvasMode.cs" />
     <Compile Include="EventArguments\CollectionPreviewItemEventArgs.cs" />
     <Compile Include="EventArguments\CommonEventArgs.cs" />
+    <Compile Include="EventArguments\InAppNotificationEventArgs.cs" />
     <Compile Include="Exceptions\ReferencedFileNotFoundException.cs" />
     <Compile Include="Extensions\GenericsExtensions.cs" />
     <Compile Include="Extensions\SafetyExtensions.cs" />
@@ -268,6 +272,9 @@
     <Compile Include="UserControls\CanvasDisplay\WebViewCanvasControl.xaml.cs">
       <DependentUpon>WebViewCanvasControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\InAppNotificationControl.xaml.cs">
+      <DependentUpon>InAppNotificationControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\SuggestedActionsControl.xaml.cs">
       <DependentUpon>SuggestedActionsControl.xaml</DependentUpon>
     </Compile>
@@ -328,6 +335,8 @@
     <Compile Include="ViewModels\UserControls\CanvasDisplay\FallbackCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\MarkdownCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\WebViewCanvasViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\InAppNotifications\IInAppNotification.cs" />
+    <Compile Include="ViewModels\UserControls\InAppNotifications\InAppNotificationControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SuggestedActionsControlItemViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SuggestedActionsControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\BasePasteCanvasViewModel.cs" />
@@ -467,6 +476,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\CanvasDisplay\WebViewCanvasControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InAppNotificationControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

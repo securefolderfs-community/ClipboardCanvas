@@ -50,6 +50,13 @@
                 Grid.Row="2"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Bottom" />
+
+            <uc:InAppNotificationControl
+                x:Name="MainInAppNotification"
+                Grid.RowSpan="3"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Bottom"
+                x:FieldModifier="public" />
         </Grid>
     </Border>
 </Page>

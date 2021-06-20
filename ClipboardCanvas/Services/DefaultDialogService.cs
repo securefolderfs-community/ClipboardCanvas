@@ -1,24 +1,18 @@
-﻿using ClipboardCanvas.Enums;
-using ClipboardCanvas.ViewModels.Dialogs;
-using System;
+﻿using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 
+using ClipboardCanvas.Enums;
+using ClipboardCanvas.ViewModels.Dialogs;
+using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
+
 namespace ClipboardCanvas.Services
 {
     public class DefaultDialogService : IDialogService
     {
-        public async Task<StorageFolder> PickSingleFolder()
-        {
-            FolderPicker folderPicker = new FolderPicker();
-            folderPicker.FileTypeFilter.Add("*");
-
-            StorageFolder folder = await folderPicker.PickSingleFolderAsync();
-
-            return folder;
-        }
+        #region IDialogService
 
         public IDialog<TViewModel> GetDialog<TViewModel>(TViewModel viewModel)
         {
@@ -31,7 +25,7 @@ namespace ClipboardCanvas.Services
                 throw new TypeLoadException($"The dialog for {viewModel} couldn't be found.");
             }
 
-            dialog = GetDialogFromType(dialogType, viewModel);
+            dialog = GetDialogFromType<TViewModel, IDialog<TViewModel>>(dialogType, viewModel);
             dialog.ViewModel = viewModel;
 
             return dialog;
@@ -43,6 +37,38 @@ namespace ClipboardCanvas.Services
 
             return await dialog.ShowAsync();
         }
+
+        public IInAppNotification GetNotification(InAppNotificationControlViewModel viewModel = null)
+        {
+            IInAppNotification notification = MainPage.Instance.MainInAppNotification;
+
+            if (viewModel != null)
+            {
+                notification.ViewModel = viewModel;
+            }
+
+            return notification;
+        }
+
+        public IInAppNotification ShowNotification(InAppNotificationControlViewModel viewModel = null, int miliseconds = 0)
+        {
+            IInAppNotification notification = GetNotification(viewModel);
+
+            notification.Show(miliseconds);
+            return notification;
+        }
+
+        public async Task<StorageFolder> PickSingleFolder()
+        {
+            FolderPicker folderPicker = new FolderPicker();
+            folderPicker.FileTypeFilter.Add("*");
+
+            StorageFolder folder = await folderPicker.PickSingleFolderAsync();
+
+            return folder;
+        }
+
+        #endregion
 
         private Type GetDialogType<TViewModel>(TViewModel viewModel)
         {
@@ -68,16 +94,16 @@ namespace ClipboardCanvas.Services
             throw new TypeLoadException($"The {viewModelType} isn't suffixed with \"ViewModel\".");
         }
 
-        private IDialog<TViewModel> GetDialogFromType<TViewModel>(Type dialogType, TViewModel viewModel)
+        private TRequestedDialog GetDialogFromType<TViewModel, TRequestedDialog>(Type dialogType, TViewModel viewModel)
         {
             object dialogInstance = Activator.CreateInstance(dialogType);
 
-            if (dialogInstance is not IDialog<TViewModel> contentDialog)
+            if (dialogInstance is not TRequestedDialog dialog)
             {
                 throw new ArgumentException($"Dialog of type {dialogType} does not implement {nameof(IDialog<TViewModel>)}.");
             }
 
-            return contentDialog;
+            return dialog;
         }
     }
 }

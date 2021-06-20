@@ -17,6 +17,8 @@ namespace ClipboardCanvas
 
         public static CoreApplicationViewTitleBar CoreTitleBar { get; private set; }
 
+        public static MainPage Instance => (MainPage)((Frame)Window.Current.Content).Content;
+
         public MainPage()
         {
             this.InitializeComponent();

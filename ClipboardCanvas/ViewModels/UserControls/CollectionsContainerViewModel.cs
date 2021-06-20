@@ -23,6 +23,7 @@ using ClipboardCanvas.Extensions;
 using ClipboardCanvas.EventArguments.CollectionsContainer;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.Exceptions;
+using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -457,6 +458,15 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     // Also update settings
                     CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
                     CollectionsHelpers.UpdateLastSelectedCollectionSetting(this);
+                }
+                else
+                {
+                    // Post a notification informing that rename had failed
+                    IInAppNotification notification = App.DialogService.GetNotification();
+                    notification.ViewModel.NotificationText = $"Couldn't rename the collection. Error: {result.ErrorCode}";
+                    notification.ViewModel.ShownButtons = InAppNotificationButtonType.OkButton;
+
+                    notification.Show(10000);
                 }
             }
 
