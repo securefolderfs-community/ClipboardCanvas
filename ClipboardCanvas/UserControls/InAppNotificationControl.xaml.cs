@@ -2,6 +2,7 @@
 using Windows.UI.Xaml.Controls;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
 using ClipboardCanvas.EventArguments;
+using ClipboardCanvas.Enums;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -21,18 +22,18 @@ namespace ClipboardCanvas.UserControls
         {
             this.InitializeComponent();
 
-            this.ViewModel = new InAppNotificationControlViewModel();
+            this.ViewModel = new InAppNotificationControlViewModel(InAppNotificationButtonType.OkButton);
             this.ViewModel.OnInAppNotificationDismissedEvent += ViewModel_OnInAppNotificationDismissedEvent;
         }
 
         public void Show(int miliseconds = 0)
         {
-            ViewModel?.ShowNotification(miliseconds);
+            ViewModel?.Show(miliseconds);
         }
 
         public void Dismiss()
         {
-            ViewModel?.DismissNotification();
+            ViewModel?.Dismiss();
         }
 
         private void ViewModel_OnInAppNotificationDismissedEvent(object sender, InAppNotificationDismissedEventArgs e)

@@ -2,14 +2,24 @@
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.EventArguments;
+using Windows.UI.Xaml;
 
 namespace ClipboardCanvas.ViewModels.UserControls.InAppNotifications
 {
-    public class InAppNotificationControlViewModel : ObservableObject
+    public class InAppNotificationControlViewModel : ObservableObject, IDisposable
     {
+        #region Private Members
+
+        private readonly DispatcherTimer _progressTimer;
+
+        private int _milisecondsPassed;
+
+        private int _showMiliseconds;
+
+        #endregion
+
         #region Public Properties
 
         public InAppNotificationButtonType NotificationResult { get; private set; }
@@ -28,11 +38,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.InAppNotifications
             }
         }
 
-        private InAppNotificationDisplayOptionsDataModel _NotificationOptions;
-        public InAppNotificationDisplayOptionsDataModel NotificationOptions
+        private bool _ShowNotification;
+        public bool ShowNotification
         {
-            get => _NotificationOptions;
-            private set => SetProperty(ref _NotificationOptions, value);
+            get => _ShowNotification;
+            private set => SetProperty(ref _ShowNotification, value);
         }
 
         private string _NotificationText;
@@ -63,6 +73,20 @@ namespace ClipboardCanvas.ViewModels.UserControls.InAppNotifications
             private set => SetProperty(ref _NoButtonLoad, value);
         }
 
+        private bool _NotificationShowTimerProgressBarLoad;
+        public bool NotificationShowTimerProgressBarLoad
+        {
+            get => _NotificationShowTimerProgressBarLoad;
+            set => SetProperty(ref _NotificationShowTimerProgressBarLoad, value);
+        }
+
+        private double _NotificationShowTimerProgressBarValue;
+        public double NotificationShowTimerProgressBarValue
+        {
+            get => _NotificationShowTimerProgressBarValue;
+            set => SetProperty(ref _NotificationShowTimerProgressBarValue, value);
+        }
+
         #endregion
 
         #region Events
@@ -83,11 +107,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.InAppNotifications
 
         #region Constructor
 
-        public InAppNotificationControlViewModel()
+        public InAppNotificationControlViewModel(InAppNotificationButtonType shownButtons)
         {
+            this.ShownButtons = shownButtons;
             CheckShownButtons();
 
-            this.NotificationOptions = new InAppNotificationDisplayOptionsDataModel();
+            this._progressTimer = new DispatcherTimer();
+            this._progressTimer.Interval = TimeSpan.FromMilliseconds(Constants.UI.Notifications.NOTIFICATION_PROGRESSBAR_REFRESH_INTERVAL);
+            this._progressTimer.Tick += ProgressTimer_Tick;
 
             // Create commands
             OkButtonClickCommand = new RelayCommand(OkButtonClick);
@@ -102,22 +129,40 @@ namespace ClipboardCanvas.ViewModels.UserControls.InAppNotifications
         private void NoButtonClick()
         {
             NotificationResult = InAppNotificationButtonType.NoButton;
-            DismissNotification();
+            Dismiss();
             OnInAppNotificationDismissedEvent?.Invoke(this, new InAppNotificationDismissedEventArgs(NotificationResult));
         }
 
         private void YesButtonClick()
         {
             NotificationResult = InAppNotificationButtonType.YesButton;
-            DismissNotification();
+            Dismiss();
             OnInAppNotificationDismissedEvent?.Invoke(this, new InAppNotificationDismissedEventArgs(NotificationResult));
         }
 
         private void OkButtonClick()
         {
             NotificationResult = InAppNotificationButtonType.OkButton;
-            DismissNotification();
+            Dismiss();
             OnInAppNotificationDismissedEvent?.Invoke(this, new InAppNotificationDismissedEventArgs(NotificationResult));
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        private void ProgressTimer_Tick(object sender, object e)
+        {
+            _milisecondsPassed += Constants.UI.Notifications.NOTIFICATION_PROGRESSBAR_REFRESH_INTERVAL;
+
+            double percentage = (double)_milisecondsPassed * 100.0d / (double)_showMiliseconds;
+            NotificationShowTimerProgressBarValue = percentage;
+
+            if (_milisecondsPassed >= _showMiliseconds)
+            {
+                _progressTimer.Stop();
+                Dismiss();
+            }
         }
 
         #endregion
@@ -161,21 +206,31 @@ namespace ClipboardCanvas.ViewModels.UserControls.InAppNotifications
 
         #region Public Helpers
 
-        public void ShowNotification(int miliseconds = 0)
+        public void Show(int miliseconds = 0)
         {
-            NotificationOptions = new InAppNotificationDisplayOptionsDataModel()
+            if (miliseconds > 0)
             {
-                show = true,
-                miliseconds = miliseconds
-            };
+                _milisecondsPassed = 0;
+                _showMiliseconds = miliseconds;
+                NotificationShowTimerProgressBarLoad = true;
+                _progressTimer.Start();
+            }
+
+            ShowNotification = true;
         }
 
-        public void DismissNotification()
+        public void Dismiss()
         {
-            NotificationOptions = new InAppNotificationDisplayOptionsDataModel()
-            {
-                show = false
-            };
+            ShowNotification = false;
+        }
+
+        #endregion
+
+        #region IDisposable
+
+        public void Dispose()
+        {
+            this._progressTimer.Tick -= ProgressTimer_Tick;
         }
 
         #endregion

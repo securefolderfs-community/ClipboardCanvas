@@ -1,19 +1,16 @@
-﻿using ClipboardCanvas.Enums;
+﻿using System.IO;
+using System.Threading.Tasks;
+using Windows.Storage;
+using ClipboardCanvas.Enums;
+
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.Dialogs;
-using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using Windows.Storage;
 
 namespace ClipboardCanvas.Helpers
 {
     public static class CanvasHelpers
     {
-        private static SafeWrapperResult CancelledResult => new SafeWrapperResult(OperationErrorCode.Cancelled, "The operation was canceled");
-
         public static async Task<SafeWrapperResult> DeleteCanvasFile(StorageFile file, bool hideConfirmation = false)
         {
             bool deletePermanently = false;
@@ -29,11 +26,11 @@ namespace ClipboardCanvas.Helpers
                 }
                 else
                 {
-                    return CancelledResult;
+                    return SafeWrapperResult.S_CANCEL;
                 }
             }
 
-            SafeWrapperResult result = await FilesystemOperations.DeleteItem(file);
+            SafeWrapperResult result = await FilesystemOperations.DeleteItem(file, deletePermanently);
 
             return result;
         }

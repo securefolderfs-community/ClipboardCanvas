@@ -10,7 +10,6 @@ namespace ClipboardCanvas.AttachedProperties
     /// <typeparam name="TProperty">The type of this attached property</typeparam>
     public abstract class BaseAttachedProperty<TParent, TProperty, TTarget>
         where TParent : new()
-        where TProperty : class
         where TTarget : DependencyObject
     {
         #region Public Events

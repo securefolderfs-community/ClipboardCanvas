@@ -152,7 +152,6 @@
     <Compile Include="AttachedProperties\MenuFlyoutAttachedProperties.cs" />
     <Compile Include="AttachedProperties\ViewModelAttachedProperties.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="DataModels\InAppNotificationDisplayOptionsDataModel.cs" />
     <Compile Include="DataModels\Navigation\DisplayFrameNavigationDataModel.cs" />
     <Compile Include="DataModels\Navigation\DisplayFrameNavigationParameterDataModel.cs" />
     <Compile Include="DataModels\PastedContentDataModels\BasePastedContentTypeDataModel.cs" />

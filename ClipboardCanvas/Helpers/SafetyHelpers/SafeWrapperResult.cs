@@ -7,6 +7,8 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
     {
         public static SafeWrapperResult S_SUCCESS => new SafeWrapperResult(OperationErrorCode.Success, null, "Operation completed successfully.");
 
+        public static SafeWrapperResult S_CANCEL => new SafeWrapperResult(OperationErrorCode.Cancelled, "The operation was canceled");
+
         public static SafeWrapperResult S_UNKNOWN_FAIL => new SafeWrapperResult(OperationErrorCode.UnknownFailed, new Exception(), "An unknown error occurred.");
 
         public string Message => Details?.message;

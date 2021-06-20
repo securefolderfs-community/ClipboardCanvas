@@ -450,7 +450,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             TipTextLoad = false;
 
             // Await a short delay before showing the loading ring
-            await Task.Delay(Constants.CanvasContent.SHOW_LOADING_RING_DELAY);
+            await Task.Delay(Constants.UI.CanvasContent.SHOW_LOADING_RING_DELAY);
 
             if (!_contentLoaded) // The value might have changed
             {

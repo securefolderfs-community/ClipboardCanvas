@@ -66,8 +66,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Protected Properties
 
-        protected SafeWrapperResult CancelledResult => new SafeWrapperResult(OperationErrorCode.Cancelled, "The operation was canceled");
-
         protected SafeWrapperResult ReferencedFileNotFoundResult => new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "The file referenced was not found");
 
         protected ICollectionsContainerItemModel AssociatedContainerCanvas => AssociatedContainer?.CurrentCanvas;
@@ -155,7 +153,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
                 DiscardData();
-                return CancelledResult;
+                return SafeWrapperResult.S_CANCEL;
             }
 
             result = await SetContentMode(associatedFile);
@@ -167,7 +165,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
                 DiscardData();
-                return CancelledResult;
+                return SafeWrapperResult.S_CANCEL;
             }
 
             result = await SetData(sourceFile as StorageFile);
@@ -179,7 +177,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
                 DiscardData();
-                return CancelledResult;
+                return SafeWrapperResult.S_CANCEL;
             }
 
             result = await TryFetchDataToView();
@@ -203,7 +201,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             RaiseOnPasteInitiatedEvent(this, new PasteInitiatedEventArgs(isFilled, dataPackage));
 
             SafeWrapperResult result;
-            SafeWrapperResult cancelResult = new SafeWrapperResult(OperationErrorCode.Cancelled, "The operation was canceled");
 
             if (IsDisposed)
             {
@@ -220,7 +217,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
                 DiscardData();
-                return cancelResult;
+                return SafeWrapperResult.S_CANCEL;
             }
 
             result = await SetDataInternal(dataPackage);
@@ -232,7 +229,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
                 DiscardData();
-                return cancelResult;
+                return SafeWrapperResult.S_CANCEL;
             }
 
             SetContentMode();
@@ -240,7 +237,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
                 DiscardData();
-                return cancelResult;
+                return SafeWrapperResult.S_CANCEL;
             }
 
             result = await TrySetFile();
@@ -252,7 +249,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
                 DiscardData();
-                return cancelResult;
+                return SafeWrapperResult.S_CANCEL;
             }
 
             result = await TrySaveDataInternal();
@@ -264,7 +261,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
                 DiscardData();
-                return cancelResult;
+                return SafeWrapperResult.S_CANCEL;
             }
 
             if (App.AppSettings.UserSettings.OpenNewCanvasOnPaste)
@@ -306,7 +303,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     // If pasting a file not raw data from clipboard...
 
                     // Signify that the file is being pasted
-                    RaiseOnTipTextUpdateRequestedEvent(this, new TipTextUpdateRequestedEventArgs("The file is being pasted, please wait.", TimeSpan.FromMilliseconds(Constants.CanvasContent.FILE_PASTING_TIP_DELAY)));
+                    RaiseOnTipTextUpdateRequestedEvent(this, new TipTextUpdateRequestedEventArgs("The file is being pasted, please wait.", TimeSpan.FromMilliseconds(Constants.UI.CanvasContent.FILE_PASTING_TIP_DELAY)));
 
                     // Copy to collection
                     SafeWrapperResult copyResult = await FilesystemOperations.CopyFileAsync(sourceFile, associatedFile, ReportProgress, cancellationToken);

@@ -119,7 +119,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             // Check if exceeds maximum fileSize or is zero
             long fileSize = await file.GetFileSize();
-            if (fileSize > Constants.CanvasContent.FALLBACK_TEXTLOAD_MAX_FILESIZE || fileSize == 0L)
+            if (fileSize > Constants.UI.CanvasContent.FALLBACK_TEXTLOAD_MAX_FILESIZE || fileSize == 0L)
             {
                 return false;
             }

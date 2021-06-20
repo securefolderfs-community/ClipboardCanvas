@@ -15,15 +15,23 @@
             public const string APPLICATION_SETTINGS_FILENAME = "application_settings.json";
         }
 
-        public static class CanvasContent
+        public static class UI
         {
-            public const long FALLBACK_TEXTLOAD_MAX_FILESIZE = 1048576L;
+            public static class CanvasContent
+            {
+                public const long FALLBACK_TEXTLOAD_MAX_FILESIZE = 1048576L;
 
-            public const int SHOW_LOADING_RING_DELAY = 100;
+                public const int SHOW_LOADING_RING_DELAY = 100;
 
-            public const int COLLECTION_RELOADING_TIP_DELAY = 400;
+                public const int COLLECTION_RELOADING_TIP_DELAY = 400;
 
-            public const int FILE_PASTING_TIP_DELAY = 150;
+                public const int FILE_PASTING_TIP_DELAY = 150;
+            }
+
+            public static class Notifications
+            {
+                public const int NOTIFICATION_PROGRESSBAR_REFRESH_INTERVAL = 50;
+            }
         }
 
         public static class FileSystem

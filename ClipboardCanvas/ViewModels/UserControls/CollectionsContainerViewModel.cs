@@ -466,7 +466,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     notification.ViewModel.NotificationText = $"Couldn't rename the collection. Error: {result.ErrorCode}";
                     notification.ViewModel.ShownButtons = InAppNotificationButtonType.OkButton;
 
-                    notification.Show(10000);
+                    notification.Show(8000);
                 }
             }
 
@@ -478,7 +478,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CanvasInitializing = true;
             IsLoadingItemsVisibility = Visibility.Visible;
 
-            OnCollectionItemsInitializationStartedEvent?.Invoke(this, new CollectionItemsInitializationStartedEventArgs(this, infoText, TimeSpan.FromMilliseconds(Constants.CanvasContent.COLLECTION_RELOADING_TIP_DELAY)));
+            OnCollectionItemsInitializationStartedEvent?.Invoke(this, new CollectionItemsInitializationStartedEventArgs(this, infoText, TimeSpan.FromMilliseconds(Constants.UI.CanvasContent.COLLECTION_RELOADING_TIP_DELAY)));
 
             IEnumerable<StorageFile> files = await Task.Run(async () => await this._innerStorageFolder.GetFilesAsync());
 
