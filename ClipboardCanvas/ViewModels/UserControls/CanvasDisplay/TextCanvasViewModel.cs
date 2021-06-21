@@ -16,6 +16,9 @@ using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.EventArguments.CanvasControl;
+using ClipboardCanvas.Extensions;
+using ClipboardCanvas.ViewModels.ContextMenu;
+using Microsoft.Toolkit.Mvvm.Input;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -45,6 +48,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         public static List<string> Extensions => new List<string>() {
             ".txt"
         };
+
+        public ITextCanvasControlView ControlView { get; set; }
 
         #endregion
 
@@ -109,6 +114,39 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             OnPropertyChanged(nameof(ContentText));
 
             return Task.FromResult(SafeWrapperResult.S_SUCCESS);
+        }
+
+        protected override void RefreshContextMenuItems()
+        {
+            base.RefreshContextMenuItems();
+
+            // The order is reversed
+
+            // Separator
+            ContextMenuItems.AddFront(new MenuFlyoutSeparatorViewModel());
+
+            // Select all
+            ContextMenuItems.AddFront(new MenuFlyoutItemViewModel()
+            {
+                Command = new RelayCommand(() =>
+                {
+                    ControlView?.TextSelectAll();
+                    RefreshContextMenuItems();
+                }),
+                IconGlyph = "\uE8B3",
+                Text = "Select all"
+            });
+
+            if (ControlView != null && ControlView.IsTextSelected)
+            {
+                // Copy selected text
+                ContextMenuItems.AddFront(new MenuFlyoutItemViewModel()
+                {
+                    Command = new RelayCommand(() => ControlView?.CopySelectedText()),
+                    IconGlyph = "\uE8C8",
+                    Text = "Copy selected text"
+                });
+            }
         }
 
         #endregion

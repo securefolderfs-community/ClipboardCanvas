@@ -8,11 +8,12 @@
     xmlns:tui="using:Microsoft.Toolkit.Uwp.UI"
     d:DesignHeight="300"
     d:DesignWidth="400"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Loaded="UserControl_Loaded">
 
     <Grid>
         <ScrollViewer tui:ScrollViewerExtensions.EnableMiddleClickScrolling="True">
-            <RichTextBlock IsTextSelectionEnabled="True">
+            <RichTextBlock ContextMenuOpening="ContentText_ContextMenuOpening" x:Name="ContentText" IsTextSelectionEnabled="True">
                 <Paragraph>
                     <Run Text="{x:Bind ViewModel.ContentText, Mode=OneWay}" />
                 </Paragraph>

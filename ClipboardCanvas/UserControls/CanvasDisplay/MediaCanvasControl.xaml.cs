@@ -1,8 +1,7 @@
-﻿using ClipboardCanvas.Models;
+﻿using System;
+using Windows.UI.Xaml.Controls;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
-using System;
-using Windows.UI.Xaml.Controls;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 

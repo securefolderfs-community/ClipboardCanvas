@@ -205,6 +205,7 @@
     <Compile Include="Models\IPasteCanvasPageModel.cs" />
     <Compile Include="ModelViews\IDynamicCanvasControlView.cs" />
     <Compile Include="ModelViews\IMediaCanvasControlView.cs" />
+    <Compile Include="ModelViews\ITextCanvasControlView.cs" />
     <Compile Include="ModelViews\IWebViewCanvasControlView.cs" />
     <Compile Include="Services\DefaultDialogService.cs" />
     <Compile Include="ReferenceItems\ReferenceFile.cs" />

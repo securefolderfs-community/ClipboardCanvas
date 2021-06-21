@@ -33,7 +33,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #region Public Properties
 
         private BasePasteCanvasViewModel _CanvasViewModel;
-
         public BasePasteCanvasViewModel CanvasViewModel
         {
             get => _CanvasViewModel;
