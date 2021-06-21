@@ -147,9 +147,11 @@
     <Compile Include="ApplicationSettings\SettingsInstance.cs" />
     <Compile Include="ApplicationSettings\UserSettingsModel.cs" />
     <Compile Include="AttachedProperties\BaseAttachedProperty.cs" />
+    <Compile Include="AttachedProperties\BaseGenericAttachedProperty.cs" />
     <Compile Include="AttachedProperties\FrameAttachedProperties.cs" />
     <Compile Include="AttachedProperties\InAppNotificationAttachedProperties.cs" />
     <Compile Include="AttachedProperties\MenuFlyoutAttachedProperties.cs" />
+    <Compile Include="AttachedProperties\TextBoxAttachedProperties.cs" />
     <Compile Include="AttachedProperties\ViewModelAttachedProperties.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DataModels\Navigation\DisplayFrameNavigationDataModel.cs" />

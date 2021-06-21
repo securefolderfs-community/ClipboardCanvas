@@ -73,6 +73,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
             get => Name;
         }
 
+        private bool _EditBoxFocus;
+        public bool EditBoxFocus
+        {
+            get => _EditBoxFocus;
+            set => SetProperty(ref _EditBoxFocus, value);
+        }
+
         private Visibility _IsLoadingItemsVisibility = Visibility.Collapsed;
         public Visibility IsLoadingItemsVisibility
         {
@@ -189,7 +196,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             // Create commands
             OpenCollectionLocationCommand = new AsyncRelayCommand(OpenCollectionLocation);
             ReloadCollectionCommand = new AsyncRelayCommand(ReloadCollection);
-            RenameCollectionCommand = new RelayCommand<Action>(RenameCollection);
+            RenameCollectionCommand = new RelayCommand(RenameCollection);
             RemoveCollectionCommand = new RelayCommand(RemoveCollection);
             EditBoxKeyDownCommand = new AsyncRelayCommand<KeyRoutedEventArgs>(EditBoxKeyDown);
             EditBoxLostFocusCommand = new AsyncRelayCommand<RoutedEventArgs>(EditBoxLostFocus);
@@ -216,7 +223,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             await InitializeItems();
         }
 
-        private void RenameCollection(Action textBoxFocusAction)
+        private void RenameCollection()
         {
             if (isDefault || !CanOpenCollection)
             {
@@ -225,7 +232,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             EditBoxText = DisplayName;
             IsEditingName = true;
-            textBoxFocusAction?.Invoke();
+
+            // Focus editbox
+            EditBoxFocus = true;
+            // Set the value to false so it can be set to true later again; doesn't unfocus the textbox
+            EditBoxFocus = false;
         }
 
         private void RemoveCollection()

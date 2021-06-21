@@ -169,6 +169,7 @@
                                     Grid.Row="1"
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Bottom"
+                                    ap:TextBoxFocusAttachedProperty.Value="{Binding EditBoxFocus}"
                                     Text="{Binding EditBoxText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                     TextAlignment="Center"
                                     Visibility="{Binding IsEditingName, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -204,10 +205,7 @@
                                         <FontIcon Glyph="&#xE72C;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem
-                                    Command="{Binding RenameCollectionCommand}"
-                                    CommandParameter="{Binding ElementName=EditBox, Converter={StaticResource ControlToFocusActionConverter}}"
-                                    Text="Edit name">
+                                <MenuFlyoutItem Command="{Binding RenameCollectionCommand}" Text="Edit name">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8AC;" />
                                     </MenuFlyoutItem.Icon>

@@ -14,6 +14,7 @@ namespace ClipboardCanvas.ValueConverters
                 return null;
             }
 
+
             return new Action(() => control.Focus(FocusState.Programmatic));
         }
 

@@ -4,14 +4,12 @@ using Windows.UI.Xaml;
 namespace ClipboardCanvas.AttachedProperties
 {
     /// <summary>
-    /// A control tied <see cref="BaseAttachedProperty{TParent, TProperty, TTarget}"/> wrapper for <see cref="DependencyProperty"/> to attach properties
+    /// Generic control tied <see cref="BaseGenericAttachedProperty{TParent, TProperty}"/> wrapper for <see cref="DependencyProperty"/> to attach properties
     /// </summary>
     /// <typeparam name="TParent">The parent class to be the attached property</typeparam>
     /// <typeparam name="TProperty">The type of this attached property</typeparam>
-    /// <typeparam name="TTarget">The type that this property can be attached to</typeparam>
-    public abstract class BaseAttachedProperty<TParent, TProperty, TTarget>
+    public abstract class BaseGenericAttachedProperty<TParent, TProperty>
         where TParent : new()
-        where TTarget : DependencyObject
     {
         #region Public Events
 
@@ -39,7 +37,7 @@ namespace ClipboardCanvas.AttachedProperties
         public static readonly DependencyProperty ValueProperty = DependencyProperty.RegisterAttached(
             "Value",
             typeof(TProperty),
-            typeof(TTarget),
+            typeof(BaseGenericAttachedProperty<TParent, TProperty>),
             new PropertyMetadata(
                 default(TProperty),
                 new PropertyChangedCallback(OnValuePropertyChanged)));
@@ -52,10 +50,10 @@ namespace ClipboardCanvas.AttachedProperties
         private static void OnValuePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             // Call the parent function
-            (Instance as BaseAttachedProperty<TParent, TProperty, TTarget>)?.OnValueChanged(d, e);
+            (Instance as BaseGenericAttachedProperty<TParent, TProperty>)?.OnValueChanged(d, e);
 
             // Call event listeners
-            (Instance as BaseAttachedProperty<TParent, TProperty, TTarget>)?.ValueChanged(d, e);
+            (Instance as BaseGenericAttachedProperty<TParent, TProperty>)?.ValueChanged(d, e);
         }
 
         /// <summary>
