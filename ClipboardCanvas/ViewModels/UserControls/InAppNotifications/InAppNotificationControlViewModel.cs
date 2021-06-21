@@ -184,10 +184,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.InAppNotifications
 
         public async Task Show(int milliseconds = 0)
         {
-            if (ShowNotification) // Don't show a notification when there's one shown already
-            {
-                return;
-            }
+            Dismiss(); // Dismiss the last notification if there was one
 
             if (milliseconds > 0)
             {
