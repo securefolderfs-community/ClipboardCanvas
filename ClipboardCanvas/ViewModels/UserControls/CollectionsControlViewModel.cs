@@ -119,7 +119,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             _collectionDoubleClickWrapper = new DoubleClickWrapper(
                 () => OnCollectionOpenRequestedEvent?.Invoke(this, new CollectionOpenRequestedEventArgs(SelectedItem)),
-                TimeSpan.FromMilliseconds(Constants.Collections.DOUBLE_CLICK_DELAY_MILISECONDS));
+                TimeSpan.FromMilliseconds(Constants.Collections.DOUBLE_CLICK_DELAY_MILLISECONDS));
 
             // Create commands
             DragOverCommand = new AsyncRelayCommand<DragEventArgs>(DragOver);

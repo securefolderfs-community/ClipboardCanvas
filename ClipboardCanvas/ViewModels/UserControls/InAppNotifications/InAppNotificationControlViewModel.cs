@@ -5,18 +5,16 @@ using Microsoft.Toolkit.Mvvm.Input;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.EventArguments;
 using Windows.UI.Xaml;
+using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace ClipboardCanvas.ViewModels.UserControls.InAppNotifications
 {
-    public class InAppNotificationControlViewModel : ObservableObject, IDisposable
+    public class InAppNotificationControlViewModel : ObservableObject
     {
         #region Private Members
 
-        private readonly DispatcherTimer _progressTimer;
-
-        private int _milisecondsPassed;
-
-        private int _showMiliseconds;
+        private bool _showTimerCancelled;
 
         #endregion
 
@@ -112,10 +110,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.InAppNotifications
             this.ShownButtons = shownButtons;
             CheckShownButtons();
 
-            this._progressTimer = new DispatcherTimer();
-            this._progressTimer.Interval = TimeSpan.FromMilliseconds(Constants.UI.Notifications.NOTIFICATION_PROGRESSBAR_REFRESH_INTERVAL);
-            this._progressTimer.Tick += ProgressTimer_Tick;
-
             // Create commands
             OkButtonClickCommand = new RelayCommand(OkButtonClick);
             YesButtonClickCommand = new RelayCommand(YesButtonClick);
@@ -145,24 +139,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.InAppNotifications
             NotificationResult = InAppNotificationButtonType.OkButton;
             Dismiss();
             OnInAppNotificationDismissedEvent?.Invoke(this, new InAppNotificationDismissedEventArgs(NotificationResult));
-        }
-
-        #endregion
-
-        #region Event Handlers
-
-        private void ProgressTimer_Tick(object sender, object e)
-        {
-            _milisecondsPassed += Constants.UI.Notifications.NOTIFICATION_PROGRESSBAR_REFRESH_INTERVAL;
-
-            double percentage = (double)_milisecondsPassed * 100.0d / (double)_showMiliseconds;
-            NotificationShowTimerProgressBarValue = percentage;
-
-            if (_milisecondsPassed >= _showMiliseconds)
-            {
-                _progressTimer.Stop();
-                Dismiss();
-            }
         }
 
         #endregion
@@ -206,31 +182,50 @@ namespace ClipboardCanvas.ViewModels.UserControls.InAppNotifications
 
         #region Public Helpers
 
-        public void Show(int miliseconds = 0)
+        public async Task Show(int milliseconds = 0)
         {
-            if (miliseconds > 0)
+            if (ShowNotification) // Don't show a notification when there's one shown already
             {
-                _milisecondsPassed = 0;
-                _showMiliseconds = miliseconds;
-                NotificationShowTimerProgressBarLoad = true;
-                _progressTimer.Start();
+                return;
             }
 
-            ShowNotification = true;
+            if (milliseconds > 0)
+            {
+                _showTimerCancelled = false;
+                ShowNotification = true;
+                NotificationShowTimerProgressBarValue = 0.0d;
+                NotificationShowTimerProgressBarLoad = true;
+
+                int passedMilliseconds = 0;
+                while (passedMilliseconds < milliseconds)
+                {
+                    if (_showTimerCancelled) // Check if cancelled
+                    {
+                        break;
+                    }
+
+                    // Increase the passed milliseconds by a constant value
+                    passedMilliseconds += Constants.UI.Notifications.NOTIFICATION_PROGRESSBAR_REFRESH_INTERVAL;
+
+                    // Get progressbar percentage
+                    double percentage = (double)passedMilliseconds * 100.0d / (double)milliseconds;
+                    NotificationShowTimerProgressBarValue = percentage;
+
+                    await Task.Delay(Constants.UI.Notifications.NOTIFICATION_PROGRESSBAR_REFRESH_INTERVAL);
+                }
+
+                Dismiss();
+            }
+            else
+            {
+                ShowNotification = true;
+            }
         }
 
         public void Dismiss()
         {
+            _showTimerCancelled = true;
             ShowNotification = false;
-        }
-
-        #endregion
-
-        #region IDisposable
-
-        public void Dispose()
-        {
-            this._progressTimer.Tick -= ProgressTimer_Tick;
         }
 
         #endregion

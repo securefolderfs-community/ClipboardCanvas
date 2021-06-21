@@ -1,6 +1,5 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Controls;
 using Windows.UI.Xaml;
-using ClipboardCanvas.DataModels;
 
 namespace ClipboardCanvas.AttachedProperties
 {

@@ -50,11 +50,11 @@ namespace ClipboardCanvas.Services
             return notification;
         }
 
-        public IInAppNotification ShowNotification(InAppNotificationControlViewModel viewModel = null, int miliseconds = 0)
+        public async Task<IInAppNotification> ShowNotification(InAppNotificationControlViewModel viewModel = null, int milliseconds = 0)
         {
             IInAppNotification notification = GetNotification(viewModel);
 
-            notification.Show(miliseconds);
+            await notification.Show(milliseconds);
             return notification;
         }
 

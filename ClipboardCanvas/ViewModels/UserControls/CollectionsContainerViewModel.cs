@@ -24,6 +24,7 @@ using ClipboardCanvas.EventArguments.CollectionsContainer;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.Exceptions;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
+using System.Diagnostics;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -258,6 +259,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
                 case VirtualKey.Enter:
                     {
+                        Debug.WriteLine("ENTER");
                         await ConfirmRename();
 
                         break;
@@ -267,6 +269,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async Task EditBoxLostFocus(RoutedEventArgs e)
         {
+            if (!IsEditingName) // Don't fire when textbox is being hidden
+            {
+                return;
+            }
+
             await ConfirmRename();
         }
 
@@ -477,7 +484,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     notification.ViewModel.NotificationText = $"Couldn't rename the collection. Error: {result.ErrorCode}";
                     notification.ViewModel.ShownButtons = InAppNotificationButtonType.OkButton;
 
-                    notification.Show(8000);
+                    notification.Show(4000);
                 }
             }
 

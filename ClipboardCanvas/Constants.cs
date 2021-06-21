@@ -49,7 +49,7 @@
         {
             public const string DEFAULT_COLLECTION_TOKEN = "$DEFAULT_COLLECTION$";
 
-            public const int DOUBLE_CLICK_DELAY_MILISECONDS = 300;
+            public const int DOUBLE_CLICK_DELAY_MILLISECONDS = 300;
         }
 
         public static class Debugging
