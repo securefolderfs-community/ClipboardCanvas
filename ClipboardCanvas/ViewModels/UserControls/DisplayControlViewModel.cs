@@ -16,6 +16,7 @@ using ClipboardCanvas.EventArguments.CollectionControl;
 using ClipboardCanvas.DataModels.Navigation;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
+using ClipboardCanvas.ReferenceItems;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -504,10 +505,16 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             if (fromError != null)
             {
-                // Reference File is corrupted
-                if (fromError == OperationErrorCode.InvalidArgument)
+                if (ReferenceFile.IsReferenceFile(_currentCollectionContainer.CurrentCanvas.File))
                 {
-                    NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(SuggestedActionsHelpers.GetActionsForInvalidReference(PasteCanvasPageModel.PasteCanvasModel));
+                    if (fromError == OperationErrorCode.InvalidArgument) // Reference File is corrupted
+                    {
+                        NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(SuggestedActionsHelpers.GetActionsForInvalidReference(PasteCanvasPageModel.PasteCanvasModel));
+                    }
+                    else if (fromError == OperationErrorCode.NotFound) // Reference not found
+                    {
+                        NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(SuggestedActionsHelpers.GetActionsForInvalidReference(PasteCanvasPageModel.PasteCanvasModel));
+                    }
                 }
             }
             else

@@ -19,7 +19,7 @@ namespace ClipboardCanvas.Helpers
                 async () =>
                 {
                     await pasteCanvasModel.TryDeleteData(true);
-                }, "Remove Reference", "\uE738");
+                }, "Delete Reference", "\uE738");
 
             actions.Add(action_deleteReference);
 
