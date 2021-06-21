@@ -6,6 +6,7 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.UserControls;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 using ClipboardCanvas.Models;
+using Microsoft.Toolkit.Mvvm.Input;
 
 namespace ClipboardCanvas.Helpers
 {
@@ -16,10 +17,10 @@ namespace ClipboardCanvas.Helpers
             List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
 
             var action_deleteReference = new SuggestedActionsControlItemViewModel(
-                async () =>
+                new AsyncRelayCommand(async () =>
                 {
                     await pasteCanvasModel.TryDeleteData(true);
-                }, "Delete Reference", "\uE738");
+                }), "Delete Reference", "\uE738");
 
             actions.Add(action_deleteReference);
 
@@ -31,7 +32,7 @@ namespace ClipboardCanvas.Helpers
             List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
 
             var action_paste = new SuggestedActionsControlItemViewModel(
-                async () =>
+                new AsyncRelayCommand(async () =>
                 {
                     DynamicCanvasControlViewModel.CanvasPasteCancellationTokenSource.Cancel();
                     DynamicCanvasControlViewModel.CanvasPasteCancellationTokenSource = new CancellationTokenSource();
@@ -39,7 +40,7 @@ namespace ClipboardCanvas.Helpers
                     SafeWrapper<DataPackageView> dataPackage = await ClipboardHelpers.GetClipboardData();
 
                     await pasteCanvasControlModel.TryPasteData(dataPackage, DynamicCanvasControlViewModel.CanvasPasteCancellationTokenSource.Token);
-                }, "Paste from clipboard", "\uE77F");
+                }), "Paste from clipboard", "\uE77F");
 
             actions.Add(action_paste);
 
@@ -51,10 +52,10 @@ namespace ClipboardCanvas.Helpers
             List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
 
             var action_addCollection = new SuggestedActionsControlItemViewModel(
-                async () =>
+                new AsyncRelayCommand(async () =>
                 {
                     await CollectionsControlViewModel.AddCollectionViaUi();
-                }, "Add Collection", "\uE710");
+                }), "Add Collection", "\uE710");
 
             actions.Add(action_addCollection);
 

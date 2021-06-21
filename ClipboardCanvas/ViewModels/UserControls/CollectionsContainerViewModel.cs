@@ -380,7 +380,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             // You can only load existing data
 
-            if (_canvasNavigationDirection == CanvasNavigationDirection.Forward && CurrentIndex == Items.Count)
+            if (Items.IsEmpty() || (_canvasNavigationDirection == CanvasNavigationDirection.Forward && CurrentIndex == Items.Count))
             {
                 OnOpenNewCanvasRequestedEvent?.Invoke(this, new OpenNewCanvasRequestedEventArgs());
                 return;

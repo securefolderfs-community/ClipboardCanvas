@@ -438,10 +438,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     if (icon != null && appName != null)
                     {
                         var action_openFile = new SuggestedActionsControlItemViewModel(
-                            async () =>
+                            new AsyncRelayCommand(async () =>
                             {
                                 await AssociatedContainer.CurrentCanvas.OpenFile();
-                            }, $"Open with {appName}", icon);
+                            }), $"Open with {appName}", icon);
 
                         actions.Add(action_openFile);
                     }
@@ -449,10 +449,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 else
                 {
                     var action_openFile = new SuggestedActionsControlItemViewModel(
-                        async () =>
+                        new AsyncRelayCommand(async () =>
                         {
                             await AssociatedContainer.CurrentCanvas.OpenFile();
-                        }, "Open file", "\uE8E5");
+                        }), "Open file", "\uE8E5");
 
                     actions.Add(action_openFile);
                 }
@@ -460,10 +460,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             // Open directory
             var action_openInFileExplorer = new SuggestedActionsControlItemViewModel(
-                async () =>
+                new AsyncRelayCommand(async () =>
                 {
                     await AssociatedContainer.CurrentCanvas.OpenContainingFolder();
-                }, "Open containing folder", "\uE838");
+                }), "Open containing folder", "\uE838");
 
             actions.Add(action_openInFileExplorer);
 

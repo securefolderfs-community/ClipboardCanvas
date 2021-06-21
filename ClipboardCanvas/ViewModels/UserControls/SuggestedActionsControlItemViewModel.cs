@@ -1,11 +1,8 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.Windows.Input;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -13,7 +10,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
     {
         #region Public Properties
 
-        public Action ExecuteAction { get; private set; }
+        public ICommand ExecuteCommand { get; private set; }
 
         private string _DisplayText;
         public string DisplayText
@@ -55,26 +52,26 @@ namespace ClipboardCanvas.ViewModels.UserControls
         #region Constructor
 
         // TODO: Pass ICommand and not action
-        public SuggestedActionsControlItemViewModel(Action executeAction, string displayText, string glyphIcon)
-            : this(executeAction, displayText)
+        public SuggestedActionsControlItemViewModel(ICommand executeCommand, string displayText, string glyphIcon)
+            : this(executeCommand, displayText)
         {
             this.GlyphIcon = glyphIcon;
             this.GlyphIconVisibility = Visibility.Visible;
             this.IconImageVisibility = Visibility.Collapsed;
         }
 
-        public SuggestedActionsControlItemViewModel(Action executeAction, string displayText, BitmapImage iconImage)
-            : this(executeAction, displayText)
+        public SuggestedActionsControlItemViewModel(ICommand executeCommand, string displayText, BitmapImage iconImage)
+            : this(executeCommand, displayText)
         {
             this.IconImage = iconImage;
             this.GlyphIconVisibility = Visibility.Collapsed;
             this.IconImageVisibility = Visibility.Visible;
         }
 
-        private SuggestedActionsControlItemViewModel(Action executeAction, string displayText)
+        private SuggestedActionsControlItemViewModel(ICommand executeCommand, string displayText)
         {
             this.DisplayText = displayText;
-            this.ExecuteAction = executeAction;
+            this.ExecuteCommand = executeCommand;
         }
 
         #endregion
@@ -99,7 +96,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public void Dispose()
         {
-            ExecuteAction = null;
+            ExecuteCommand = null;
             _IconImage = null;
         }
 

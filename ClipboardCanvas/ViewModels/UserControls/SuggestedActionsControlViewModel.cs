@@ -67,21 +67,21 @@ namespace ClipboardCanvas.ViewModels.UserControls
             {
                 case (c: true, s: false, a: false, w: false, k: VirtualKey.Number1):
                     {
-                        Items.ElementAtOrDefault(0)?.ExecuteAction.Invoke();
+                        Items.ElementAtOrDefault(0)?.ExecuteCommand.Execute(null);
 
                         break;
                     }
 
                 case (c: true, s: false, a: false, w: false, k: VirtualKey.Number2):
                     {
-                        Items.ElementAtOrDefault(1)?.ExecuteAction.Invoke();
+                        Items.ElementAtOrDefault(1)?.ExecuteCommand.Execute(null);
 
                         break;
                     }
 
                 case (c: true, s: false, a: false, w: false, k: VirtualKey.Number3):
                     {
-                        Items.ElementAtOrDefault(2)?.ExecuteAction.Invoke();
+                        Items.ElementAtOrDefault(2)?.ExecuteCommand.Execute(null);
 
                         break;
                     }
@@ -91,7 +91,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         private void ItemClick(ItemClickEventArgs e)
         {
             var clickedItem = e.ClickedItem as SuggestedActionsControlItemViewModel;
-            clickedItem.ExecuteAction?.Invoke();
+            clickedItem.ExecuteCommand.Execute(null);
         }
 
         #endregion
