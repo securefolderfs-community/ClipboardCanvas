@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using ClipboardCanvas.ViewModels.UserControls;
 
 namespace ClipboardCanvas.Helpers
@@ -19,7 +19,16 @@ namespace ClipboardCanvas.Helpers
 
         public static void UpdateSavedCollectionLocationsSetting()
         {
-            App.AppSettings.CollectionLocationsSettings.SavedCollectionLocations = CollectionsControlViewModel.Items.Where((item) => !item.isDefault).Select((item) => item.CollectionFolderPath).ToList();
+            List<string> paths = new List<string>();
+            foreach (var item in CollectionsControlViewModel.Items)
+            {
+                if (!item.isDefault)
+                {
+                    paths.Add(item.CollectionFolderPath);
+                }
+            }
+
+            App.AppSettings.CollectionLocationsSettings.SavedCollectionLocations = paths;
         }
     }
 }

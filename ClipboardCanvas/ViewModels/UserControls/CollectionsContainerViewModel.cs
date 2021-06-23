@@ -281,7 +281,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region ICollectionContainerModel
 
-        public void CheckCollectionAvailability()
+        public bool CheckCollectionAvailability()
         {
             if (App.IsInRestrictedAccessMode && !isDefault)
             {
@@ -290,11 +290,14 @@ namespace ClipboardCanvas.ViewModels.UserControls
             else if (StorageHelpers.Exists(CollectionFolderPath))
             {
                 SetCollectionError(SafeWrapperResult.S_SUCCESS);
+                return true;
             }
             else
             {
                 SetCollectionError(s_CollectionFolderNotFound);
             }
+
+            return false;
         }
 
         public void DangerousSetIndex(int newIndex)
@@ -584,7 +587,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task<bool> InitializeInnerStorageFolder()
         {
-            if (_innerStorageFolder != null && StorageHelpers.Exists(_innerStorageFolder?.Path))
+            if (!CheckCollectionAvailability())
+            {
+                return false;
+            }
+
+            if (_innerStorageFolder != null)
             {
                 // Make sure to update the state if collection path was repaired
                 SetCollectionError(SafeWrapperResult.S_SUCCESS);

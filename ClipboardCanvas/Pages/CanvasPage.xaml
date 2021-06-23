@@ -83,16 +83,21 @@
                     </Grid.RowDefinitions>
 
                     <!--  Title text  -->
-                    <TextBlock
-                        x:Name="TitleText"
-                        Grid.Row="0"
+                    <Viewbox
+                        x:Name="TitleTextViewBox"
+                        MaxWidth="680"
+                        MaxHeight="150"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         x:Load="{x:Bind ViewModel.TitleTextLoad, Mode=OneWay}"
-                        AllowDrop="True"
-                        FontSize="32"
-                        FontWeight="Bold"
-                        Text="{x:Bind ViewModel.TitleText, Mode=OneWay}" />
+                        StretchDirection="Both">
+                        <Grid Padding="20">
+                            <TextBlock
+                                AllowDrop="True"
+                                FontWeight="Bold"
+                                Text="{x:Bind ViewModel.TitleText, Mode=OneWay}" />
+                        </Grid>
+                    </Viewbox>
 
                     <!--  Content Loading progress ring  -->
                     <ProgressRing

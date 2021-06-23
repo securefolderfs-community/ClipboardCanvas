@@ -364,7 +364,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public static async Task<bool> AddCollection(CollectionsContainerViewModel container, bool suppressSettingsUpdate = false)
         {
-            if (Items.Any((item) => item.DangerousGetCollectionFolder()?.Path == container.DangerousGetCollectionFolder()?.Path))
+            if (Items.Any((item) => item.DangerousGetCollectionFolder()?.Path == container.CollectionFolderPath))
             {
                 return false;
             } 
@@ -390,7 +390,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             {
                 CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
             }
-
+            
             return true;
         }
 

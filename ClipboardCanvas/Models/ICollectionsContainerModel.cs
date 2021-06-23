@@ -43,7 +43,7 @@ namespace ClipboardCanvas.Models
         /// <summary>
         /// Checks whether can open collection and updates UI and <see cref="CanOpenCollection"/> if necessary
         /// </summary>
-        void CheckCollectionAvailability();
+        bool CheckCollectionAvailability();
 
         /// <summary>
         /// Sets index of currently selected canvas

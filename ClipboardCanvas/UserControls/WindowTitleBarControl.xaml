@@ -9,13 +9,17 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <Grid x:Name="CustomTitleBar" Padding="15,0,15,0">
+    <Grid
+        x:Name="CustomTitleBar"
+        Padding="15,0,15,0"
+        HorizontalAlignment="Stretch"
+        ColumnSpacing="8">
 
         <Grid.ColumnDefinitions>
             <!--  Title text  -->
-            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
             <!--  Restricted Access  -->
-            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
             <!--  Compact overlay  -->
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
@@ -40,6 +44,8 @@
         <Grid
             Grid.Column="0"
             Padding="0,8,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
             Canvas.ZIndex="1">
             <TextBlock
                 x:Name="StandardTitleBar"
@@ -47,7 +53,8 @@
                 x:Load="{x:Bind ViewModel.StandardTitleBarLoad, Mode=OneWay}"
                 FontSize="16"
                 FontWeight="SemiLight"
-                Text="{x:Bind ViewModel.StandardTitleBarText, Mode=OneWay}" />
+                Text="{x:Bind ViewModel.StandardTitleBarText, Mode=OneWay}"
+                TextTrimming="CharacterEllipsis" />
 
             <StackPanel
                 x:Name="TwoSideTitleBar"
@@ -65,14 +72,16 @@
                     VerticalAlignment="Center"
                     FontSize="16"
                     FontWeight="SemiBold"
-                    Text="{x:Bind ViewModel.TitleBarSecondSideText, Mode=OneWay}" />
+                    Text="{x:Bind ViewModel.TitleBarSecondSideText, Mode=OneWay}"
+                    TextTrimming="CharacterEllipsis" />
             </StackPanel>
         </Grid>
 
         <!--  Restricted Access title text  -->
         <TextBlock
             x:Name="RestrictedAccess"
-            Grid.Column="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
             Padding="0,8,0,0"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
@@ -95,7 +104,8 @@
             HorizontalAlignment="Left"
             x:Load="{x:Bind ViewModel.ShowTitleUnderline, Mode=OneWay}"
             BorderBrush="{ThemeResource TitleBarSeparatorColor}"
-            BorderThickness="0,0,0,0.5" />
+            BorderThickness="0,0,0,0.5"
+            Canvas.ZIndex="1" />
 
         <!--  TODO: For now the button is hidden  -->
         <!--  Compact overlay button  -->

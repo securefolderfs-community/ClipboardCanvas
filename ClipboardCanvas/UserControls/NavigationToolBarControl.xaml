@@ -37,11 +37,11 @@
                         <ResourceDictionary x:Key="Dark">
                             <AcrylicBrush
                                 x:Key="NavigationBarBackground"
-                                Windows10version1903:TintLuminosityOpacity="0.30"
+                                Windows10version1903:TintLuminosityOpacity="0.40"
                                 BackgroundSource="HostBackdrop"
                                 FallbackColor="{ThemeResource SolidBackgroundAcrylic}"
                                 TintColor="{ThemeResource SolidBackgroundAcrylic}"
-                                TintOpacity="0.30" />
+                                TintOpacity="0.40" />
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>
                 </ResourceDictionary>
@@ -50,7 +50,7 @@
             <!--  Toolbar size modes  -->
 
             <!--  Medium size mode  -->
-            <DataTemplate x:Key="ToolBar_Medium_SizeMode" x:DataType="vm:NavigationToolBarControlViewModel">
+            <DataTemplate x:Key="ToolBar_Small_SizeMode" x:DataType="vm:NavigationToolBarControlViewModel">
                 <Border>
                     <!--  Navigation  -->
                     <uc:NavigationControl
@@ -126,7 +126,7 @@
                         <AdaptiveTrigger MinWindowWidth="{StaticResource MediumWindowThreshold}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MainContentPresenter.ContentTemplate" Value="{StaticResource ToolBar_Medium_SizeMode}" />
+                        <Setter Target="MainContentPresenter.ContentTemplate" Value="{StaticResource ToolBar_Large_SizeMode}" />
                     </VisualState.Setters>
                 </VisualState>
                 <!--  Small window  -->
@@ -135,7 +135,7 @@
                         <AdaptiveTrigger MinWindowWidth="{StaticResource SmallWindowThreshold}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MainContentPresenter.ContentTemplate" Value="{StaticResource ToolBar_Medium_SizeMode}" />
+                        <Setter Target="MainContentPresenter.ContentTemplate" Value="{StaticResource ToolBar_Small_SizeMode}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

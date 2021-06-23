@@ -1,11 +1,11 @@
-﻿using ClipboardCanvas.Helpers.SafetyHelpers;
-using ClipboardCanvas.UnsafeNative;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
+
 using ClipboardCanvas.Enums;
-using static ClipboardCanvas.UnsafeNative.UnsafeNativeDataModels;
+using ClipboardCanvas.Helpers.SafetyHelpers;
+using ClipboardCanvas.UnsafeNative;
 
 namespace ClipboardCanvas.Helpers.Filesystem
 {
@@ -29,7 +29,7 @@ namespace ClipboardCanvas.Helpers.Filesystem
             // Check if path is to .lnk or .url file
             if (path.ToLower().EndsWith(".lnk") || path.ToLower().EndsWith(".url"))
             {
-                throw new UnauthorizedAccessException("Function ToStorageItem<TOut>() does not support converting from .lnk nor .url files.");
+                return new SafeWrapper<TOut>(default, OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Function ToStorageItem<TOut>() does not support converting from .lnk nor .url files.");
             }
 
             // Check if exists
