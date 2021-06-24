@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:uc="using:ClipboardCanvas.UserControls"
+    xmlns:uc="using:ClipboardCanvas.UserControls.CanvasDisplay"
     xmlns:vm="using:ClipboardCanvas.ViewModels.UserControls"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Loaded="Page_Loaded"
@@ -51,7 +51,7 @@
                             </Grid.RowDefinitions>
 
                             <!--  Reuse the dynamic canvas control  -->
-                            <uc:DynamicCanvasControl
+                            <uc:CanvasPreviewControl
                                 Grid.Row="0"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center" />

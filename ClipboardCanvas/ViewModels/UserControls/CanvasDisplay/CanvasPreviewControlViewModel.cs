@@ -20,7 +20,7 @@ using ClipboardCanvas.ViewModels.ContextMenu;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
-    public class DynamicCanvasControlViewModel : ObservableObject, IPasteCanvasModel, IDisposable
+    public class CanvasPreviewControlViewModel : ObservableObject, ICanvasPreviewModel, IDisposable
     {
         #region Private Members
 
@@ -32,16 +32,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Public Properties
 
-        private BasePasteCanvasViewModel _CanvasViewModel;
-        public BasePasteCanvasViewModel CanvasViewModel
+        private BaseCanvasViewModel _CanvasViewModel;
+        public BaseCanvasViewModel CanvasViewModel
         {
             get => _CanvasViewModel;
             set => SetProperty(ref _CanvasViewModel, value);
         }
 
-        public ICollectionsContainerModel AssociatedContainer => _view?.CollectionContainer;
+        public ICollectionModel AssociatedContainer => _view?.CollectionModel;
         
-        public ICollectionsContainerItemModel AssociatedContainerCanvas => AssociatedContainer?.CurrentCanvas;
+        public ICollectionItemModel AssociatedContainerCanvas => AssociatedContainer?.CurrentCanvas;
 
         public CanvasPreviewMode CanvasMode => CanvasViewModel?.CanvasMode ?? CanvasPreviewMode.PreviewOnly;
 
@@ -81,7 +81,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public DynamicCanvasControlViewModel(IDynamicCanvasControlView view)
+        public CanvasPreviewControlViewModel(IDynamicCanvasControlView view)
         {
             this._view = view;
         }
@@ -90,7 +90,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region IPasteCanvasModel
 
-        public async Task<SafeWrapperResult> TryLoadExistingData(ICollectionsContainerItemModel itemData, CancellationToken cancellationToken)
+        public async Task<SafeWrapperResult> TryLoadExistingData(ICollectionItemModel itemData, CancellationToken cancellationToken)
         {
             this._associatedFile = itemData.File;
 
@@ -146,7 +146,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 else if (result != OperationErrorCode.Cancelled)
                 {
                     AssociatedContainer.RefreshRemoveItem(AssociatedContainerCanvas);
-                    OnFileDeletedEvent?.Invoke(this, new FileDeletedEventArgs(_associatedFile, AssociatedContainer));
+                    OnFileDeletedEvent?.Invoke(this, new FileDeletedEventArgs(_associatedFile));
                 }
 
                 return result;
@@ -306,7 +306,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         /// <summary>
         /// Initialize View Model from existing data
         /// </summary>
-        private async Task<SafeWrapperResult> InitializeViewModel(ICollectionsContainerItemModel containerItemModel)
+        private async Task<SafeWrapperResult> InitializeViewModel(ICollectionItemModel containerItemModel)
         {
             DiscardData();
 
@@ -375,7 +375,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         }
 
         private bool InitializeViewModelForType<TContentType, TViewModel>(BasePastedContentTypeDataModel contentType, Func<TViewModel> initializer)
-            where TViewModel : BasePasteCanvasViewModel
+            where TViewModel : BaseCanvasViewModel
             where TContentType : BasePastedContentTypeDataModel
         {
             if (contentType is TContentType)
@@ -386,7 +386,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return false;
         }
 
-        public bool InitializeViewModel<TViewModel>(Func<TViewModel> initializer) where TViewModel : BasePasteCanvasViewModel
+        public bool InitializeViewModel<TViewModel>(Func<TViewModel> initializer) where TViewModel : BaseCanvasViewModel
         {
             if (CanvasViewModel is TViewModel) // Reuse View Model
             {

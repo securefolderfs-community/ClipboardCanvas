@@ -8,7 +8,7 @@
     xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
     xmlns:local="using:ClipboardCanvas.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:uc="using:ClipboardCanvas.UserControls"
+    xmlns:uc="using:ClipboardCanvas.UserControls.CanvasDisplay"
     xmlns:vc="using:ClipboardCanvas.ValueConverters"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     IsTabStop="False"
@@ -118,18 +118,18 @@
                 </Grid>
 
                 <!--  The canvas  -->
-                <uc:DynamicCanvasControl
-                    x:Name="PasteCanvasControl"
+                <uc:CanvasPreviewControl
+                    x:Name="CanvasPreviewControl"
                     Grid.Row="0"
                     Background="Transparent"
-                    CollectionContainer="{x:Bind ViewModel.CollectionContainer, Mode=OneWay}">
-                    <uc:DynamicCanvasControl.ContextFlyout>
+                    CollectionModel="{x:Bind ViewModel.CollectionModel, Mode=OneWay}">
+                    <uc:CanvasPreviewControl.ContextFlyout>
                         <MenuFlyout
                             x:Name="CanvasContextMenu"
                             ap:FlyoutItemsSourceAttachedProperty.Value="{x:Bind ViewModel.CanvasContextMenuItems, Mode=OneWay}"
                             Opening="CanvasContextMenu_Opening" />
-                    </uc:DynamicCanvasControl.ContextFlyout>
-                </uc:DynamicCanvasControl>
+                    </uc:CanvasPreviewControl.ContextFlyout>
+                </uc:CanvasPreviewControl>
 
                 <!--  TODO: Add teaching tip here: "What's this?"  -->
                 <!--  Pasted as reference hyperlink  -->

@@ -11,7 +11,7 @@ using ClipboardCanvas.DataModels.PastedContentDataModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
-    public class CollectionsContainerItemViewModel : ICollectionsContainerItemModel
+    public class CollectionItemViewModel : ICollectionItemModel
     {
         #region Public Properties
 
@@ -23,12 +23,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Constructor
 
-        public CollectionsContainerItemViewModel(StorageFile file)
+        public CollectionItemViewModel(StorageFile file)
             : this(file, null)
         {
         }
 
-        public CollectionsContainerItemViewModel(StorageFile file, BasePastedContentTypeDataModel contentType)
+        public CollectionItemViewModel(StorageFile file, BasePastedContentTypeDataModel contentType)
         {
             this.File = file;
             this.ContentType = contentType;

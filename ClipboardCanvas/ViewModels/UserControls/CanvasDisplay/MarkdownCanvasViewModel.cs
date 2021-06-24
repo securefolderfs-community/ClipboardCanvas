@@ -21,7 +21,7 @@ using ClipboardCanvas.DataModels.PastedContentDataModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
-    public class MarkdownCanvasViewModel : BasePasteCanvasViewModel
+    public class MarkdownCanvasViewModel : BaseCanvasViewModel
     {
         #region Private Members
 
@@ -31,7 +31,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Protected Members
 
-        protected override ICollectionsContainerModel AssociatedContainer => _view?.CollectionContainer;
+        protected override ICollectionModel AssociatedCollection => _view?.CollectionModel;
 
         #endregion
 
@@ -106,7 +106,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task<SafeWrapper<StorageFile>> TrySetFileWithExtension()
         {
-            SafeWrapper<StorageFile> file = await AssociatedContainer.GetEmptyFileToWrite(".md");
+            SafeWrapper<StorageFile> file = await AssociatedCollection.GetEmptyFileToWrite(".md");
 
             return file;
         }

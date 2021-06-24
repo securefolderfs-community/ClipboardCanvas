@@ -44,9 +44,9 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         #region Public Properties
 
-        public ICollectionsContainerModel CollectionContainer => _view?.AssociatedCollection;
+        public ICollectionModel CollectionModel => _view?.AssociatedCollectionModel;
 
-        public IPasteCanvasModel PasteCanvasModel => _view?.PasteCanvasModel;
+        public ICanvasPreviewModel PasteCanvasModel => _view?.CanvasPreviewModel;
 
         private List<BaseMenuFlyoutItemViewModel> _CanvasContextMenuItems;
         public List<BaseMenuFlyoutItemViewModel> CanvasContextMenuItems
@@ -235,7 +235,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
                     if (draggedItems)
                     {
-                        if (CollectionContainer.IsOnNewCanvas)
+                        if (CollectionModel.IsOnNewCanvas)
                         {
                             e.AcceptedOperation = DataPackageOperation.Copy;
                             TitleText = DRAG_TITLE_TEXT;
@@ -247,9 +247,9 @@ namespace ClipboardCanvas.ViewModels.Pages
 
                             foreach (var item in draggedItems.Result)
                             {
-                                if (ReferenceFile.IsReferenceFile(CollectionContainer.CurrentCanvas.File))
+                                if (ReferenceFile.IsReferenceFile(CollectionModel.CurrentCanvas.File))
                                 {
-                                    ReferenceFile referenceFile = await ReferenceFile.GetFile(CollectionContainer.CurrentCanvas.File);
+                                    ReferenceFile referenceFile = await ReferenceFile.GetFile(CollectionModel.CurrentCanvas.File);
 
                                     if (referenceFile.ReferencedFile?.Path == item.Path)
                                     {
@@ -259,7 +259,7 @@ namespace ClipboardCanvas.ViewModels.Pages
                                 }
                                 else
                                 {
-                                    if (item.Path == CollectionContainer.CurrentCanvas.File.Path)
+                                    if (item.Path == CollectionModel.CurrentCanvas.File.Path)
                                     {
                                         canPaste = false;
                                         break;
@@ -461,8 +461,8 @@ namespace ClipboardCanvas.ViewModels.Pages
         private async Task PasteDataInternal(DataPackageView dataPackage = null)
         {
             SafeWrapperResult result = null;
-            DynamicCanvasControlViewModel.CanvasPasteCancellationTokenSource.Cancel();
-            DynamicCanvasControlViewModel.CanvasPasteCancellationTokenSource = new CancellationTokenSource();
+            CanvasPreviewControlViewModel.CanvasPasteCancellationTokenSource.Cancel();
+            CanvasPreviewControlViewModel.CanvasPasteCancellationTokenSource = new CancellationTokenSource();
 
             if (dataPackage == null)
             {
@@ -470,12 +470,12 @@ namespace ClipboardCanvas.ViewModels.Pages
 
                 if (dataPackageWrapper)
                 {
-                    result = await PasteCanvasModel.TryPasteData(dataPackageWrapper, DynamicCanvasControlViewModel.CanvasPasteCancellationTokenSource.Token);
+                    result = await PasteCanvasModel.TryPasteData(dataPackageWrapper, CanvasPreviewControlViewModel.CanvasPasteCancellationTokenSource.Token);
                 }
             }
             else
             {
-                result = await PasteCanvasModel.TryPasteData(dataPackage, DynamicCanvasControlViewModel.CanvasPasteCancellationTokenSource.Token);
+                result = await PasteCanvasModel.TryPasteData(dataPackage, CanvasPreviewControlViewModel.CanvasPasteCancellationTokenSource.Token);
             }
 
             if (result.Exception is ObjectDisposedException)

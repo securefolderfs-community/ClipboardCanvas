@@ -50,15 +50,12 @@ namespace ClipboardCanvas.EventArguments.CanvasControl
 
     public class FileCreatedEventArgs : EventArgs
     {
-        public readonly ICollectionsContainerModel associatedContainer;
-
         public readonly BasePastedContentTypeDataModel contentType;
 
         public readonly StorageFile file;
 
-        public FileCreatedEventArgs(ICollectionsContainerModel associatedContainer, BasePastedContentTypeDataModel contentType, StorageFile file)
+        public FileCreatedEventArgs(BasePastedContentTypeDataModel contentType, StorageFile file)
         {
-            this.associatedContainer = associatedContainer;
             this.contentType = contentType;
             this.file = file;
         }
@@ -66,27 +63,21 @@ namespace ClipboardCanvas.EventArguments.CanvasControl
 
     public class FileModifiedEventArgs : EventArgs
     {
-        public readonly ICollectionsContainerModel associatedContainer;
-
         public readonly IStorageFile file;
 
-        public FileModifiedEventArgs(IStorageFile file, ICollectionsContainerModel associatedContainer)
+        public FileModifiedEventArgs(IStorageFile file)
         {
             this.file = file;
-            this.associatedContainer = associatedContainer;
         }
     }
 
     public class FileDeletedEventArgs : EventArgs
     {
-        public readonly ICollectionsContainerModel associatedContainer;
-
         public readonly IStorageFile file;
 
-        public FileDeletedEventArgs(IStorageFile file, ICollectionsContainerModel associatedContainer)
+        public FileDeletedEventArgs(IStorageFile file)
         {
             this.file = file;
-            this.associatedContainer = associatedContainer;
         }
     }
 

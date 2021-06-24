@@ -22,7 +22,7 @@ using ClipboardCanvas.DataModels.PastedContentDataModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
-    public class FallbackCanvasViewModel : BasePasteCanvasViewModel
+    public class FallbackCanvasViewModel : BaseCanvasViewModel
     {
         #region Private Members
 
@@ -34,7 +34,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Protected Members
 
-        protected override ICollectionsContainerModel AssociatedContainer => _view?.CollectionContainer;
+        protected override ICollectionModel AssociatedCollection => _view?.CollectionModel;
 
         #endregion
 

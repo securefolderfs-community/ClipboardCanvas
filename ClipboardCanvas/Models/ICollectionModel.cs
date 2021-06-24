@@ -11,12 +11,12 @@ using ClipboardCanvas.Enums;
 namespace ClipboardCanvas.Models
 {
     /// <summary>
-    /// This interface is part of containers which hold pasted items
+    /// This interface is part of collections which hold pasted items
     /// This interface contains functions to save data and delete to/from files
     /// </summary>
-    public interface ICollectionsContainerModel
+    public interface ICollectionModel
     {
-        List<CollectionsContainerItemViewModel> Items { get; }
+        List<CollectionItemViewModel> Items { get; }
 
         bool CanOpenCollection { get; }
 
@@ -38,7 +38,7 @@ namespace ClipboardCanvas.Models
         /// <summary>
         /// Gets currently opened canvas
         /// </summary>
-        ICollectionsContainerItemModel CurrentCanvas { get; }
+        ICollectionItemModel CurrentCanvas { get; }
 
         /// <summary>
         /// Checks whether can open collection and updates UI and <see cref="CanOpenCollection"/> if necessary
@@ -60,13 +60,13 @@ namespace ClipboardCanvas.Models
         /// <br/><br/>
         /// Note:
         /// <br/>
-        /// This function is considered as *dangerous* since <see cref="ICollectionsContainerModel"/> contains wrapper functions for provided return value
+        /// This function is considered as *dangerous* since <see cref="ICollectionModel"/> contains wrapper functions for provided return value
         /// </summary>
         /// <returns></returns>
         IStorageFolder DangerousGetCollectionFolder();
 
         /// <summary>
-        /// Creates a file and returns it within this container 
+        /// Creates a file and returns it within this collection
         /// </summary>
         /// <returns>A <see cref="StorageFile"/> which can be written to, read from</returns>
         Task<SafeWrapper<StorageFile>> GetEmptyFileToWrite(string extension, string fileName = null);
@@ -86,26 +86,26 @@ namespace ClipboardCanvas.Models
         /// <summary>
         /// Navigates to new canvas
         /// </summary>
-        void NavigateFirst(IPasteCanvasModel pasteCanvasModel);
+        void NavigateFirst(ICanvasPreviewModel pasteCanvasModel);
 
         /// <summary>
         /// Navigates to next canvas
         /// </summary>
         /// <returns></returns>
-        Task NavigateNext(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken);
+        Task NavigateNext(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken);
 
         /// <summary>
         /// Navigates to oldest canvas in the list
         /// </summary>
-        Task NavigateLast(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken);
+        Task NavigateLast(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken);
 
         /// <summary>
         /// Navigates to back canvas
         /// </summary>
         /// <returns></returns>
-        Task NavigateBack(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken);
+        Task NavigateBack(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken);
 
-        Task LoadCanvasFromCollection(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken);
+        Task LoadCanvasFromCollection(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken);
 
         /// <summary>
         /// Silently adds item to the collection instead of refreshing
@@ -117,7 +117,7 @@ namespace ClipboardCanvas.Models
         /// <summary>
         /// Silently removes an item from the collection to prevent from reloading it
         /// </summary>
-        void RefreshRemoveItem(ICollectionsContainerItemModel collectionsContainerItem);
+        void RefreshRemoveItem(ICollectionItemModel collectionItemModel);
 
         /// <summary>
         /// Initializes collection's items

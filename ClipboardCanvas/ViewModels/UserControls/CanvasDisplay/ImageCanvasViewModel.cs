@@ -5,7 +5,6 @@ using Windows.Storage;
 using System.IO;
 using Windows.Storage.Streams;
 using System.Diagnostics;
-using Windows.UI.Xaml.Media;
 using System.Linq;
 using System.Collections.Generic;
 using Windows.Graphics.Imaging;
@@ -14,18 +13,16 @@ using Windows.UI.Xaml.Media.Imaging;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
-using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.EventArguments.CanvasControl;
-using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
-    public sealed class ImageCanvasViewModel : BasePasteCanvasViewModel
+    public sealed class ImageCanvasViewModel : BaseCanvasViewModel
     {
         #region Private Members
 
@@ -39,7 +36,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Protected Properties
 
-        protected override ICollectionsContainerModel AssociatedContainer => _view?.CollectionContainer;
+        protected override ICollectionModel AssociatedCollection => _view?.CollectionModel;
 
         #endregion
 
@@ -147,7 +144,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (result)
             {
-                RaiseOnFileModifiedEvent(this, new FileModifiedEventArgs(sourceFile, AssociatedContainer));
+                RaiseOnFileModifiedEvent(this, new FileModifiedEventArgs(sourceFile));
             }
 
             return result;
@@ -246,7 +243,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task<SafeWrapper<StorageFile>> TrySetFileWithExtension()
         {
-            SafeWrapper<StorageFile> file = await AssociatedContainer.GetEmptyFileToWrite(".png");
+            SafeWrapper<StorageFile> file = await AssociatedCollection.GetEmptyFileToWrite(".png");
 
             return file;
         }

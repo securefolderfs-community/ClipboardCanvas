@@ -4,8 +4,8 @@ namespace ClipboardCanvas.ModelViews
 {
     public interface ICanvasPageView
     {
-        ICollectionsContainerModel AssociatedCollection { get; }
+        ICollectionModel AssociatedCollectionModel { get; }
 
-        IPasteCanvasModel PasteCanvasModel { get; }
+        ICanvasPreviewModel CanvasPreviewModel { get; }
     }
 }

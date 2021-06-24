@@ -16,7 +16,7 @@ using System.Threading;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
-    public class MediaCanvasViewModel : BasePasteCanvasViewModel
+    public class MediaCanvasViewModel : BaseCanvasViewModel
     {
         #region Private Members
 
@@ -28,7 +28,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Protected Members
 
-        protected override ICollectionsContainerModel AssociatedContainer => _view?.CollectionContainer;
+        protected override ICollectionModel AssociatedCollection => _view?.CollectionModel;
 
         #endregion
 
@@ -93,7 +93,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Override
 
-        public override async Task<SafeWrapperResult> TryLoadExistingData(ICollectionsContainerItemModel itemData, CancellationToken cancellationToken)
+        public override async Task<SafeWrapperResult> TryLoadExistingData(ICollectionItemModel itemData, CancellationToken cancellationToken)
         {
             SafeWrapperResult result = await base.TryLoadExistingData(itemData, cancellationToken);
 
@@ -161,7 +161,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             if (ControlView != null && ContentMediaLoad)
             {
-                if (AssociatedContainerCanvas?.ContentType is MediaContentType mediaContentType)
+                if (AssociatedCollectionItemModel?.ContentType is MediaContentType mediaContentType)
                 {
                     mediaContentType.savedPosition = __Position;
                 }

@@ -23,7 +23,7 @@ using ClipboardCanvas.UnsafeNative;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
-    public class WebViewCanvasViewModel : BasePasteCanvasViewModel
+    public class WebViewCanvasViewModel : BaseCanvasViewModel
     {
         #region Private Members
 
@@ -39,7 +39,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Protected Members
 
-        protected override ICollectionsContainerModel AssociatedContainer => _view?.CollectionContainer;
+        protected override ICollectionModel AssociatedCollection => _view?.CollectionModel;
 
         #endregion
 
@@ -149,11 +149,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (_mode == WebViewCanvasMode.ReadWebsite)
             {
-                file = await AssociatedContainer.GetEmptyFileToWrite(Constants.FileSystem.WEBSITE_LINK_FILE_EXTENSION);
+                file = await AssociatedCollection.GetEmptyFileToWrite(Constants.FileSystem.WEBSITE_LINK_FILE_EXTENSION);
             }
             else
             {
-                file = await AssociatedContainer.GetEmptyFileToWrite(".html");
+                file = await AssociatedCollection.GetEmptyFileToWrite(".html");
             }
 
             return file;

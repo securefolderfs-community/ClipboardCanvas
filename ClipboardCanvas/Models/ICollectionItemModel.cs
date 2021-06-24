@@ -5,9 +5,9 @@ using ClipboardCanvas.DataModels.PastedContentDataModels;
 namespace ClipboardCanvas.Models
 {
     /// <summary>
-    /// This interface is an item model that's within <see cref="ICollectionsContainerModel"/>
+    /// This interface is an item model that's within <see cref="ICollectionModel"/>
     /// </summary>
-    public interface ICollectionsContainerItemModel
+    public interface ICollectionItemModel
     {
         StorageFile File { get; }
 

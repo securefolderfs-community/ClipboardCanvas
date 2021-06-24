@@ -22,7 +22,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
-    public class TextCanvasViewModel : BasePasteCanvasViewModel
+    public class TextCanvasViewModel : BaseCanvasViewModel
     {
         #region Private Members
 
@@ -32,7 +32,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Protected Properties
 
-        protected override ICollectionsContainerModel AssociatedContainer => _view?.CollectionContainer;
+        protected override ICollectionModel AssociatedCollection => _view?.CollectionModel;
 
         #endregion
 
@@ -94,7 +94,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             SafeWrapper<StorageFile> file;
 
-            file = await AssociatedContainer.GetEmptyFileToWrite(".txt");
+            file = await AssociatedCollection.GetEmptyFileToWrite(".txt");
 
             return file;
         }

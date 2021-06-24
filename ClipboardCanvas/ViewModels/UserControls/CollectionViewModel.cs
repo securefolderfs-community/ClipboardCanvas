@@ -20,7 +20,7 @@ using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Extensions;
-using ClipboardCanvas.EventArguments.CollectionsContainer;
+using ClipboardCanvas.EventArguments.Collections;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.Exceptions;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
@@ -28,7 +28,7 @@ using System.Diagnostics;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
-    public class CollectionsContainerViewModel : ObservableObject, ICollectionsContainerModel, IDisposable
+    public class CollectionViewModel : ObservableObject, ICollectionModel, IDisposable
     {
         #region Private Members
 
@@ -50,7 +50,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Public Properties
 
-        public List<CollectionsContainerItemViewModel> Items { get; private set; }
+        public List<CollectionItemViewModel> Items { get; private set; }
 
         public string CollectionFolderPath { get; private set; }
 
@@ -125,7 +125,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public bool IsFilled => CurrentIndex < Items.Count;
 
-        public ICollectionsContainerItemModel CurrentCanvas => Items.Count == CurrentIndex ? null : this.Items[CurrentIndex];
+        public ICollectionItemModel CurrentCanvas => Items.Count == CurrentIndex ? null : this.Items[CurrentIndex];
 
         #endregion
 
@@ -167,17 +167,17 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Constructor
 
-        public CollectionsContainerViewModel(string collectionFolderPath, bool isDefault = false)
+        public CollectionViewModel(string collectionFolderPath, bool isDefault = false)
             : this (collectionFolderPath, null, isDefault)
         {
         }
 
-        public CollectionsContainerViewModel(StorageFolder collectionFolder, bool isDefault = false)
+        public CollectionViewModel(StorageFolder collectionFolder, bool isDefault = false)
             : this (null, collectionFolder, isDefault)
         {
         }
 
-        private CollectionsContainerViewModel(string collectionFolderPath, StorageFolder collectionFolder, bool isDefault = false)
+        private CollectionViewModel(string collectionFolderPath, StorageFolder collectionFolder, bool isDefault = false)
         {
             if (!string.IsNullOrEmpty(collectionFolderPath))
             {
@@ -190,7 +190,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             this._innerStorageFolder = collectionFolder;
             this.isDefault = isDefault;
 
-            this.Items = new List<CollectionsContainerItemViewModel>();
+            this.Items = new List<CollectionItemViewModel>();
 
             OnPropertyChanged(nameof(DisplayName));
 
@@ -338,7 +338,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             return CurrentIndex > 0;
         }
 
-        public void NavigateFirst(IPasteCanvasModel pasteCanvasModel)
+        public void NavigateFirst(ICanvasPreviewModel pasteCanvasModel)
         {
             CurrentIndex = Items.Count;
             _canvasNavigationDirection = CanvasNavigationDirection.Forward;
@@ -346,7 +346,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             OnOpenNewCanvasRequestedEvent?.Invoke(this, new OpenNewCanvasRequestedEventArgs());
         }
 
-        public async Task NavigateNext(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken)
+        public async Task NavigateNext(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken)
         {
             CurrentIndex++;
             _canvasNavigationDirection = CanvasNavigationDirection.Forward;
@@ -363,7 +363,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        public async Task NavigateLast(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken)
+        public async Task NavigateLast(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken)
         {
             CurrentIndex = 0;
             _canvasNavigationDirection = CanvasNavigationDirection.Backward;
@@ -371,7 +371,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             await LoadCanvasFromCollection(pasteCanvasModel, cancellationToken);
         }
 
-        public async Task NavigateBack(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken)
+        public async Task NavigateBack(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken)
         {
             CurrentIndex--;
             _canvasNavigationDirection = CanvasNavigationDirection.Backward;
@@ -379,7 +379,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             await LoadCanvasFromCollection(pasteCanvasModel, cancellationToken);
         }
 
-        public async Task LoadCanvasFromCollection(IPasteCanvasModel pasteCanvasModel, CancellationToken cancellationToken)
+        public async Task LoadCanvasFromCollection(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken)
         {
             // You can only load existing data
 
@@ -449,7 +449,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             AddCanvasItem(file, contentType);
         }
 
-        public void RefreshRemoveItem(ICollectionsContainerItemModel collectionsContainerItem)
+        public void RefreshRemoveItem(ICollectionItemModel collectionsContainerItem)
         {
             RemoveCanvasItem(collectionsContainerItem);
         }
@@ -476,7 +476,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     OnPropertyChanged(nameof(DisplayName));
 
                     // Also update settings
-                    CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
+                    CollectionsHelpers.UpdateSavedCollectionsSetting();
                     CollectionsHelpers.UpdateLastSelectedCollectionSetting(this);
                 }
                 else
@@ -538,12 +538,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void AddCanvasItem(StorageFile file, BasePastedContentTypeDataModel contentType = null)
         {
-            Items.Add(new CollectionsContainerItemViewModel(file, contentType));
+            Items.Add(new CollectionItemViewModel(file, contentType));
         }
 
-        private void RemoveCanvasItem(ICollectionsContainerItemModel collectionsContainerItem)
+        private void RemoveCanvasItem(ICollectionItemModel collectionsContainerItem)
         {
-            Items.Remove(collectionsContainerItem as CollectionsContainerItemViewModel);
+            Items.Remove(collectionsContainerItem as CollectionItemViewModel);
         }
 
         private void SetCollectionError(SafeWrapperResult safeWrapperResult)

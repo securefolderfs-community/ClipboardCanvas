@@ -4,6 +4,6 @@ namespace ClipboardCanvas.ModelViews
 {
     public interface IDynamicCanvasControlView
     {
-        ICollectionsContainerModel CollectionContainer { get; }
+        ICollectionModel CollectionModel { get; }
     }
 }

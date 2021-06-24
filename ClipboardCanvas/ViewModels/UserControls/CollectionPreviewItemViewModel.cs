@@ -15,15 +15,15 @@ namespace ClipboardCanvas.ViewModels.UserControls
     {
         #region Public Properties
 
-        private IPasteCanvasModel _AssociatedCanvas;
-        public IPasteCanvasModel AssociatedCanvas
+        private ICanvasPreviewModel _AssociatedCanvas;
+        public ICanvasPreviewModel AssociatedCanvas
         {
             get => _AssociatedCanvas;
             set => SetProperty(ref _AssociatedCanvas, value);
         }
 
-        private ICollectionsContainerModel _ParentCollection;
-        public ICollectionsContainerModel ParentCollection 
+        private ICollectionModel _ParentCollection;
+        public ICollectionModel ParentCollection 
         {
             get => _ParentCollection;
             set => SetProperty(ref _ParentCollection, value);
@@ -46,7 +46,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Constructor
 
-        public CollectionPreviewItemViewModel(ICollectionsContainerModel parentCollection, string itemName)
+        public CollectionPreviewItemViewModel(ICollectionModel parentCollection, string itemName)
         {
             this.ParentCollection = parentCollection;
             this.ItemName = itemName;

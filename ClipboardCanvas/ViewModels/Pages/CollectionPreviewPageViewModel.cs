@@ -15,7 +15,7 @@ namespace ClipboardCanvas.ViewModels.Pages
     {
         #region Singleton
 
-        private ICollectionsContainerModel AssociatedCollection => _view?.AssociatedCollection;
+        private ICollectionModel AssociatedCollection => _view?.AssociatedCollectionModel;
 
         #endregion
 

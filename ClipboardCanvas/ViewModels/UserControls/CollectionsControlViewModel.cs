@@ -14,11 +14,10 @@ using Windows.Storage;
 
 using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Helpers;
-using ClipboardCanvas.EventArguments.CollectionControl;
-using ClipboardCanvas.EventArguments.CollectionsContainer;
+using ClipboardCanvas.EventArguments.Collections;
+using ClipboardCanvas.EventArguments.Collections;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
-using ClipboardCanvas.Services;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -37,10 +36,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
         #region Public Properties
 
         // Collection of folders (canvas collection)
-        public static ObservableCollection<CollectionsContainerViewModel> Items { get; private set; } = new ObservableCollection<CollectionsContainerViewModel>();
+        public static ObservableCollection<CollectionViewModel> Items { get; private set; } = new ObservableCollection<CollectionViewModel>();
 
-        private static CollectionsContainerViewModel _CurrentCollection;
-        public static CollectionsContainerViewModel CurrentCollection
+        private static CollectionViewModel _CurrentCollection;
+        public static CollectionViewModel CurrentCollection
         {
             get => _CurrentCollection;
             set
@@ -66,7 +65,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        public CollectionsContainerViewModel SelectedItem
+        public CollectionViewModel SelectedItem
         {
             get => CurrentCollection;
             set => CurrentCollection = value;
@@ -179,19 +178,19 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     return;
                 }
 
-                CollectionsContainerViewModel collection;
+                CollectionViewModel collection;
                 foreach (var item in items.Result)
                 {
                     // We retrieve the folder again this time using ToStorageItem<>() because items received cannot be modified - i.e. Renamed etc.
                     StorageFolder folder = await StorageHelpers.ToStorageItem<StorageFolder>(item.Path);
 
-                    collection = new CollectionsContainerViewModel(folder);
+                    collection = new CollectionViewModel(folder);
 
                     await AddCollection(collection, true);
                 }
 
                 // We need to update saved collections because we suppressed that in AddCollection()
-                CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
+                CollectionsHelpers.UpdateSavedCollectionsSetting();
             }
             finally
             {
@@ -213,7 +212,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             if (!s_itemAddedInternally && s_internalCollectionsCount < Items.Count)
             {
-                CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
+                CollectionsHelpers.UpdateSavedCollectionsSetting();
             }
 
             s_internalCollectionsCount = Items.Count;
@@ -241,16 +240,16 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private static void Container_OnRemoveCollectionRequestedEvent(object sender, RemoveCollectionRequestedEventArgs e)
         {
-            RemoveCollection(e.containerViewModel);
+            RemoveCollection(e.collectionViewModel);
         }
 
         private static void Container_OnCheckRenameCollectionRequestedEvent(object sender, CheckRenameCollectionRequestedEventArgs e)
         {
             if (
                 !Items.Any((item) => item.DisplayName == e.newName)
-                && !e.containerViewModel.isDefault
+                && !e.collectionViewModel.isDefault
                 && !string.IsNullOrWhiteSpace(e.newName)
-                && !e.containerViewModel.DisplayName.SequenceEqual(e.newName)
+                && !e.collectionViewModel.DisplayName.SequenceEqual(e.newName)
                 )
             {
                 e.canRename = true;
@@ -293,20 +292,20 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 savedCollectionPaths = new List<string>();
             }
 
-            CollectionsContainerViewModel collection;
+            CollectionViewModel collection;
 
-            collection = new CollectionsContainerViewModel(defaultCollectionFolder, true);
+            collection = new CollectionViewModel(defaultCollectionFolder, true);
             await AddCollection(collection, true);
 
             foreach (var item in savedCollectionPaths)
             {
-                collection = new CollectionsContainerViewModel(item);
+                collection = new CollectionViewModel(item);
 
                 await AddCollection(collection, true);
             }
 
             // We need to update saved collections because we suppressed that in AddCollection()
-            CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
+            CollectionsHelpers.UpdateSavedCollectionsSetting();
 
             TrySetSelectedItem();
 
@@ -336,7 +335,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        public static void RemoveCollection(CollectionsContainerViewModel container)
+        public static void RemoveCollection(CollectionViewModel container)
         {
             if (container.isDefault)
             {
@@ -356,13 +355,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
             container.Dispose();
             Items.RemoveAt(index);
 
-            CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
+            CollectionsHelpers.UpdateSavedCollectionsSetting();
             TrySetSelectedItem();
             CollectionsHelpers.UpdateLastSelectedCollectionSetting(CurrentCollection);
             OnCollectionRemovedEvent?.Invoke(null, new CollectionRemovedEventArgs(container));
         }
 
-        public static async Task<bool> AddCollection(CollectionsContainerViewModel container, bool suppressSettingsUpdate = false)
+        public static async Task<bool> AddCollection(CollectionViewModel container, bool suppressSettingsUpdate = false)
         {
             if (Items.Any((item) => item.DangerousGetCollectionFolder()?.Path == container.CollectionFolderPath))
             {
@@ -388,7 +387,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             if (!suppressSettingsUpdate)
             {
-                CollectionsHelpers.UpdateSavedCollectionLocationsSetting();
+                CollectionsHelpers.UpdateSavedCollectionsSetting();
             }
             
             return true;
@@ -407,7 +406,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 return false; // User didn't pick any folder or couldn't retrieve the folder after it's been picked
             }
 
-            var collection = new CollectionsContainerViewModel(folder);
+            var collection = new CollectionViewModel(folder);
 
             return await AddCollection(collection);
         }

@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="ClipboardCanvas.UserControls.DynamicCanvasControl"
+    x:Class="ClipboardCanvas.UserControls.CanvasDisplay.CanvasPreviewControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ap="using:ClipboardCanvas.AttachedProperties"
@@ -21,7 +21,7 @@
     <Border>
         <Grid>
             <ContentControl
-                x:Name="DynamicDisplay"
+                x:Name="CanvasPreviewDisplay"
                 HorizontalContentAlignment="Stretch"
                 VerticalContentAlignment="Stretch"
                 Content="{x:Bind ViewModel.CanvasViewModel, Mode=OneWay}"

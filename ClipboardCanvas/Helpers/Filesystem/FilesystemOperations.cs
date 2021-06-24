@@ -21,13 +21,13 @@ namespace ClipboardCanvas.Helpers.Filesystem
             {
                 using (Stream destinationStream = (await destination.OpenAsync(FileAccessMode.ReadWrite)).AsStreamForWrite())
                 {
-                    long totalBytes = 0L;
+                    long bytesTransferred = 0L;
                     int currentBlockSize = 0;
 
                     while ((currentBlockSize = await sourceStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
                     {
-                        totalBytes += currentBlockSize;
-                        float percentage = (float)totalBytes * 100.0f / (float)fileSize;
+                        bytesTransferred += currentBlockSize;
+                        float percentage = (float)bytesTransferred * 100.0f / (float)fileSize;
 
                         await destinationStream.WriteAsync(buffer, 0, currentBlockSize);
                         progressReportDelegate?.Invoke(percentage);

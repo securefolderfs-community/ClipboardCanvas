@@ -229,8 +229,7 @@
     <Compile Include="Enums\DisplayPageType.cs" />
     <Compile Include="Enums\OperationStatus.cs" />
     <Compile Include="EventArguments\CanvasControlEventArgs.cs" />
-    <Compile Include="EventArguments\CollectionControlEventArgs.cs" />
-    <Compile Include="EventArguments\CollectionsContainerEventArgs.cs" />
+    <Compile Include="EventArguments\CollectionEventArgs.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Helpers\AdaptiveActionsHelpers.cs" />
     <Compile Include="Helpers\ImagingHelpers.cs" />
@@ -248,10 +247,10 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\ISuggestedActionsControlModel.cs" />
-    <Compile Include="Models\ICollectionsContainerItemModel.cs" />
-    <Compile Include="Models\ICollectionsContainerModel.cs" />
-    <Compile Include="Models\IPasteCanvasEventsModel.cs" />
-    <Compile Include="Models\IPasteCanvasModel.cs" />
+    <Compile Include="Models\ICollectionItemModel.cs" />
+    <Compile Include="Models\ICollectionModel.cs" />
+    <Compile Include="Models\ICanvasPreviewEventsModel.cs" />
+    <Compile Include="Models\ICanvasPreviewModel.cs" />
     <Compile Include="Models\INavigationControlModel.cs" />
     <Compile Include="Models\INavigationToolBarControlModel.cs" />
     <Compile Include="ModelViews\ICanvasPageView.cs" />
@@ -295,8 +294,8 @@
     <Compile Include="UserControls\DisplayControl.xaml.cs">
       <DependentUpon>DisplayControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\DynamicCanvasControl.xaml.cs">
-      <DependentUpon>DynamicCanvasControl.xaml</DependentUpon>
+    <Compile Include="UserControls\CanvasDisplay\CanvasPreviewControl.xaml.cs">
+      <DependentUpon>CanvasPreviewControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\NavigationControl.xaml.cs">
       <DependentUpon>NavigationControl.xaml</DependentUpon>
@@ -341,14 +340,14 @@
     <Compile Include="ViewModels\UserControls\InAppNotifications\InAppNotificationControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SuggestedActionsControlItemViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SuggestedActionsControlViewModel.cs" />
-    <Compile Include="ViewModels\UserControls\CanvasDisplay\BasePasteCanvasViewModel.cs" />
-    <Compile Include="ViewModels\UserControls\CanvasDisplay\DynamicCanvasControlViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\CanvasDisplay\BaseCanvasViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\CanvasDisplay\CanvasPreviewControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\ImageCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\TextCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\MediaCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CollectionPreviewItemViewModel.cs" />
-    <Compile Include="ViewModels\UserControls\CollectionsContainerItemViewModel.cs" />
-    <Compile Include="ViewModels\UserControls\CollectionsContainerViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\CollectionItemViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\CollectionViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CollectionsControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\DisplayControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\NavigationControlViewModel.cs" />
@@ -509,7 +508,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\DynamicCanvasControl.xaml">
+    <Page Include="UserControls\CanvasDisplay\CanvasPreviewControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

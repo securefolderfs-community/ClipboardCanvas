@@ -4,7 +4,7 @@ using ClipboardCanvas.EventArguments.CanvasControl;
 
 namespace ClipboardCanvas.Models
 {
-    public interface IPasteCanvasEventsModel
+    public interface ICanvasPreviewEventsModel
     {
         event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
 

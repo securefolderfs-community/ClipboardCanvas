@@ -12,7 +12,7 @@ namespace ClipboardCanvas.Helpers
 {
     public static class SuggestedActionsHelpers
     {
-        public static IEnumerable<SuggestedActionsControlItemViewModel> GetActionsForInvalidReference(IPasteCanvasModel pasteCanvasModel)
+        public static IEnumerable<SuggestedActionsControlItemViewModel> GetActionsForInvalidReference(ICanvasPreviewModel pasteCanvasModel)
         {
             List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
 
@@ -27,19 +27,19 @@ namespace ClipboardCanvas.Helpers
             return actions;
         }
 
-        public static IEnumerable<SuggestedActionsControlItemViewModel> GetActionsForEmptyCanvasPage(IPasteCanvasModel pasteCanvasControlModel)
+        public static IEnumerable<SuggestedActionsControlItemViewModel> GetActionsForEmptyCanvasPage(ICanvasPreviewModel pasteCanvasControlModel)
         {
             List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
 
             var action_paste = new SuggestedActionsControlItemViewModel(
                 new AsyncRelayCommand(async () =>
                 {
-                    DynamicCanvasControlViewModel.CanvasPasteCancellationTokenSource.Cancel();
-                    DynamicCanvasControlViewModel.CanvasPasteCancellationTokenSource = new CancellationTokenSource();
+                    CanvasPreviewControlViewModel.CanvasPasteCancellationTokenSource.Cancel();
+                    CanvasPreviewControlViewModel.CanvasPasteCancellationTokenSource = new CancellationTokenSource();
 
                     SafeWrapper<DataPackageView> dataPackage = await ClipboardHelpers.GetClipboardData();
 
-                    await pasteCanvasControlModel.TryPasteData(dataPackage, DynamicCanvasControlViewModel.CanvasPasteCancellationTokenSource.Token);
+                    await pasteCanvasControlModel.TryPasteData(dataPackage, CanvasPreviewControlViewModel.CanvasPasteCancellationTokenSource.Token);
                 }), "Paste from clipboard", "\uE77F");
 
             actions.Add(action_paste);

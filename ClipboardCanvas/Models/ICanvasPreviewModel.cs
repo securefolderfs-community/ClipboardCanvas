@@ -11,7 +11,7 @@ using ClipboardCanvas.ViewModels.ContextMenu;
 
 namespace ClipboardCanvas.Models
 {
-    public interface IPasteCanvasModel : IPasteCanvasEventsModel, IDisposable
+    public interface ICanvasPreviewModel : ICanvasPreviewEventsModel, IDisposable
     {
         CanvasPreviewMode CanvasMode { get; } // set??
 
@@ -24,7 +24,7 @@ namespace ClipboardCanvas.Models
         /// Attempts to load existing data to display
         /// </summary>
         /// <param name="itemData"></param>
-        Task<SafeWrapperResult> TryLoadExistingData(ICollectionsContainerItemModel itemData, CancellationToken cancellationToken);
+        Task<SafeWrapperResult> TryLoadExistingData(ICollectionItemModel itemData, CancellationToken cancellationToken);
 
         /// <summary>
         /// Attempts to paste data from provided <see cref="DataPackageView"/> <paramref name="dataPackage"/>
@@ -34,7 +34,7 @@ namespace ClipboardCanvas.Models
         Task<SafeWrapperResult> TryPasteData(DataPackageView dataPackage, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Attempts to save current data to file in associated container
+        /// Attempts to save current data to file in associated collection
         /// </summary>
         /// <returns></returns>
         Task<SafeWrapperResult> TrySaveData();

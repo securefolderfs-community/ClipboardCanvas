@@ -1,10 +1,6 @@
-﻿using ClipboardCanvas.Helpers.SafetyHelpers;
+﻿using System;
+using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.UserControls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClipboardCanvas.EventArguments
 {
@@ -24,20 +20,20 @@ namespace ClipboardCanvas.EventArguments
 
     public class CollectionItemsInitializationStartedEventArgs : EventArgs
     {
-        public readonly CollectionsContainerViewModel containerViewModel;
+        public readonly CollectionViewModel collectionViewModel;
 
         public readonly string infoText;
 
         public readonly TimeSpan tipShowDelay;
 
-        public CollectionItemsInitializationStartedEventArgs(CollectionsContainerViewModel containerViewModel, string infoText)
+        public CollectionItemsInitializationStartedEventArgs(CollectionViewModel containerViewModel, string infoText)
             : this(containerViewModel, infoText, TimeSpan.Zero)
         {
         }
 
-        public CollectionItemsInitializationStartedEventArgs(CollectionsContainerViewModel containerViewModel, string infoText, TimeSpan tipShowDelay)
+        public CollectionItemsInitializationStartedEventArgs(CollectionViewModel collectionViewModel, string infoText, TimeSpan tipShowDelay)
         {
-            this.containerViewModel = containerViewModel;
+            this.collectionViewModel = collectionViewModel;
             this.infoText = infoText;
             this.tipShowDelay = tipShowDelay;
         }
@@ -45,11 +41,11 @@ namespace ClipboardCanvas.EventArguments
 
     public class CollectionItemsInitializationFinishedEventArgs : EventArgs
     {
-        public readonly CollectionsContainerViewModel containerViewModel;
+        public readonly CollectionViewModel collectionViewModel;
 
-        public CollectionItemsInitializationFinishedEventArgs(CollectionsContainerViewModel containerViewModel)
+        public CollectionItemsInitializationFinishedEventArgs(CollectionViewModel collectionViewModel)
         {
-            this.containerViewModel = containerViewModel;
+            this.collectionViewModel = collectionViewModel;
         }
     }
 

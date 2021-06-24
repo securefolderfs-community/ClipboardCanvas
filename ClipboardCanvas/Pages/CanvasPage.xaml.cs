@@ -21,16 +21,16 @@ namespace ClipboardCanvas.Pages
             set => DataContext = value;
         }
 
-        public IPasteCanvasModel PasteCanvasModel => PasteCanvasControl?.ViewModel;
+        public ICanvasPreviewModel CanvasPreviewModel => CanvasPreviewControl?.ViewModel;
 
-        public ICollectionsContainerModel AssociatedCollection { get; private set; }
+        public ICollectionModel AssociatedCollectionModel { get; private set; }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
             DisplayFrameNavigationParameterDataModel navigationParameter = e.Parameter as DisplayFrameNavigationParameterDataModel;
-            AssociatedCollection = navigationParameter.collectionContainer;
+            AssociatedCollectionModel = navigationParameter.collectionModel;
         }
 
         public CanvasPage()

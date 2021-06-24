@@ -27,9 +27,9 @@ using ClipboardCanvas.Services;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
-    public abstract class BasePasteCanvasViewModel : ObservableObject,
-        IPasteCanvasModel,
-        IPasteCanvasEventsModel,
+    public abstract class BaseCanvasViewModel : ObservableObject,
+        ICanvasPreviewModel,
+        ICanvasPreviewEventsModel,
         IDisposable
     {
         #region Protected Members
@@ -68,9 +68,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected SafeWrapperResult ReferencedFileNotFoundResult => new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "The file referenced was not found");
 
-        protected ICollectionsContainerItemModel AssociatedContainerCanvas => AssociatedContainer?.CurrentCanvas;
+        protected ICollectionItemModel AssociatedCollectionItemModel => AssociatedCollection?.CurrentCanvas;
 
-        protected abstract ICollectionsContainerModel AssociatedContainer { get; }
+        protected abstract ICollectionModel AssociatedCollection { get; }
 
         protected bool IsDisposed { get; private set; }
 
@@ -122,7 +122,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public BasePasteCanvasViewModel(ISafeWrapperExceptionReporter errorReporter, BasePastedContentTypeDataModel contentType, CanvasPreviewMode canvasMode)
+        public BaseCanvasViewModel(ISafeWrapperExceptionReporter errorReporter, BasePastedContentTypeDataModel contentType, CanvasPreviewMode canvasMode)
         {
             this.errorReporter = errorReporter;
             this.contentType = contentType;
@@ -133,7 +133,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region IPasteCanvasModel
 
-        public virtual async Task<SafeWrapperResult> TryLoadExistingData(ICollectionsContainerItemModel itemData, CancellationToken cancellationToken)
+        public virtual async Task<SafeWrapperResult> TryLoadExistingData(ICollectionItemModel itemData, CancellationToken cancellationToken)
         {
             this.cancellationToken = cancellationToken;
 
@@ -204,7 +204,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (IsDisposed)
             {
-                return new SafeWrapperResult(OperationErrorCode.InvalidOperation, new ObjectDisposedException(nameof(BasePasteCanvasViewModel)), "The canvas has been already disposed of.");
+                return new SafeWrapperResult(OperationErrorCode.InvalidOperation, new ObjectDisposedException(nameof(BaseCanvasViewModel)), "The canvas has been already disposed of.");
             }
             if (isFilled)
             {
@@ -315,7 +315,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
                 if (result)
                 {
-                    RaiseOnFileModifiedEvent(this, new FileModifiedEventArgs(associatedFile, AssociatedContainer));
+                    RaiseOnFileModifiedEvent(this, new FileModifiedEventArgs(associatedFile));
                 }
 
                 return result;
@@ -334,8 +334,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             else if (result != OperationErrorCode.Cancelled)
             {
-                AssociatedContainer.RefreshRemoveItem(AssociatedContainerCanvas);
-                RaiseOnFileDeletedEvent(this, new FileDeletedEventArgs(associatedFile, AssociatedContainer));
+                AssociatedCollection.RefreshRemoveItem(AssociatedCollectionItemModel);
+                RaiseOnFileDeletedEvent(this, new FileDeletedEventArgs(associatedFile));
             }
 
             return result;
@@ -367,7 +367,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             string extension = Path.GetExtension(referencedFile.Path);
             string fileName = Path.GetFileNameWithoutExtension(referencedFile.Path);
-            SafeWrapper<StorageFile> newFile = await AssociatedContainer.GetEmptyFileToWrite(extension, fileName);
+            SafeWrapper<StorageFile> newFile = await AssociatedCollection.GetEmptyFileToWrite(extension, fileName);
 
             if (!AssertNoError(newFile))
             {
@@ -386,7 +386,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             associatedFile = newFile;
             sourceFile = associatedFile;
             contentAsReference = false;
-            AssociatedContainer.CurrentCanvas.DangerousUpdateFile(associatedFile);
+            AssociatedCollection.CurrentCanvas.DangerousUpdateFile(associatedFile);
 
             if (copyResult)
             {
@@ -440,7 +440,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                         var action_openFile = new SuggestedActionsControlItemViewModel(
                             new AsyncRelayCommand(async () =>
                             {
-                                await AssociatedContainer.CurrentCanvas.OpenFile();
+                                await AssociatedCollection.CurrentCanvas.OpenFile();
                             }), $"Open with {appName}", icon);
 
                         actions.Add(action_openFile);
@@ -451,7 +451,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     var action_openFile = new SuggestedActionsControlItemViewModel(
                         new AsyncRelayCommand(async () =>
                         {
-                            await AssociatedContainer.CurrentCanvas.OpenFile();
+                            await AssociatedCollection.CurrentCanvas.OpenFile();
                         }), "Open file", "\uE8E5");
 
                     actions.Add(action_openFile);
@@ -462,7 +462,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             var action_openInFileExplorer = new SuggestedActionsControlItemViewModel(
                 new AsyncRelayCommand(async () =>
                 {
-                    await AssociatedContainer.CurrentCanvas.OpenContainingFolder();
+                    await AssociatedCollection.CurrentCanvas.OpenContainingFolder();
                 }), "Open containing folder", "\uE838");
 
             actions.Add(action_openInFileExplorer);
@@ -487,7 +487,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             List<BaseMenuFlyoutItemViewModel> items = new List<BaseMenuFlyoutItemViewModel>();
 
             // May occur when quickly switching between canvases
-            if (AssociatedContainer == null)
+            if (AssociatedCollection == null)
             {
                 ContextMenuItems = items;
             }
@@ -495,7 +495,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Open item
             items.Add(new MenuFlyoutItemViewModel()
             {
-                Command = new AsyncRelayCommand(AssociatedContainer.CurrentCanvas.OpenFile),
+                Command = new AsyncRelayCommand(AssociatedCollection.CurrentCanvas.OpenFile),
                 IconGlyph = "\uE8E5",
                 Text = "Open file"
             });
@@ -514,7 +514,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Open containing folder
             items.Add(new MenuFlyoutItemViewModel()
             {
-                Command = new AsyncRelayCommand(AssociatedContainer.CurrentCanvas.OpenContainingFolder),
+                Command = new AsyncRelayCommand(AssociatedCollection.CurrentCanvas.OpenContainingFolder),
                 IconGlyph = "\uE838",
                 Text = "Open containing folder"
             });
@@ -524,7 +524,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 items.Add(new MenuFlyoutItemViewModel()
                 {
-                    Command = new AsyncRelayCommand(() => AssociatedContainer.CurrentCanvas.OpenContainingFolder(checkForReference: false)),
+                    Command = new AsyncRelayCommand(() => AssociatedCollection.CurrentCanvas.OpenContainingFolder(checkForReference: false)),
                     IconGlyph = "\uE838",
                     Text = "Open reference containing folder"
                 });
@@ -617,14 +617,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (contentAsReference)
             {
-                file = await AssociatedContainer.GetEmptyFileToWrite(Constants.FileSystem.REFERENCE_FILE_EXTENSION);
+                file = await AssociatedCollection.GetEmptyFileToWrite(Constants.FileSystem.REFERENCE_FILE_EXTENSION);
             }
             else
             {
                 if (sourceFile != null)
                 {
                     string extension = Path.GetExtension(sourceFile.Path);
-                    file = await AssociatedContainer.GetEmptyFileToWrite(extension, Path.GetFileNameWithoutExtension(sourceFile.Path));
+                    file = await AssociatedCollection.GetEmptyFileToWrite(extension, Path.GetFileNameWithoutExtension(sourceFile.Path));
                 }
                 else
                 {
@@ -641,7 +641,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (file)
             {
-                RaiseOnFileCreatedEvent(this, new FileCreatedEventArgs(AssociatedContainer, contentType, associatedFile));
+                RaiseOnFileCreatedEvent(this, new FileCreatedEventArgs(contentType, associatedFile));
             }
 
             return file;
