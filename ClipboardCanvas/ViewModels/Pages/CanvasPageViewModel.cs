@@ -247,9 +247,9 @@ namespace ClipboardCanvas.ViewModels.Pages
 
                             foreach (var item in draggedItems.Result)
                             {
-                                if (ReferenceFile.IsReferenceFile(CollectionModel.CurrentCanvas.File))
+                                if (ReferenceFile.IsReferenceFile(CollectionModel.CurrentCollectionItemViewModel.File))
                                 {
-                                    ReferenceFile referenceFile = await ReferenceFile.GetFile(CollectionModel.CurrentCanvas.File);
+                                    ReferenceFile referenceFile = await ReferenceFile.GetFile(CollectionModel.CurrentCollectionItemViewModel.File);
 
                                     if (referenceFile.ReferencedFile?.Path == item.Path)
                                     {
@@ -259,7 +259,7 @@ namespace ClipboardCanvas.ViewModels.Pages
                                 }
                                 else
                                 {
-                                    if (item.Path == CollectionModel.CurrentCanvas.File.Path)
+                                    if (item.Path == CollectionModel.CurrentCollectionItemViewModel.File.Path)
                                     {
                                         canPaste = false;
                                         break;

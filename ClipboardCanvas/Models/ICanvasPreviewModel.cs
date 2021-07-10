@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
-using ClipboardCanvas.Helpers.SafetyHelpers;
 using System.Threading;
 using System.Collections.Generic;
+
+using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.UserControls;
 using ClipboardCanvas.Enums;
-using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.ViewModels.ContextMenu;
 
 namespace ClipboardCanvas.Models
@@ -14,6 +14,11 @@ namespace ClipboardCanvas.Models
     public interface ICanvasPreviewModel : ICanvasPreviewEventsModel, IDisposable
     {
         CanvasPreviewMode CanvasMode { get; } // set??
+
+        /// <summary>
+        /// Determines whether canvas content has been loaded
+        /// </summary>
+        bool IsFilled { get; }
 
         /// <summary>
         /// Context menu options available for the canvas

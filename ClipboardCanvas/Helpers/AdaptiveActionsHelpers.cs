@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.Toolkit.Mvvm.Input;
 using Windows.ApplicationModel.DataTransfer;
 using System.Threading;
 
@@ -6,7 +7,7 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.UserControls;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 using ClipboardCanvas.Models;
-using Microsoft.Toolkit.Mvvm.Input;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.Helpers
 {

@@ -130,4 +130,11 @@ namespace ClipboardCanvas.EventArguments.CanvasControl
             this.tipShowDelay = tipShowDelay;
         }
     }
+
+    public class OpenNewCanvasRequestedEventArgs : EventArgs
+    {
+        public OpenNewCanvasRequestedEventArgs()
+        {
+        }
+    }
 }

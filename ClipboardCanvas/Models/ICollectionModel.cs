@@ -1,87 +1,29 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.UserControls;
-using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.Models
 {
-    /// <summary>
-    /// This interface is part of collections which hold pasted items
-    /// This interface contains functions to save data and delete to/from files
-    /// </summary>
     public interface ICollectionModel
     {
-        List<CollectionItemViewModel> Items { get; }
-
-        bool CanOpenCollection { get; }
+        bool IsCollectionAvailable { get; }
 
         bool IsOnNewCanvas { get; }
 
-        bool CanvasInitialized { get; }
+        string DisplayName { get; }
 
-        bool CanvasInitializing { get; }
+        bool IsCanvasInitialized { get; }
+        
+        bool IsCanvasInitializing { get; }
 
-        string Name { get; }
+        CollectionItemViewModel CurrentCollectionItemViewModel { get; }
 
-        int CurrentIndex { get; }
+        Task<SafeWrapper<StorageFile>> GetOrCreateNewCollectionFileFromExtension(string extension);
 
-        /// <summary>
-        /// Gets whether current canvas is new unfilled or canvas is not new with already existing content - filled
-        /// </summary>
-        bool IsFilled { get; }
-
-        /// <summary>
-        /// Gets currently opened canvas
-        /// </summary>
-        ICollectionItemModel CurrentCanvas { get; }
-
-        /// <summary>
-        /// Checks whether can open collection and updates UI and <see cref="CanOpenCollection"/> if necessary
-        /// </summary>
-        bool CheckCollectionAvailability();
-
-        /// <summary>
-        /// Sets index of currently selected canvas
-        /// <br/><br/>
-        /// Note:
-        /// <br/>
-        /// This function is considered as *dangerous* since calling it may yield unexpected results
-        /// </summary>
-        /// <param name="newIndex">New value</param>
-        void DangerousSetIndex(int newIndex);
-
-        /// <summary>
-        /// Gets folder associated with the collection
-        /// <br/><br/>
-        /// Note:
-        /// <br/>
-        /// This function is considered as *dangerous* since <see cref="ICollectionModel"/> contains wrapper functions for provided return value
-        /// </summary>
-        /// <returns></returns>
-        IStorageFolder DangerousGetCollectionFolder();
-
-        /// <summary>
-        /// Creates a file and returns it within this collection
-        /// </summary>
-        /// <returns>A <see cref="StorageFile"/> which can be written to, read from</returns>
-        Task<SafeWrapper<StorageFile>> GetEmptyFileToWrite(string extension, string fileName = null);
-
-        /// <summary>
-        /// Determines whether current canvas can be changed to next
-        /// </summary>
-        /// <returns></returns>
-        bool HasNext();
-
-        /// <summary>
-        /// Determines whether current canvas can be changed to back
-        /// </summary>
-        /// <returns></returns>
-        bool HasBack();
+        Task<SafeWrapper<StorageFile>> GetOrCreateNewCollectionFile(string fileName);
 
         /// <summary>
         /// Navigates to new canvas
@@ -95,7 +37,7 @@ namespace ClipboardCanvas.Models
         Task NavigateNext(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Navigates to oldest canvas in the list
+        /// Navigates to last canvas in the list
         /// </summary>
         Task NavigateLast(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken);
 
@@ -105,24 +47,47 @@ namespace ClipboardCanvas.Models
         /// <returns></returns>
         Task NavigateBack(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken);
 
+        /// <summary>
+        /// Tries to load current canvas from collection
+        /// </summary>
+        /// <param name="pasteCanvasModel"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         Task LoadCanvasFromCollection(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Silently adds item to the collection instead of refreshing
+        /// Manually adds item to collection
         /// </summary>
-        /// <param name="file"></param>
-        /// <param name="contentType"></param>
-        void RefreshAddItem(StorageFile file, BasePastedContentTypeDataModel contentType);
+        /// <param name="collectionItemViewModel"></param>
+        void AddCollectionItem(CollectionItemViewModel collectionItemViewModel);
 
         /// <summary>
-        /// Silently removes an item from the collection to prevent from reloading it
+        /// Manually removes item from collection
         /// </summary>
-        void RefreshRemoveItem(ICollectionItemModel collectionItemModel);
+        /// <param name="collectionItemViewModel"></param>
+        void RemoveCollectionItem(CollectionItemViewModel collectionItemViewModel);
 
         /// <summary>
-        /// Initializes collection's items
+        /// Returns true, if it's possible to navigate canvas forward
         /// </summary>
-        /// <returns>Returns true if operation completed successfully, otherwise false</returns>
-        Task<bool> InitializeItems();
+        /// <returns></returns>
+        bool HasNext();
+
+        /// <summary>
+        /// Returns true, if it's possible to navigate canvas back
+        /// </summary>
+        /// <returns></returns>
+        bool HasBack();
+
+        /// <summary>
+        /// Sets current index at the stack end
+        /// </summary>
+        void SetIndexOnNewCanvas();
+
+        bool CheckCollectionAvailability();
+
+        Task<bool> InitializeCollectionItems();
+
+        Task<bool> InitializeCollectionFolder();
     }
 }

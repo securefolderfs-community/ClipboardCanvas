@@ -1,34 +1,29 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ClipboardCanvas.ViewModels.UserControls;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.Helpers
 {
     public static class CollectionsHelpers
     {
-        public static void UpdateLastSelectedCollectionSetting(CollectionViewModel collectionViewModel)
+        public static void UpdateLastSelectedCollectionSetting(BaseCollectionViewModel collectionViewModel)
         {
-            if (collectionViewModel.isDefault)
+            if (collectionViewModel is DefaultCollectionViewModel)
             {
                 App.AppSettings.CollectionLocationsSettings.LastSelectedCollection = Constants.Collections.DEFAULT_COLLECTION_TOKEN;
             }
             else
             {
-                App.AppSettings.CollectionLocationsSettings.LastSelectedCollection = collectionViewModel.DangerousGetCollectionFolder()?.Path;
+                App.AppSettings.CollectionLocationsSettings.LastSelectedCollection = collectionViewModel.CollectionPath;
             }
         }
 
         public static void UpdateSavedCollectionsSetting()
         {
-            List<string> paths = new List<string>();
-            foreach (var item in CollectionsControlViewModel.Items)
-            {
-                if (!item.isDefault)
-                {
-                    paths.Add(item.CollectionFolderPath);
-                }
-            }
+            IEnumerable<string> paths = CollectionsControlViewModel.Collections.Select((item) => item.CollectionPath);
 
-            App.AppSettings.CollectionLocationsSettings.SavedCollectionLocations = paths;
+            App.AppSettings.CollectionLocationsSettings.SavedCollectionLocations = paths.ToList();
         }
     }
 }

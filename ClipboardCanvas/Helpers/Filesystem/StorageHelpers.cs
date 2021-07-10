@@ -95,6 +95,11 @@ namespace ClipboardCanvas.Helpers.Filesystem
 
         public static bool Exists(string path)
         {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return false;
+            }
+
             return UnsafeNativeApis.GetFileAttributesExFromApp(path, UnsafeNativeDataModels.GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out _);
         }
     }

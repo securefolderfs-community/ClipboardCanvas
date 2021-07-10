@@ -63,5 +63,31 @@ namespace ClipboardCanvas.Helpers.Filesystem
 
             return result;
         }
+
+        public static async Task<SafeWrapper<StorageFile>> CreateFile(string path)
+        {
+            string parentFolderPath = Path.GetDirectoryName(path);
+            SafeWrapper<StorageFolder> parentFolder = await StorageHelpers.ToStorageItemWithError<StorageFolder>(parentFolderPath);
+
+            if (!parentFolder)
+            {
+                return new SafeWrapper<StorageFile>(null, parentFolder.Details);
+            }
+
+            string fileName = Path.GetFileName(path);
+
+            return await CreateFile(parentFolder, fileName);
+        }
+
+        public static async Task<SafeWrapper<StorageFile>> CreateFile(StorageFolder parentFolder, string fileName)
+        {
+            if (parentFolder == null)
+            {
+                return new SafeWrapper<StorageFile>(null, OperationErrorCode.InvalidArgument, new ArgumentNullException(), "The provided folder is null.");
+            }
+
+            SafeWrapper<StorageFile> file = await SafeWrapperRoutines.SafeWrapAsync(async () => await parentFolder.CreateFileAsync(fileName, CreationCollisionOption.GenerateUniqueName));
+            return file;
+        }
     }
 }

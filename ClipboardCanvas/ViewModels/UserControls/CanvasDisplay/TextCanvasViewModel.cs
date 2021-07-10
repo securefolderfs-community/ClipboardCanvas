@@ -94,7 +94,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             SafeWrapper<StorageFile> file;
 
-            file = await AssociatedCollection.GetEmptyFileToWrite(".txt");
+            file = await AssociatedCollection.GetOrCreateNewCollectionFileFromExtension(".txt");
 
             return file;
         }

@@ -21,9 +21,13 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters
                 return (OperationErrorCode.AccessUnauthorized, e, App.IsInRestrictedAccessMode ? "Couldn't access this path because Clipboard Canvas is in Restricted Access mode. Access is unauthorized."
                     : "Access is unauthorized.");
             }
-            else if (e is FileNotFoundException) // Item was deleted
+            else if (e is FileNotFoundException) // File not found
             {
-                return (OperationErrorCode.NotFound, e, "File/Folder was not found.");
+                return (OperationErrorCode.NotFound, e, "The file was not found.");
+            }
+            else if (e is DirectoryNotFoundException) // Folder not found
+            {
+                return (OperationErrorCode.NotFound, e, "The folder was not found.");
             }
             else if (e is ArgumentException) // Item was invalid
             {

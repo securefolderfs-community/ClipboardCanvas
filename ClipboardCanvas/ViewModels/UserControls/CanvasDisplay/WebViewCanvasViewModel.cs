@@ -149,11 +149,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (_mode == WebViewCanvasMode.ReadWebsite)
             {
-                file = await AssociatedCollection.GetEmptyFileToWrite(Constants.FileSystem.WEBSITE_LINK_FILE_EXTENSION);
+                file = await AssociatedCollection.GetOrCreateNewCollectionFileFromExtension(Constants.FileSystem.WEBSITE_LINK_FILE_EXTENSION);
             }
             else
             {
-                file = await AssociatedCollection.GetEmptyFileToWrite(".html");
+                file = await AssociatedCollection.GetOrCreateNewCollectionFileFromExtension(".html");
             }
 
             return file;

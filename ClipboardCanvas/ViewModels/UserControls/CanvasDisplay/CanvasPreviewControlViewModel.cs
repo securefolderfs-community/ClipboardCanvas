@@ -41,9 +41,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public ICollectionModel AssociatedContainer => _view?.CollectionModel;
         
-        public ICollectionItemModel AssociatedContainerCanvas => AssociatedContainer?.CurrentCanvas;
-
         public CanvasPreviewMode CanvasMode => CanvasViewModel?.CanvasMode ?? CanvasPreviewMode.PreviewOnly;
+
+        public bool IsFilled => CanvasViewModel?.IsFilled ?? false;
 
         public List<BaseMenuFlyoutItemViewModel> ContextMenuItems => CanvasViewModel?.ContextMenuItems;
 
@@ -145,7 +145,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 }
                 else if (result != OperationErrorCode.Cancelled)
                 {
-                    AssociatedContainer.RefreshRemoveItem(AssociatedContainerCanvas);
+                    AssociatedContainer.RemoveCollectionItem(AssociatedContainer.CurrentCollectionItemViewModel);
                     OnFileDeletedEvent?.Invoke(this, new FileDeletedEventArgs(_associatedFile));
                 }
 

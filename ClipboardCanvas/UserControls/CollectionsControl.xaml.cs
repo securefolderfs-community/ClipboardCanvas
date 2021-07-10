@@ -1,5 +1,5 @@
-﻿using ClipboardCanvas.ViewModels.UserControls;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml.Controls;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 

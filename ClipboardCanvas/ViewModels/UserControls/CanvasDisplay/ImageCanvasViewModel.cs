@@ -243,7 +243,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task<SafeWrapper<StorageFile>> TrySetFileWithExtension()
         {
-            SafeWrapper<StorageFile> file = await AssociatedCollection.GetEmptyFileToWrite(".png");
+            SafeWrapper<StorageFile> file = await AssociatedCollection.GetOrCreateNewCollectionFileFromExtension(".png");
 
             return file;
         }

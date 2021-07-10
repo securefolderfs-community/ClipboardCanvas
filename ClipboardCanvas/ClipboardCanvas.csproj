@@ -183,7 +183,6 @@
     <Compile Include="Enums\SettingsPageType.cs" />
     <Compile Include="Enums\WebViewCanvasMode.cs" />
     <Compile Include="EventArguments\CollectionPreviewItemEventArgs.cs" />
-    <Compile Include="EventArguments\CommonEventArgs.cs" />
     <Compile Include="EventArguments\InAppNotificationEventArgs.cs" />
     <Compile Include="Exceptions\ReferencedFileNotFoundException.cs" />
     <Compile Include="Extensions\GenericsExtensions.cs" />
@@ -200,8 +199,11 @@
     <Compile Include="Helpers\StringHelpers.cs" />
     <Compile Include="Helpers\ThemeHelper.cs" />
     <Compile Include="Helpers\VersionHelpers.cs" />
+    <Compile Include="Interfaces\Collections\ICollectionNameEditable.cs" />
+    <Compile Include="Interfaces\Collections\ICollectionRemovable.cs" />
     <Compile Include="Logging\ExceptionLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Models\ICollectionModel.cs" />
     <Compile Include="Models\IPasteCanvasPageModel.cs" />
     <Compile Include="ModelViews\IDynamicCanvasControlView.cs" />
     <Compile Include="ModelViews\IMediaCanvasControlView.cs" />
@@ -229,7 +231,7 @@
     <Compile Include="Enums\DisplayPageType.cs" />
     <Compile Include="Enums\OperationStatus.cs" />
     <Compile Include="EventArguments\CanvasControlEventArgs.cs" />
-    <Compile Include="EventArguments\CollectionEventArgs.cs" />
+    <Compile Include="EventArguments\CollectionsEventArgs.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Helpers\AdaptiveActionsHelpers.cs" />
     <Compile Include="Helpers\ImagingHelpers.cs" />
@@ -248,7 +250,6 @@
     </Compile>
     <Compile Include="Models\ISuggestedActionsControlModel.cs" />
     <Compile Include="Models\ICollectionItemModel.cs" />
-    <Compile Include="Models\ICollectionModel.cs" />
     <Compile Include="Models\ICanvasPreviewEventsModel.cs" />
     <Compile Include="Models\ICanvasPreviewModel.cs" />
     <Compile Include="Models\INavigationControlModel.cs" />
@@ -336,6 +337,10 @@
     <Compile Include="ViewModels\UserControls\CanvasDisplay\FallbackCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\MarkdownCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\WebViewCanvasViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\Collections\BaseCollectionViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\Collections\CollectionsControlViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\Collections\DefaultCollectionViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\Collections\StandardCollectionViewModel.cs" />
     <Compile Include="ViewModels\UserControls\InAppNotifications\IInAppNotification.cs" />
     <Compile Include="ViewModels\UserControls\InAppNotifications\InAppNotificationControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SuggestedActionsControlItemViewModel.cs" />
@@ -346,9 +351,7 @@
     <Compile Include="ViewModels\UserControls\CanvasDisplay\TextCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\MediaCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CollectionPreviewItemViewModel.cs" />
-    <Compile Include="ViewModels\UserControls\CollectionItemViewModel.cs" />
-    <Compile Include="ViewModels\UserControls\CollectionViewModel.cs" />
-    <Compile Include="ViewModels\UserControls\CollectionsControlViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\Collections\CollectionItemViewModel.cs" />
     <Compile Include="ViewModels\UserControls\DisplayControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\NavigationControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\NavigationToolBarControlViewModel.cs" />

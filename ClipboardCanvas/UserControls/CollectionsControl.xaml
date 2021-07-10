@@ -9,7 +9,7 @@
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vc="using:ClipboardCanvas.ValueConverters"
-    xmlns:vm="using:ClipboardCanvas.ViewModels.UserControls"
+    xmlns:vm="using:ClipboardCanvas.ViewModels.UserControls.Collections"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
@@ -48,7 +48,7 @@
             AllowDrop="True"
             CanReorderItems="True"
             IsItemClickEnabled="True"
-            ItemsSource="{x:Bind vm:CollectionsControlViewModel.Items}"
+            ItemsSource="{x:Bind vm:CollectionsControlViewModel.Collections}"
             ReorderMode="Enabled"
             SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
             SelectionMode="Single">
@@ -130,7 +130,7 @@
                                     VerticalAlignment="Bottom"
                                     Foreground="Red"
                                     Glyph="&#xE783;"
-                                    Visibility="{Binding ErrorIconVisibility}">
+                                    Visibility="{Binding ErrorIconVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
                                     <ToolTipService.ToolTip>
                                         <ToolTip>
                                             <StackPanel Spacing="8">
@@ -138,7 +138,7 @@
                                                 <TextBlock
                                                     FontSize="16"
                                                     FontWeight="SemiBold"
-                                                    Text="Collection Error" />
+                                                    Text="Collection unavailable" />
 
                                                 <!--  Content text  -->
                                                 <TextBlock
@@ -175,10 +175,10 @@
                                     Visibility="{Binding IsEditingName, Converter={StaticResource BooleanToVisibilityConverter}}">
                                     <i:Interaction.Behaviors>
                                         <icore:EventTriggerBehavior EventName="KeyDown">
-                                            <icore:InvokeCommandAction Command="{Binding EditBoxKeyDownCommand}" />
+                                            <icore:InvokeCommandAction Command="{Binding RenameBoxKeyDownCommand}" />
                                         </icore:EventTriggerBehavior>
                                         <icore:EventTriggerBehavior EventName="LostFocus">
-                                            <icore:InvokeCommandAction Command="{Binding EditBoxLostFocusCommand}" />
+                                            <icore:InvokeCommandAction Command="{Binding RenameBoxLostFocusCommand}" />
                                         </icore:EventTriggerBehavior>
                                     </i:Interaction.Behaviors>
                                 </TextBox>
@@ -190,7 +190,7 @@
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Center"
                                 IsIndeterminate="True"
-                                Visibility="{Binding IsLoadingItemsVisibility}" />
+                                Visibility="{Binding IsCanvasInitializing, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         </Grid>
                         <Border.ContextFlyout>
                             <MenuFlyout>
@@ -205,7 +205,7 @@
                                         <FontIcon Glyph="&#xE72C;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem Command="{Binding RenameCollectionCommand}" Text="Edit name">
+                                <MenuFlyoutItem Command="{Binding StartRenameCollectionCommand}" Text="Edit name">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8AC;" />
                                     </MenuFlyoutItem.Icon>

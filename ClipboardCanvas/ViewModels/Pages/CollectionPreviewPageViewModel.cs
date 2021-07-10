@@ -55,11 +55,11 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private void InitItems()
         {
-            foreach (var item in AssociatedCollection.Items)
-            {
-                CollectionPreviewItemViewModel collectionPreviewItem = new CollectionPreviewItemViewModel(AssociatedCollection, item.File.Name);
-                Items.Add(collectionPreviewItem);
-            }
+            //foreach (var item in AssociatedCollection.)
+            //{
+            //    CollectionPreviewItemViewModel collectionPreviewItem = new CollectionPreviewItemViewModel(AssociatedCollection, item.File.Name);
+            //    Items.Add(collectionPreviewItem);
+            //}
         }
 
         #endregion
