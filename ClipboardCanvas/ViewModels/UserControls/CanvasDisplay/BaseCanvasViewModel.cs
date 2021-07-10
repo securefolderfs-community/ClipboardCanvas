@@ -484,6 +484,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (AssociatedCollection == null)
             {
                 ContextMenuItems = items;
+                return;
             }
 
             // Open item

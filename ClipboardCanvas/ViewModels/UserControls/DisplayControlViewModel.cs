@@ -424,7 +424,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                         if (!_currentCollectionModel.IsCanvasInitializing)
                         {
                             // We might navigate from home to a canvas that's already filled, so initialize the content
-                            if (PasteCanvasPageModel.PasteCanvasModel.IsFilled)
+                            if (!_currentCollectionModel.IsOnNewCanvas)
                             {
                                 _canvasLoadCancellationTokenSource.Cancel();
                                 _canvasLoadCancellationTokenSource.Dispose();

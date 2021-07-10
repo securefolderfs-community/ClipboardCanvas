@@ -181,16 +181,5 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         }
 
         #endregion
-
-        #region IDisposable
-
-        public override void Dispose()
-        {
-            base.Dispose();
-
-            ContentText = null;
-        }
-
-        #endregion
     }
 }
