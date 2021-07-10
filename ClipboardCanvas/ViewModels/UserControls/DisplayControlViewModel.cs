@@ -498,7 +498,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             if (fromError != null)
             {
-                if (ReferenceFile.IsReferenceFile(_currentCollectionModel.CurrentCollectionItemViewModel.File))
+                if (_currentCollectionModel.CurrentCollectionItemViewModel != null && ReferenceFile.IsReferenceFile(_currentCollectionModel.CurrentCollectionItemViewModel.File))
                 {
                     if (fromError == OperationErrorCode.InvalidArgument) // Reference File is corrupted
                     {
