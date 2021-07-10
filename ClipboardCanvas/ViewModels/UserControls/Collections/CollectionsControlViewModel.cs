@@ -299,14 +299,26 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             }
 
             DefaultCollectionViewModel defaultCollectionViewModel = new DefaultCollectionViewModel(defaultCollectionFolder);
-            await AddCollection(defaultCollectionViewModel, true);
+            bool defaultCollectionAdded = false;
 
-            BaseCollectionViewModel baseCollectionViewModel;
             foreach (var item in savedCollectionPaths)
             {
-                baseCollectionViewModel = new StandardCollectionViewModel(item);
+                if (!defaultCollectionAdded && item == Constants.Collections.DEFAULT_COLLECTION_TOKEN)
+                {
+                    defaultCollectionAdded = true;
+                    await AddCollection(defaultCollectionViewModel, true);
+                }
+                else
+                {
+                    StandardCollectionViewModel standardCollectionViewModel = new StandardCollectionViewModel(item);
+                    await AddCollection(standardCollectionViewModel, true);
+                }
+            }
 
-                await AddCollection(baseCollectionViewModel, true);
+            if (!defaultCollectionAdded)
+            {
+                // Add default collection if it hasn't been added
+                await AddCollection(defaultCollectionViewModel, true);
             }
 
             // We need to update saved collections because we suppressed that in AddCollection()

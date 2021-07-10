@@ -21,7 +21,7 @@ namespace ClipboardCanvas.Helpers
 
         public static void UpdateSavedCollectionsSetting()
         {
-            IEnumerable<string> paths = CollectionsControlViewModel.Collections.Select((item) => item.CollectionPath);
+            IEnumerable<string> paths = CollectionsControlViewModel.Collections.Select((item) => item is DefaultCollectionViewModel ? Constants.Collections.DEFAULT_COLLECTION_TOKEN : item.CollectionPath);
 
             App.AppSettings.CollectionLocationsSettings.SavedCollectionLocations = paths.ToList();
         }
