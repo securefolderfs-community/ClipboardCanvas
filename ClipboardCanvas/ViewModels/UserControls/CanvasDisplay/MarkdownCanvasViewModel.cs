@@ -52,8 +52,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public MarkdownCanvasViewModel(IDynamicCanvasControlView view, CanvasPreviewMode canvasMode)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new MarkdownContentType(), canvasMode)
+        public MarkdownCanvasViewModel(IDynamicCanvasControlView view)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new MarkdownContentType())
         {
             this._view = view;
         }
@@ -72,8 +72,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return result;
         }
 
-        protected override async Task<SafeWrapperResult> SetData(StorageFile file)
+        protected override async Task<SafeWrapperResult> SetData(IStorageItem item)
         {
+            if (item is not StorageFile file)
+            {
+                return ItemIsNotAFileResult;
+            }
+
             SafeWrapper<string> text = await SafeWrapperRoutines.SafeWrapAsync(async () => await FileIO.ReadTextAsync(file));
 
             this._TextMarkdown = text;

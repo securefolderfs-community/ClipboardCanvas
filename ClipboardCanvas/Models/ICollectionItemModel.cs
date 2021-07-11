@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Windows.Storage;
+﻿using Windows.Storage;
+using System.Threading.Tasks;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 
 namespace ClipboardCanvas.Models
@@ -9,7 +9,7 @@ namespace ClipboardCanvas.Models
     /// </summary>
     public interface ICollectionItemModel
     {
-        StorageFile File { get; }
+        IStorageItem Item { get; }
 
         BasePastedContentTypeDataModel ContentType { get; set; }
 
@@ -20,13 +20,13 @@ namespace ClipboardCanvas.Models
         Task OpenContainingFolder(bool checkForReference);
 
         /// <summary>
-        /// Updates <see cref="File"/> with new <paramref name="file"/>
+        /// Updates <see cref="Item"/> with new <paramref name="item"/>
         /// <br/><br/>
         /// Note:
         /// <br/>
         /// This function is considered as *dangerous* since calling it may yield unexpected results
         /// </summary>
-        /// <param name="file">New file to replace the old one with</param>
-        void DangerousUpdateFile(StorageFile file);
+        /// <param name="item">New item to replace the old one with</param>
+        void DangerousUpdateFile(IStorageItem item);
     }
 }

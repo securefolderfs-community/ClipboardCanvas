@@ -64,8 +64,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public ImageCanvasViewModel(IDynamicCanvasControlView view, CanvasPreviewMode canvasMode)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new ImageContentType(), canvasMode)
+        public ImageCanvasViewModel(IDynamicCanvasControlView view)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new ImageContentType())
         {
             this._view = view;
         }
@@ -109,6 +109,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         public override async Task<SafeWrapperResult> TrySaveData()
         {
             SafeWrapperResult result;
+
+            if (sourceFile == null)
+            {
+                return ItemIsNotAFileResult;
+            }
 
             BitmapEncoder encoder = null;
             result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
@@ -213,12 +218,18 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
         }
 
-        protected override async Task<SafeWrapperResult> SetData(StorageFile file)
+        protected override async Task<SafeWrapperResult> SetData(IStorageItem item)
         {
             SafeWrapperResult result;
+            StorageFile file = item as StorageFile;
+
+            if (file == null)
+            {
+                return ItemIsNotAFileResult;
+            }
 
             SafeWrapper<Stream> openedStream = await SafeWrapperRoutines.SafeWrapAsync(
-                    () => sourceFile.OpenStreamForReadAsync());
+                    () => file.OpenStreamForReadAsync());
 
             if (!openedStream)
             {
@@ -302,7 +313,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public IReadOnlyList<IStorageItem> ProvideDragData()
         {
-            return new List<IStorageItem>() { sourceFile };
+            return new List<IStorageItem>() { sourceItem };
         }
 
         #endregion

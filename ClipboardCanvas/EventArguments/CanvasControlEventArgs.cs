@@ -52,32 +52,32 @@ namespace ClipboardCanvas.EventArguments.CanvasControl
     {
         public readonly BasePastedContentTypeDataModel contentType;
 
-        public readonly StorageFile file;
+        public readonly IStorageItem item;
 
-        public FileCreatedEventArgs(BasePastedContentTypeDataModel contentType, StorageFile file)
+        public FileCreatedEventArgs(BasePastedContentTypeDataModel contentType, IStorageItem item)
         {
             this.contentType = contentType;
-            this.file = file;
+            this.item = item;
         }
     }
 
     public class FileModifiedEventArgs : EventArgs
     {
-        public readonly IStorageFile file;
+        public readonly IStorageItem item;
 
-        public FileModifiedEventArgs(IStorageFile file)
+        public FileModifiedEventArgs(IStorageItem item)
         {
-            this.file = file;
+            this.item = item;
         }
     }
 
     public class FileDeletedEventArgs : EventArgs
     {
-        public readonly IStorageFile file;
+        public readonly IStorageItem item;
 
-        public FileDeletedEventArgs(IStorageFile file)
+        public FileDeletedEventArgs(IStorageItem item)
         {
-            this.file = file;
+            this.item = item;
         }
     }
 

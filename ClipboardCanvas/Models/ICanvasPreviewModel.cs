@@ -13,12 +13,10 @@ namespace ClipboardCanvas.Models
 {
     public interface ICanvasPreviewModel : ICanvasPreviewEventsModel, IDisposable
     {
-        CanvasPreviewMode CanvasMode { get; } // set??
-
         /// <summary>
         /// Determines whether canvas content has been loaded
         /// </summary>
-        bool IsFilled { get; }
+        bool IsContentLoaded { get; }
 
         /// <summary>
         /// Context menu options available for the canvas

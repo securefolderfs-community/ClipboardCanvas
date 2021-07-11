@@ -11,13 +11,13 @@ namespace ClipboardCanvas.Helpers
 {
     public static class CanvasHelpers
     {
-        public static async Task<SafeWrapperResult> DeleteCanvasFile(StorageFile file, bool hideConfirmation = false)
+        public static async Task<SafeWrapperResult> DeleteCanvasFile(IStorageItem item, bool hideConfirmation = false)
         {
             bool deletePermanently = false;
 
             if (App.AppSettings.UserSettings.ShowDeleteConfirmationDialog && !hideConfirmation)
             {
-                DeleteConfirmationDialogViewModel deleteConfirmationDialogViewModel = new DeleteConfirmationDialogViewModel(Path.GetFileName(file.Path));
+                DeleteConfirmationDialogViewModel deleteConfirmationDialogViewModel = new DeleteConfirmationDialogViewModel(Path.GetFileName(item.Path));
                 DialogResult dialogOption = await App.DialogService.ShowDialog(deleteConfirmationDialogViewModel);
 
                 if (dialogOption == DialogResult.Primary)
@@ -30,7 +30,7 @@ namespace ClipboardCanvas.Helpers
                 }
             }
 
-            SafeWrapperResult result = await FilesystemOperations.DeleteItem(file, deletePermanently);
+            SafeWrapperResult result = await FilesystemOperations.DeleteItem(item, deletePermanently);
 
             return result;
         }

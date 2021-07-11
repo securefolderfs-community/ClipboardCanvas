@@ -45,8 +45,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public WebViewCanvasViewModel(IDynamicCanvasControlView view, WebViewCanvasMode mode, CanvasPreviewMode canvasMode)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new WebViewContentType(mode), canvasMode)
+        public WebViewCanvasViewModel(IDynamicCanvasControlView view, WebViewCanvasMode mode)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new WebViewContentType(mode))
         {
             this._view = view;
             this._mode = mode;
@@ -115,6 +115,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             SafeWrapperResult result;
 
+            if (associatedFile == null)
+            {
+                return ItemIsNotAFileResult;
+            }
+
             if (_mode == WebViewCanvasMode.ReadWebsite)
             {
                 result = await SafeWrapperRoutines.SafeWrapAsync(() => FileIO.WriteTextAsync(associatedFile, Source).AsTask());
@@ -127,8 +132,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return result;
         }
 
-        protected override async Task<SafeWrapperResult> SetData(StorageFile file)
+        protected override async Task<SafeWrapperResult> SetData(IStorageItem item)
         {
+            StorageFile file = item as StorageFile;
+            if (file == null)
+            {
+                return ItemIsNotAFileResult;
+            }
+
             SafeWrapper<string> text = SafeWrapperRoutines.SafeWrap(() => UnsafeNativeHelpers.ReadStringFromFile(file.Path));
 
             if (_mode == WebViewCanvasMode.ReadWebsite)

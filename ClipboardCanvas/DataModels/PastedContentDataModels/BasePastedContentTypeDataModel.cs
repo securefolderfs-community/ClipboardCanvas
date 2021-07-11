@@ -36,12 +36,20 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
                     // Reference File, get the destination file extension
                     ReferenceFile referenceFile = await ReferenceFile.GetFile(file);
 
-                    if (referenceFile.ReferencedFile == null)
+                    if (referenceFile.ReferencedItem == null)
                     {
                         return new InvalidContentTypeDataModel(referenceFile.LastError, false);
                     }
 
-                    file = referenceFile.ReferencedFile;
+                    if (referenceFile.ReferencedItem is StorageFolder)
+                    {
+                        return new InvalidContentTypeDataModel(new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Displaying content for folders is not yet supported."), false);
+                    }
+                    else
+                    {
+                        file = referenceFile.ReferencedItem as StorageFile;
+                    }
+
                     ext = Path.GetExtension(file.Path);
                 }
 

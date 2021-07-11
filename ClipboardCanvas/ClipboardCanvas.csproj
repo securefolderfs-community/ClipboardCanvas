@@ -334,6 +334,7 @@
     <Compile Include="ViewModels\Pages\SettingsPages\SettingsAboutPageViewModel.cs" />
     <Compile Include="ViewModels\Pages\SettingsPages\SettingsGeneralPageViewModel.cs" />
     <Compile Include="ViewModels\Pages\SettingsPages\SettingsPastingPageViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\CanvasDisplay\BaseReadOnlyCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\FallbackCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\MarkdownCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\WebViewCanvasViewModel.cs" />

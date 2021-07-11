@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Media.Core;
@@ -9,7 +8,6 @@ using Windows.Storage;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.Models;
-using ClipboardCanvas.Enums;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using System.Threading;
@@ -83,8 +81,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public MediaCanvasViewModel(IDynamicCanvasControlView view, CanvasPreviewMode canvasMode)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new MediaContentType(), canvasMode)
+        public MediaCanvasViewModel(IDynamicCanvasControlView view)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new MediaContentType())
         {
             this._view = view;
         }
@@ -115,14 +113,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
-        protected override async Task<SafeWrapperResult> SetData(StorageFile file)
+        protected override async Task<SafeWrapperResult> SetData(IStorageItem item)
         {
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
         protected override async Task<SafeWrapper<StorageFile>> TrySetFileWithExtension()
         {
-            return await Task.FromResult(new SafeWrapper<StorageFile>(associatedFile, SafeWrapperResult.S_SUCCESS));
+            return await Task.FromResult(new SafeWrapper<StorageFile>(associatedItem as StorageFile, SafeWrapperResult.S_SUCCESS));
         }
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()

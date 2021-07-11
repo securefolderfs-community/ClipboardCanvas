@@ -287,7 +287,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void PasteCanvasModel_OnFileCreatedEvent(object sender, FileCreatedEventArgs e)
         {
-            _currentCollectionModel.AddCollectionItem(new CollectionItemViewModel(e.file, e.contentType));
+            _currentCollectionModel.AddCollectionItem(new CollectionItemViewModel(e.item, e.contentType));
         }
 
         private async void PasteCanvasModel_OnPasteInitiatedEvent(object sender, PasteInitiatedEventArgs e)
@@ -498,7 +498,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             if (fromError != null)
             {
-                if (_currentCollectionModel.CurrentCollectionItemViewModel != null && ReferenceFile.IsReferenceFile(_currentCollectionModel.CurrentCollectionItemViewModel.File))
+                if (_currentCollectionModel.CurrentCollectionItemViewModel != null && _currentCollectionModel.CurrentCollectionItemViewModel.Item is StorageFile file && ReferenceFile.IsReferenceFile(file))
                 {
                     if (fromError == OperationErrorCode.InvalidArgument) // Reference File is corrupted
                     {
@@ -520,7 +520,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                         case DisplayPageType.CanvasPage:
                             {
                                 // Add suggested actions
-                                if (PasteCanvasPageModel.PasteCanvasModel.IsFilled && PasteCanvasPageModel != null)
+                                if (PasteCanvasPageModel.PasteCanvasModel.IsContentLoaded && PasteCanvasPageModel != null)
                                 {
                                     NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(await PasteCanvasPageModel.PasteCanvasModel.GetSuggestedActions());
 

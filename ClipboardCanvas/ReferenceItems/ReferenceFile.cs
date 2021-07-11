@@ -15,24 +15,24 @@ namespace ClipboardCanvas.ReferenceItems
     /// </summary>
     public sealed class ReferenceFile
     {
-        private readonly StorageFile _innerFile;
+        private readonly StorageFile _innerReferenceFile;
 
         public SafeWrapperResult LastError { get; private set; } = SafeWrapperResult.S_SUCCESS;
 
-        public StorageFile ReferencedFile { get; private set; }
+        public IStorageItem ReferencedItem { get; private set; }
 
         public ReferenceFileData ReferenceFileData { get; private set; }
 
-        private ReferenceFile(StorageFile innerFile, StorageFile referencedFile)
+        private ReferenceFile(StorageFile innerFile, IStorageItem referencedItem)
         {
-            this._innerFile = innerFile;
-            this.ReferencedFile = referencedFile;
+            this._innerReferenceFile = innerFile;
+            this.ReferencedItem = referencedItem;
         }
 
         public async Task UpdateReferenceFile(ReferenceFileData referenceFileData)
         {
             string serialized = JsonConvert.SerializeObject(referenceFileData, Formatting.Indented);
-            await FileIO.WriteTextAsync(_innerFile, serialized);
+            await FileIO.WriteTextAsync(_innerReferenceFile, serialized);
         }
 
         internal static async Task<ReferenceFileData> ReadData(StorageFile referenceFile)
@@ -74,7 +74,7 @@ namespace ClipboardCanvas.ReferenceItems
                 };
             }
 
-            SafeWrapper<StorageFile> file = await StorageHelpers.ToStorageItemWithError<StorageFile>(referenceFileData.path);
+            SafeWrapper<IStorageItem> file = await StorageHelpers.ToStorageItemWithError<IStorageItem>(referenceFileData.path);
 
             if (!file)
             {
@@ -83,7 +83,7 @@ namespace ClipboardCanvas.ReferenceItems
                     // If NotFound, use custom exception for LoadCanvasFromCollection()
                     return new ReferenceFile(referenceFile, null)
                     {
-                        LastError = new SafeWrapperResult(OperationErrorCode.NotFound, new ReferencedFileNotFoundException(), "The file referenced could not be found.")
+                        LastError = new SafeWrapperResult(OperationErrorCode.NotFound, new ReferencedFileNotFoundException(), "The item referenced could not be found.")
                     };
                 }
                 else
@@ -95,7 +95,7 @@ namespace ClipboardCanvas.ReferenceItems
                 }
             }
 
-            return new ReferenceFile(referenceFile, file);
+            return new ReferenceFile(referenceFile, file.Result);
         }
 
         public static bool IsReferenceFile(StorageFile file)

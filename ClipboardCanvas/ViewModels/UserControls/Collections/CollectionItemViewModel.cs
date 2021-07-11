@@ -15,7 +15,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
     {
         #region Public Properties
 
-        public StorageFile File { get; private set; }
+        public IStorageItem Item { get; private set; }
 
         public BasePastedContentTypeDataModel ContentType { get; set; }
 
@@ -23,14 +23,14 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Constructor
 
-        public CollectionItemViewModel(StorageFile file)
-            : this(file, null)
+        public CollectionItemViewModel(IStorageItem item)
+            : this(item, null)
         {
         }
 
-        public CollectionItemViewModel(StorageFile file, BasePastedContentTypeDataModel contentType)
+        public CollectionItemViewModel(IStorageItem item, BasePastedContentTypeDataModel contentType)
         {
-            this.File = file;
+            this.Item = item;
             this.ContentType = contentType;
         }
 
@@ -40,20 +40,40 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task OpenFile()
         {
-            if (ReferenceFile.IsReferenceFile(File))
+            if (Item == null)
             {
-                ReferenceFile referenceFile = await ReferenceFile.GetFile(File);
+                return;
+            }
 
-                if (referenceFile.ReferencedFile == null)
+            StorageFile file = Item as StorageFile;
+            if (file != null && ReferenceFile.IsReferenceFile(file))
+            {
+                ReferenceFile referenceFile = await ReferenceFile.GetFile(file);
+
+                if (referenceFile.ReferencedItem == null)
                 {
                     return;
                 }
 
-                await Launcher.LaunchFileAsync(referenceFile.ReferencedFile);
+                if (referenceFile.ReferencedItem is StorageFile referencedFile)
+                {
+                    await Launcher.LaunchFileAsync(referencedFile);
+                }
+                else
+                {
+                    await Launcher.LaunchFolderAsync(referenceFile.ReferencedItem as StorageFolder);
+                }
             }
             else
             {
-                await Launcher.LaunchFileAsync(File);
+                if (file != null)
+                {
+                    await Launcher.LaunchFileAsync(file);
+                }
+                else
+                {
+                    await Launcher.LaunchFolderAsync(Item as StorageFolder);
+                }
             }
         }
 
@@ -65,45 +85,45 @@ namespace ClipboardCanvas.ViewModels.UserControls
         public async Task OpenContainingFolder(bool checkForReference)
         {
             IStorageFolder folder;
-            IStorageFile fileToSelect;
+            IStorageItem itemToSelect;
 
-            if (checkForReference && ReferenceFile.IsReferenceFile(File))
+            if (checkForReference && Item is StorageFile file && ReferenceFile.IsReferenceFile(file))
             {
-                ReferenceFile referenceFile = await ReferenceFile.GetFile(File);
+                ReferenceFile referenceFile = await ReferenceFile.GetFile(file);
 
-                if (referenceFile.ReferencedFile == null)
+                if (referenceFile.ReferencedItem == null)
                 {
-                    folder = await StorageHelpers.ToStorageItem<StorageFolder>(Path.GetDirectoryName(File.Path));
-                    fileToSelect = File;
+                    folder = await StorageHelpers.ToStorageItem<StorageFolder>(Path.GetDirectoryName(Item.Path));
+                    itemToSelect = file;
                 }
                 else
                 {
-                    folder = await StorageHelpers.ToStorageItem<StorageFolder>(Path.GetDirectoryName(referenceFile.ReferencedFile.Path));
-                    fileToSelect = referenceFile.ReferencedFile;
+                    folder = await StorageHelpers.ToStorageItem<StorageFolder>(Path.GetDirectoryName(referenceFile.ReferencedItem.Path));
+                    itemToSelect = referenceFile.ReferencedItem;
                 }
             }
             else
             {
-                folder = await StorageHelpers.ToStorageItem<StorageFolder>(Path.GetDirectoryName(File.Path));
-                fileToSelect = File;
+                folder = await StorageHelpers.ToStorageItem<StorageFolder>(Path.GetDirectoryName(Item.Path));
+                itemToSelect = Item;
             }
 
             if (folder != null)
             {
                 FolderLauncherOptions launcherOptions = new FolderLauncherOptions();
 
-                if (File != null)
+                if (Item != null)
                 {
-                    launcherOptions.ItemsToSelect.Add(fileToSelect);
+                    launcherOptions.ItemsToSelect.Add(itemToSelect);
                 }
 
                 await Launcher.LaunchFolderAsync(folder, launcherOptions);
             }
         }
 
-        public void DangerousUpdateFile(StorageFile file)
+        public void DangerousUpdateFile(IStorageItem item)
         {
-            this.File = file;
+            this.Item = item;
         }
 
         #endregion

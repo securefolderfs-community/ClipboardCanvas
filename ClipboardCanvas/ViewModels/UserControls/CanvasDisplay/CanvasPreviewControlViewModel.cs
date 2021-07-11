@@ -26,7 +26,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         private readonly IDynamicCanvasControlView _view;
 
-        private StorageFile _associatedFile;
+        private IStorageItem _associatedItem;
 
         #endregion
 
@@ -41,9 +41,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public ICollectionModel AssociatedContainer => _view?.CollectionModel;
         
-        public CanvasPreviewMode CanvasMode => CanvasViewModel?.CanvasMode ?? CanvasPreviewMode.PreviewOnly;
-
-        public bool IsFilled => CanvasViewModel?.IsFilled ?? false;
+        public bool IsContentLoaded => CanvasViewModel?.IsContentLoaded ?? false;
 
         public List<BaseMenuFlyoutItemViewModel> ContextMenuItems => CanvasViewModel?.ContextMenuItems;
 
@@ -92,7 +90,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public async Task<SafeWrapperResult> TryLoadExistingData(ICollectionItemModel itemData, CancellationToken cancellationToken)
         {
-            this._associatedFile = itemData.File;
+            this._associatedItem = itemData.Item;
 
             SafeWrapperResult result = await InitializeViewModel(itemData);
 
@@ -136,7 +134,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (CanvasViewModel == null)
             {
                 // The canvas is null, delete the reference file manually
-                SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(_associatedFile, hideConfirmation);
+                SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(_associatedItem, hideConfirmation);
 
                 if (result != OperationErrorCode.Cancelled && !result)
                 {
@@ -146,7 +144,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 else if (result != OperationErrorCode.Cancelled)
                 {
                     AssociatedContainer.RemoveCollectionItem(AssociatedContainer.CurrentCollectionItemViewModel);
-                    OnFileDeletedEvent?.Invoke(this, new FileDeletedEventArgs(_associatedFile));
+                    OnFileDeletedEvent?.Invoke(this, new FileDeletedEventArgs(_associatedItem));
                 }
 
                 return result;
@@ -210,7 +208,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (dataPackage.Contains(StandardDataFormats.Bitmap))
             {
                 // Image
-                InitializeViewModel(() => new ImageCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview));
+                InitializeViewModel(() => new ImageCanvasViewModel(_view));
             }
             else if (dataPackage.Contains(StandardDataFormats.Text))
             {
@@ -229,7 +227,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     if (StringHelpers.IsUrlFile(text))
                     {
                         // Image
-                        InitializeViewModel(() => new ImageCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview));
+                        InitializeViewModel(() => new ImageCanvasViewModel(_view));
                     }
                     else
                     {
@@ -238,12 +236,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                         if (App.AppSettings.UserSettings.PrioritizeMarkdownOverText)
                         {
                             // Markdown
-                            InitializeViewModel(() => new MarkdownCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview));
+                            InitializeViewModel(() => new MarkdownCanvasViewModel(_view));
                         }
                         else
                         {
                             // Normal text
-                            InitializeViewModel(() => new TextCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview));
+                            InitializeViewModel(() => new TextCanvasViewModel(_view));
                         }
                     }
                 }
@@ -252,12 +250,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     if (App.AppSettings.UserSettings.PrioritizeMarkdownOverText)
                     {
                         // Markdown
-                        InitializeViewModel(() => new MarkdownCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview));
+                        InitializeViewModel(() => new MarkdownCanvasViewModel(_view));
                     }
                     else
                     {
                         // Normal text
-                        InitializeViewModel(() => new TextCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview));
+                        InitializeViewModel(() => new TextCanvasViewModel(_view));
                     }
                 }
             }
@@ -314,7 +312,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             BasePastedContentTypeDataModel contentType;
 
             // TODO: Add support for adding previews from extensions
-            contentType = await BasePastedContentTypeDataModel.GetContentType(containerItemModel.File, containerItemModel.ContentType);
+            contentType = await BasePastedContentTypeDataModel.GetContentType(containerItemModel.Item, containerItemModel.ContentType);
 
             // Check if contentType is InvalidContentTypeDataModel
             if (contentType is InvalidContentTypeDataModel invalidContentType)
@@ -336,37 +334,37 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Initialize View Model
 
             // Try for image
-            if (InitializeViewModelForType<ImageContentType, ImageCanvasViewModel>(contentType, () => new ImageCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview)))
+            if (InitializeViewModelForType<ImageContentType, ImageCanvasViewModel>(contentType, () => new ImageCanvasViewModel(_view)))
             {
                 return true;
             }
 
             // Try for text
-            if (InitializeViewModelForType<TextContentType, TextCanvasViewModel>(contentType, () => new TextCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview)))
+            if (InitializeViewModelForType<TextContentType, TextCanvasViewModel>(contentType, () => new TextCanvasViewModel(_view)))
             {
                 return true;
             }
 
             // Try for media
-            if (InitializeViewModelForType<MediaContentType, MediaCanvasViewModel>(contentType, () => new MediaCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview)))
+            if (InitializeViewModelForType<MediaContentType, MediaCanvasViewModel>(contentType, () => new MediaCanvasViewModel(_view)))
             {
                 return true;
             }
 
             // Try for WebView
-            if (InitializeViewModelForType<WebViewContentType, WebViewCanvasViewModel>(contentType, () => new WebViewCanvasViewModel(_view, (contentType as WebViewContentType)?.mode ?? WebViewCanvasMode.Unknown, CanvasPreviewMode.InteractionAndPreview)))
+            if (InitializeViewModelForType<WebViewContentType, WebViewCanvasViewModel>(contentType, () => new WebViewCanvasViewModel(_view, (contentType as WebViewContentType)?.mode ?? WebViewCanvasMode.Unknown)))
             {
                 return true;
             }
 
             // Try for markdown
-            if (InitializeViewModelForType<MarkdownContentType, MarkdownCanvasViewModel>(contentType, () => new MarkdownCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview)))
+            if (InitializeViewModelForType<MarkdownContentType, MarkdownCanvasViewModel>(contentType, () => new MarkdownCanvasViewModel(_view)))
             {
                 return true;
             }
 
             // Try fallback
-            if (InitializeViewModelForType<FallbackContentType, FallbackCanvasViewModel>(contentType, () => new FallbackCanvasViewModel(_view, CanvasPreviewMode.InteractionAndPreview)))
+            if (InitializeViewModelForType<FallbackContentType, FallbackCanvasViewModel>(contentType, () => new FallbackCanvasViewModel(_view)))
             {
                 return true;
             }

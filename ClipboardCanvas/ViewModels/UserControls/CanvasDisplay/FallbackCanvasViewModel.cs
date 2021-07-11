@@ -86,8 +86,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public FallbackCanvasViewModel(IDynamicCanvasControlView view, CanvasPreviewMode canvasMode)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new FallbackContentType(), canvasMode)
+        public FallbackCanvasViewModel(IDynamicCanvasControlView view)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new FallbackContentType())
         {
             this._view = view;
         }
@@ -101,20 +101,24 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
-        protected override async Task<SafeWrapperResult> SetData(StorageFile file)
+        protected override async Task<SafeWrapperResult> SetData(IStorageItem item)
         {
             // Read file properties
+            if (item is not StorageFile file)
+            {
+                return ItemIsNotAFileResult;
+            }
 
             if (file == null)
             {
                 return new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentNullException(), "The file is null.");
             }
 
-            this._FileName = Path.GetFileName(file.Path);
-            this._FilePath = file.Path;
-            this._DateCreated = file.DateCreated.DateTime;
+            this._FileName = Path.GetFileName(item.Path);
+            this._FilePath = item.Path;
+            this._DateCreated = item.DateCreated.DateTime;
 
-            var properties = await file.GetBasicPropertiesAsync();
+            var properties = await item.GetBasicPropertiesAsync();
             this._DateModified = properties.DateModified.DateTime;
 
             _thumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem);
