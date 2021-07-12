@@ -8,6 +8,7 @@
     xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:uc="using:ClipboardCanvas.UserControls"
     xmlns:vc="using:ClipboardCanvas.ValueConverters"
     xmlns:vm="using:ClipboardCanvas.ViewModels.UserControls"
@@ -99,7 +100,7 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             Command="{x:Bind OpenOrCloseSettingsCommand}"
-                            Content="{x:Bind SettingsHyperlinkText, Mode=OneWay}" />
+                            Content="{x:Bind SettingsButtonText, Mode=OneWay}" />
                     </Grid>
                 </Border>
             </DataTemplate>

@@ -30,12 +30,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
             {
                 if (SetProperty(ref _IsSettingsPaneOpened, value))
                 {
-                    OnPropertyChanged(nameof(SettingsHyperlinkText));
+                    OnPropertyChanged(nameof(SettingsButtonText));
                 }
             }
         }
 
-        public string SettingsHyperlinkText
+        public string SettingsButtonText
         {
             get => IsSettingsPaneOpened ? "Close Settings" : "Open Settings";
         }
