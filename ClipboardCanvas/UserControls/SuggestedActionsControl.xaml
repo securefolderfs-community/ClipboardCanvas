@@ -156,6 +156,12 @@
                     </icore:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
 
+                <ListView.ItemContainerTransitions>
+                    <TransitionCollection>
+                        <PopupThemeTransition />
+                    </TransitionCollection>
+                </ListView.ItemContainerTransitions>
+
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal" Spacing="8" />
