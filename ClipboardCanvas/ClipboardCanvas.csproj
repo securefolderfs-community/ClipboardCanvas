@@ -256,7 +256,6 @@
     <Compile Include="Models\INavigationToolBarControlModel.cs" />
     <Compile Include="ModelViews\ICanvasPageView.cs" />
     <Compile Include="ModelViews\IDisplayControlView.cs" />
-    <Compile Include="ModelViews\INavigationToolBarControlView.cs" />
     <Compile Include="Pages\CanvasPage.xaml.cs">
       <DependentUpon>CanvasPage.xaml</DependentUpon>
     </Compile>

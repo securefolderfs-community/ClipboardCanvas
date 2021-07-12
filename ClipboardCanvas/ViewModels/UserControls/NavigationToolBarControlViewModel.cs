@@ -1,21 +1,14 @@
-﻿using Microsoft.Toolkit.Mvvm.Input;
-using System.Windows.Input;
+﻿using System.Windows.Input;
+using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 using ClipboardCanvas.Models;
-using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
     public class NavigationToolBarControlViewModel : ObservableObject, INavigationToolBarControlModel
     {
-        #region Private Members
-
-        private readonly INavigationToolBarControlView _view;
-
-        #endregion
-
         #region Public Properties
 
         public INavigationControlModel NavigationControlModel { get; set; } = new NavigationControlViewModel();
@@ -26,18 +19,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         public bool IsSettingsPaneOpened
         {
             get => _IsSettingsPaneOpened;
-            set
-            {
-                if (SetProperty(ref _IsSettingsPaneOpened, value))
-                {
-                    OnPropertyChanged(nameof(SettingsButtonText));
-                }
-            }
-        }
-
-        public string SettingsButtonText
-        {
-            get => IsSettingsPaneOpened ? "Close Settings" : "Open Settings";
+            set => SetProperty(ref _IsSettingsPaneOpened, value);
         }
 
         #endregion
@@ -50,17 +32,15 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Constructor
 
-        public NavigationToolBarControlViewModel(INavigationToolBarControlView view)
+        public NavigationToolBarControlViewModel()
         {
-            this._view = view;
-
             // Create Commands
             OpenOrCloseSettingsCommand = new RelayCommand(OpenOrCloseSettings);
         }
 
         #endregion
 
-        #region Commands Implementation
+        #region Command Implementation
 
         private void OpenOrCloseSettings()
         {
