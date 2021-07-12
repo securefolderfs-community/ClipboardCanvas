@@ -5,6 +5,8 @@ namespace ClipboardCanvas.Models
 {
     public interface ISuggestedActionsControlModel
     {
+        bool ShowNoActionsLabelSuppressed { get; set; }
+
         void SetActions(IEnumerable<SuggestedActionsControlItemViewModel> actions);
 
         void AddAction(SuggestedActionsControlItemViewModel action);

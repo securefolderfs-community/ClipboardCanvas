@@ -302,6 +302,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
+        private void PasteCanvasModel_OnContentStartedLoadingEvent(object sender, ContentStartedLoadingEventArgs e)
+        {
+            NavigationToolBarControlModel.SuggestedActionsControlModel.ShowNoActionsLabelSuppressed = true;
+        }
+
         private async void PasteCanvasModel_OnContentLoadedEvent(object sender, ContentLoadedEventArgs e)
         {
             if (CurrentPage == DisplayPageType.CanvasPage
@@ -318,6 +323,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CheckCanvasPageNavigation();
 
             await SetSuggestedActions();
+            NavigationToolBarControlModel.SuggestedActionsControlModel.ShowNoActionsLabelSuppressed = false;
         }
 
         private void PasteCanvasModel_OnOpenNewCanvasRequestedEvent(object sender, OpenNewCanvasRequestedEventArgs e)
@@ -520,9 +526,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
                         case DisplayPageType.CanvasPage:
                             {
                                 // Add suggested actions
-                                if (PasteCanvasPageModel.PasteCanvasModel.IsContentLoaded && PasteCanvasPageModel != null)
+                                if (PasteCanvasPageModel != null && (!_currentCollectionModel.IsOnNewCanvas || PasteCanvasPageModel.PasteCanvasModel.IsContentLoaded))
                                 {
-                                    NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(await PasteCanvasPageModel.PasteCanvasModel.GetSuggestedActions());
+                                    var actions = await PasteCanvasPageModel.PasteCanvasModel.GetSuggestedActions();
+                                    NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(actions);
 
                                     // Check again, the state might have changed
                                     if (_currentCollectionModel.IsOnNewCanvas)
@@ -674,6 +681,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             {
                 this.PasteCanvasPageModel.PasteCanvasModel.OnOpenNewCanvasRequestedEvent += PasteCanvasModel_OnOpenNewCanvasRequestedEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnContentLoadedEvent += PasteCanvasModel_OnContentLoadedEvent;
+                this.PasteCanvasPageModel.PasteCanvasModel.OnContentStartedLoadingEvent += PasteCanvasModel_OnContentStartedLoadingEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnPasteInitiatedEvent += PasteCanvasModel_OnPasteInitiatedEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnFileCreatedEvent += PasteCanvasModel_OnFileCreatedEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnFileModifiedEvent += PasteCanvasModel_OnFileModifiedEvent;
@@ -689,6 +697,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             {
                 this.PasteCanvasPageModel.PasteCanvasModel.OnOpenNewCanvasRequestedEvent -= PasteCanvasModel_OnOpenNewCanvasRequestedEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnContentLoadedEvent -= PasteCanvasModel_OnContentLoadedEvent;
+                this.PasteCanvasPageModel.PasteCanvasModel.OnContentStartedLoadingEvent -= PasteCanvasModel_OnContentStartedLoadingEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnPasteInitiatedEvent -= PasteCanvasModel_OnPasteInitiatedEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnFileCreatedEvent -= PasteCanvasModel_OnFileCreatedEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnFileModifiedEvent -= PasteCanvasModel_OnFileModifiedEvent;

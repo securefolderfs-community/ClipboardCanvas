@@ -27,7 +27,7 @@
             Margin="0,0,0,16"
             StretchDirection="DownOnly">
             <Image
-                CanDrag="{x:Bind ViewModel.CanDrag, Mode=OneWay}"
+                CanDrag="True"
                 DragStarting="Image_DragStarting"
                 Source="{x:Bind ViewModel.FileIcon, Mode=OneWay}" />
         </Viewbox>

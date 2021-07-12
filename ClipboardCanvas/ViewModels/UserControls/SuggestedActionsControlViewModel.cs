@@ -19,6 +19,28 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public ObservableCollection<SuggestedActionsControlItemViewModel> Items { get; private set; }
 
+        private bool _ShowNoActionsLabelSuppressed;
+        public bool ShowNoActionsLabelSuppressed
+        {
+            get => _ShowNoActionsLabelSuppressed;
+            set
+            {
+                if (value != _ShowNoActionsLabelSuppressed)
+                {
+                    _ShowNoActionsLabelSuppressed = value;
+
+                    if (_ShowNoActionsLabelSuppressed)
+                    {
+                        NoActionsAvailableLoad = false;
+                    }
+                    else
+                    {
+                        CheckAnyActionsExist();
+                    }
+                }
+            }
+        }
+
         private bool _NoActionsAvailableLoad;
         public bool NoActionsAvailableLoad
         {
@@ -188,6 +210,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void CheckAnyActionsExist()
         {
+            if (ShowNoActionsLabelSuppressed)
+            {
+                return;
+            }
+
             if (Items.IsEmpty())
             {
                 NoActionsAvailableLoad = true;

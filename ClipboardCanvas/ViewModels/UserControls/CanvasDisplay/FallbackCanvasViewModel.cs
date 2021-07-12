@@ -75,13 +75,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             set => SetProperty(ref _FileIcon, value);
         }
 
-        private bool _CanDrag;
-        public bool CanDrag
-        {
-            get => _CanDrag;
-            set => SetProperty(ref _CanDrag, value);
-        }
-
         #endregion
 
         #region Constructor
@@ -162,30 +155,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         protected override async Task<SafeWrapper<StorageFile>> TrySetFileWithExtension()
         {
             return await Task.FromResult(new SafeWrapper<StorageFile>(associatedFile, SafeWrapperResult.S_SUCCESS));
-        }
-
-        protected override void OnCanvasModeChanged(CanvasPreviewMode canvasMode)
-        {
-            switch (canvasMode)
-            {
-                case CanvasPreviewMode.PreviewOnly:
-                    {
-                        CanDrag = false;
-                        break;
-                    }
-
-                case CanvasPreviewMode.InteractionAndPreview:
-                    {
-                        CanDrag = true;
-                        break;
-                    }
-
-                case CanvasPreviewMode.WriteAndPreview:
-                    {
-                        CanDrag = false;
-                        break;
-                    }
-            }
         }
 
         #endregion

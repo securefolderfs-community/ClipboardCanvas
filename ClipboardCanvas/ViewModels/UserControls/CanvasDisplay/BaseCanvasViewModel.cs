@@ -349,10 +349,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Protected Helpers
 
-        protected virtual void OnCanvasModeChanged(CanvasPreviewMode canvasMode)
-        {
-        }
-
         protected virtual void OnReferencePasted()
         {
         }
