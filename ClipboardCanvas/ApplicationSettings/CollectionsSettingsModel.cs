@@ -1,15 +1,15 @@
-﻿using ClipboardCanvas.ApplicationSettings.Interfaces;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using Windows.Storage;
+using ClipboardCanvas.ApplicationSettings.Interfaces;
 
 namespace ClipboardCanvas.ApplicationSettings
 {
-    public class CollectionLocationsSettingsModel : BaseJsonSettingsModel, ICollectionLocationsSettings
+    public class CollectionsSettingsModel : BaseJsonSettingsModel, ICollectionsSettings
     {
         #region Constructor
 
-        public CollectionLocationsSettingsModel()
+        public CollectionsSettingsModel()
             : base(Path.Combine(ApplicationData.Current.LocalFolder.Path, Constants.LocalSettings.SETTINGS_FOLDERNAME, Constants.LocalSettings.COLLECTION_LOCATIONS_FILENAME),
                   isCachingEnabled: true)
         {
@@ -19,10 +19,10 @@ namespace ClipboardCanvas.ApplicationSettings
 
         #region ICollectionLocationsSettings
 
-        public List<string> SavedCollectionLocations
+        public IEnumerable<string> SavedCollectionLocations
         {
-            get => Get<List<string>>(null);
-            set => Set<List<string>>(value);
+            get => Get<IEnumerable<string>>(null);
+            set => Set<IEnumerable<string>>(value);
         }
 
         public string LastSelectedCollection

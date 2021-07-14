@@ -5,15 +5,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.UserControls.CanvasDisplay"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tuc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:tui="using:Microsoft.Toolkit.Uwp.UI"
-    xmlns:uwptuc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
 
     <Grid>
         <ScrollViewer tui:ScrollViewerExtensions.EnableMiddleClickScrolling="True">
-            <uwptuc:MarkdownTextBlock x:Name="ContentText" Text="{x:Bind ViewModel.TextMarkdown, Mode=OneWay}" />
+            <tuc:MarkdownTextBlock x:Name="ContentText" Text="{x:Bind ViewModel.TextMarkdown, Mode=OneWay}" />
         </ScrollViewer>
     </Grid>
 </UserControl>

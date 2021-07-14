@@ -6,6 +6,7 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using Windows.ApplicationModel.DataTransfer;
 using ClipboardCanvas.Enums;
+using ClipboardCanvas.Helpers;
 
 namespace ClipboardCanvas.EventArguments.CanvasControl
 {
@@ -133,8 +134,16 @@ namespace ClipboardCanvas.EventArguments.CanvasControl
 
     public class OpenNewCanvasRequestedEventArgs : EventArgs
     {
+        public readonly CanvasType canvasType;
+
         public OpenNewCanvasRequestedEventArgs()
         {
+            this.canvasType = CanvasHelpers.GetDefaultCanvasType();
+        }
+
+        public OpenNewCanvasRequestedEventArgs(CanvasType canvasType)
+        {
+            this.canvasType = canvasType;
         }
     }
 }

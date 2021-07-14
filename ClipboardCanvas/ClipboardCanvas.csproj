@@ -139,10 +139,10 @@
     <Compile Include="ApplicationSettings\ApplicationSettingsModel.cs" />
     <Compile Include="ApplicationSettings\BaseJsonSettingsModel.cs" />
     <Compile Include="ApplicationSettings\CanvasSettingsModel.cs" />
-    <Compile Include="ApplicationSettings\CollectionLocationsSettingsModel.cs" />
+    <Compile Include="ApplicationSettings\CollectionsSettingsModel.cs" />
     <Compile Include="ApplicationSettings\Interfaces\IApplicationSettings.cs" />
     <Compile Include="ApplicationSettings\Interfaces\ICanvasSettings.cs" />
-    <Compile Include="ApplicationSettings\Interfaces\ICollectionLocationsSettings.cs" />
+    <Compile Include="ApplicationSettings\Interfaces\ICollectionsSettings.cs" />
     <Compile Include="ApplicationSettings\Interfaces\IUserSettings.cs" />
     <Compile Include="ApplicationSettings\SettingsInstance.cs" />
     <Compile Include="ApplicationSettings\UserSettingsModel.cs" />
@@ -176,17 +176,20 @@
     </Compile>
     <Compile Include="Enums\CanvasNavigationDirection.cs" />
     <Compile Include="Enums\CanvasPageProgressType.cs" />
-    <Compile Include="Enums\CanvasPreviewMode.cs" />
+    <Compile Include="Enums\CanvasType.cs" />
     <Compile Include="Enums\DialogResult.cs" />
     <Compile Include="Enums\InAppNotificationButtonType.cs" />
     <Compile Include="Enums\SetClipboardDataSourceType.cs" />
     <Compile Include="Enums\SettingsPageType.cs" />
     <Compile Include="Enums\WebViewCanvasMode.cs" />
-    <Compile Include="EventArguments\CollectionPreviewItemEventArgs.cs" />
+    <Compile Include="EventArguments\CollectionPreviewEventArgs.cs" />
     <Compile Include="EventArguments\InAppNotificationEventArgs.cs" />
+    <Compile Include="EventArguments\SearchControlEventArgs.cs" />
     <Compile Include="Exceptions\ReferencedFileNotFoundException.cs" />
     <Compile Include="Extensions\GenericsExtensions.cs" />
+    <Compile Include="Extensions\RangeObservableCollection.cs" />
     <Compile Include="Extensions\SafetyExtensions.cs" />
+    <Compile Include="Extensions\TaskExtensions.cs" />
     <Compile Include="Helpers\CanvasHelpers.cs" />
     <Compile Include="Helpers\CollectionsHelpers.cs" />
     <Compile Include="Helpers\DialogHelpers.cs" />
@@ -201,10 +204,14 @@
     <Compile Include="Helpers\VersionHelpers.cs" />
     <Compile Include="Interfaces\Collections\ICollectionNameEditable.cs" />
     <Compile Include="Interfaces\Collections\ICollectionRemovable.cs" />
+    <Compile Include="Interfaces\Search\ISearchItem.cs" />
+    <Compile Include="Interfaces\Search\ISearchItems.cs" />
     <Compile Include="Logging\ExceptionLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Models\ICollectionModel.cs" />
+    <Compile Include="Models\ICollectionPreviewPageModel.cs" />
     <Compile Include="Models\IPasteCanvasPageModel.cs" />
+    <Compile Include="Models\ISearchControlModel.cs" />
     <Compile Include="ModelViews\IDynamicCanvasControlView.cs" />
     <Compile Include="ModelViews\IMediaCanvasControlView.cs" />
     <Compile Include="ModelViews\ITextCanvasControlView.cs" />
@@ -276,6 +283,9 @@
     <Compile Include="UserControls\InAppNotificationControl.xaml.cs">
       <DependentUpon>InAppNotificationControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\SearchControl.xaml.cs">
+      <DependentUpon>SearchControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\SuggestedActionsControl.xaml.cs">
       <DependentUpon>SuggestedActionsControl.xaml</DependentUpon>
     </Compile>
@@ -311,12 +321,14 @@
     </Compile>
     <Compile Include="ValueConverters\BooleanInvertConverter.cs" />
     <Compile Include="ValueConverters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="ValueConverters\BooleanSearchedItemToShadowOpacityConverter.cs" />
     <Compile Include="ValueConverters\ControlToFocusActionConverter.cs" />
     <Compile Include="ValueConverters\ImplicitDataTemplateConverter.cs" />
     <Compile Include="ValueConverters\InterfaceToNavigationControlViewModelConverter.cs" />
     <Compile Include="ValueConverters\InterfaceToSuggestedActionsControlViewModelConverter.cs" />
     <Compile Include="ValueConverters\SafeWrapperResultToErrorConverter.cs" />
-    <Compile Include="ValueConverters\SelectedCollectionsContainerConverter.cs" />
+    <Compile Include="ValueConverters\SelectedItemToBorderThicknessConverter.cs" />
+    <Compile Include="ViewModels\CollectionPreviewItemViewModel.cs" />
     <Compile Include="ViewModels\ContextMenu\BaseMenuFlyoutItemViewModel.cs" />
     <Compile Include="ViewModels\ContextMenu\MenuFlyoutItemViewModel.cs" />
     <Compile Include="ViewModels\ContextMenu\MenuFlyoutSeparatorViewModel.cs" />
@@ -333,6 +345,7 @@
     <Compile Include="ViewModels\Pages\SettingsPages\SettingsAboutPageViewModel.cs" />
     <Compile Include="ViewModels\Pages\SettingsPages\SettingsGeneralPageViewModel.cs" />
     <Compile Include="ViewModels\Pages\SettingsPages\SettingsPastingPageViewModel.cs" />
+    <Compile Include="ViewModels\SearchControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\BaseReadOnlyCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\FallbackCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\MarkdownCanvasViewModel.cs" />
@@ -350,7 +363,6 @@
     <Compile Include="ViewModels\UserControls\CanvasDisplay\ImageCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\TextCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\MediaCanvasViewModel.cs" />
-    <Compile Include="ViewModels\UserControls\CollectionPreviewItemViewModel.cs" />
     <Compile Include="ViewModels\UserControls\Collections\CollectionItemViewModel.cs" />
     <Compile Include="ViewModels\UserControls\DisplayControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\NavigationControlViewModel.cs" />
@@ -487,6 +499,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\SearchControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\SuggestedActionsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -546,6 +562,9 @@
       <Version>7.0.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp">
+      <Version>7.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations">
       <Version>7.0.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">

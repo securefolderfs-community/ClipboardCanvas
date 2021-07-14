@@ -11,6 +11,8 @@ namespace ClipboardCanvas.Models
     {
         IStorageItem Item { get; }
 
+        Task<IStorageItem> SourceItem { get; }
+
         BasePastedContentTypeDataModel ContentType { get; set; }
 
         Task OpenFile();
@@ -20,7 +22,7 @@ namespace ClipboardCanvas.Models
         Task OpenContainingFolder(bool checkForReference);
 
         /// <summary>
-        /// Updates <see cref="Item"/> with new <paramref name="item"/>
+        /// Updates <see cref="Item"/> with new <paramref name="item"/> and also updates <see cref="SourceItem"/>
         /// <br/><br/>
         /// Note:
         /// <br/>

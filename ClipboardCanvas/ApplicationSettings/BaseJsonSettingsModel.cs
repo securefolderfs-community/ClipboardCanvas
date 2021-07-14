@@ -9,6 +9,19 @@ using ClipboardCanvas.UnsafeNative;
 
 namespace ClipboardCanvas.ApplicationSettings
 {
+    public sealed class SettingChangedEventArgs : EventArgs
+    {
+        public readonly string settingName;
+
+        public readonly object newValue;
+
+        public SettingChangedEventArgs(string settingName, object newValue)
+        {
+            this.settingName = settingName;
+            this.newValue = newValue;
+        }
+    }
+
     public abstract class BaseJsonSettingsModel
     {
         #region Protected Members
@@ -18,6 +31,12 @@ namespace ClipboardCanvas.ApplicationSettings
         protected readonly bool isCachingEnabled;
 
         protected Dictionary<string, object> settingsCache;
+
+        #endregion
+
+        #region Events
+
+        public event EventHandler<SettingChangedEventArgs> OnSettingChangedEvent;
 
         #endregion
 
@@ -85,6 +104,8 @@ namespace ClipboardCanvas.ApplicationSettings
                 Debugger.Break();
             }
         }
+
+        protected void RaiseOnSettingChangedEvent(object sender, SettingChangedEventArgs e) => OnSettingChangedEvent?.Invoke(sender, e);
 
         #endregion
 
@@ -216,6 +237,9 @@ namespace ClipboardCanvas.ApplicationSettings
                     // Otherwise, update the setting's value
                     settingsCache[propertyName] = value;
                 }
+
+                // A setting has changed, raise setting changed event
+                RaiseOnSettingChangedEvent(this, new SettingChangedEventArgs(propertyName, value));
 
                 // Serialize
                 string serialized = JsonConvert.SerializeObject(settingsCache, Formatting.Indented);

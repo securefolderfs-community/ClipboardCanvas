@@ -32,4 +32,6 @@
         <uc:FallbackCanvasControl />
     </DataTemplate>
 
+    <!--  Lightweight canvases (optimized canvas)  -->
+
 </ResourceDictionary>

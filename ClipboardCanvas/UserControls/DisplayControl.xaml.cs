@@ -1,5 +1,6 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
@@ -27,6 +28,19 @@ namespace ClipboardCanvas.UserControls
             get
             {
                 if ((DisplayFrame.Content as Page)?.DataContext is CanvasPageViewModel viewModel)
+                {
+                    return viewModel;
+                }
+
+                return null;
+            }
+        }
+
+        public ICollectionPreviewPageModel CollectionPreviewPageModel
+        {
+            get
+            {
+                if ((DisplayFrame.Content as Page)?.DataContext is CollectionPreviewPageViewModel viewModel)
                 {
                     return viewModel;
                 }

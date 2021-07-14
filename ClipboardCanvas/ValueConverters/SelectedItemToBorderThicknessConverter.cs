@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Data;
 
 namespace ClipboardCanvas.ValueConverters
 {
-    public class SelectedCollectionsContainerConverter : IValueConverter
+    public class SelectedItemToBorderThicknessConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
@@ -15,7 +15,7 @@ namespace ClipboardCanvas.ValueConverters
 
             if (boolParam)
             {
-                return new Thickness(3);
+                return new Thickness(2);
             }
             else
             {

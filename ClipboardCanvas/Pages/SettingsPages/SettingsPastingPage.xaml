@@ -21,6 +21,8 @@
                 Text="Pasting" />
 
             <StackPanel Spacing="12">
+                <ToggleSwitch Header="Open new canvas on paste" IsOn="{x:Bind ViewModel.OpenNewCanvasOnPaste, Mode=TwoWay}" />
+
                 <StackPanel>
                     <!--  TODO: Add teaching tooltip here  -->
                     <ToggleSwitch

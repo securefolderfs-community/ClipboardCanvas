@@ -1,5 +1,5 @@
-﻿using Windows.Storage;
-using System.IO;
+﻿using System.IO;
+using Windows.Storage;
 using ClipboardCanvas.ApplicationSettings.Interfaces;
 
 namespace ClipboardCanvas.ApplicationSettings
@@ -43,6 +43,12 @@ namespace ClipboardCanvas.ApplicationSettings
         }
 
         public bool ShowDeleteConfirmationDialog
+        {
+            get => Get<bool>(true);
+            set => Set<bool>(value);
+        }
+
+        public bool UseInfiniteCanvasAsDefault
         {
             get => Get<bool>(true);
             set => Set<bool>(value);

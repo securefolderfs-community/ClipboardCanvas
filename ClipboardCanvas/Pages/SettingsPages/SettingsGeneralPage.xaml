@@ -16,7 +16,7 @@
                 Text="General" />
 
             <StackPanel Spacing="12">
-                <ToggleSwitch Header="Always open new canvas on paste" IsOn="{x:Bind ViewModel.OpenNewCanvasOnPaste, Mode=TwoWay}" />
+                <ToggleSwitch Header="Use Infinite Canvas as default" IsOn="{x:Bind ViewModel.UseInfiniteCanvasAsDefault, Mode=TwoWay}" />
 
                 <ToggleSwitch Header="Show confirmation dialog when deleting items" IsOn="{x:Bind ViewModel.ShowDeleteConfirmationDialog, Mode=TwoWay}" />
             </StackPanel>

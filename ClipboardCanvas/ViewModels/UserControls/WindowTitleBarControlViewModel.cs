@@ -117,6 +117,15 @@ namespace ClipboardCanvas.ViewModels.UserControls
             StandardTitleBarLoad = false;
         }
 
+        public void SetTitleBarForCollectionPreview(string collectionName)
+        {
+            TwoSideTitleBarLoad = true;
+            TitleBarFirstSideText = "Collection Preview:";
+            TitleBarSecondSideText = collectionName;
+
+            StandardTitleBarLoad = false;
+        }
+
         #endregion
     }
 }

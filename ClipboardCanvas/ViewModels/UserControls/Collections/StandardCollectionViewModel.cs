@@ -163,7 +163,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 EditBoxText = DisplayName;
                 IsEditingName = true;
 
-                // Focus editbox
+                // Focus EditBox
                 EditBoxFocus = true;
                 EditBoxFocus = false;
             }

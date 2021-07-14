@@ -14,7 +14,7 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <Style x:Key="NavigationButton" TargetType="Button">
+            <Style x:Key="NavigationButtonStyle" TargetType="Button">
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
                 <Setter Property="VerticalAlignment" Value="Stretch" />
@@ -160,90 +160,125 @@
         BorderBrush="{ThemeResource NavigationButtonsBorderBrush}"
         BorderThickness="2,0,2,0">
         <Grid>
-            <Grid.ColumnDefinitions>
+            <Grid x:Name="CanvasLayoutControls" x:Load="{x:Bind ViewModel.CanvasLayoutControlsLoad, Mode=OneWay}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
 
-                <ColumnDefinition />
-                <ColumnDefinition Width="2*" />
-                <ColumnDefinition />
+                <!--  Navigate back  -->
+                <Grid Grid.Column="0">
+                    <Button
+                        Command="{x:Bind ViewModel.NavigateBackCommand}"
+                        IsEnabled="{x:Bind ViewModel.NavigateBackEnabled, Mode=OneWay}"
+                        Style="{StaticResource NavigationButtonStyle}"
+                        ToolTipService.ToolTip="Navigate Back (Left Arrow)&#x0a;Navigate to last item (Ctrl + Left Arrow | End)">
+                        <Button.Content>
+                            <FontIcon Glyph="&#xE76B;" />
+                        </Button.Content>
+                    </Button>
+                    <ProgressRing
+                        x:Name="NavigateBackRing"
+                        Margin="12"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        x:Load="{x:Bind ViewModel.NavigateBackLoading, Mode=OneWay}"
+                        IsActive="True" />
+                </Grid>
 
-            </Grid.ColumnDefinitions>
+                <!--  Navigate forward  -->
+                <Grid Grid.Column="2">
+                    <Button
+                        Command="{x:Bind ViewModel.NavigateForwardCommand}"
+                        IsEnabled="{x:Bind ViewModel.NavigateForwardEnabled, Mode=OneWay}"
+                        Style="{StaticResource NavigationButtonStyle}"
+                        ToolTipService.ToolTip="Navigate Forward (Right Arrow)&#x0a;Open new canvas (Ctrl + Right Arrow | Home)">
+                        <Button.Content>
+                            <FontIcon Glyph="&#xE76C;" />
+                        </Button.Content>
+                    </Button>
+                    <ProgressRing
+                        x:Name="NavigateForwardRing"
+                        Margin="12"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        x:Load="{x:Bind ViewModel.NavigateForwardLoading, Mode=OneWay}"
+                        IsActive="True" />
+                </Grid>
 
-            <!--  Navigate back  -->
-            <Grid
-                x:Name="NavigateBack"
-                Grid.Column="0"
-                x:Load="{x:Bind ViewModel.NavigateBackLoad, Mode=OneWay}">
+                <!--  Go to Homepage  -->
                 <Button
-                    Command="{x:Bind ViewModel.NavigateBackCommand}"
-                    IsEnabled="{x:Bind ViewModel.NavigateBackEnabled, Mode=OneWay}"
-                    Style="{StaticResource NavigationButton}"
-                    TabIndex="0"
-                    ToolTipService.ToolTip="Navigate Back (Left Arrow)&#x0a;Navigate to last item (Ctrl + Left Arrow | End)">
+                    Grid.Column="1"
+                    Command="{x:Bind ViewModel.GoToHomepageCommand}"
+                    Style="{StaticResource NavigationButtonStyle}"
+                    ToolTipService.ToolTip="Navigate Home (Ctrl + Down Arrow)">
+                    <Button.Content>
+                        <FontIcon Glyph="&#xE80F;" />
+                    </Button.Content>
+                </Button>
+            </Grid>
+
+            <Grid x:Name="HomepageLayoutControls" x:Load="{x:Bind ViewModel.HomepageLayoutControlsLoad, Mode=OneWay}">
+                <!--  Go to Canvas  -->
+                <Button
+                    Command="{x:Bind ViewModel.GoToCanvasCommand}"
+                    IsEnabled="{x:Bind ViewModel.GoToCanvasEnabled, Mode=OneWay}"
+                    Style="{StaticResource NavigationButtonStyle}"
+                    ToolTipService.ToolTip="Navigate to Canvas (Ctrl + Up Arrow)">
+                    <Button.Content>
+                        <FontIcon Glyph="&#xF0E3;" />
+                    </Button.Content>
+                </Button>
+            </Grid>
+
+            <Grid x:Name="CollectionPreviewLayoutControls" x:Load="{x:Bind ViewModel.CollectionPreviewLayoutControlsLoad, Mode=OneWay}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <!--  Go back  -->
+                <Button
+                    Grid.Column="0"
+                    Command="{x:Bind ViewModel.CollectionPreviewNavigateBackCommand}"
+                    Style="{StaticResource NavigationButtonStyle}"
+                    ToolTipService.ToolTip="Go Back (Ctrl + Left Arrow)">
                     <Button.Content>
                         <FontIcon Glyph="&#xE76B;" />
                     </Button.Content>
                 </Button>
-                <ProgressRing
-                    x:Name="NavigateBackRing"
-                    Margin="12"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    x:Load="{x:Bind ViewModel.NavigateBackLoading, Mode=OneWay}"
-                    IsActive="True" />
-            </Grid>
-
-            <!--  Navigate forward  -->
-            <Grid
-                x:Name="NavigateForward"
-                Grid.Column="2"
-                x:Load="{x:Bind ViewModel.NavigateForwardLoad, Mode=OneWay}">
+                <!--  Go to Homepage  -->
                 <Button
-                    Command="{x:Bind ViewModel.NavigateForwardCommand}"
-                    IsEnabled="{x:Bind ViewModel.NavigateForwardEnabled, Mode=OneWay}"
-                    Style="{StaticResource NavigationButton}"
-                    TabIndex="3"
-                    ToolTipService.ToolTip="Navigate Forward (Right Arrow)&#x0a;Open new canvas (Ctrl + Right Arrow | Home)">
+                    Grid.Column="1"
+                    Command="{x:Bind ViewModel.GoToHomepageCommand}"
+                    Style="{StaticResource NavigationButtonStyle}"
+                    ToolTipService.ToolTip="Navigate Home (Ctrl + Down Arrow)">
                     <Button.Content>
-                        <FontIcon Glyph="&#xE76C;" />
+                        <FontIcon Glyph="&#xE80F;" />
                     </Button.Content>
                 </Button>
-                <ProgressRing
-                    x:Name="NavigateForwardRing"
-                    Margin="12"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    x:Load="{x:Bind ViewModel.NavigateForwardLoading, Mode=OneWay}"
-                    IsActive="True" />
+                <!--  Go to Canvas  -->
+                <Grid Grid.Column="2">
+                    <Button
+                        Command="{x:Bind ViewModel.CollectionPreviewGoToCanvasCommand}"
+                        IsEnabled="{x:Bind ViewModel.CollectionPreviewGoToCanvasEnabled, Mode=OneWay}"
+                        Style="{StaticResource NavigationButtonStyle}"
+                        ToolTipService.ToolTip="Navigate to Canvas (Ctrl + Up Arrow)">
+                        <Button.Content>
+                            <FontIcon Glyph="&#xF0E3;" />
+                        </Button.Content>
+                    </Button>
+                    <ProgressRing
+                        x:Name="CollectionPreviewGoToCanvasRing"
+                        Margin="12"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        x:Load="{x:Bind ViewModel.CollectionPreviewGoToCanvasLoading, Mode=OneWay}"
+                        IsActive="True" />
+                </Grid>
             </Grid>
-
-            <!--  Go to home button  -->
-            <Button
-                x:Name="GoToHome"
-                Grid.Column="1"
-                x:Load="{x:Bind ViewModel.GoToHomeLoad, Mode=OneWay}"
-                Command="{x:Bind ViewModel.GoToHomeCommand}"
-                Style="{StaticResource NavigationButton}"
-                TabIndex="1"
-                ToolTipService.ToolTip="Navigate Home (Ctrl + Down Arrow)">
-                <Button.Content>
-                    <FontIcon Glyph="&#xE80F;" />
-                </Button.Content>
-            </Button>
-
-            <!--  Go to Canvas button  -->
-            <Button
-                x:Name="GoToCanvas"
-                Grid.ColumnSpan="3"
-                x:Load="{x:Bind ViewModel.GoToCanvasLoad, Mode=OneWay}"
-                Command="{x:Bind ViewModel.GoToCanvasCommand}"
-                IsEnabled="{x:Bind ViewModel.GoToCanvasEnabled, Mode=OneWay}"
-                Style="{StaticResource NavigationButton}"
-                TabIndex="2"
-                ToolTipService.ToolTip="Navigate to Canvas (Ctrl + Up Arrow)">
-                <Button.Content>
-                    <FontIcon Glyph="&#xF0E3;" />
-                </Button.Content>
-            </Button>
         </Grid>
     </Border>
 </UserControl>

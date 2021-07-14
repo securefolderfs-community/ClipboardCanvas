@@ -1,10 +1,13 @@
 ﻿using Windows.UI.Xaml.Controls;
-using ClipboardCanvas.ViewModels.Pages;
 using Windows.UI.Xaml.Navigation;
-using ClipboardCanvas.DataModels;
+using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml;
+
+using ClipboardCanvas.ViewModels.Pages;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.DataModels.Navigation;
+using ClipboardCanvas.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -23,12 +26,21 @@ namespace ClipboardCanvas.Pages
 
         public ICollectionModel AssociatedCollectionModel { get; private set; }
 
+        public ISearchControlModel SearchControlModel => CanvasPreviewSearchControl.ViewModel;
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
             DisplayFrameNavigationParameterDataModel navigationParameter = e.Parameter as DisplayFrameNavigationParameterDataModel;
             AssociatedCollectionModel = navigationParameter.collectionModel;
+        }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            this.ViewModel.Dispose();
+
+            base.OnNavigatingFrom(e);
         }
 
         public CollectionPreviewPage()
@@ -38,9 +50,25 @@ namespace ClipboardCanvas.Pages
             this.ViewModel = new CollectionPreviewPageViewModel(this);
         }
 
-        private void Page_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            this.ViewModel.Initialize();
+            this.ViewModel.InitializeItems();
+        }
+
+        public void PrepareConnectedAnimation(CollectionPreviewItemViewModel sourceViewModel)
+        {
+            UIElement sourceAnimationControl = ((ItemsGrid.ContainerFromItem(sourceViewModel) as GridViewItem).ContentTemplateRoot as FrameworkElement).FindName("OptimizedCanvasPreviewControl") as UIElement;
+
+            ConnectedAnimation connectedAnimation = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(
+                Constants.UI.Animations.CONNECTED_ANIMATION_COLLECTION_PREVIEW_ITEM_OPEN_REQUESTED_TOKEN,
+                sourceAnimationControl);
+
+            connectedAnimation.Configuration = new DirectConnectedAnimationConfiguration();
+        }
+
+        public void ScrollIntoItemView(CollectionPreviewItemViewModel sourceViewModel)
+        {
+            ItemsGrid.ScrollIntoView(sourceViewModel);
         }
     }
 }

@@ -41,14 +41,14 @@ namespace ClipboardCanvas.Helpers
                     SafeWrapper<DataPackageView> dataPackage = await ClipboardHelpers.GetClipboardData();
 
                     await pasteCanvasControlModel.TryPasteData(dataPackage, CanvasPreviewControlViewModel.CanvasPasteCancellationTokenSource.Token);
-                }), "Paste from clipboard", "\uE77F");
+                }), "Paste from Clipboard", "\uE77F");
 
             actions.Add(action_paste);
 
             return actions;
         }
 
-        public static IEnumerable<SuggestedActionsControlItemViewModel> GetActionsForUnselectedCollection()
+        public static IEnumerable<SuggestedActionsControlItemViewModel> GetActionsForHomepage()
         {
             List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
 
@@ -59,6 +59,13 @@ namespace ClipboardCanvas.Helpers
                 }), "Add Collection", "\uE710");
 
             actions.Add(action_addCollection);
+
+            return actions;
+        }
+
+        public static IEnumerable<SuggestedActionsControlItemViewModel> GetActionsForCollectionPreviewPage()
+        {
+            List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
 
             return actions;
         }

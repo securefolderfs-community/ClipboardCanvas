@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using System.Collections.ObjectModel;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.UserControls;
@@ -9,15 +10,17 @@ namespace ClipboardCanvas.Models
 {
     public interface ICollectionModel
     {
+        ObservableCollection<CollectionItemViewModel> CollectionItems { get; }
+
         bool IsCollectionAvailable { get; }
 
         bool IsOnNewCanvas { get; }
 
         string DisplayName { get; }
 
-        bool IsCanvasInitialized { get; }
+        bool IsCollectionInitialized { get; }
         
-        bool IsCanvasInitializing { get; }
+        bool IsCollectionInitializing { get; }
 
         CollectionItemViewModel CurrentCollectionItemViewModel { get; }
 
@@ -53,7 +56,7 @@ namespace ClipboardCanvas.Models
         /// <param name="pasteCanvasModel"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task LoadCanvasFromCollection(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken);
+        Task LoadCanvasFromCollection(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken, ICollectionItemModel collectionItemModel = null);
 
         /// <summary>
         /// Manually adds item to collection
@@ -83,6 +86,12 @@ namespace ClipboardCanvas.Models
         /// Sets current index at the stack end
         /// </summary>
         void SetIndexOnNewCanvas();
+
+        /// <summary>
+        /// Sets current index to index of <paramref name="collectionItemModel"/>
+        /// </summary>
+        /// <param name="collectionItemModel"></param>
+        void UpdateIndex(ICollectionItemModel collectionItemModel);
 
         bool CheckCollectionAvailability();
 

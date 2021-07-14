@@ -5,8 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.Dialogs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tuc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:tui="using:Microsoft.Toolkit.Uwp.UI"
-    xmlns:uwptuc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:vc="using:ClipboardCanvas.ValueConverters"
     DefaultButton="Primary"
     Loaded="ContentDialog_Loaded"
@@ -53,7 +53,7 @@
         </StackPanel>
 
         <ScrollViewer Grid.Row="1" tui:ScrollViewerExtensions.EnableMiddleClickScrolling="True">
-            <uwptuc:MarkdownTextBlock Background="Transparent" Text="{x:Bind ViewModel.UpdateMarkdownInfoText, Mode=OneWay}" />
+            <tuc:MarkdownTextBlock Background="Transparent" Text="{x:Bind ViewModel.UpdateMarkdownInfoText, Mode=OneWay}" />
         </ScrollViewer>
         <HyperlinkButton
             x:Name="SeeOnGitHubLink"

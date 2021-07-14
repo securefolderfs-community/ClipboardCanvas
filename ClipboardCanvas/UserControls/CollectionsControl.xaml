@@ -16,7 +16,7 @@
 
     <UserControl.Resources>
         <vc:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <vc:SelectedCollectionsContainerConverter x:Key="SelectedCollectionsContainerConverter" />
+        <vc:SelectedItemToBorderThicknessConverter x:Key="SelectedItemToBorderThicknessConverter" />
         <vc:SafeWrapperResultToErrorConverter x:Key="SafeWrapperResultToErrorConverter" />
         <vc:ControlToFocusActionConverter x:Key="ControlToFocusActionConverter" />
     </UserControl.Resources>
@@ -77,28 +77,59 @@
             </GridView.ItemContainerStyle>
             <GridView.ItemTemplate>
                 <DataTemplate>
-                    <Border
+                    <Grid
                         Width="260"
                         Height="140"
                         Background="{ThemeResource SubtleBackgroundBrush}"
                         BorderBrush="{ThemeResource SystemAccentColor}"
-                        BorderThickness="{Binding IsSelected, Converter={StaticResource SelectedCollectionsContainerConverter}}"
+                        BorderThickness="{Binding IsSelected, Converter={StaticResource SelectedItemToBorderThicknessConverter}}"
                         CornerRadius="8">
-                        <Grid Margin="4,0,4,2">
-                            <Grid.RowDefinitions>
-                                <!--  Icon  -->
-                                <RowDefinition Height="9*" />
-                                <!--  Filename  -->
-                                <RowDefinition Height="Auto" />
-                                <!--  Loading progressbar  -->
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-
+                        <Grid.RowDefinitions>
                             <!--  Icon  -->
-                            <Grid
-                                Grid.Row="0"
-                                HorizontalAlignment="Stretch"
-                                Background="Transparent">
+                            <RowDefinition Height="9*" />
+                            <!--  Filename  -->
+                            <RowDefinition Height="Auto" />
+                            <!--  Loading progressbar  -->
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!--  Icon  -->
+                        <Grid
+                            Grid.Row="0"
+                            HorizontalAlignment="Stretch"
+                            Background="Transparent">
+                            <ToolTipService.ToolTip>
+                                <ToolTip>
+                                    <StackPanel Spacing="8">
+                                        <!--  Title  -->
+                                        <TextBlock
+                                            FontSize="16"
+                                            FontWeight="SemiBold"
+                                            Text="{Binding DisplayName}"
+                                            TextTrimming="CharacterEllipsis" />
+
+                                        <!--  Content text  -->
+                                        <TextBlock
+                                            Text="Double click to open this Collection.&#x0a;Right click for more options."
+                                            TextTrimming="WordEllipsis"
+                                            TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </ToolTip>
+                            </ToolTipService.ToolTip>
+                            <FontIcon
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="48"
+                                Glyph="&#xF12B;" />
+
+                            <!--  Collection Error Warning  -->
+                            <FontIcon
+                                Grid.Row="1"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                Foreground="Red"
+                                Glyph="&#xE783;"
+                                Visibility="{Binding ErrorIconVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <ToolTipService.ToolTip>
                                     <ToolTip>
                                         <StackPanel Spacing="8">
@@ -106,93 +137,61 @@
                                             <TextBlock
                                                 FontSize="16"
                                                 FontWeight="SemiBold"
-                                                Text="{Binding DisplayName}"
-                                                TextTrimming="CharacterEllipsis" />
+                                                Text="Collection unavailable" />
 
                                             <!--  Content text  -->
                                             <TextBlock
-                                                Text="Double click to open this Collection.&#x0a;Right click for more options."
+                                                Text="{Binding CollectionErrorInfo, Converter={StaticResource SafeWrapperResultToErrorConverter}}"
                                                 TextTrimming="WordEllipsis"
                                                 TextWrapping="Wrap" />
                                         </StackPanel>
                                     </ToolTip>
                                 </ToolTipService.ToolTip>
-                                <FontIcon
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    FontSize="48"
-                                    Glyph="&#xF12B;" />
-
-                                <!--  Collection Error Warning  -->
-                                <FontIcon
-                                    Grid.Row="1"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Bottom"
-                                    Foreground="Red"
-                                    Glyph="&#xE783;"
-                                    Visibility="{Binding ErrorIconVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                    <ToolTipService.ToolTip>
-                                        <ToolTip>
-                                            <StackPanel Spacing="8">
-                                                <!--  Title  -->
-                                                <TextBlock
-                                                    FontSize="16"
-                                                    FontWeight="SemiBold"
-                                                    Text="Collection unavailable" />
-
-                                                <!--  Content text  -->
-                                                <TextBlock
-                                                    Text="{Binding CollectionErrorInfo, Converter={StaticResource SafeWrapperResultToErrorConverter}}"
-                                                    TextTrimming="WordEllipsis"
-                                                    TextWrapping="Wrap" />
-                                            </StackPanel>
-                                        </ToolTip>
-                                    </ToolTipService.ToolTip>
-                                </FontIcon>
-                            </Grid>
-
-                            <!--  Collection name and control  -->
-                            <Grid Grid.Row="1" Padding="8,0,8,0">
-                                <!--  Collection name  -->
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    FontWeight="SemiBold"
-                                    Text="{Binding DisplayName}"
-                                    TextTrimming="CharacterEllipsis"
-                                    ToolTipService.ToolTip="{Binding DisplayName}"
-                                    Visibility="{Binding IsEditingName, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter='invert'}" />
-
-                                <!--  Collection name edit box  -->
-                                <TextBox
-                                    x:Name="EditBox"
-                                    Grid.Row="1"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Bottom"
-                                    ap:TextBoxFocusAttachedProperty.Value="{Binding EditBoxFocus}"
-                                    Text="{Binding EditBoxText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                    TextAlignment="Center"
-                                    Visibility="{Binding IsEditingName, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                    <i:Interaction.Behaviors>
-                                        <icore:EventTriggerBehavior EventName="KeyDown">
-                                            <icore:InvokeCommandAction Command="{Binding RenameBoxKeyDownCommand}" />
-                                        </icore:EventTriggerBehavior>
-                                        <icore:EventTriggerBehavior EventName="LostFocus">
-                                            <icore:InvokeCommandAction Command="{Binding RenameBoxLostFocusCommand}" />
-                                        </icore:EventTriggerBehavior>
-                                    </i:Interaction.Behaviors>
-                                </TextBox>
-                            </Grid>
-
-                            <!--  Progressbar  -->
-                            <ProgressBar
-                                Grid.Row="2"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Center"
-                                IsIndeterminate="True"
-                                Visibility="{Binding IsCanvasInitializing, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            </FontIcon>
                         </Grid>
-                        <Border.ContextFlyout>
+
+                        <!--  Collection name and control  -->
+                        <Grid Grid.Row="1" Padding="8,0,8,0">
+                            <!--  Collection name  -->
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontWeight="SemiBold"
+                                Text="{Binding DisplayName}"
+                                TextTrimming="CharacterEllipsis"
+                                ToolTipService.ToolTip="{Binding DisplayName}"
+                                Visibility="{Binding IsEditingName, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter='invert'}" />
+
+                            <!--  Collection name edit box  -->
+                            <TextBox
+                                x:Name="EditBox"
+                                Grid.Row="1"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Bottom"
+                                ap:TextBoxFocusAttachedProperty.Value="{Binding EditBoxFocus}"
+                                Text="{Binding EditBoxText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                TextAlignment="Center"
+                                Visibility="{Binding IsEditingName, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <i:Interaction.Behaviors>
+                                    <icore:EventTriggerBehavior EventName="KeyDown">
+                                        <icore:InvokeCommandAction Command="{Binding RenameBoxKeyDownCommand}" />
+                                    </icore:EventTriggerBehavior>
+                                    <icore:EventTriggerBehavior EventName="LostFocus">
+                                        <icore:InvokeCommandAction Command="{Binding RenameBoxLostFocusCommand}" />
+                                    </icore:EventTriggerBehavior>
+                                </i:Interaction.Behaviors>
+                            </TextBox>
+                        </Grid>
+
+                        <!--  Progressbar  -->
+                        <ProgressBar
+                            Grid.Row="2"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            IsIndeterminate="True"
+                            Visibility="{Binding IsCollectionInitializing, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                        <Grid.ContextFlyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem Command="{Binding OpenCollectionLocationCommand}" Text="Open Collection location">
                                     <MenuFlyoutItem.Icon>
@@ -216,8 +215,8 @@
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                             </MenuFlyout>
-                        </Border.ContextFlyout>
-                    </Border>
+                        </Grid.ContextFlyout>
+                    </Grid>
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>

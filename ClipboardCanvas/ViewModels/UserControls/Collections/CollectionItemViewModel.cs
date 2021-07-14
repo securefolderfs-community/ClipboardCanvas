@@ -13,9 +13,17 @@ namespace ClipboardCanvas.ViewModels.UserControls
 {
     public class CollectionItemViewModel : ICollectionItemModel
     {
+        #region Private Members
+
+        private IStorageItem _sourceItem;
+
+        #endregion
+
         #region Public Properties
 
         public IStorageItem Item { get; private set; }
+
+        public Task<IStorageItem> SourceItem => GetSourceItem();
 
         public BasePastedContentTypeDataModel ContentType { get; set; }
 
@@ -30,7 +38,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public CollectionItemViewModel(IStorageItem item, BasePastedContentTypeDataModel contentType)
         {
-            this.Item = item;
+            DangerousUpdateFile(item);
             this.ContentType = contentType;
         }
 
@@ -45,35 +53,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 return;
             }
 
-            StorageFile file = Item as StorageFile;
-            if (file != null && ReferenceFile.IsReferenceFile(file))
+            if (await SourceItem is StorageFile file)
             {
-                ReferenceFile referenceFile = await ReferenceFile.GetFile(file);
-
-                if (referenceFile.ReferencedItem == null)
-                {
-                    return;
-                }
-
-                if (referenceFile.ReferencedItem is StorageFile referencedFile)
-                {
-                    await Launcher.LaunchFileAsync(referencedFile);
-                }
-                else
-                {
-                    await Launcher.LaunchFolderAsync(referenceFile.ReferencedItem as StorageFolder);
-                }
+                await Launcher.LaunchFileAsync(file);
             }
-            else
+            else if (await SourceItem is StorageFolder folder)
             {
-                if (file != null)
-                {
-                    await Launcher.LaunchFileAsync(file);
-                }
-                else
-                {
-                    await Launcher.LaunchFolderAsync(Item as StorageFolder);
-                }
+                await Launcher.LaunchFolderAsync(folder);
             }
         }
 
@@ -84,46 +70,63 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task OpenContainingFolder(bool checkForReference)
         {
-            IStorageFolder folder;
+            IStorageFolder parentFolder;
             IStorageItem itemToSelect;
 
-            if (checkForReference && Item is StorageFile file && ReferenceFile.IsReferenceFile(file))
+            if (checkForReference)
             {
-                ReferenceFile referenceFile = await ReferenceFile.GetFile(file);
-
-                if (referenceFile.ReferencedItem == null)
-                {
-                    folder = await StorageHelpers.ToStorageItem<StorageFolder>(Path.GetDirectoryName(Item.Path));
-                    itemToSelect = file;
-                }
-                else
-                {
-                    folder = await StorageHelpers.ToStorageItem<StorageFolder>(Path.GetDirectoryName(referenceFile.ReferencedItem.Path));
-                    itemToSelect = referenceFile.ReferencedItem;
-                }
+                string parentPath = Path.GetDirectoryName((await SourceItem).Path);
+                parentFolder = await StorageHelpers.ToStorageItem<StorageFolder>(parentPath);
+                itemToSelect = await SourceItem;
             }
             else
             {
-                folder = await StorageHelpers.ToStorageItem<StorageFolder>(Path.GetDirectoryName(Item.Path));
+                string parentPath = Path.GetDirectoryName(Item.Path);
+                parentFolder = await StorageHelpers.ToStorageItem<StorageFolder>(parentPath);
                 itemToSelect = Item;
             }
 
-            if (folder != null)
+            if (parentFolder != null)
             {
                 FolderLauncherOptions launcherOptions = new FolderLauncherOptions();
 
-                if (Item != null)
+                if (itemToSelect != null)
                 {
                     launcherOptions.ItemsToSelect.Add(itemToSelect);
                 }
 
-                await Launcher.LaunchFolderAsync(folder, launcherOptions);
+                await Launcher.LaunchFolderAsync(parentFolder, launcherOptions);
             }
         }
 
         public void DangerousUpdateFile(IStorageItem item)
         {
             this.Item = item;
+            this._sourceItem = null;
+        }
+
+        #endregion
+
+        #region Private Helpers
+
+        private async Task<IStorageItem> GetSourceItem()
+        {
+            if (_sourceItem != null)
+            {
+                return _sourceItem;
+            }
+
+            if (Item is StorageFile file && ReferenceFile.IsReferenceFile(file))
+            {
+                ReferenceFile referenceFile = await ReferenceFile.GetFile(file);
+                _sourceItem = referenceFile.ReferencedItem;
+            }
+            else
+            {
+                _sourceItem = Item;
+            }
+
+            return _sourceItem;
         }
 
         #endregion

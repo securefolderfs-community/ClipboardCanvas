@@ -1,7 +1,11 @@
-﻿namespace ClipboardCanvas.ApplicationSettings.Interfaces
+﻿using System;
+
+namespace ClipboardCanvas.ApplicationSettings.Interfaces
 {
     public interface IUserSettings
     {
+        event EventHandler<SettingChangedEventArgs> OnSettingChangedEvent;
+
         /// <summary>
         /// Determines whether detailed logging is enabled or disabled
         /// <br/><br/>
@@ -21,16 +25,21 @@
         /// <br/>
         /// Otherwise, items are copied directly to collection.
         /// </summary>
-        public bool AlwaysPasteFilesAsReference { get; set; } // TODO: Add a setting so user can also select which items to paste as reference
+        bool AlwaysPasteFilesAsReference { get; set; } // TODO: Add a setting so user can also select which items to paste as reference
 
         /// <summary>
         /// Determines whether to favor markdown or .txt files when pasting items
         /// </summary>
-        public bool PrioritizeMarkdownOverText { get; set; }
+        bool PrioritizeMarkdownOverText { get; set; }
 
         /// <summary>
         /// Determines whether to show delete confirmation dialog when deleting canvases
         /// </summary>
-        public bool ShowDeleteConfirmationDialog { get; set; }
+        bool ShowDeleteConfirmationDialog { get; set; }
+
+        /// <summary>
+        /// Determines whether to use Infinite Canvas as default when opening new Canvas
+        /// </summary>
+        bool UseInfiniteCanvasAsDefault { get; set; }
     }
 }

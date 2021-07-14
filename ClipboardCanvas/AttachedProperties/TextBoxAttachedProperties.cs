@@ -16,7 +16,6 @@ namespace ClipboardCanvas.AttachedProperties
             if (value)
             {
                 textBox.Focus(FocusState.Programmatic);
-                textBox.SelectionStart = textBox.Text.Length;
             }
             else // Unfocus
             {

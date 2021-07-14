@@ -178,9 +178,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public void RemoveAction(SuggestedActionsControlItemViewModel action)
         {
-            int indexToRemove = Items.IndexOf(action);
-            Items[indexToRemove].Dispose();
-            Items.RemoveAt(indexToRemove);
+            action.Dispose();
+            Items.Remove(action);
 
             CheckAnyActionsExist();
         }

@@ -7,5 +7,7 @@ namespace ClipboardCanvas.ModelViews
         ICollectionModel AssociatedCollectionModel { get; }
 
         ICanvasPreviewModel CanvasPreviewModel { get; }
+
+        void OnContentLoaded();
     }
 }

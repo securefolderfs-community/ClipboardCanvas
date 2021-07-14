@@ -121,6 +121,8 @@
                 <uc:CanvasPreviewControl
                     x:Name="CanvasPreviewControl"
                     Grid.Row="0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
                     Background="Transparent"
                     CollectionModel="{x:Bind ViewModel.CollectionModel, Mode=OneWay}">
                     <uc:CanvasPreviewControl.ContextFlyout>

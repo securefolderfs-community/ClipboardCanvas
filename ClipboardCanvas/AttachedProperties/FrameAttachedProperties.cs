@@ -29,7 +29,7 @@ namespace ClipboardCanvas.AttachedProperties
                         break;
                     }
 
-                case DisplayPageType.CollectionsPreview:
+                case DisplayPageType.CollectionPreviewPage:
                     {
                         frame.Navigate(typeof(CollectionPreviewPage), navigationDataModel.parameter, navigationDataModel.transitionInfo);
                         break;

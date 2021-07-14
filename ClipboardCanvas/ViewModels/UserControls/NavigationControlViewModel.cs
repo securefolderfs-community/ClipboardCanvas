@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Input;
 using Windows.System;
 using Windows.UI.Xaml.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 
-using ClipboardCanvas.DataModels;
-using ClipboardCanvas.DataModels.Navigation;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Models;
 
@@ -23,11 +20,25 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Public Properties
 
-        private bool _NavigateBackLoad;
-        public bool NavigateBackLoad
+        private bool _CanvasLayoutControlsLoad;
+        public bool CanvasLayoutControlsLoad
         {
-            get => _NavigateBackLoad;
-            private set => SetProperty(ref _NavigateBackLoad, value);
+            get => _CanvasLayoutControlsLoad;
+            set => SetProperty(ref _CanvasLayoutControlsLoad, value);
+        }
+
+        private bool _HomepageLayoutControlsLoad;
+        public bool HomepageLayoutControlsLoad
+        {
+            get => _HomepageLayoutControlsLoad;
+            set => SetProperty(ref _HomepageLayoutControlsLoad, value);
+        }
+
+        private bool _CollectionPreviewLayoutControlsLoad;
+        public bool CollectionPreviewLayoutControlsLoad
+        {
+            get => _CollectionPreviewLayoutControlsLoad;
+            set => SetProperty(ref _CollectionPreviewLayoutControlsLoad, value);
         }
 
         private bool _NavigateBackEnabled = true;
@@ -44,13 +55,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
             set => SetProperty(ref _NavigateBackLoading, value);
         }
 
-        private bool _NavigateForwardLoad;
-        public bool NavigateForwardLoad
-        {
-            get => _NavigateForwardLoad;
-            private set => SetProperty(ref _NavigateForwardLoad, value);
-        }
-
         private bool _NavigateForwardEnabled = true;
         public bool NavigateForwardEnabled
         {
@@ -65,25 +69,25 @@ namespace ClipboardCanvas.ViewModels.UserControls
             set => SetProperty(ref _NavigateForwardLoading, value);
         }
 
-        private bool _GoToHomeLoad;
-        public bool GoToHomeLoad
-        {
-            get => _GoToHomeLoad;
-            private set => SetProperty(ref _GoToHomeLoad, value);
-        }
-
-        private bool _GoToCanvasLoad;
-        public bool GoToCanvasLoad
-        {
-            get => _GoToCanvasLoad;
-            private set => SetProperty(ref _GoToCanvasLoad, value);
-        }
-
         private bool _GoToCanvasEnabled = true;
         public bool GoToCanvasEnabled
         {
             get => _GoToCanvasEnabled;
             set => SetProperty(ref _GoToCanvasEnabled, value);
+        }
+
+        private bool _CollectionPreviewGoToCanvasEnabled = true;
+        public bool CollectionPreviewGoToCanvasEnabled
+        {
+            get => _CollectionPreviewGoToCanvasEnabled;
+            set => SetProperty(ref _CollectionPreviewGoToCanvasEnabled, value);
+        }
+
+        private bool _CollectionPreviewGoToCanvasLoading;
+        public bool CollectionPreviewGoToCanvasLoading
+        {
+            get => _CollectionPreviewGoToCanvasLoading;
+            set => SetProperty(ref _CollectionPreviewGoToCanvasLoading, value);
         }
 
         #endregion
@@ -98,9 +102,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public event EventHandler OnNavigateForwardRequestedEvent;
 
-        public event EventHandler OnGoToHomePageRequestedEvent;
+        public event EventHandler OnGoToHomepageRequestedEvent;
 
         public event EventHandler OnGoToCanvasRequestedEvent;
+
+        public event EventHandler OnCollectionPreviewNavigateBackRequestedEvent;
+
+        public event EventHandler OnCollectionPreviewGoToCanvasRequestedEvent;
 
         #endregion
 
@@ -114,9 +122,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public ICommand NavigateForwardCommand { get; private set; }
 
-        public ICommand GoToHomeCommand { get; private set; }
+        public ICommand GoToHomepageCommand { get; private set; }
 
         public ICommand GoToCanvasCommand { get; private set; }
+
+        public ICommand CollectionPreviewNavigateBackCommand { get; private set; }
+
+        public ICommand CollectionPreviewGoToCanvasCommand { get; private set; }
 
         public ICommand DefaultKeyboardAcceleratorInvokedCommand { get; private set; }
 
@@ -133,8 +145,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
             NavigateBackCommand = new RelayCommand(NavigateBack);
             NavigateFirstCommand = new RelayCommand(NavigateFirst);
             NavigateForwardCommand = new RelayCommand(NavigateForward);
-            GoToHomeCommand = new RelayCommand(GoToHome);
+            GoToHomepageCommand = new RelayCommand(GoToHomepage);
             GoToCanvasCommand = new RelayCommand(GoToCanvas);
+            CollectionPreviewNavigateBackCommand = new RelayCommand(CollectionPreviewNavigateBack);
+            CollectionPreviewGoToCanvasCommand = new RelayCommand(CollectionPreviewGoToCanvas);
             DefaultKeyboardAcceleratorInvokedCommand = new RelayCommand<KeyboardAcceleratorInvokedEventArgs>(DefaultKeyboardAcceleratorInvoked);
         }
 
@@ -157,7 +171,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 case (c: true, s: false, a: false, w: false, k: VirtualKey.Up):
                     {
                         if (_currentPage == DisplayPageType.CanvasPage)
-                        {
+                        { 
                             break;
                         }
 
@@ -172,7 +186,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                             break;
                         }
 
-                        GoToHome();
+                        GoToHomepage();
                         break;
                     }
 
@@ -196,9 +210,22 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     }
 
                 case (c: false, s: false, a: false, w: false, k: VirtualKey.End):
-                case (c: true, s: false, a: false, w: false, k: VirtualKey.Left):
                     {
                         NavigateLast();
+                        break;
+                    }
+
+                case (c: true, s: false, a: false, w: false, k: VirtualKey.Left):
+                    {
+                        if (_currentPage == DisplayPageType.CanvasPage)
+                        {
+                            NavigateLast();
+                        }
+                        else
+                        {
+                            CollectionPreviewNavigateBack();
+                        }
+
                         break;
                     }
             }
@@ -224,14 +251,24 @@ namespace ClipboardCanvas.ViewModels.UserControls
             OnNavigateForwardRequestedEvent?.Invoke(this, EventArgs.Empty);
         }
 
-        private void GoToHome()
+        private void GoToHomepage()
         {
-            OnGoToHomePageRequestedEvent?.Invoke(this, EventArgs.Empty);
+            OnGoToHomepageRequestedEvent?.Invoke(this, EventArgs.Empty);
         }
 
         private void GoToCanvas()
         {
             OnGoToCanvasRequestedEvent?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void CollectionPreviewNavigateBack()
+        {
+            OnCollectionPreviewNavigateBackRequestedEvent?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void CollectionPreviewGoToCanvas()
+        {
+            OnCollectionPreviewGoToCanvasRequestedEvent?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion
@@ -241,6 +278,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         public void NotifyCurrentPageChanged(DisplayPageType pageType)
         {
             _currentPage = pageType;
+
             switch (_currentPage)
             {
                 case DisplayPageType.HomePage:
@@ -255,9 +293,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
                         break;
                     }
 
-                case DisplayPageType.CollectionsPreview:
+                case DisplayPageType.CollectionPreviewPage:
                     {
-                        Debugger.Break();
+                        ChangeButtonLayoutOnCollectionPreview();
                         break;
                     }
             }
@@ -269,18 +307,23 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void ChangeButtonLayoutOnCanvas()
         {
-            NavigateBackLoad = true;
-            NavigateForwardLoad = true;
-            GoToHomeLoad = true;
-            GoToCanvasLoad = false;
+            CanvasLayoutControlsLoad = true;
+            HomepageLayoutControlsLoad = false;
+            CollectionPreviewLayoutControlsLoad = false;
         }
 
         private void ChangeButtonLayoutOnHome()
         {
-            NavigateBackLoad = false;
-            NavigateForwardLoad = false;
-            GoToHomeLoad = false;
-            GoToCanvasLoad = true;
+            CanvasLayoutControlsLoad = false;
+            HomepageLayoutControlsLoad = true;
+            CollectionPreviewLayoutControlsLoad = false;
+        }
+
+        private void ChangeButtonLayoutOnCollectionPreview()
+        {
+            CanvasLayoutControlsLoad = false;
+            HomepageLayoutControlsLoad = false;
+            CollectionPreviewLayoutControlsLoad = true;
         }
 
         #endregion

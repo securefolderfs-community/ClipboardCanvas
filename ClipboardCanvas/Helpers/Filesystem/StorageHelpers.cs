@@ -66,11 +66,11 @@ namespace ClipboardCanvas.Helpers.Filesystem
 
             if (file != null && file)
             {
-                return file as SafeWrapper<TOut>;
+                return new SafeWrapper<TOut>((TOut)(IStorageItem)file.Result, file);
             }
             else if (folder != null && folder)
             {
-                return folder as SafeWrapper<TOut>;
+                return new SafeWrapper<TOut>((TOut)(IStorageItem)folder.Result, folder);
             }
 
             return file as SafeWrapper<TOut> ?? (folder as SafeWrapper<TOut> ?? new SafeWrapper<TOut>(default, OperationErrorCode.UnknownFailed, "The operation to get file/folder failed all attempts."));
@@ -78,12 +78,12 @@ namespace ClipboardCanvas.Helpers.Filesystem
 
             async Task GetFile()
             {
-                file = await SafeWrapperRoutines.SafeWrapAsync<StorageFile>(() => DangerousStorageFileExtensions.DangerousGetStorageFile(path));
+                file = await SafeWrapperRoutines.SafeWrapAsync(() => DangerousStorageFileExtensions.DangerousGetStorageFile(path));
             }
 
             async Task GetFolder()
             {
-                folder = await SafeWrapperRoutines.SafeWrapAsync<StorageFolder>(() => DangerousStorageFileExtensions.DangerousGetStorageFolder(path));
+                folder = await SafeWrapperRoutines.SafeWrapAsync(() => DangerousStorageFileExtensions.DangerousGetStorageFolder(path));
             }
         }
 

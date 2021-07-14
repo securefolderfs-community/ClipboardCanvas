@@ -4,16 +4,18 @@ namespace ClipboardCanvas.Models
 {
     public interface IWindowTitleBarControlModel
     {
+        event EventHandler OnSwitchApplicationViewRequestedEvent;
+
         bool IsInRestrictedAccess { get; set; }
 
         bool ShowTitleUnderline { get; set; }
-
-        event EventHandler OnSwitchApplicationViewRequestedEvent;
 
         void SetTitleBarForDefaultView();
 
         void SetTitleBarForCollectionsView();
 
         void SetTitleBarForCanvasView(string collectionName);
+
+        void SetTitleBarForCollectionPreview(string collectionName);
     }
 }

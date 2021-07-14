@@ -9,5 +9,7 @@ namespace ClipboardCanvas.ModelViews
         INavigationToolBarControlModel NavigationToolBarControlModel { get; }
 
         IPasteCanvasPageModel PasteCanvasPageModel { get; }
+
+        ICollectionPreviewPageModel CollectionPreviewPageModel { get; }
     }
 }

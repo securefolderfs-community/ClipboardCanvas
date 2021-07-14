@@ -1,8 +1,6 @@
-﻿using System;
-using Windows.UI.Xaml.Media.Animation;
+﻿using Windows.UI.Xaml.Media.Animation;
 
 using ClipboardCanvas.Enums;
-using ClipboardCanvas.Models;
 
 namespace ClipboardCanvas.DataModels.Navigation
 {

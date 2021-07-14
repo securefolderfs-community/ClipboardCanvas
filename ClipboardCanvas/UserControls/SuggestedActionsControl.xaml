@@ -7,6 +7,7 @@
     xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tua="using:Microsoft.Toolkit.Uwp.UI.Animations"
     d:DesignHeight="300"
     d:DesignWidth="400"
     Background="Transparent"
@@ -186,6 +187,7 @@
                                 </Viewbox>
                             </Grid>
                             <TextBlock
+                                Margin="0,0,0,2"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 Text="{Binding DisplayText}" />
@@ -199,8 +201,15 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 x:Load="{x:Bind ViewModel.NoActionsAvailableLoad, Mode=OneWay}"
-                Opacity="0.6"
-                Text="No actions available" />
+                Opacity="0.0"
+                Text="No suggestions available">
+                <tua:Implicit.ShowAnimations>
+                    <tua:OpacityAnimation To="0.6" Duration="0:0:0.3" />
+                </tua:Implicit.ShowAnimations>
+                <tua:Implicit.HideAnimations>
+                    <tua:OpacityAnimation To="0" Duration="0:0:0.3" />
+                </tua:Implicit.HideAnimations>
+            </TextBlock>
         </Grid>
     </Border>
 </UserControl>

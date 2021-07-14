@@ -3,17 +3,19 @@
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
             <Color x:Key="SolidBackgroundAcrylic">#E0E0E0</Color>
+            <Color x:Key="GradientPrimaryStrongColor">#E8E8E8</Color>
             <SolidColorBrush x:Key="TitleBarSeparatorColor">#FFc7c7c7</SolidColorBrush>
             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush">#F3F3F3</SolidColorBrush>
-            <SolidColorBrush x:Key="SubtleBackgroundBrush">#B3FFFFFF</SolidColorBrush>
+            <SolidColorBrush x:Key="SubtleBackgroundBrush">#FBFBFB</SolidColorBrush>
             <SolidColorBrush x:Key="NavigationButtonDisabledBackgroundBrush">#20FFFFFF</SolidColorBrush>
             <SolidColorBrush x:Key="NavigationButtonsBorderBrush">#20FFFFFF</SolidColorBrush>
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
             <Color x:Key="SolidBackgroundAcrylic">#2E2E2E</Color>
+            <Color x:Key="GradientPrimaryStrongBrush">#171717</Color>
             <SolidColorBrush x:Key="TitleBarSeparatorColor">#6FFFFFFF</SolidColorBrush>
             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush">#201F1E</SolidColorBrush>
-            <SolidColorBrush x:Key="SubtleBackgroundBrush">#0FFFFFFF</SolidColorBrush>
+            <SolidColorBrush x:Key="SubtleBackgroundBrush">#2D2C2B</SolidColorBrush>
             <SolidColorBrush x:Key="NavigationButtonDisabledBackgroundBrush">#0FFFFFFF</SolidColorBrush>
             <SolidColorBrush x:Key="NavigationButtonsBorderBrush">#0FFFFFFF</SolidColorBrush>
         </ResourceDictionary>

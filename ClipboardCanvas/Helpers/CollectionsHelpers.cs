@@ -11,11 +11,11 @@ namespace ClipboardCanvas.Helpers
         {
             if (collectionViewModel is DefaultCollectionViewModel)
             {
-                App.AppSettings.CollectionLocationsSettings.LastSelectedCollection = Constants.Collections.DEFAULT_COLLECTION_TOKEN;
+                App.AppSettings.CollectionsSettings.LastSelectedCollection = Constants.Collections.DEFAULT_COLLECTION_TOKEN;
             }
             else
             {
-                App.AppSettings.CollectionLocationsSettings.LastSelectedCollection = collectionViewModel.CollectionPath;
+                App.AppSettings.CollectionsSettings.LastSelectedCollection = collectionViewModel.CollectionPath;
             }
         }
 
@@ -23,7 +23,7 @@ namespace ClipboardCanvas.Helpers
         {
             IEnumerable<string> paths = CollectionsControlViewModel.Collections.Select((item) => item is DefaultCollectionViewModel ? Constants.Collections.DEFAULT_COLLECTION_TOKEN : item.CollectionPath);
 
-            App.AppSettings.CollectionLocationsSettings.SavedCollectionLocations = paths.ToList();
+            App.AppSettings.CollectionsSettings.SavedCollectionLocations = paths.ToList();
         }
     }
 }

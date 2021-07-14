@@ -6,7 +6,7 @@ namespace ClipboardCanvas.ApplicationSettings
     {
         public IUserSettings UserSettings { get; private set; }
 
-        public ICollectionLocationsSettings CollectionLocationsSettings { get; private set; }
+        public ICollectionsSettings CollectionsSettings { get; private set; }
 
         public ICanvasSettings CanvasSettings { get; private set; }
 
@@ -15,7 +15,7 @@ namespace ClipboardCanvas.ApplicationSettings
         public SettingsInstance()
         {
             UserSettings = new UserSettingsModel();
-            CollectionLocationsSettings = new CollectionLocationsSettingsModel();
+            CollectionsSettings = new CollectionsSettingsModel();
             CanvasSettings = new CanvasSettingsModel();
             ApplicationSettings = new ApplicationSettingsModel();
         }

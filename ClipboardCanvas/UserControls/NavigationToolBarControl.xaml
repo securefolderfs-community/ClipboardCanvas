@@ -97,7 +97,6 @@
                         x:Name="SettingsButton"
                         Grid.Column="2"
                         Height="48"
-                        MinWidth="128"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         Background="Transparent"
@@ -107,7 +106,7 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Orientation="Horizontal"
-                            Spacing="8">
+                            Spacing="10">
                             <Grid Padding="0,8,0,8">
                                 <muxc:AnimatedIcon x:Name="SettingsAnimatedIcon">
                                     <muxc:AnimatedIcon.Source>

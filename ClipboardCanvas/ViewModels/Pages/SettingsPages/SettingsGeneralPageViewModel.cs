@@ -6,16 +6,16 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
     {
         #region Public Properties
 
-        public bool OpenNewCanvasOnPaste
+        public bool UseInfiniteCanvasAsDefault
         {
-            get => App.AppSettings.UserSettings.OpenNewCanvasOnPaste;
+            get => App.AppSettings.UserSettings.UseInfiniteCanvasAsDefault;
             set
             {
-                if (value != App.AppSettings.UserSettings.OpenNewCanvasOnPaste)
+                if (value != App.AppSettings.UserSettings.UseInfiniteCanvasAsDefault)
                 {
-                    App.AppSettings.UserSettings.OpenNewCanvasOnPaste = value;
+                    App.AppSettings.UserSettings.UseInfiniteCanvasAsDefault = value;
 
-                    OnPropertyChanged(nameof(OpenNewCanvasOnPaste));
+                    OnPropertyChanged(nameof(UseInfiniteCanvasAsDefault));
                 }
             }
         }

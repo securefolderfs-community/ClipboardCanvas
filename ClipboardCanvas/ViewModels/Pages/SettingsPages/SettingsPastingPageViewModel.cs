@@ -6,6 +6,20 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
     {
         #region Public Properties
 
+        public bool OpenNewCanvasOnPaste
+        {
+            get => App.AppSettings.UserSettings.OpenNewCanvasOnPaste;
+            set
+            {
+                if (value != App.AppSettings.UserSettings.OpenNewCanvasOnPaste)
+                {
+                    App.AppSettings.UserSettings.OpenNewCanvasOnPaste = value;
+
+                    OnPropertyChanged(nameof(OpenNewCanvasOnPaste));
+                }
+            }
+        }
+
         public bool AlwaysPasteFilesAsReference
         {
             get => App.IsInRestrictedAccessMode ? false : App.AppSettings.UserSettings.AlwaysPasteFilesAsReference;

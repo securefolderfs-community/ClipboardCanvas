@@ -25,7 +25,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
     {
         #region Private Members
 
-        private DoubleClickWrapper _collectionDoubleClickWrapper;
+        private readonly DoubleClickWrapper _collectionDoubleClickWrapper;
 
         private static bool s_itemAddedInternally;
 
@@ -282,7 +282,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public static async Task ReloadAllCollections()
         {
-            List<string> savedCollectionPaths = App.AppSettings.CollectionLocationsSettings.SavedCollectionLocations;
+            IEnumerable<string> savedCollectionPaths = App.AppSettings.CollectionsSettings.SavedCollectionLocations;
 
             // Add default collection
             StorageFolder defaultCollectionFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Default Collection", CreationCollisionOption.OpenIfExists);
@@ -331,24 +331,24 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public static void FallbackSetSelectedCollection()
         {
-            string lastSelectedCollection = App.AppSettings.CollectionLocationsSettings.LastSelectedCollection;
+            string lastSelectedCollection = App.AppSettings.CollectionsSettings.LastSelectedCollection;
 
             if (string.IsNullOrWhiteSpace(lastSelectedCollection))
             {
                 // The last selected collection setting is not set
                 lastSelectedCollection = Constants.Collections.DEFAULT_COLLECTION_TOKEN;
-                App.AppSettings.CollectionLocationsSettings.LastSelectedCollection = lastSelectedCollection;
+                App.AppSettings.CollectionsSettings.LastSelectedCollection = lastSelectedCollection;
             }
 
             if (lastSelectedCollection == Constants.Collections.DEFAULT_COLLECTION_TOKEN)
             {
                 // Set current collection to default collection
-                CurrentCollection = Collections.Where((item) => item is DefaultCollectionViewModel).First();
+                CurrentCollection = Collections.Single((item) => item is DefaultCollectionViewModel);
             }
             else
             {
                 // Find the collection with the matching lastSelectedCollection setting
-                BaseCollectionViewModel baseCollectionViewModel = Collections.Where((item) => item.CollectionPath == lastSelectedCollection).FirstOrDefault();
+                BaseCollectionViewModel baseCollectionViewModel = Collections.SingleOrDefault((item) => item.CollectionPath == lastSelectedCollection);
 
                 if (baseCollectionViewModel != null)
                 {
@@ -357,7 +357,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 else
                 {
                     // Fallback to default collection
-                    CurrentCollection = Collections.Where((item) => item is DefaultCollectionViewModel).First();
+                    CurrentCollection = Collections.Single((item) => item is DefaultCollectionViewModel);
                 }
             }
         }

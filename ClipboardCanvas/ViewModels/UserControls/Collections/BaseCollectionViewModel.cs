@@ -53,16 +53,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public string DisplayName => Path.GetFileName(CollectionPath);
         
-        public bool IsCanvasInitialized { get; protected set; }
+        public bool IsCollectionInitialized { get; protected set; }
 
         protected bool isCanvasInitializing;
-        public bool IsCanvasInitializing
+        public bool IsCollectionInitializing
         {
             get => isCanvasInitializing;
             protected set => SetProperty(ref isCanvasInitializing, value);
         }
 
-        protected bool isSelected = false;
+        protected bool isSelected;
         public bool IsSelected
         {
             get => isSelected;
@@ -216,7 +216,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public virtual void NavigateFirst(ICanvasPreviewModel pasteCanvasModel)
         {
-            currentIndex = CollectionItems.Count;
+            SetIndexOnNewCanvas();
             canvasNavigationDirection = CanvasNavigationDirection.Forward;
 
             OnOpenNewCanvasRequestedEvent?.Invoke(this, new OpenNewCanvasRequestedEventArgs());
@@ -280,12 +280,31 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             currentIndex = CollectionItems.Count;
         }
 
+        public virtual void UpdateIndex(ICollectionItemModel collectionItemModel)
+        {
+            int newIndex = -1;
+
+            if (collectionItemModel != null)
+            {
+                newIndex = CollectionItems.IndexOf(collectionItemModel as CollectionItemViewModel);
+            }
+
+            if (newIndex == -1)
+            {
+                SetIndexOnNewCanvas();
+            }
+            else
+            {
+                currentIndex = newIndex;
+            }
+        }
+
         public abstract bool CheckCollectionAvailability();
 
-        public virtual async Task LoadCanvasFromCollection(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken)
+        public virtual async Task LoadCanvasFromCollection(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken, ICollectionItemModel collectionItemModel = null)
         {
             // You can only load existing data
-            if (CollectionItems.IsEmpty() || (canvasNavigationDirection == CanvasNavigationDirection.Forward && currentIndex == CollectionItems.Count))
+            if (CollectionItems.IsEmpty() || (canvasNavigationDirection == CanvasNavigationDirection.Forward && (IsOnNewCanvas && collectionItemModel == null)))
             {
                 OnOpenNewCanvasRequestedEvent?.Invoke(this, new OpenNewCanvasRequestedEventArgs());
                 return;
@@ -294,7 +313,17 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             {
                 currentIndex = Extensions.CollectionExtensions.IndexFitBounds(CollectionItems.Count, currentIndex);
 
-                SafeWrapperResult result = await pasteCanvasModel.TryLoadExistingData(CollectionItems[currentIndex], cancellationToken);
+                if (collectionItemModel == null)
+                {
+                    collectionItemModel = CollectionItems[currentIndex];
+                }
+                else
+                {
+                    int providedCollectionItemModelIndex = CollectionItems.IndexOf(collectionItemModel as CollectionItemViewModel);
+                    currentIndex = providedCollectionItemModelIndex;
+                }
+
+                SafeWrapperResult result = await pasteCanvasModel.TryLoadExistingData(collectionItemModel, cancellationToken);
 
                 if (result == OperationErrorCode.NotFound && result.Exception is not ReferencedFileNotFoundException) // A canvas is missing, meaning we need to reload all other items
                 {
@@ -338,8 +367,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                     }
                     else
                     {
+                        int providedCollectionItemModelIndex = CollectionItems.IndexOf(collectionItemModel as CollectionItemViewModel);
+                        if (providedCollectionItemModelIndex != -1)
+                        {
+                            currentIndex = providedCollectionItemModelIndex;
+                        }
+                        collectionItemModel = CollectionItems[currentIndex];
+
                         // Load canvas again
-                        result = await pasteCanvasModel.TryLoadExistingData(CollectionItems[currentIndex], cancellationToken);
+                        result = await pasteCanvasModel.TryLoadExistingData(collectionItemModel, cancellationToken);
                     }
                 }
                 else if (result.ErrorCode == OperationErrorCode.InvalidOperation)
@@ -359,7 +395,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         {
             if (collectionFolder != null)
             {
-                IsCanvasInitializing = true;
+                IsCollectionInitializing = true;
                 OnCollectionItemsInitializationStartedEvent?.Invoke(this, new CollectionItemsInitializationStartedEventArgs(this));
 
                 IEnumerable<StorageFile> files = await Task.Run(async () => await collectionFolder.GetFilesAsync());
@@ -387,14 +423,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                     this.currentIndex = Extensions.CollectionExtensions.IndexFitBounds(this.CollectionItems.Count + 1, newIndex); // Increase the Items.Count by one to account for new canvas being always Items.Count
                 }
 
-                IsCanvasInitializing = false;
-                IsCanvasInitialized = true;
+                IsCollectionInitializing = false;
+                IsCollectionInitialized = true;
                 OnCollectionItemsInitializationFinishedEvent?.Invoke(this, new CollectionItemsInitializationFinishedEventArgs(this));
 
                 return true;
             }
 
-            IsCanvasInitialized = false;
+            IsCollectionInitialized = false;
             return false;
         }
 

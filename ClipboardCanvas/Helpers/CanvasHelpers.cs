@@ -34,5 +34,17 @@ namespace ClipboardCanvas.Helpers
 
             return result;
         }
+
+        public static CanvasType GetDefaultCanvasType()
+        {
+            if (App.AppSettings.UserSettings.UseInfiniteCanvasAsDefault)
+            {
+                return CanvasType.InfiniteCanvas;
+            }
+            else
+            {
+                return CanvasType.NormalCanvas;
+            }
+        }
     }
 }

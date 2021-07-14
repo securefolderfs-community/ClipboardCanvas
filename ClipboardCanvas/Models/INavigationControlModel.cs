@@ -1,5 +1,4 @@
 ﻿using System;
-using ClipboardCanvas.DataModels.Navigation;
 using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.Models
@@ -14,9 +13,13 @@ namespace ClipboardCanvas.Models
 
         event EventHandler OnNavigateForwardRequestedEvent;
 
-        event EventHandler OnGoToHomePageRequestedEvent;
+        event EventHandler OnGoToHomepageRequestedEvent;
 
         event EventHandler OnGoToCanvasRequestedEvent;
+
+        event EventHandler OnCollectionPreviewNavigateBackRequestedEvent;
+
+        event EventHandler OnCollectionPreviewGoToCanvasRequestedEvent;
 
         bool NavigateBackEnabled { get; set; }
 
@@ -27,6 +30,10 @@ namespace ClipboardCanvas.Models
         bool NavigateForwardLoading { get; set; }
 
         bool GoToCanvasEnabled { get; set; }
+
+        bool CollectionPreviewGoToCanvasEnabled { get; set; }
+
+        bool CollectionPreviewGoToCanvasLoading { get; set; }
 
         void NotifyCurrentPageChanged(DisplayPageType pageType);
     }

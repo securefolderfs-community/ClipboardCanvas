@@ -32,6 +32,11 @@
             {
                 public const int NOTIFICATION_PROGRESSBAR_REFRESH_INTERVAL = 50;
             }
+
+            public static class Animations
+            {
+                public const string CONNECTED_ANIMATION_COLLECTION_PREVIEW_ITEM_OPEN_REQUESTED_TOKEN = "CollectionPreviewItemOpenConnectedAnimation";
+            }
         }
 
         public static class FileSystem

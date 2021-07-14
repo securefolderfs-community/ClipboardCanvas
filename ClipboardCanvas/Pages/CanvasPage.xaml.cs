@@ -5,6 +5,7 @@ using ClipboardCanvas.ViewModels.Pages;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.DataModels.Navigation;
+using Windows.UI.Xaml.Media.Animation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -48,6 +49,18 @@ namespace ClipboardCanvas.Pages
         private void CanvasContextMenu_Opening(object sender, object e)
         {
             ViewModel.CanvasContextMenuOpeningCommand.Execute(null);
+        }
+
+        public void OnContentLoaded()
+        {
+            // Check if connected animation is available
+            ConnectedAnimation connectedAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation(
+                Constants.UI.Animations.CONNECTED_ANIMATION_COLLECTION_PREVIEW_ITEM_OPEN_REQUESTED_TOKEN);
+
+            if (connectedAnimation != null)
+            {
+                connectedAnimation.TryStart(CanvasPreviewControl);
+            }
         }
     }
 }

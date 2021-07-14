@@ -2,9 +2,9 @@
 
 namespace ClipboardCanvas.ApplicationSettings.Interfaces
 {
-    public interface ICollectionLocationsSettings
+    public interface ICollectionsSettings
     {
-        List<string> SavedCollectionLocations { get; set; }
+        IEnumerable<string> SavedCollectionLocations { get; set; }
 
         string LastSelectedCollection { get; set; }
     }
