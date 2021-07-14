@@ -20,6 +20,7 @@ using System.Windows.Input;
 using System.Collections.ObjectModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Windows.System;
+using ClipboardCanvas.DataModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {
@@ -42,6 +43,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         #region Public Properties
 
         public ObservableCollection<CollectionItemViewModel> CollectionItems { get; protected set; }
+
+        public SearchDataModel SavedSearchData { get; set; }
 
         public bool IsCollectionAvailable { get; protected set; }
 

@@ -291,6 +291,15 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         #region Public Helpers
 
+        public void CheckSearchData()
+        {
+            if (_associatedCollectionModel.SavedSearchData != null)
+            {
+                ShowSearch();
+                _searchControlModel.RestoreSearchData(_associatedCollectionModel.SavedSearchData);
+            }
+        }
+
         public async Task InitializeItems()
         {
             if (_associatedCollectionModel.IsCollectionInitializing)
@@ -421,6 +430,15 @@ namespace ClipboardCanvas.ViewModels.Pages
         {
             _canvasPreviewItemDoubleClickWrapper?.Dispose();
             UnhookEvents();
+
+            if (SearchControlVisible)
+            {
+                _associatedCollectionModel.SavedSearchData = _searchControlModel.ConstructSearchData();
+            }
+            else
+            {
+                _associatedCollectionModel.SavedSearchData = null;
+            }
         }
 
         #endregion

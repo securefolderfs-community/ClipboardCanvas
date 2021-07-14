@@ -1,4 +1,5 @@
 ﻿using System;
+using ClipboardCanvas.DataModels;
 using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Interfaces.Search;
 
@@ -21,5 +22,9 @@ namespace ClipboardCanvas.Models
         void OnSearchHidden();
 
         void ResetIndex();
+
+        void RestoreSearchData(SearchDataModel searchData);
+
+        SearchDataModel ConstructSearchData();
     }
 }

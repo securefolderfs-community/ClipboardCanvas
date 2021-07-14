@@ -50,9 +50,10 @@ namespace ClipboardCanvas.Pages
             this.ViewModel = new CollectionPreviewPageViewModel(this);
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            this.ViewModel.InitializeItems();
+            await this.ViewModel.InitializeItems();
+            this.ViewModel.CheckSearchData();
         }
 
         public void PrepareConnectedAnimation(CollectionPreviewItemViewModel sourceViewModel)

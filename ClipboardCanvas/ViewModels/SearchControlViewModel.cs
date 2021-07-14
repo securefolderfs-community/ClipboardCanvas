@@ -11,6 +11,7 @@ using ClipboardCanvas.Extensions;
 using ClipboardCanvas.Interfaces.Search;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.EventArguments;
+using ClipboardCanvas.DataModels;
 
 namespace ClipboardCanvas.ViewModels
 {
@@ -166,6 +167,23 @@ namespace ClipboardCanvas.ViewModels
         public void ResetIndex()
         {
             _indexInSearch = 0;
+        }
+
+        public void RestoreSearchData(SearchDataModel searchData)
+        {
+            if (searchData != null)
+            {
+                _indexInSearch = searchData.indexInSearch;
+                SearchBoxText = searchData.phrase;
+
+                Search(SearchBoxText);
+                FitIndexIfOutOfBounds();
+            }
+        }
+
+        public SearchDataModel ConstructSearchData()
+        {
+            return new SearchDataModel(SearchBoxText, _indexInSearch);
         }
 
         #endregion

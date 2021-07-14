@@ -165,6 +165,7 @@
     <Compile Include="DataModels\PastedContentDataModels\MediaContentType.cs" />
     <Compile Include="DataModels\PastedContentDataModels\TextContentType.cs" />
     <Compile Include="DataModels\Navigation\SettingsFrameNavigationDataModel.cs" />
+    <Compile Include="DataModels\SearchDataModel.cs" />
     <Compile Include="Dialogs\DeleteConfirmationDialog.xaml.cs">
       <DependentUpon>DeleteConfirmationDialog.xaml</DependentUpon>
     </Compile>

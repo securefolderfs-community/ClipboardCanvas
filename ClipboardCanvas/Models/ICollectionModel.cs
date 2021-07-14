@@ -5,12 +5,18 @@ using System.Collections.ObjectModel;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.UserControls;
+using ClipboardCanvas.DataModels;
 
 namespace ClipboardCanvas.Models
 {
     public interface ICollectionModel
     {
         ObservableCollection<CollectionItemViewModel> CollectionItems { get; }
+
+        /// <summary>
+        /// Saved search data by the Search function
+        /// </summary>
+        SearchDataModel SavedSearchData { get; set; }
 
         bool IsCollectionAvailable { get; }
 
