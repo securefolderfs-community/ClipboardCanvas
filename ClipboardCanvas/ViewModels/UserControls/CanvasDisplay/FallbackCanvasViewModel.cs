@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.Storage.FileProperties;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using System.IO;
@@ -9,15 +9,8 @@ using Windows.Storage;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
-using ClipboardCanvas.Models;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.ModelViews;
-using ClipboardCanvas.Helpers.Filesystem;
-using ClipboardCanvas.ReferenceItems;
-using ClipboardCanvas.Helpers;
-using ClipboardCanvas.EventArguments.CanvasControl;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.Storage.FileProperties;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
@@ -26,15 +19,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
     {
         #region Private Members
 
-        private readonly IDynamicCanvasControlView _view;
-
         private StorageItemThumbnail _thumbnail;
-
-        #endregion
-
-        #region Protected Members
-
-        protected override ICollectionModel AssociatedCollection => _view?.CollectionModel;
 
         #endregion
 
@@ -79,10 +64,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public FallbackCanvasViewModel(IDynamicCanvasControlView view)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new FallbackContentType())
+        public FallbackCanvasViewModel(IBaseCanvasPreviewControlView view)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new FallbackContentType(), view)
         {
-            this._view = view;
         }
 
         #endregion
@@ -97,14 +81,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         protected override async Task<SafeWrapperResult> SetData(IStorageItem item)
         {
             // Read file properties
-            if (item is not StorageFile file)
+            if (item is StorageFile file)
             {
-                return ItemIsNotAFileResult;
+                _thumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem);
             }
-
-            if (file == null)
+            else if (item is StorageFolder folder)
             {
-                return new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentNullException(), "The file is null.");
+                _thumbnail = await folder.GetThumbnailAsync(ThumbnailMode.SingleItem);
             }
 
             this._FileName = Path.GetFileName(item.Path);
@@ -113,8 +96,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             var properties = await item.GetBasicPropertiesAsync();
             this._DateModified = properties.DateModified.DateTime;
-
-            _thumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem);
 
             _FileIcon = new BitmapImage();
             await _FileIcon.SetSourceAsync(_thumbnail);

@@ -180,7 +180,6 @@
     <Compile Include="Enums\CanvasType.cs" />
     <Compile Include="Enums\DialogResult.cs" />
     <Compile Include="Enums\InAppNotificationButtonType.cs" />
-    <Compile Include="Enums\SetClipboardDataSourceType.cs" />
     <Compile Include="Enums\SettingsPageType.cs" />
     <Compile Include="Enums\WebViewCanvasMode.cs" />
     <Compile Include="EventArguments\CollectionPreviewEventArgs.cs" />
@@ -212,8 +211,12 @@
     <Compile Include="Models\ICollectionModel.cs" />
     <Compile Include="Models\ICollectionPreviewPageModel.cs" />
     <Compile Include="Models\IPasteCanvasPageModel.cs" />
+    <Compile Include="Models\IReadOnlyCanvasPreviewModel.cs" />
     <Compile Include="Models\ISearchControlModel.cs" />
-    <Compile Include="ModelViews\IDynamicCanvasControlView.cs" />
+    <Compile Include="ModelViews\IBaseCanvasPreviewControlView.cs" />
+    <Compile Include="ModelViews\ICanvasPageView.cs" />
+    <Compile Include="ModelViews\ICollectionPreviewPageView.cs" />
+    <Compile Include="ModelViews\IDisplayControlView.cs" />
     <Compile Include="ModelViews\IMediaCanvasControlView.cs" />
     <Compile Include="ModelViews\ITextCanvasControlView.cs" />
     <Compile Include="ModelViews\IWebViewCanvasControlView.cs" />
@@ -222,7 +225,6 @@
     <Compile Include="ReferenceItems\ReferenceFileData.cs" />
     <Compile Include="Helpers\SafetyHelpers\SafeWrapperRoutines.cs" />
     <Compile Include="Models\IWindowTitleBarControlModel.cs" />
-    <Compile Include="ModelViews\ICollectionPreviewPageView.cs" />
     <Compile Include="Pages\CollectionPreviewPage.xaml.cs">
       <DependentUpon>CollectionPreviewPage.xaml</DependentUpon>
     </Compile>
@@ -258,12 +260,9 @@
     </Compile>
     <Compile Include="Models\ISuggestedActionsControlModel.cs" />
     <Compile Include="Models\ICollectionItemModel.cs" />
-    <Compile Include="Models\ICanvasPreviewEventsModel.cs" />
     <Compile Include="Models\ICanvasPreviewModel.cs" />
     <Compile Include="Models\INavigationControlModel.cs" />
     <Compile Include="Models\INavigationToolBarControlModel.cs" />
-    <Compile Include="ModelViews\ICanvasPageView.cs" />
-    <Compile Include="ModelViews\IDisplayControlView.cs" />
     <Compile Include="Pages\CanvasPage.xaml.cs">
       <DependentUpon>CanvasPage.xaml</DependentUpon>
     </Compile>
@@ -278,6 +277,9 @@
     <Compile Include="UserControls\CanvasDisplay\MarkdownCanvasControl.xaml.cs">
       <DependentUpon>MarkdownCanvasControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\SimpleCanvasDisplay\TextSimpleCanvasControl.xaml.cs">
+      <DependentUpon>TextSimpleCanvasControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\CanvasDisplay\WebViewCanvasControl.xaml.cs">
       <DependentUpon>WebViewCanvasControl.xaml</DependentUpon>
     </Compile>
@@ -286,6 +288,12 @@
     </Compile>
     <Compile Include="UserControls\SearchControl.xaml.cs">
       <DependentUpon>SearchControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\SimpleCanvasDisplay\SimpleCanvasPreviewControl.xaml.cs">
+      <DependentUpon>SimpleCanvasPreviewControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\SimpleCanvasDisplay\ThumbnailSimpleCanvasControl.xaml.cs">
+      <DependentUpon>ThumbnailSimpleCanvasControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\SuggestedActionsControl.xaml.cs">
       <DependentUpon>SuggestedActionsControl.xaml</DependentUpon>
@@ -351,16 +359,21 @@
     <Compile Include="ViewModels\UserControls\CanvasDisplay\FallbackCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\MarkdownCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\WebViewCanvasViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\CanvasPreview\BaseCanvasPreviewControlViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\CanvasPreview\BaseReadOnlyCanvasPreviewControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\Collections\BaseCollectionViewModel.cs" />
     <Compile Include="ViewModels\UserControls\Collections\CollectionsControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\Collections\DefaultCollectionViewModel.cs" />
     <Compile Include="ViewModels\UserControls\Collections\StandardCollectionViewModel.cs" />
     <Compile Include="ViewModels\UserControls\InAppNotifications\IInAppNotification.cs" />
     <Compile Include="ViewModels\UserControls\InAppNotifications\InAppNotificationControlViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\CanvasPreview\SimpleCanvasPreviewControlViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\SimpleCanvasDisplay\TextSimpleCanvasViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\SimpleCanvasDisplay\ThumbnailSimpleCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SuggestedActionsControlItemViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SuggestedActionsControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\BaseCanvasViewModel.cs" />
-    <Compile Include="ViewModels\UserControls\CanvasDisplay\CanvasPreviewControlViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\CanvasPreview\CanvasPreviewControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\ImageCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\TextCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\MediaCanvasViewModel.cs" />
@@ -492,6 +505,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\SimpleCanvasDisplay\TextSimpleCanvasControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\CanvasDisplay\WebViewCanvasControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -501,6 +518,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\SearchControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\SimpleCanvasDisplay\SimpleCanvasPreviewControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\SimpleCanvasDisplay\ThumbnailSimpleCanvasControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

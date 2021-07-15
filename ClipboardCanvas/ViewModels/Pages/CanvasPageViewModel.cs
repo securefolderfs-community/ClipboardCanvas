@@ -25,6 +25,7 @@ using ClipboardCanvas.Enums;
 using ClipboardCanvas.ReferenceItems;
 using System.Runtime.CompilerServices;
 using ClipboardCanvas.ViewModels.ContextMenu;
+using ClipboardCanvas.ViewModels.UserControls.CanvasPreview;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {
@@ -209,7 +210,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
                 case (c: true, s: false, a: false, w: false, k: VirtualKey.C):
                     {
-                        PasteCanvasModel?.SetDataToClipboard(SetClipboardDataSourceType.FromKeyboardAccelerator);
+                        PasteCanvasModel?.SetDataToClipboard();
                         break;
                     }
             }
@@ -452,8 +453,8 @@ namespace ClipboardCanvas.ViewModels.Pages
         private async Task PasteDataInternal(DataPackageView dataPackage = null)
         {
             SafeWrapperResult result = null;
-            CanvasPreviewControlViewModel.CanvasPasteCancellationTokenSource.Cancel();
-            CanvasPreviewControlViewModel.CanvasPasteCancellationTokenSource = new CancellationTokenSource();
+            BaseReadOnlyCanvasPreviewControlViewModel<BaseReadOnlyCanvasViewModel>.CanvasPasteCancellationTokenSource.Cancel();
+            BaseReadOnlyCanvasPreviewControlViewModel<BaseReadOnlyCanvasViewModel>.CanvasPasteCancellationTokenSource = new CancellationTokenSource();
 
             if (dataPackage == null)
             {

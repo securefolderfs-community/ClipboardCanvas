@@ -1,5 +1,4 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -19,39 +18,14 @@ using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.ReferenceItems;
-using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Extensions;
-using ClipboardCanvas.ViewModels.ContextMenu;
-using ClipboardCanvas.ViewModels.Dialogs;
-using ClipboardCanvas.Services;
+using ClipboardCanvas.ModelViews;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
-    public abstract class BaseCanvasViewModel : BaseReadOnlyCanvasViewModel,
-        ICanvasPreviewModel,
-        ICanvasPreviewEventsModel,
-        IDisposable
+    public abstract class BaseCanvasViewModel : BaseReadOnlyCanvasViewModel, ICanvasPreviewModel, IDisposable
     {
-        #region Protected Members
-
-        /// <summary>
-        /// The file that's associated with the canvas, use is not recommended. Use <see cref="associatedFile"/> instead.
-        /// </summary>
-        //protected StorageFile associatedFile;
-
-        /// <summary>
-        /// The source file. If not in reference mode, points to <see cref="associatedFile"/>
-        /// </summary>
-        //protected IStorageFile sourceFile;
-
-        /// <summary>
-        /// Determines whether content is loaded/pasted as reference
-        /// </summary>
-        //protected bool isContentAsReference;
-
-        #endregion
-
-        #region IPasteCanvasEventsModel
+        #region Events
 
         public event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
 
@@ -67,8 +41,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public BaseCanvasViewModel(ISafeWrapperExceptionReporter errorReporter, BasePastedContentTypeDataModel contentType)
-            : base(errorReporter, contentType)
+        public BaseCanvasViewModel(ISafeWrapperExceptionReporter errorReporter, BasePastedContentTypeDataModel contentType, IBaseCanvasPreviewControlView view)
+            : base(errorReporter, contentType, view)
         {
         }
 
@@ -231,7 +205,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             string fileName = Path.GetFileName(referencedItem.Path);
-            SafeWrapper<StorageFile> newFile = await AssociatedCollection.GetOrCreateNewCollectionFile(fileName);
+            SafeWrapper<StorageFile> newFile = await associatedCollection.GetOrCreateNewCollectionFile(fileName);
 
             if (!AssertNoError(newFile))
             {
@@ -250,7 +224,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             associatedItem = newFile.Result;
             sourceItem = associatedItem;
             isContentAsReference = false;
-            AssociatedCollection.CurrentCollectionItemViewModel.DangerousUpdateFile(associatedItem);
+            associatedCollection.CurrentCollectionItemViewModel.DangerousUpdateFile(associatedItem);
 
             if (copyResult)
             {
@@ -305,7 +279,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                         var action_openFile = new SuggestedActionsControlItemViewModel(
                             new AsyncRelayCommand(async () =>
                             {
-                                await AssociatedCollection.CurrentCollectionItemViewModel.OpenFile();
+                                await associatedCollection.CurrentCollectionItemViewModel.OpenFile();
                             }), $"Open with {appName}", icon);
 
                         actions.Add(action_openFile);
@@ -316,7 +290,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     var action_openFile = new SuggestedActionsControlItemViewModel(
                         new AsyncRelayCommand(async () =>
                         {
-                            await AssociatedCollection.CurrentCollectionItemViewModel.OpenFile();
+                            await associatedCollection.CurrentCollectionItemViewModel.OpenFile();
                         }), "Open file", "\uE8E5");
 
                     actions.Add(action_openFile);
@@ -327,22 +301,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             var action_openInFileExplorer = new SuggestedActionsControlItemViewModel(
                 new AsyncRelayCommand(async () =>
                 {
-                    await AssociatedCollection.CurrentCollectionItemViewModel.OpenContainingFolder();
+                    await associatedCollection.CurrentCollectionItemViewModel.OpenContainingFolder();
                 }), "Open containing folder", "\uE838");
 
             actions.Add(action_openInFileExplorer);
 
             return actions;
-        }
-
-        public virtual bool SetDataToClipboard(SetClipboardDataSourceType dataSourceSetType)
-        {
-            DataPackage dataPackage = new DataPackage();
-            dataPackage.SetStorageItems(new List<IStorageItem>() { sourceItem });
-
-            Clipboard.SetContent(dataPackage);
-
-            return true;
         }
 
         #endregion
@@ -405,14 +369,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (isContentAsReference)
             {
-                file = await AssociatedCollection.GetOrCreateNewCollectionFileFromExtension(Constants.FileSystem.REFERENCE_FILE_EXTENSION);
+                file = await associatedCollection.GetOrCreateNewCollectionFileFromExtension(Constants.FileSystem.REFERENCE_FILE_EXTENSION);
             }
             else
             {
                 if (sourceItem != null)
                 {
                     string fileName = Path.GetFileName(sourceItem.Path);
-                    file = await AssociatedCollection.GetOrCreateNewCollectionFile(fileName);
+                    file = await associatedCollection.GetOrCreateNewCollectionFile(fileName);
                 }
                 else
                 {

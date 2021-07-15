@@ -26,6 +26,8 @@
                 public const int COLLECTION_RELOADING_TIP_DELAY = 400;
 
                 public const int FILE_PASTING_TIP_DELAY = 150;
+
+                public const uint SIMPLE_CANVAS_THUMBNAIL_SIZE = 128u;
             }
 
             public static class Notifications

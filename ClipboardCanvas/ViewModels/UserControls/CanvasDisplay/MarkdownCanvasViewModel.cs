@@ -23,18 +23,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
     public class MarkdownCanvasViewModel : BaseCanvasViewModel
     {
-        #region Private Members
-
-        private readonly IDynamicCanvasControlView _view;
-
-        #endregion
-
-        #region Protected Members
-
-        protected override ICollectionModel AssociatedCollection => _view?.CollectionModel;
-
-        #endregion
-
         #region Public Properties
 
         public static List<string> Extensions => new List<string>() {
@@ -52,10 +40,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public MarkdownCanvasViewModel(IDynamicCanvasControlView view)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new MarkdownContentType())
+        public MarkdownCanvasViewModel(IBaseCanvasPreviewControlView view)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new MarkdownContentType(), view)
         {
-            this._view = view;
         }
 
         #endregion
@@ -111,7 +98,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task<SafeWrapper<StorageFile>> TrySetFileWithExtension()
         {
-            SafeWrapper<StorageFile> file = await AssociatedCollection.GetOrCreateNewCollectionFileFromExtension(".md");
+            SafeWrapper<StorageFile> file = await associatedCollection.GetOrCreateNewCollectionFileFromExtension(".md");
 
             return file;
         }

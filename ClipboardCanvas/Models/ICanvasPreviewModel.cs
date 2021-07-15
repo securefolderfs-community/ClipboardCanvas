@@ -6,28 +6,21 @@ using System.Collections.Generic;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.UserControls;
-using ClipboardCanvas.Enums;
-using ClipboardCanvas.ViewModels.ContextMenu;
+using ClipboardCanvas.EventArguments.CanvasControl;
 
 namespace ClipboardCanvas.Models
 {
-    public interface ICanvasPreviewModel : ICanvasPreviewEventsModel, IDisposable
+    public interface ICanvasPreviewModel : IReadOnlyCanvasPreviewModel
     {
-        /// <summary>
-        /// Determines whether canvas content has been loaded
-        /// </summary>
-        bool IsContentLoaded { get; }
+        event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
 
-        /// <summary>
-        /// Context menu options available for the canvas
-        /// </summary>
-        List<BaseMenuFlyoutItemViewModel> ContextMenuItems { get; }
+        event EventHandler<PasteInitiatedEventArgs> OnPasteInitiatedEvent;
 
-        /// <summary>
-        /// Attempts to load existing data to display
-        /// </summary>
-        /// <param name="itemData"></param>
-        Task<SafeWrapperResult> TryLoadExistingData(ICollectionItemModel itemData, CancellationToken cancellationToken);
+        event EventHandler<FileCreatedEventArgs> OnFileCreatedEvent;
+
+        event EventHandler<FileModifiedEventArgs> OnFileModifiedEvent;
+
+        event EventHandler<ProgressReportedEventArgs> OnProgressReportedEvent;
 
         /// <summary>
         /// Attempts to paste data from provided <see cref="DataPackageView"/> <paramref name="dataPackage"/>
@@ -43,23 +36,10 @@ namespace ClipboardCanvas.Models
         Task<SafeWrapperResult> TrySaveData();
 
         /// <summary>
-        /// Attempts to delete the file and discard data
-        /// </summary>
-        /// <param name="hideConfirmation">Hides the delete confirmation dialog, overrides <see cref="ApplicationSettings.Interfaces.IUserSettings.ShowDeleteConfirmationDialog"/> if necessary</param>
-        /// <returns></returns>
-        Task<SafeWrapperResult> TryDeleteData(bool hideConfirmation = false);
-
-        /// <summary>
         /// Overrides the reference and pastes the file to the collection
         /// </summary>
         /// <returns></returns>
         Task<SafeWrapperResult> PasteOverrideReference();
-
-        /// <summary>
-        /// Frees cached data and disposes the instance
-        /// </summary>
-        /// <returns></returns>
-        void DiscardData();
 
         /// <summary>
         /// Opens new canvas
@@ -71,12 +51,5 @@ namespace ClipboardCanvas.Models
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions();
-
-        /// <summary>
-        /// Sets the data to clipboard determined by <paramref name="dataSourceSetType"/>
-        /// </summary>
-        /// <param name="dataSourceSetType"></param>
-        /// <returns></returns>
-        bool SetDataToClipboard(SetClipboardDataSourceType dataSourceSetType);
     }
 }

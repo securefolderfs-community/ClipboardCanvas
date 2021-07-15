@@ -1,15 +1,20 @@
 ﻿using ClipboardCanvas.Interfaces.Search;
 using ClipboardCanvas.Models;
+using ClipboardCanvas.ViewModels.Pages;
 using ClipboardCanvas.ViewModels.UserControls;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.Storage;
+using Windows.UI.Xaml;
 
 namespace ClipboardCanvas.ViewModels
 {
-    public class CollectionPreviewItemViewModel : ObservableObject, ISearchItem
+    public class CollectionPreviewItemViewModel : ObservableObject, ISearchItem, IDisposable
     {
         #region Public Properties
 
@@ -34,24 +39,47 @@ namespace ClipboardCanvas.ViewModels
             set => SetProperty(ref _IsHighlighted, value);
         }
 
+        public IReadOnlyCanvasPreviewModel SimpleCanvasPreviewModel { get; set; }
+
+        public ICollectionModel CollectionModel { get; private set; }
+
         public ICollectionItemModel CollectionItemModel { get; private set; }
+
+        #endregion
+
+        #region Commands
+
+        public ICommand SimpleCanvasLoadedCommand { get; set; }
 
         #endregion
 
         #region Constructor
 
-        private CollectionPreviewItemViewModel()
+        public CollectionPreviewItemViewModel()
         {
+            // Create commands
+            SimpleCanvasLoadedCommand = new AsyncRelayCommand<RoutedEventArgs>(SimpleCanvasLoaded);
+        }
+
+        #endregion
+
+        #region Command Implementation
+
+        private async Task SimpleCanvasLoaded(RoutedEventArgs e)
+        {
+            return;
+            await SimpleCanvasPreviewModel.TryLoadExistingData(CollectionItemModel, CollectionPreviewPageViewModel.LoadCancellationToken.Token);
         }
 
         #endregion
 
         #region Public Helpers
 
-        public static async Task<CollectionPreviewItemViewModel> GetCollectionPreviewItemModel(ICollectionItemModel collectionItemModel)
+        public static async Task<CollectionPreviewItemViewModel> GetCollectionPreviewItemModel(ICollectionModel collectionModel, ICollectionItemModel collectionItemModel)
         {
             CollectionPreviewItemViewModel viewModel = new CollectionPreviewItemViewModel()
             {
+                CollectionModel = collectionModel,
                 CollectionItemModel = collectionItemModel
             };
             IStorageItem sourceItem = await collectionItemModel.SourceItem;
@@ -59,7 +87,7 @@ namespace ClipboardCanvas.ViewModels
 
             if (sourceItem == null)
             {
-                itemPath = viewModel.CollectionItemModel.Item.Path;
+                itemPath = collectionItemModel.Item.Path;
             }
             else
             {
@@ -69,6 +97,15 @@ namespace ClipboardCanvas.ViewModels
             viewModel.DisplayName = Path.GetFileName(itemPath);
 
             return viewModel;
+        }
+
+        #endregion
+
+        #region IDisposable
+
+        public void Dispose()
+        {
+            SimpleCanvasPreviewModel?.Dispose();
         }
 
         #endregion

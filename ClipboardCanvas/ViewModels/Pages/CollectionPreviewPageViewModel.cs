@@ -22,6 +22,7 @@ using ClipboardCanvas.Interfaces.Search;
 using System.Collections.Generic;
 using ClipboardCanvas.EventArguments;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {
@@ -66,7 +67,11 @@ namespace ClipboardCanvas.ViewModels.Pages
                         _searchControlModel.ResetIndex();
                     }
 
-                    _SelectedItem.IsSelected = true;
+                    if (_SelectedItem != null)
+                    {
+                        _SelectedItem.IsSelected = true;
+                    }
+
                     OnCanvasPreviewSelectedItemChangedEvent?.Invoke(this, new CanvasPreviewSelectedItemChangedEventArgs(_SelectedItem));
                 }
             }
@@ -131,6 +136,8 @@ namespace ClipboardCanvas.ViewModels.Pages
                 }
             }
         }
+
+        public static CancellationTokenSource LoadCancellationToken = new CancellationTokenSource();
 
         #endregion
 
@@ -317,7 +324,7 @@ namespace ClipboardCanvas.ViewModels.Pages
                 List<Task<CollectionPreviewItemViewModel>> itemTaskDelegates = new List<Task<CollectionPreviewItemViewModel>>();
                 foreach (var item in _associatedCollectionModel.CollectionItems)
                 {
-                    itemTaskDelegates.Add(CollectionPreviewItemViewModel.GetCollectionPreviewItemModel(item));
+                    itemTaskDelegates.Add(CollectionPreviewItemViewModel.GetCollectionPreviewItemModel(_associatedCollectionModel, item));
                 }
 
                 CollectionLoadingIndicatorLoad = true;
@@ -332,6 +339,10 @@ namespace ClipboardCanvas.ViewModels.Pages
             }
         }
 
+        #endregion
+
+        #region Private Helpers
+
         private void SetSelectedItemAfterInitialization()
         {
             if (_associatedCollectionModel.CurrentCollectionItemViewModel != null)
@@ -341,10 +352,6 @@ namespace ClipboardCanvas.ViewModels.Pages
                 _view?.ScrollIntoItemView(SelectedItem);
             }
         }
-
-        #endregion
-
-        #region Private Helpers
 
         private void ItemOpenRequested()
         {
@@ -428,6 +435,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public void Dispose()
         {
+            Items?.DisposeClear();
             _canvasPreviewItemDoubleClickWrapper?.Dispose();
             UnhookEvents();
 

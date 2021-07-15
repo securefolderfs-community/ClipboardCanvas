@@ -19,12 +19,15 @@ using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.ViewModels.ContextMenu;
+using ClipboardCanvas.ModelViews;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
-    public abstract class BaseReadOnlyCanvasViewModel : ObservableObject, IDisposable
+    public abstract class BaseReadOnlyCanvasViewModel : ObservableObject, IReadOnlyCanvasPreviewModel, IDisposable
     {
         #region Protected Members
+
+        protected readonly IBaseCanvasPreviewControlView view;
 
         protected readonly ISafeWrapperExceptionReporter errorReporter;
 
@@ -32,8 +35,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected BasePastedContentTypeDataModel contentType;
 
+        /// <inheritdoc cref="associatedItem"/>
         protected StorageFile associatedFile => associatedItem as StorageFile;
 
+        /// <inheritdoc cref="sourceItem"/>
         protected StorageFile sourceFile => sourceItem as StorageFile;
 
         /// <summary>
@@ -51,6 +56,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         /// </summary>
         protected bool isContentAsReference;
 
+        protected ICollectionModel associatedCollection => view?.CollectionModel;
+
         #endregion
 
         #region Protected Properties
@@ -58,8 +65,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         protected SafeWrapperResult ReferencedFileNotFoundResult => new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "The file referenced was not found");
 
         protected SafeWrapperResult ItemIsNotAFileResult => new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentException(), "The provided item is not a file.");
-
-        protected abstract ICollectionModel AssociatedCollection { get; }
 
         protected bool IsDisposed { get; private set; }
 
@@ -89,10 +94,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public BaseReadOnlyCanvasViewModel(ISafeWrapperExceptionReporter errorReporter, BasePastedContentTypeDataModel contentType)
+        public BaseReadOnlyCanvasViewModel(ISafeWrapperExceptionReporter errorReporter, BasePastedContentTypeDataModel contentType, IBaseCanvasPreviewControlView view)
         {
             this.errorReporter = errorReporter;
             this.contentType = contentType;
+            this.view = view;
         }
 
         #endregion
@@ -170,7 +176,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             else if (result != OperationErrorCode.Cancelled)
             {
-                AssociatedCollection.RemoveCollectionItem(AssociatedCollection.CurrentCollectionItemViewModel);
+                associatedCollection.RemoveCollectionItem(associatedCollection.CurrentCollectionItemViewModel);
                 RaiseOnFileDeletedEvent(this, new FileDeletedEventArgs(associatedItem));
             }
 
@@ -200,7 +206,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             List<BaseMenuFlyoutItemViewModel> items = new List<BaseMenuFlyoutItemViewModel>();
 
             // May occur when quickly switching between canvases
-            if (AssociatedCollection == null)
+            if (associatedCollection == null)
             {
                 ContextMenuItems = items;
                 return;
@@ -209,7 +215,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Open item
             items.Add(new MenuFlyoutItemViewModel()
             {
-                Command = new AsyncRelayCommand(AssociatedCollection.CurrentCollectionItemViewModel.OpenFile),
+                Command = new AsyncRelayCommand(associatedCollection.CurrentCollectionItemViewModel.OpenFile),
                 IconGlyph = "\uE8E5",
                 Text = "Open file"
             });
@@ -228,7 +234,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Open containing folder
             items.Add(new MenuFlyoutItemViewModel()
             {
-                Command = new AsyncRelayCommand(AssociatedCollection.CurrentCollectionItemViewModel.OpenContainingFolder),
+                Command = new AsyncRelayCommand(associatedCollection.CurrentCollectionItemViewModel.OpenContainingFolder),
                 IconGlyph = "\uE838",
                 Text = "Open containing folder"
             });
@@ -238,7 +244,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 items.Add(new MenuFlyoutItemViewModel()
                 {
-                    Command = new AsyncRelayCommand(() => AssociatedCollection.CurrentCollectionItemViewModel.OpenContainingFolder(checkForReference: false)),
+                    Command = new AsyncRelayCommand(() => associatedCollection.CurrentCollectionItemViewModel.OpenContainingFolder(checkForReference: false)),
                     IconGlyph = "\uE838",
                     Text = "Open reference containing folder"
                 });

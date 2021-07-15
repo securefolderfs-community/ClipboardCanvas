@@ -8,6 +8,7 @@ using ClipboardCanvas.ViewModels.UserControls;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
+using ClipboardCanvas.ViewModels.UserControls.CanvasPreview;
 
 namespace ClipboardCanvas.Helpers
 {
@@ -35,12 +36,12 @@ namespace ClipboardCanvas.Helpers
             var action_paste = new SuggestedActionsControlItemViewModel(
                 new AsyncRelayCommand(async () =>
                 {
-                    CanvasPreviewControlViewModel.CanvasPasteCancellationTokenSource.Cancel();
-                    CanvasPreviewControlViewModel.CanvasPasteCancellationTokenSource = new CancellationTokenSource();
+                    BaseReadOnlyCanvasPreviewControlViewModel<BaseReadOnlyCanvasViewModel>.CanvasPasteCancellationTokenSource.Cancel();
+                    BaseReadOnlyCanvasPreviewControlViewModel<BaseReadOnlyCanvasViewModel>.CanvasPasteCancellationTokenSource = new CancellationTokenSource();
 
                     SafeWrapper<DataPackageView> dataPackage = await ClipboardHelpers.GetClipboardData();
 
-                    await pasteCanvasControlModel.TryPasteData(dataPackage, CanvasPreviewControlViewModel.CanvasPasteCancellationTokenSource.Token);
+                    await pasteCanvasControlModel.TryPasteData(dataPackage, BaseReadOnlyCanvasPreviewControlViewModel<BaseReadOnlyCanvasViewModel>.CanvasPasteCancellationTokenSource.Token);
                 }), "Paste from Clipboard", "\uE77F");
 
             actions.Add(action_paste);

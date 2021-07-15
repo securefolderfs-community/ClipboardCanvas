@@ -8,6 +8,7 @@ using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.DataModels.Navigation;
 using ClipboardCanvas.ViewModels;
+using ClipboardCanvas.UserControls.SimpleCanvasDisplay;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 

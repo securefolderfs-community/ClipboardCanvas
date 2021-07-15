@@ -27,8 +27,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
     {
         #region Private Members
 
-        private readonly IDynamicCanvasControlView _view;
-
         private readonly WebViewCanvasMode _mode;
 
         private bool _webViewNeedsUpdate;
@@ -37,18 +35,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #endregion
 
-        #region Protected Members
-
-        protected override ICollectionModel AssociatedCollection => _view?.CollectionModel;
-
-        #endregion
-
         #region Constructor
 
-        public WebViewCanvasViewModel(IDynamicCanvasControlView view, WebViewCanvasMode mode)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new WebViewContentType(mode))
+        public WebViewCanvasViewModel(IBaseCanvasPreviewControlView view, WebViewCanvasMode mode)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new WebViewContentType(mode), view)
         {
-            this._view = view;
             this._mode = mode;
         }
 
@@ -160,11 +151,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (_mode == WebViewCanvasMode.ReadWebsite)
             {
-                file = await AssociatedCollection.GetOrCreateNewCollectionFileFromExtension(Constants.FileSystem.WEBSITE_LINK_FILE_EXTENSION);
+                file = await associatedCollection.GetOrCreateNewCollectionFileFromExtension(Constants.FileSystem.WEBSITE_LINK_FILE_EXTENSION);
             }
             else
             {
-                file = await AssociatedCollection.GetOrCreateNewCollectionFileFromExtension(".html");
+                file = await associatedCollection.GetOrCreateNewCollectionFileFromExtension(".html");
             }
 
             return file;

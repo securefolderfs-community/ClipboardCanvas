@@ -1,11 +1,11 @@
 ﻿using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Media.Animation;
 
 using ClipboardCanvas.ViewModels.Pages;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.DataModels.Navigation;
-using Windows.UI.Xaml.Media.Animation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 

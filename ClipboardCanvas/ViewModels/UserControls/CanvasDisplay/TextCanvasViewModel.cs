@@ -2,40 +2,22 @@
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
-using System.IO;
+using Microsoft.Toolkit.Mvvm.Input;
 using System.Diagnostics;
 using System.Collections.Generic;
 
-using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
-using ClipboardCanvas.EventArguments;
-using ClipboardCanvas.Helpers;
-using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Helpers.Filesystem;
-using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.ViewModels.ContextMenu;
-using Microsoft.Toolkit.Mvvm.Input;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
     public class TextCanvasViewModel : BaseCanvasViewModel
     {
-        #region Private Members
-
-        private IDynamicCanvasControlView _view;
-
-        #endregion
-
-        #region Protected Properties
-
-        protected override ICollectionModel AssociatedCollection => _view?.CollectionModel;
-
-        #endregion
-
         #region Public Properties
 
         private string _ContentText;
@@ -55,10 +37,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public TextCanvasViewModel(IDynamicCanvasControlView view)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new TextContentType())
+        public TextCanvasViewModel(IBaseCanvasPreviewControlView view)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new TextContentType(), view)
         {
-            this._view = view;
         }
 
         #endregion
@@ -99,7 +80,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             SafeWrapper<StorageFile> file;
 
-            file = await AssociatedCollection.GetOrCreateNewCollectionFileFromExtension(".txt");
+            file = await associatedCollection.GetOrCreateNewCollectionFileFromExtension(".txt");
 
             return file;
         }
@@ -114,11 +95,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return result;
         }
 
-        protected override Task<SafeWrapperResult> TryFetchDataToView()
+        protected override async Task<SafeWrapperResult> TryFetchDataToView()
         {
             OnPropertyChanged(nameof(ContentText));
 
-            return Task.FromResult(SafeWrapperResult.S_SUCCESS);
+            return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
         protected override void RefreshContextMenuItems()
@@ -142,6 +123,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 Text = "Select all"
             });
 
+            // TODO: IsTextSelected doesn't seem to work
             if (ControlView != null && ControlView.IsTextSelected)
             {
                 // Copy selected text

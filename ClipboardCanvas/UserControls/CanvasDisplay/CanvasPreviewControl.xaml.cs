@@ -2,13 +2,13 @@
 
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
-using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
+using ClipboardCanvas.ViewModels.UserControls.CanvasPreview;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace ClipboardCanvas.UserControls.CanvasDisplay
 {
-    public sealed partial class CanvasPreviewControl : UserControl, IDynamicCanvasControlView
+    public sealed partial class CanvasPreviewControl : UserControl, IBaseCanvasPreviewControlView
     {
         public CanvasPreviewControlViewModel ViewModel
         {

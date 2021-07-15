@@ -1,0 +1,59 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+
+using ClipboardCanvas.EventArguments.CanvasControl;
+using ClipboardCanvas.Helpers.SafetyHelpers;
+using ClipboardCanvas.ViewModels.ContextMenu;
+
+namespace ClipboardCanvas.Models
+{
+    public interface IReadOnlyCanvasPreviewModel : IDisposable
+    {
+        event EventHandler<ContentStartedLoadingEventArgs> OnContentStartedLoadingEvent;
+
+        event EventHandler<ContentLoadedEventArgs> OnContentLoadedEvent;
+
+        event EventHandler<FileDeletedEventArgs> OnFileDeletedEvent;
+
+        event EventHandler<ErrorOccurredEventArgs> OnErrorOccurredEvent;
+
+        event EventHandler<TipTextUpdateRequestedEventArgs> OnTipTextUpdateRequestedEvent;
+
+        /// <summary>
+        /// Determines whether canvas content has been loaded
+        /// </summary>
+        bool IsContentLoaded { get; }
+
+        /// <summary>
+        /// Context menu options available for the canvas
+        /// </summary>
+        List<BaseMenuFlyoutItemViewModel> ContextMenuItems { get; }
+
+        /// <summary>
+        /// Attempts to load existing data to display
+        /// </summary>
+        /// <param name="itemData"></param>
+        Task<SafeWrapperResult> TryLoadExistingData(ICollectionItemModel itemData, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Attempts to delete the file and discard data
+        /// </summary>
+        /// <param name="hideConfirmation">Hides the delete confirmation dialog, overrides <see cref="ApplicationSettings.Interfaces.IUserSettings.ShowDeleteConfirmationDialog"/> if necessary</param>
+        /// <returns></returns>
+        Task<SafeWrapperResult> TryDeleteData(bool hideConfirmation = false);
+
+        /// <summary>
+        /// Frees cached data and disposes the instance
+        /// </summary>
+        /// <returns></returns>
+        void DiscardData();
+
+        /// <summary>
+        /// Sets the data to clipboard determined
+        /// </summary>
+        /// <returns></returns>
+        bool SetDataToClipboard();
+    }
+}

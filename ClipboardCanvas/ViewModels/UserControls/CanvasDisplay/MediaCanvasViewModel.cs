@@ -18,15 +18,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
     {
         #region Private Members
 
-        private readonly IDynamicCanvasControlView _view;
-
         private MediaContentType _mediaContentType => contentType as MediaContentType;
-
-        #endregion
-
-        #region Protected Members
-
-        protected override ICollectionModel AssociatedCollection => _view?.CollectionModel;
 
         #endregion
 
@@ -81,10 +73,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public MediaCanvasViewModel(IDynamicCanvasControlView view)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new MediaContentType())
+        public MediaCanvasViewModel(IBaseCanvasPreviewControlView view)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new MediaContentType(), view)
         {
-            this._view = view;
         }
 
         #endregion
@@ -159,7 +150,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             if (ControlView != null && ContentMediaLoad)
             {
-                if (AssociatedCollection.CurrentCollectionItemViewModel?.ContentType is MediaContentType mediaContentType)
+                if (associatedCollection.CurrentCollectionItemViewModel?.ContentType is MediaContentType mediaContentType)
                 {
                     mediaContentType.savedPosition = __Position;
                 }

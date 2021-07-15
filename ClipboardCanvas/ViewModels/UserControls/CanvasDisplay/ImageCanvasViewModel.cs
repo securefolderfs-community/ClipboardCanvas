@@ -26,17 +26,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
     {
         #region Private Members
 
-        private readonly IDynamicCanvasControlView _view;
-
         private Stream _dataStream;
 
         private SoftwareBitmap _softwareBitmap;
-
-        #endregion
-
-        #region Protected Properties
-
-        protected override ICollectionModel AssociatedCollection => _view?.CollectionModel;
 
         #endregion
 
@@ -57,10 +49,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public ImageCanvasViewModel(IDynamicCanvasControlView view)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new ImageContentType())
+        public ImageCanvasViewModel(IBaseCanvasPreviewControlView view)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new ImageContentType(), view)
         {
-            this._view = view;
         }
 
         #endregion
@@ -247,7 +238,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task<SafeWrapper<StorageFile>> TrySetFileWithExtension()
         {
-            SafeWrapper<StorageFile> file = await AssociatedCollection.GetOrCreateNewCollectionFileFromExtension(".png");
+            SafeWrapper<StorageFile> file = await associatedCollection.GetOrCreateNewCollectionFileFromExtension(".png");
 
             return file;
         }

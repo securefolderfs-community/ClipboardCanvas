@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 
+#nullable enable
 namespace ClipboardCanvas.Extensions
 {
     // Licensed to the .NET Foundation under one or more agreements.
