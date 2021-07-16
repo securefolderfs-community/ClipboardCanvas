@@ -343,7 +343,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             if (lastSelectedCollection == Constants.Collections.DEFAULT_COLLECTION_TOKEN)
             {
                 // Set current collection to default collection
-                CurrentCollection = Collections.Single((item) => item is DefaultCollectionViewModel);
+                CurrentCollection = Collections.First((item) => item is DefaultCollectionViewModel);
             }
             else
             {
@@ -357,7 +357,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 else
                 {
                     // Fallback to default collection
-                    CurrentCollection = Collections.Single((item) => item is DefaultCollectionViewModel);
+                    CurrentCollection = Collections.First((item) => item is DefaultCollectionViewModel);
                 }
             }
         }

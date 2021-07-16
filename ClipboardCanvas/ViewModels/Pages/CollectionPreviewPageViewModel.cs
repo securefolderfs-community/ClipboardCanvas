@@ -347,7 +347,7 @@ namespace ClipboardCanvas.ViewModels.Pages
         {
             if (_associatedCollectionModel.CurrentCollectionItemViewModel != null)
             {
-                SelectedItem = Items.Single((item) => item.CollectionItemModel == _associatedCollectionModel.CurrentCollectionItemViewModel);
+                SelectedItem = Items.FirstOrDefault((item) => item.CollectionItemModel == _associatedCollectionModel.CurrentCollectionItemViewModel);
 
                 _view?.ScrollIntoItemView(SelectedItem);
             }
@@ -355,7 +355,8 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private void ItemOpenRequested()
         {
-            _view?.PrepareConnectedAnimation(SelectedItem);
+            int indexOfSelectedItem = Items.IndexOf(SelectedItem);
+            _view?.PrepareConnectedAnimation(indexOfSelectedItem);
             OnCanvasPreviewOpenRequestedEvent?.Invoke(this, new CanvasPreviewOpenRequestedEventArgs(SelectedItem));
         }
 

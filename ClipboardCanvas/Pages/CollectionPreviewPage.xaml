@@ -25,6 +25,7 @@
             <vc:SelectedItemToBorderThicknessConverter x:Key="SelectedItemToBorderThicknessConverter" />
             <vc:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <vc:BooleanSearchedItemToShadowOpacityConverter x:Key="BooleanSearchedItemToShadowOpacityConverter" />
+            <vc:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter" />
         </ResourceDictionary>
     </Page.Resources>
 
@@ -125,16 +126,22 @@
 
                             <!--  The canvas preview  -->
                             <Grid
-                                x:Name="OptimizedCanvasPreviewControl"
+                                x:Name="SimpleCanvasPreviewControl"
                                 Grid.RowSpan="2"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
                                 Background="{ThemeResource SubtleBackgroundBrush}"
                                 CornerRadius="8">
+                                <uc2:SimpleCanvasPreviewControl
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Top"
+                                    CollectionModel="{Binding Path=DataContext.CollectionModel, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                    SimpleCanvasPreviewModelAccessor="{Binding Path=DataContext.SimpleCanvasPreviewModelAccessor, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
                                 <i:Interaction.Behaviors>
                                     <icore:EventTriggerBehavior EventName="Loaded">
                                         <icore:InvokeCommandAction Command="{Binding SimpleCanvasLoadedCommand}" />
                                     </icore:EventTriggerBehavior>
                                 </i:Interaction.Behaviors>
-                                <uc2:SimpleCanvasPreviewControl CollectionModel="{Binding CollectionModel, Mode=OneWay}" SimpleCanvasPreviewModel="{Binding SimpleCanvasPreviewModel, Mode=TwoWay}" />
                             </Grid>
 
                             <!--  Shadow and Filename  -->

@@ -14,7 +14,11 @@ namespace ClipboardCanvas.UserControls.SimpleCanvasDisplay
         public SimpleCanvasPreviewControlViewModel ViewModel
         {
             get => (SimpleCanvasPreviewControlViewModel)DataContext;
-            set => DataContext = value;
+            set
+            {
+                DataContext = value;
+                SimpleCanvasPreviewModelAccessor?.PropertyValueUpdated(ViewModel);
+            }
         }
 
         public static readonly DependencyProperty CollectionModelProperty =
@@ -26,25 +30,31 @@ namespace ClipboardCanvas.UserControls.SimpleCanvasDisplay
         }
 
 
-        public static readonly DependencyProperty SimpleCanvasPreviewModelProperty =
-            DependencyProperty.Register(nameof(SimpleCanvasPreviewModel), typeof(IReadOnlyCanvasPreviewModel), typeof(SimpleCanvasPreviewControl), new PropertyMetadata(null));
-        public IReadOnlyCanvasPreviewModel SimpleCanvasPreviewModel
+        public IControlPropertyAccessorModel<IReadOnlyCanvasPreviewModel> SimpleCanvasPreviewModelAccessor
         {
-            get { return (IReadOnlyCanvasPreviewModel)GetValue(SimpleCanvasPreviewModelProperty); }
-            set { SetValue(SimpleCanvasPreviewModelProperty, value); }
+            get { return (IControlPropertyAccessorModel<IReadOnlyCanvasPreviewModel>)GetValue(SimpleCanvasPreviewModelAccessorProperty); }
+            set { SetValue(SimpleCanvasPreviewModelAccessorProperty, value); }
         }
+
+        public static readonly DependencyProperty SimpleCanvasPreviewModelAccessorProperty =
+            DependencyProperty.Register(nameof(SimpleCanvasPreviewModelAccessor), typeof(IControlPropertyAccessorModel<IReadOnlyCanvasPreviewModel>), typeof(SimpleCanvasPreviewControl), new PropertyMetadata(null));
+
 
         public SimpleCanvasPreviewControl()
         {
             this.InitializeComponent();
 
             this.ViewModel = new SimpleCanvasPreviewControlViewModel(this);
-            this.SimpleCanvasPreviewModel = ViewModel;
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-
+            if (ViewModel != null)
+            {
+                // ViewModel is not null meaning the value changed and therefore
+                // call SimpleCanvasPreviewModelAccessor.PropertyValueUpdated(), because it could not be called before the control was loaded
+                SimpleCanvasPreviewModelAccessor?.PropertyValueUpdated(ViewModel);
+            }
         }
     }
 }

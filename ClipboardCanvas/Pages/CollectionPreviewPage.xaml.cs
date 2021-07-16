@@ -9,6 +9,9 @@ using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.DataModels.Navigation;
 using ClipboardCanvas.ViewModels;
 using ClipboardCanvas.UserControls.SimpleCanvasDisplay;
+using System.Linq;
+using ClipboardCanvas.Extensions;
+using System;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -57,9 +60,9 @@ namespace ClipboardCanvas.Pages
             this.ViewModel.CheckSearchData();
         }
 
-        public void PrepareConnectedAnimation(CollectionPreviewItemViewModel sourceViewModel)
+        public void PrepareConnectedAnimation(int itemIndex)
         {
-            UIElement sourceAnimationControl = ((ItemsGrid.ContainerFromItem(sourceViewModel) as GridViewItem).ContentTemplateRoot as FrameworkElement).FindName("OptimizedCanvasPreviewControl") as UIElement;
+            UIElement sourceAnimationControl = ((ItemsGrid.ContainerFromIndex(itemIndex) as GridViewItem).ContentTemplateRoot as FrameworkElement).FindName("SimpleCanvasPreviewControl") as UIElement;
 
             ConnectedAnimation connectedAnimation = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(
                 Constants.UI.Animations.CONNECTED_ANIMATION_COLLECTION_PREVIEW_ITEM_OPEN_REQUESTED_TOKEN,

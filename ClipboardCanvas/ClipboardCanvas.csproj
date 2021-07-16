@@ -210,12 +210,14 @@
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Models\ICollectionModel.cs" />
     <Compile Include="Models\ICollectionPreviewPageModel.cs" />
+    <Compile Include="Models\Implementation\ControlPropertyAccessorModel.cs" />
     <Compile Include="Models\IPasteCanvasPageModel.cs" />
     <Compile Include="Models\IReadOnlyCanvasPreviewModel.cs" />
     <Compile Include="Models\ISearchControlModel.cs" />
     <Compile Include="ModelViews\IBaseCanvasPreviewControlView.cs" />
     <Compile Include="ModelViews\ICanvasPageView.cs" />
     <Compile Include="ModelViews\ICollectionPreviewPageView.cs" />
+    <Compile Include="Models\IControlPropertyAccessorModel.cs" />
     <Compile Include="ModelViews\IDisplayControlView.cs" />
     <Compile Include="ModelViews\IMediaCanvasControlView.cs" />
     <Compile Include="ModelViews\ITextCanvasControlView.cs" />
@@ -329,6 +331,7 @@
       <DependentUpon>WindowTitleBarControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ValueConverters\BooleanInvertConverter.cs" />
+    <Compile Include="ValueConverters\BooleanToOpacityConverter.cs" />
     <Compile Include="ValueConverters\BooleanToVisibilityConverter.cs" />
     <Compile Include="ValueConverters\BooleanSearchedItemToShadowOpacityConverter.cs" />
     <Compile Include="ValueConverters\ControlToFocusActionConverter.cs" />

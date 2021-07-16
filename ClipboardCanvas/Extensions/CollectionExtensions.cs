@@ -19,13 +19,12 @@ namespace ClipboardCanvas.Extensions
                 return;
             }
 
-            for (int i = 0; i < collection.Count(); i++)
+            foreach (var item in collection)
             {
-                T item = collection.ElementAt(i);
-
                 (item as IDisposable)?.Dispose();
-                collection.Remove(item);
             }
+
+            collection.Clear();
         }
     }
 }

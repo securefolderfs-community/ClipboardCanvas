@@ -23,5 +23,11 @@
             Content="{x:Bind ViewModel.CanvasViewModel, Mode=OneWay}"
             ContentTemplate="{x:Bind ViewModel.CanvasViewModel, Mode=OneWay, Converter={StaticResource ImplicitDataTemplateConverter}}"
             IsTabStop="False" />
+
+        <!--  Overlay grid to block interactions with content  -->
+        <Grid
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="Transparent" />
     </Grid>
 </UserControl>

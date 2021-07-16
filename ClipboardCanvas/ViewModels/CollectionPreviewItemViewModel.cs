@@ -1,5 +1,6 @@
 ﻿using ClipboardCanvas.Interfaces.Search;
 using ClipboardCanvas.Models;
+using ClipboardCanvas.Models.Implementation;
 using ClipboardCanvas.ViewModels.Pages;
 using ClipboardCanvas.ViewModels.UserControls;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
@@ -39,11 +40,20 @@ namespace ClipboardCanvas.ViewModels
             set => SetProperty(ref _IsHighlighted, value);
         }
 
-        public IReadOnlyCanvasPreviewModel SimpleCanvasPreviewModel { get; set; }
+        private bool _IsCanvasPreviewVisible;
+        public bool IsCanvasPreviewVisible
+        {
+            get => _IsCanvasPreviewVisible;
+            set => SetProperty(ref _IsCanvasPreviewVisible, value);
+        }
+
+        public IReadOnlyCanvasPreviewModel SimpleCanvasPreviewModel { get; private set; }
 
         public ICollectionModel CollectionModel { get; private set; }
 
         public ICollectionItemModel CollectionItemModel { get; private set; }
+
+        public IControlPropertyAccessorModel<IReadOnlyCanvasPreviewModel> SimpleCanvasPreviewModelAccessor { get; private set; }
 
         #endregion
 
@@ -67,8 +77,17 @@ namespace ClipboardCanvas.ViewModels
 
         private async Task SimpleCanvasLoaded(RoutedEventArgs e)
         {
-            return;
             await SimpleCanvasPreviewModel.TryLoadExistingData(CollectionItemModel, CollectionPreviewPageViewModel.LoadCancellationToken.Token);
+            IsCanvasPreviewVisible = true;
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        private void SimpleCanvasPreviewModelAccessor_OnPropertyValueUpdatedEvent(object sender, IReadOnlyCanvasPreviewModel e)
+        {
+            SimpleCanvasPreviewModel = e;
         }
 
         #endregion
@@ -79,9 +98,13 @@ namespace ClipboardCanvas.ViewModels
         {
             CollectionPreviewItemViewModel viewModel = new CollectionPreviewItemViewModel()
             {
-                CollectionModel = collectionModel,
-                CollectionItemModel = collectionItemModel
+                SimpleCanvasPreviewModelAccessor = new ControlPropertyAccessorModel<IReadOnlyCanvasPreviewModel>()
             };
+            viewModel.HookEvents();
+
+            viewModel.CollectionModel = collectionModel;
+            viewModel.CollectionItemModel = collectionItemModel;
+
             IStorageItem sourceItem = await collectionItemModel.SourceItem;
             string itemPath;
 
@@ -101,11 +124,32 @@ namespace ClipboardCanvas.ViewModels
 
         #endregion
 
+        #region Event Hooks
+
+        private void HookEvents()
+        {
+            if (SimpleCanvasPreviewModelAccessor != null)
+            {
+                SimpleCanvasPreviewModelAccessor.OnPropertyValueUpdatedEvent += SimpleCanvasPreviewModelAccessor_OnPropertyValueUpdatedEvent;
+            }
+        }
+
+        private void UnhookEvents()
+        {
+            if (SimpleCanvasPreviewModelAccessor != null)
+            {
+                SimpleCanvasPreviewModelAccessor.OnPropertyValueUpdatedEvent -= SimpleCanvasPreviewModelAccessor_OnPropertyValueUpdatedEvent;
+            }
+        }
+
+        #endregion
+
         #region IDisposable
 
         public void Dispose()
         {
             SimpleCanvasPreviewModel?.Dispose();
+            UnhookEvents();
         }
 
         #endregion

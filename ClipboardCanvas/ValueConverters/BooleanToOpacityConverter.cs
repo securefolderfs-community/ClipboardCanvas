@@ -1,30 +1,24 @@
 ﻿using System;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
 namespace ClipboardCanvas.ValueConverters
 {
-    public class BooleanToVisibilityConverter : IValueConverter
+    public class BooleanToOpacityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is not bool boolParam)
             {
-                return Visibility.Collapsed;
+                return 0.0d;
             }
 
-            if (parameter is not string stringParam)
+            if (boolParam)
             {
-                return boolParam ? Visibility.Visible : Visibility.Collapsed;
+                return 1.0d;
             }
             else
             {
-                if (stringParam.ToLower() == "invert")
-                {
-                    return boolParam ? Visibility.Collapsed : Visibility.Visible;
-                }
-
-                return boolParam ? Visibility.Visible : Visibility.Collapsed;
+                return 0.0d;
             }
         }
 

@@ -9,7 +9,7 @@ namespace ClipboardCanvas.ModelViews
 
         ISearchControlModel SearchControlModel { get; }
 
-        void PrepareConnectedAnimation(CollectionPreviewItemViewModel sourceViewModel);
+        void PrepareConnectedAnimation(int itemIndex);
 
         void ScrollIntoItemView(CollectionPreviewItemViewModel sourceViewModel);
     }

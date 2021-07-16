@@ -12,9 +12,9 @@
 
     <Grid>
         <ScrollViewer tui:ScrollViewerExtensions.EnableMiddleClickScrolling="True">
-            <RichTextBlock x:Name="ContentText" IsTextSelectionEnabled="True">
+            <RichTextBlock x:Name="ContentText">
                 <Paragraph>
-                    <Run Text="{x:Bind ViewModel.ContentText, Mode=OneWay}" />
+                    <Run FontSize="6" Text="{x:Bind ViewModel.ContentText, Mode=OneWay}" />
                 </Paragraph>
             </RichTextBlock>
         </ScrollViewer>
