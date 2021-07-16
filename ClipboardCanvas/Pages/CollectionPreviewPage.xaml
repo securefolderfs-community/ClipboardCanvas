@@ -112,8 +112,8 @@
                         ShadowOpacity="{Binding IsHighlighted, Converter={StaticResource BooleanSearchedItemToShadowOpacityConverter}}"
                         Color="{ThemeResource SystemAccentColor}">
                         <Grid
-                            Width="280"
-                            Height="200"
+                            Width="256"
+                            Height="144"
                             Padding="0"
                             Background="{ThemeResource SubtleBackgroundBrush}"
                             BorderBrush="{ThemeResource SystemAccentColor}"
@@ -132,11 +132,14 @@
                                 VerticalAlignment="Stretch"
                                 Background="{ThemeResource SubtleBackgroundBrush}"
                                 CornerRadius="8">
-                                <uc2:SimpleCanvasPreviewControl
+
+                                <Viewbox
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Top"
-                                    CollectionModel="{Binding Path=DataContext.CollectionModel, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                    SimpleCanvasPreviewModelAccessor="{Binding Path=DataContext.SimpleCanvasPreviewModelAccessor, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                                    StretchDirection="Both">
+                                    <uc2:SimpleCanvasPreviewControl CollectionModel="{Binding Path=DataContext.CollectionModel, RelativeSource={RelativeSource Mode=TemplatedParent}}" SimpleCanvasPreviewModelAccessor="{Binding Path=DataContext.SimpleCanvasPreviewModelAccessor, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                                </Viewbox>
+
                                 <i:Interaction.Behaviors>
                                     <icore:EventTriggerBehavior EventName="Loaded">
                                         <icore:InvokeCommandAction Command="{Binding SimpleCanvasLoadedCommand}" />
