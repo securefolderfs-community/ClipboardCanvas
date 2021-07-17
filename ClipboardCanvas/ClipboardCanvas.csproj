@@ -198,6 +198,7 @@
     <Compile Include="Helpers\FlyoutHelpers.cs" />
     <Compile Include="Helpers\InitialApplicationChecksHelpers.cs" />
     <Compile Include="Helpers\ApplicationHelpers.cs" />
+    <Compile Include="Helpers\ObservableUserControl.cs" />
     <Compile Include="Helpers\SafetyHelpers\SafeWrapperResult.cs" />
     <Compile Include="Helpers\StringHelpers.cs" />
     <Compile Include="Helpers\ThemeHelper.cs" />

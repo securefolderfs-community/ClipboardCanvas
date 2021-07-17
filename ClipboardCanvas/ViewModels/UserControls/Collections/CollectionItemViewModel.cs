@@ -120,6 +120,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
             {
                 ReferenceFile referenceFile = await ReferenceFile.GetFile(file);
                 _sourceItem = referenceFile.ReferencedItem;
+                
+                if (_sourceItem == null)
+                {
+                    _sourceItem = Item;
+                }
             }
             else
             {

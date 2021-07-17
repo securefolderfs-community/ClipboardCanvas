@@ -163,6 +163,8 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public ICommand ShowOrHideSearchCommand { get; private set; }
 
+        public ICommand ContainerChangingCommand { get; private set; }
+
         public ICommand DefaultKeyboardAcceleratorInvokedCommand { get; private set; }
 
         #endregion
@@ -189,6 +191,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             OpenNewInfiniteCanvasCommand = new RelayCommand(OpenNewInfiniteCanvas);
             ItemClickCommand = new RelayCommand<ItemClickEventArgs>(ItemClick);
             ShowOrHideSearchCommand = new RelayCommand(ShowOrHideSearch);
+            ContainerChangingCommand = new AsyncRelayCommand<ContainerContentChangingEventArgs>(ContainerContentChanging);
             DefaultKeyboardAcceleratorInvokedCommand = new RelayCommand<KeyboardAcceleratorInvokedEventArgs>(DefaultKeyboardAcceleratorInvoked);
         }
 
@@ -232,6 +235,18 @@ namespace ClipboardCanvas.ViewModels.Pages
             else
             {
                 ShowSearch();
+            }
+        }
+
+        private async Task ContainerContentChanging(ContainerContentChangingEventArgs e)
+        {
+            if (!e.InRecycleQueue)
+            {
+                if (e.Item is CollectionPreviewItemViewModel itemViewModel && e.ItemContainer is GridViewItem gvi)
+                {
+                    await itemViewModel.RequestCanvasLoad();
+                    //itemViewModel.SimpleCanvasLoadedCommand.Execute(null);
+                }
             }
         }
 

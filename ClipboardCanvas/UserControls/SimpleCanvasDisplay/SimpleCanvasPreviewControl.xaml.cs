@@ -1,45 +1,34 @@
 ﻿using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.UserControls.CanvasPreview;
+using ClipboardCanvas.Helpers;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace ClipboardCanvas.UserControls.SimpleCanvasDisplay
 {
-    public sealed partial class SimpleCanvasPreviewControl : UserControl, IBaseCanvasPreviewControlView
+    public sealed partial class SimpleCanvasPreviewControl : ObservableUserControl, IBaseCanvasPreviewControlView
     {
         public SimpleCanvasPreviewControlViewModel ViewModel
         {
             get => (SimpleCanvasPreviewControlViewModel)DataContext;
-            set
-            {
-                DataContext = value;
-                SimpleCanvasPreviewModelAccessor?.PropertyValueUpdated(ViewModel);
-            }
+            set => DataContext = value;
         }
 
-        public static readonly DependencyProperty CollectionModelProperty =
-            DependencyProperty.Register(nameof(CollectionModel), typeof(ICollectionModel), typeof(SimpleCanvasPreviewControl), new PropertyMetadata(null));
-        public ICollectionModel CollectionModel
+        public ICollectionModel CollectionModel { get; set; }
+
+
+        public static readonly DependencyProperty SimpleCanvasPreviewModelProperty =
+           DependencyProperty.Register(nameof(SimpleCanvasPreviewModel), typeof(IReadOnlyCanvasPreviewModel), typeof(SimpleCanvasPreviewControl), new PropertyMetadata(null));
+        public IReadOnlyCanvasPreviewModel SimpleCanvasPreviewModel
         {
-            get { return (ICollectionModel)GetValue(CollectionModelProperty); }
-            set { SetValue(CollectionModelProperty, value); }
+            get { return (IReadOnlyCanvasPreviewModel)GetValue(SimpleCanvasPreviewModelProperty); }
+            set { SetValueDP(SimpleCanvasPreviewModelProperty, value); }
         }
 
-
-        public IControlPropertyAccessorModel<IReadOnlyCanvasPreviewModel> SimpleCanvasPreviewModelAccessor
-        {
-            get { return (IControlPropertyAccessorModel<IReadOnlyCanvasPreviewModel>)GetValue(SimpleCanvasPreviewModelAccessorProperty); }
-            set { SetValue(SimpleCanvasPreviewModelAccessorProperty, value); }
-        }
-
-        public static readonly DependencyProperty SimpleCanvasPreviewModelAccessorProperty =
-            DependencyProperty.Register(nameof(SimpleCanvasPreviewModelAccessor), typeof(IControlPropertyAccessorModel<IReadOnlyCanvasPreviewModel>), typeof(SimpleCanvasPreviewControl), new PropertyMetadata(null));
-
-
+       
         public SimpleCanvasPreviewControl()
         {
             this.InitializeComponent();
@@ -51,9 +40,7 @@ namespace ClipboardCanvas.UserControls.SimpleCanvasDisplay
         {
             if (ViewModel != null)
             {
-                // ViewModel is not null meaning the value changed and therefore
-                // call SimpleCanvasPreviewModelAccessor.PropertyValueUpdated(), because it could not be called before the control was loaded
-                SimpleCanvasPreviewModelAccessor?.PropertyValueUpdated(ViewModel);
+                SimpleCanvasPreviewModel = ViewModel;
             }
         }
     }

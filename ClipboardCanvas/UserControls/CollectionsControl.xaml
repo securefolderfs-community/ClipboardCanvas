@@ -76,13 +76,13 @@
                 </Style>
             </GridView.ItemContainerStyle>
             <GridView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="vm:BaseCollectionViewModel">
                     <Grid
                         Width="260"
                         Height="140"
                         Background="{ThemeResource SubtleBackgroundBrush}"
                         BorderBrush="{ThemeResource SystemAccentColor}"
-                        BorderThickness="{Binding IsSelected, Converter={StaticResource SelectedItemToBorderThicknessConverter}}"
+                        BorderThickness="{x:Bind IsSelected, Mode=OneWay, Converter={StaticResource SelectedItemToBorderThicknessConverter}}"
                         CornerRadius="8">
                         <Grid.RowDefinitions>
                             <!--  Icon  -->
@@ -105,7 +105,7 @@
                                         <TextBlock
                                             FontSize="16"
                                             FontWeight="SemiBold"
-                                            Text="{Binding DisplayName}"
+                                            Text="{x:Bind DisplayName, Mode=OneWay}"
                                             TextTrimming="CharacterEllipsis" />
 
                                         <!--  Content text  -->
@@ -129,7 +129,7 @@
                                 VerticalAlignment="Bottom"
                                 Foreground="Red"
                                 Glyph="&#xE783;"
-                                Visibility="{Binding ErrorIconVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                Visibility="{x:Bind ErrorIconVisibility, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <ToolTipService.ToolTip>
                                     <ToolTip>
                                         <StackPanel Spacing="8">
@@ -141,7 +141,7 @@
 
                                             <!--  Content text  -->
                                             <TextBlock
-                                                Text="{Binding CollectionErrorInfo, Converter={StaticResource SafeWrapperResultToErrorConverter}}"
+                                                Text="{x:Bind CollectionErrorInfo, Mode=OneWay, Converter={StaticResource SafeWrapperResultToErrorConverter}}"
                                                 TextTrimming="WordEllipsis"
                                                 TextWrapping="Wrap" />
                                         </StackPanel>
@@ -157,10 +157,10 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 FontWeight="SemiBold"
-                                Text="{Binding DisplayName}"
+                                Text="{x:Bind DisplayName, Mode=OneWay}"
                                 TextTrimming="CharacterEllipsis"
-                                ToolTipService.ToolTip="{Binding DisplayName}"
-                                Visibility="{Binding IsEditingName, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter='invert'}" />
+                                ToolTipService.ToolTip="{x:Bind DisplayName, Mode=OneWay}"
+                                Visibility="{x:Bind IsEditingName, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter='invert'}" />
 
                             <!--  Collection name edit box  -->
                             <TextBox
@@ -168,16 +168,16 @@
                                 Grid.Row="1"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Bottom"
-                                ap:TextBoxFocusAttachedProperty.Value="{Binding EditBoxFocus}"
-                                Text="{Binding EditBoxText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                ap:TextBoxFocusAttachedProperty.Value="{x:Bind EditBoxFocus, Mode=OneWay}"
+                                Text="{x:Bind EditBoxText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                 TextAlignment="Center"
-                                Visibility="{Binding IsEditingName, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                Visibility="{x:Bind IsEditingName, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <i:Interaction.Behaviors>
                                     <icore:EventTriggerBehavior EventName="KeyDown">
-                                        <icore:InvokeCommandAction Command="{Binding RenameBoxKeyDownCommand}" />
+                                        <icore:InvokeCommandAction Command="{x:Bind RenameBoxKeyDownCommand}" />
                                     </icore:EventTriggerBehavior>
                                     <icore:EventTriggerBehavior EventName="LostFocus">
-                                        <icore:InvokeCommandAction Command="{Binding RenameBoxLostFocusCommand}" />
+                                        <icore:InvokeCommandAction Command="{x:Bind RenameBoxLostFocusCommand}" />
                                     </icore:EventTriggerBehavior>
                                 </i:Interaction.Behaviors>
                             </TextBox>
@@ -189,27 +189,27 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center"
                             IsIndeterminate="True"
-                            Visibility="{Binding IsCollectionInitializing, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            Visibility="{x:Bind IsCollectionInitializing, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                         <Grid.ContextFlyout>
                             <MenuFlyout>
-                                <MenuFlyoutItem Command="{Binding OpenCollectionLocationCommand}" Text="Open Collection location">
+                                <MenuFlyoutItem Command="{x:Bind OpenCollectionLocationCommand}" Text="Open Collection location">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE838;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutSeparator />
-                                <MenuFlyoutItem Command="{Binding ReloadCollectionCommand}" Text="Reload Collection">
+                                <MenuFlyoutItem Command="{x:Bind ReloadCollectionCommand}" Text="Reload Collection">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE72C;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem Command="{Binding StartRenameCollectionCommand}" Text="Edit name">
+                                <MenuFlyoutItem Command="{x:Bind StartRenameCollectionCommand}" Text="Edit name">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8AC;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem Command="{Binding RemoveCollectionCommand}" Text="Remove Collection">
+                                <MenuFlyoutItem Command="{x:Bind RemoveCollectionCommand}" Text="Remove Collection">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE738;" />
                                     </MenuFlyoutItem.Icon>

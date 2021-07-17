@@ -99,6 +99,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             this.errorReporter = errorReporter;
             this.contentType = contentType;
             this.view = view;
+
+            this.ContextMenuItems = new List<BaseMenuFlyoutItemViewModel>();
         }
 
         #endregion
@@ -203,17 +205,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             ContextMenuItems.DisposeClear();
 
-            List<BaseMenuFlyoutItemViewModel> items = new List<BaseMenuFlyoutItemViewModel>();
-
             // May occur when quickly switching between canvases
             if (associatedCollection == null)
             {
-                ContextMenuItems = items;
                 return;
             }
 
             // Open item
-            items.Add(new MenuFlyoutItemViewModel()
+            ContextMenuItems.Add(new MenuFlyoutItemViewModel()
             {
                 Command = new AsyncRelayCommand(associatedCollection.CurrentCollectionItemViewModel.OpenFile),
                 IconGlyph = "\uE8E5",
@@ -221,10 +220,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             });
 
             // Separator
-            items.Add(new MenuFlyoutSeparatorViewModel());
+            ContextMenuItems.Add(new MenuFlyoutSeparatorViewModel());
 
             // Copy item
-            items.Add(new MenuFlyoutItemViewModel()
+            ContextMenuItems.Add(new MenuFlyoutItemViewModel()
             {
                 Command = new RelayCommand(() => SetDataToClipboard()),
                 IconGlyph = "\uE8C8",
@@ -232,7 +231,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             });
 
             // Open containing folder
-            items.Add(new MenuFlyoutItemViewModel()
+            ContextMenuItems.Add(new MenuFlyoutItemViewModel()
             {
                 Command = new AsyncRelayCommand(associatedCollection.CurrentCollectionItemViewModel.OpenContainingFolder),
                 IconGlyph = "\uE838",
@@ -242,7 +241,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Open reference containing folder
             if (isContentAsReference)
             {
-                items.Add(new MenuFlyoutItemViewModel()
+                ContextMenuItems.Add(new MenuFlyoutItemViewModel()
                 {
                     Command = new AsyncRelayCommand(() => associatedCollection.CurrentCollectionItemViewModel.OpenContainingFolder(checkForReference: false)),
                     IconGlyph = "\uE838",
@@ -251,14 +250,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             // Delete item
-            items.Add(new MenuFlyoutItemViewModel()
+            ContextMenuItems.Add(new MenuFlyoutItemViewModel()
             {
                 Command = new AsyncRelayCommand(() => TryDeleteData()),
                 IconGlyph = "\uE74D",
                 Text = isContentAsReference ? "Delete reference" : "Delete file"
             });
-
-            ContextMenuItems = items;
         }
 
         protected abstract Task<SafeWrapperResult> SetData(IStorageItem item);

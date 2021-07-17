@@ -55,6 +55,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
+        protected override void RefreshContextMenuItems()
+        {
+            return;
+        }
+
         #endregion
     }
 }

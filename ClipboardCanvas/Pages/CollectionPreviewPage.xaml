@@ -80,6 +80,9 @@
                 <icore:EventTriggerBehavior EventName="ItemClick">
                     <icore:InvokeCommandAction Command="{x:Bind ViewModel.ItemClickCommand}" />
                 </icore:EventTriggerBehavior>
+                <icore:EventTriggerBehavior EventName="ContainerContentChanging">
+                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.ContainerChangingCommand}" />
+                </icore:EventTriggerBehavior>
             </i:Interaction.Behaviors>
             <!--  Remove Reveal Highlight Effect  -->
             <GridView.ItemContainerStyle>
@@ -109,7 +112,7 @@
                     <tuc:DropShadowPanel
                         BlurRadius="10"
                         IsMasked="True"
-                        ShadowOpacity="{Binding IsHighlighted, Converter={StaticResource BooleanSearchedItemToShadowOpacityConverter}}"
+                        ShadowOpacity="{x:Bind IsHighlighted, Mode=OneWay, Converter={StaticResource BooleanSearchedItemToShadowOpacityConverter}}"
                         Color="{ThemeResource SystemAccentColor}">
                         <Grid
                             Width="256"
@@ -117,7 +120,7 @@
                             Padding="0"
                             Background="{ThemeResource SubtleBackgroundBrush}"
                             BorderBrush="{ThemeResource SystemAccentColor}"
-                            BorderThickness="{Binding IsSelected, Converter={StaticResource SelectedItemToBorderThicknessConverter}}"
+                            BorderThickness="{x:Bind IsSelected, Mode=OneWay, Converter={StaticResource SelectedItemToBorderThicknessConverter}}"
                             CornerRadius="8">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="3*" />
@@ -137,12 +140,12 @@
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Top"
                                     StretchDirection="Both">
-                                    <uc2:SimpleCanvasPreviewControl CollectionModel="{Binding Path=DataContext.CollectionModel, RelativeSource={RelativeSource Mode=TemplatedParent}}" SimpleCanvasPreviewModelAccessor="{Binding Path=DataContext.SimpleCanvasPreviewModelAccessor, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                                    <uc2:SimpleCanvasPreviewControl CollectionModel="{x:Bind CollectionModel, Mode=OneWay}" SimpleCanvasPreviewModel="{x:Bind SimpleCanvasPreviewModel, Mode=TwoWay}" />
                                 </Viewbox>
 
                                 <i:Interaction.Behaviors>
                                     <icore:EventTriggerBehavior EventName="Loaded">
-                                        <icore:InvokeCommandAction Command="{Binding SimpleCanvasLoadedCommand}" />
+                                        <icore:InvokeCommandAction Command="{x:Bind SimpleCanvasLoadedCommand}" />
                                     </icore:EventTriggerBehavior>
                                 </i:Interaction.Behaviors>
                             </Grid>
@@ -174,9 +177,9 @@
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Bottom"
                                     Opacity="0.8"
-                                    Text="{Binding DisplayName}"
+                                    Text="{x:Bind DisplayName, Mode=OneWay}"
                                     TextTrimming="CharacterEllipsis"
-                                    ToolTipService.ToolTip="{Binding DisplayName}" />
+                                    ToolTipService.ToolTip="{x:Bind DisplayName, Mode=OneWay}" />
 
                                 <!--  Add to favorites  -->
                                 <!--  TODO  -->

@@ -19,11 +19,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
             private set => SetProperty(ref _DisplayText, value);
         }
 
-        private Visibility _GlyphIconVisibility;
-        public Visibility GlyphIconVisibility
+        private bool _GlyphIconLoad;
+        public bool GlyphIconLoad
         {
-            get => _GlyphIconVisibility;
-            set => SetProperty(ref _GlyphIconVisibility, value);
+            get => _GlyphIconLoad;
+            set => SetProperty(ref _GlyphIconLoad, value);
         }
 
         private string _GlyphIcon;
@@ -40,11 +40,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
             set => SetProperty(ref _IconImage, value);
         }
 
-        private Visibility _IconImageVisibility;
-        public Visibility IconImageVisibility
+        private bool _IconImageLoad;
+        public bool IconImageLoad
         {
-            get => _IconImageVisibility;
-            set => SetProperty(ref _IconImageVisibility, value);
+            get => _IconImageLoad;
+            set => SetProperty(ref _IconImageLoad, value);
         }
 
         #endregion
@@ -56,16 +56,16 @@ namespace ClipboardCanvas.ViewModels.UserControls
             : this(executeCommand, displayText)
         {
             this.GlyphIcon = glyphIcon;
-            this.GlyphIconVisibility = Visibility.Visible;
-            this.IconImageVisibility = Visibility.Collapsed;
+            this.GlyphIconLoad = true;
+            this.IconImageLoad = false;
         }
 
         public SuggestedActionsControlItemViewModel(ICommand executeCommand, string displayText, BitmapImage iconImage)
             : this(executeCommand, displayText)
         {
             this.IconImage = iconImage;
-            this.GlyphIconVisibility = Visibility.Collapsed;
-            this.IconImageVisibility = Visibility.Visible;
+            this.GlyphIconLoad = false;
+            this.IconImageLoad = true;
         }
 
         private SuggestedActionsControlItemViewModel(ICommand executeCommand, string displayText)

@@ -8,6 +8,7 @@
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tua="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    xmlns:vm="using:ClipboardCanvas.ViewModels.UserControls"
     d:DesignHeight="300"
     d:DesignWidth="400"
     Background="Transparent"
@@ -169,20 +170,21 @@
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
                 <ListView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="vm:SuggestedActionsControlItemViewModel">
                         <StackPanel Orientation="Horizontal" Spacing="15">
                             <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
                                 <FontIcon
-                                    x:Name="GlyphIcon"
+                                    x:Name="IconGlyph"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
-                                    Glyph="{Binding GlyphIcon}"
-                                    Visibility="{Binding GlyphIconVisibility}" />
+                                    x:Load="{x:Bind GlyphIconLoad, Mode=OneWay}"
+                                    Glyph="{x:Bind GlyphIcon, Mode=OneWay}" />
                                 <Viewbox
+                                    x:Name="IconImage"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
-                                    StretchDirection="DownOnly"
-                                    Visibility="{Binding IconImageVisibility}">
+                                    x:Load="{x:Bind IconImageLoad, Mode=OneWay}"
+                                    StretchDirection="DownOnly">
                                     <Image Source="{Binding IconImage}" Stretch="UniformToFill" />
                                 </Viewbox>
                             </Grid>
@@ -190,7 +192,7 @@
                                 Margin="0,0,0,2"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
-                                Text="{Binding DisplayText}" />
+                                Text="{x:Bind DisplayText, Mode=OneWay}" />
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>

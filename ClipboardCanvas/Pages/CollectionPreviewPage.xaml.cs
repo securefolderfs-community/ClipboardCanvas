@@ -12,6 +12,7 @@ using ClipboardCanvas.UserControls.SimpleCanvasDisplay;
 using System.Linq;
 using ClipboardCanvas.Extensions;
 using System;
+using System.Diagnostics;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 

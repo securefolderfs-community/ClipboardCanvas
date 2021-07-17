@@ -1,10 +1,4 @@
-﻿using ClipboardCanvas.Interfaces.Search;
-using ClipboardCanvas.Models;
-using ClipboardCanvas.Models.Implementation;
-using ClipboardCanvas.ViewModels.Pages;
-using ClipboardCanvas.ViewModels.UserControls;
-using ClipboardCanvas.ViewModels.UserControls.Collections;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.IO;
@@ -12,6 +6,12 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Storage;
 using Windows.UI.Xaml;
+
+using ClipboardCanvas.Interfaces.Search;
+using ClipboardCanvas.Models;
+using ClipboardCanvas.Models.Implementation;
+using ClipboardCanvas.ViewModels.Pages;
+using System.Diagnostics;
 
 namespace ClipboardCanvas.ViewModels
 {
@@ -47,13 +47,11 @@ namespace ClipboardCanvas.ViewModels
             set => SetProperty(ref _IsCanvasPreviewVisible, value);
         }
 
-        public IReadOnlyCanvasPreviewModel SimpleCanvasPreviewModel { get; private set; }
+        public IReadOnlyCanvasPreviewModel SimpleCanvasPreviewModel { get; set; }
 
         public ICollectionModel CollectionModel { get; private set; }
 
         public ICollectionItemModel CollectionItemModel { get; private set; }
-
-        public IControlPropertyAccessorModel<IReadOnlyCanvasPreviewModel> SimpleCanvasPreviewModelAccessor { get; private set; }
 
         #endregion
 
@@ -68,78 +66,56 @@ namespace ClipboardCanvas.ViewModels
         public CollectionPreviewItemViewModel()
         {
             // Create commands
-            SimpleCanvasLoadedCommand = new AsyncRelayCommand<RoutedEventArgs>(SimpleCanvasLoaded);
+            SimpleCanvasLoadedCommand = new RelayCommand<RoutedEventArgs>(SimpleCanvasLoaded);
         }
 
         #endregion
 
         #region Command Implementation
 
-        private async Task SimpleCanvasLoaded(RoutedEventArgs e)
+
+        private async void SimpleCanvasLoaded(RoutedEventArgs e)
         {
-            await SimpleCanvasPreviewModel.TryLoadExistingData(CollectionItemModel, CollectionPreviewPageViewModel.LoadCancellationToken.Token);
-            IsCanvasPreviewVisible = true;
-        }
-
-        #endregion
-
-        #region Event Handlers
-
-        private void SimpleCanvasPreviewModelAccessor_OnPropertyValueUpdatedEvent(object sender, IReadOnlyCanvasPreviewModel e)
-        {
-            SimpleCanvasPreviewModel = e;
+            if (_loadRequested)
+            {
+                await SimpleCanvasPreviewModel.TryLoadExistingData(CollectionItemModel, CollectionPreviewPageViewModel.LoadCancellationToken.Token);
+                IsCanvasPreviewVisible = true;
+                Debug.WriteLine("LOADED VIA LOAD");
+            }
+            _loadRequested = false;
         }
 
         #endregion
 
         #region Public Helpers
 
+        private bool _loadRequested;
+
+        public async Task RequestCanvasLoad()
+        {
+            if (SimpleCanvasPreviewModel == null)
+            {
+                _loadRequested = true;
+                return;
+            }
+
+            await SimpleCanvasPreviewModel.TryLoadExistingData(CollectionItemModel, CollectionPreviewPageViewModel.LoadCancellationToken.Token);
+            Debug.WriteLine("LOADED VIA REQUEST");
+        }
+
         public static async Task<CollectionPreviewItemViewModel> GetCollectionPreviewItemModel(ICollectionModel collectionModel, ICollectionItemModel collectionItemModel)
         {
             CollectionPreviewItemViewModel viewModel = new CollectionPreviewItemViewModel()
             {
-                SimpleCanvasPreviewModelAccessor = new ControlPropertyAccessorModel<IReadOnlyCanvasPreviewModel>()
+                CollectionModel = collectionModel,
+                CollectionItemModel = collectionItemModel
             };
-            viewModel.HookEvents();
-
-            viewModel.CollectionModel = collectionModel;
-            viewModel.CollectionItemModel = collectionItemModel;
 
             IStorageItem sourceItem = await collectionItemModel.SourceItem;
-            string itemPath;
 
-            if (sourceItem == null)
-            {
-                itemPath = collectionItemModel.Item.Path;
-            }
-            else
-            {
-                itemPath = sourceItem.Path;
-            }
-
-            viewModel.DisplayName = Path.GetFileName(itemPath);
+            viewModel.DisplayName = Path.GetFileName(sourceItem.Path);
 
             return viewModel;
-        }
-
-        #endregion
-
-        #region Event Hooks
-
-        private void HookEvents()
-        {
-            if (SimpleCanvasPreviewModelAccessor != null)
-            {
-                SimpleCanvasPreviewModelAccessor.OnPropertyValueUpdatedEvent += SimpleCanvasPreviewModelAccessor_OnPropertyValueUpdatedEvent;
-            }
-        }
-
-        private void UnhookEvents()
-        {
-            if (SimpleCanvasPreviewModelAccessor != null)
-            {
-                SimpleCanvasPreviewModelAccessor.OnPropertyValueUpdatedEvent -= SimpleCanvasPreviewModelAccessor_OnPropertyValueUpdatedEvent;
-            }
         }
 
         #endregion
@@ -149,7 +125,6 @@ namespace ClipboardCanvas.ViewModels
         public void Dispose()
         {
             SimpleCanvasPreviewModel?.Dispose();
-            UnhookEvents();
         }
 
         #endregion
