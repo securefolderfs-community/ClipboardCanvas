@@ -29,18 +29,26 @@ namespace ClipboardCanvas.ReferenceItems
             this.ReferencedItem = referencedItem;
         }
 
-        public async Task UpdateReferenceFile(ReferenceFileData referenceFileData)
+        public async Task<SafeWrapperResult> UpdateReferenceFile(ReferenceFileData referenceFileData)
         {
             string serialized = JsonConvert.SerializeObject(referenceFileData, Formatting.Indented);
-            await FileIO.WriteTextAsync(_innerReferenceFile, serialized);
+            SafeWrapperResult result = await FilesystemOperations.WriteFileText(_innerReferenceFile, serialized);
+
+            return result;
         }
 
-        internal static async Task<ReferenceFileData> ReadData(StorageFile referenceFile)
+        internal static async Task<SafeWrapper<ReferenceFileData>> ReadData(StorageFile referenceFile)
         {
-            string data = await FileIO.ReadTextAsync(referenceFile);
+            SafeWrapper<string> data = await FilesystemOperations.ReadFileText(referenceFile);
+
+            if (!data)
+            {
+                return new SafeWrapper<ReferenceFileData>(null, data.Details);
+            }
+
             ReferenceFileData referenceFileData = JsonConvert.DeserializeObject<ReferenceFileData>(data);
 
-            return referenceFileData;
+            return new SafeWrapper<ReferenceFileData>(referenceFileData, SafeWrapperResult.S_SUCCESS);
         }
 
         public static async Task<ReferenceFile> GetFile(StorageFile referenceFile)
@@ -59,22 +67,22 @@ namespace ClipboardCanvas.ReferenceItems
                 };
             }
 
-            ReferenceFileData referenceFileData = await ReadData(referenceFile);
+            SafeWrapper<ReferenceFileData> referenceFileData = await ReadData(referenceFile);
 
             return await GetFile(referenceFile, referenceFileData);
         }
 
-        public static async Task<ReferenceFile> GetFile(StorageFile referenceFile, ReferenceFileData referenceFileData)
+        public static async Task<ReferenceFile> GetFile(StorageFile referenceFile, SafeWrapper<ReferenceFileData> referenceFileData)
         {
-            if (referenceFileData == null || string.IsNullOrEmpty(referenceFileData.path))
+            if (!referenceFileData || string.IsNullOrEmpty(referenceFileData.Result?.path))
             {
                 return new ReferenceFile(referenceFile, null)
                 {
-                    LastError = new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentNullException(), "The Reference File data is corrupt.")
+                    LastError = referenceFileData
                 };
             }
 
-            SafeWrapper<IStorageItem> file = await StorageHelpers.ToStorageItemWithError<IStorageItem>(referenceFileData.path);
+            SafeWrapper<IStorageItem> file = await StorageHelpers.ToStorageItemWithError<IStorageItem>(referenceFileData.Result.path);
 
             if (!file)
             {

@@ -1,11 +1,11 @@
-﻿using ClipboardCanvas.Enums;
-using ClipboardCanvas.Helpers.SafetyHelpers;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.Storage.Streams;
+
+using ClipboardCanvas.Enums;
+using ClipboardCanvas.Helpers.SafetyHelpers;
 
 namespace ClipboardCanvas.Helpers.Filesystem
 {
@@ -41,6 +41,20 @@ namespace ClipboardCanvas.Helpers.Filesystem
                     }
                 }
             }
+
+            return result;
+        }
+
+        public static async Task<SafeWrapper<string>> ReadFileText(IStorageFile file)
+        {
+            SafeWrapper<string> result = await SafeWrapperRoutines.SafeWrapAsync(() => FileIO.ReadTextAsync(file).AsTask());
+
+            return result;
+        }
+
+        public static async Task<SafeWrapperResult> WriteFileText(IStorageFile file, string text)
+        {
+            SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(() => FileIO.WriteTextAsync(file, text).AsTask());
 
             return result;
         }

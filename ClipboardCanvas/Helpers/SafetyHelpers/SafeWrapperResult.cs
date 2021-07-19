@@ -5,7 +5,7 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
 {
     public class SafeWrapperResult
     {
-        public static SafeWrapperResult S_SUCCESS => new SafeWrapperResult(OperationErrorCode.Success, null, "Operation completed successfully.");
+        public static readonly SafeWrapperResult S_SUCCESS = new SafeWrapperResult(OperationErrorCode.Success, null, "Operation completed successfully.");
 
         public static SafeWrapperResult S_CANCEL => new SafeWrapperResult(OperationErrorCode.Cancelled, "The operation was canceled.");
 

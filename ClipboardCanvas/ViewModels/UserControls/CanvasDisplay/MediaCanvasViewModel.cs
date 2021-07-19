@@ -82,7 +82,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Override
 
-        public override async Task<SafeWrapperResult> TryLoadExistingData(ICollectionItemModel itemData, CancellationToken cancellationToken)
+        public override async Task<SafeWrapperResult> TryLoadExistingData(CollectionItemViewModel itemData, CancellationToken cancellationToken)
         {
             SafeWrapperResult result = await base.TryLoadExistingData(itemData, cancellationToken);
 
@@ -104,28 +104,28 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
-        protected override async Task<SafeWrapperResult> SetData(IStorageItem item)
+        protected override async Task<SafeWrapperResult> SetDataFromExistingFile(IStorageItem item)
         {
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
-        protected override async Task<SafeWrapper<StorageFile>> TrySetFileWithExtension()
+        protected override async Task<SafeWrapper<CollectionItemViewModel>> TrySetFileWithExtension()
         {
-            return await Task.FromResult(new SafeWrapper<StorageFile>(associatedItem as StorageFile, SafeWrapperResult.S_SUCCESS));
+            return await Task.FromResult(new SafeWrapper<CollectionItemViewModel>(null, SafeWrapperResult.S_SUCCESS));
         }
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()
         {
             ContentMediaLoad = true;
-            ContentMedia = MediaSource.CreateFromStorageFile(sourceFile);
+            ContentMedia = MediaSource.CreateFromStorageFile(await sourceFile);
 
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
-        protected override void OnReferencePasted()
+        protected override async Task OnReferencePasted()
         {
             // Change the source
-            _ContentMedia = MediaSource.CreateFromStorageFile(sourceFile);
+            _ContentMedia = MediaSource.CreateFromStorageFile(await sourceFile);
         }
 
         #endregion

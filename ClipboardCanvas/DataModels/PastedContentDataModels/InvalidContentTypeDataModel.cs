@@ -8,6 +8,11 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
 
         public readonly bool needsReinitialization;
 
+        public InvalidContentTypeDataModel(SafeWrapperResult error)
+            : this(error, false)
+        {
+        }
+
         public InvalidContentTypeDataModel(SafeWrapperResult error, bool needsReinitialization)
         {
             this.error = error;

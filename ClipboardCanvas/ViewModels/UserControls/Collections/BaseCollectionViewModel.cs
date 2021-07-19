@@ -198,23 +198,39 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         #region ICollectionModel
 
-        public async Task<SafeWrapper<StorageFile>> GetOrCreateNewCollectionFileFromExtension(string extension)
+        public async Task<SafeWrapper<CollectionItemViewModel>> CreateNewCollectionItemFromExtension(string extension)
         {
             string fileName = DateTime.Now.ToString("dd.mm.yyyy HH_mm_ss");
             fileName = $"{fileName}{extension}";
 
-            return await GetOrCreateNewCollectionFile(fileName);
+            return await CreateNewCollectionItemFromFilename(fileName);
         }
 
-        public async Task<SafeWrapper<StorageFile>> GetOrCreateNewCollectionFile(string fileName)
+        public async Task<SafeWrapper<CollectionItemViewModel>> CreateNewCollectionItemFromFilename(string fileName)
         {
             if (collectionFolder == null)
             {
-                return new SafeWrapper<StorageFile>(null, s_CollectionFolderNotFound);
+                return new SafeWrapper<CollectionItemViewModel>(null, s_CollectionFolderNotFound);
             }
 
             SafeWrapper<StorageFile> file = await FilesystemOperations.CreateFile(collectionFolder, fileName);
-            return file;
+
+            var item = new CollectionItemViewModel(file.Result);
+            AddCollectionItem(item);
+
+            return new SafeWrapper<CollectionItemViewModel>(item, file.Details);
+        }
+
+        public async Task<SafeWrapperResult> DeleteCollectionItem(CollectionItemViewModel itemToDelete, bool permanently = true)
+        {
+            SafeWrapperResult result = await FilesystemOperations.DeleteItem(itemToDelete.Item, permanently);
+
+            if (result)
+            {
+                RemoveCollectionItem(itemToDelete);
+            }
+
+            return result;
         }
 
         public virtual void NavigateFirst(ICanvasPreviewModel pasteCanvasModel)
@@ -304,10 +320,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public abstract bool CheckCollectionAvailability();
 
-        public virtual async Task LoadCanvasFromCollection(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken, ICollectionItemModel collectionItemModel = null)
+        public virtual async Task LoadCanvasFromCollection(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken, CollectionItemViewModel collectionItemViewModel = null)
         {
             // You can only load existing data
-            if (CollectionItems.IsEmpty() || (canvasNavigationDirection == CanvasNavigationDirection.Forward && (IsOnNewCanvas && collectionItemModel == null)))
+            if (CollectionItems.IsEmpty() || (canvasNavigationDirection == CanvasNavigationDirection.Forward && (IsOnNewCanvas && collectionItemViewModel == null)))
             {
                 OnOpenNewCanvasRequestedEvent?.Invoke(this, new OpenNewCanvasRequestedEventArgs());
                 return;
@@ -316,17 +332,17 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             {
                 currentIndex = Extensions.CollectionExtensions.IndexFitBounds(CollectionItems.Count, currentIndex);
 
-                if (collectionItemModel == null)
+                if (collectionItemViewModel == null)
                 {
-                    collectionItemModel = CollectionItems[currentIndex];
+                    collectionItemViewModel = CollectionItems[currentIndex];
                 }
                 else
                 {
-                    int providedCollectionItemModelIndex = CollectionItems.IndexOf(collectionItemModel as CollectionItemViewModel);
+                    int providedCollectionItemModelIndex = CollectionItems.IndexOf(collectionItemViewModel);
                     currentIndex = providedCollectionItemModelIndex;
                 }
 
-                SafeWrapperResult result = await pasteCanvasModel.TryLoadExistingData(collectionItemModel, cancellationToken);
+                SafeWrapperResult result = await pasteCanvasModel.TryLoadExistingData(collectionItemViewModel, cancellationToken);
 
                 if (result == OperationErrorCode.NotFound && result.Exception is not ReferencedFileNotFoundException) // A canvas is missing, meaning we need to reload all other items
                 {
@@ -370,15 +386,19 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                     }
                     else
                     {
-                        int providedCollectionItemModelIndex = CollectionItems.IndexOf(collectionItemModel as CollectionItemViewModel);
+                        int providedCollectionItemModelIndex = CollectionItems.IndexOf(collectionItemViewModel as CollectionItemViewModel);
                         if (providedCollectionItemModelIndex != -1)
                         {
                             currentIndex = providedCollectionItemModelIndex;
                         }
-                        collectionItemModel = CollectionItems[currentIndex];
 
-                        // Load canvas again
-                        result = await pasteCanvasModel.TryLoadExistingData(collectionItemModel, cancellationToken);
+                        if (currentIndex < CollectionItems.Count)
+                        {
+                            collectionItemViewModel = CollectionItems[currentIndex];
+
+                            // Load canvas again
+                            result = await pasteCanvasModel.TryLoadExistingData(collectionItemViewModel, cancellationToken);
+                        }
                     }
                 }
                 else if (result.ErrorCode == OperationErrorCode.InvalidOperation)

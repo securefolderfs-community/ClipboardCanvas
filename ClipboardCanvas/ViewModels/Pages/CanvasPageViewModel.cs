@@ -26,6 +26,7 @@ using ClipboardCanvas.ReferenceItems;
 using System.Runtime.CompilerServices;
 using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.ViewModels.UserControls.CanvasPreview;
+using ClipboardCanvas.DataModels.PastedContentDataModels;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {

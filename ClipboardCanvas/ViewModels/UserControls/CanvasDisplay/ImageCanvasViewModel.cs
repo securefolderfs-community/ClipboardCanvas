@@ -14,7 +14,6 @@ using ClipboardCanvas.Extensions;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.Helpers;
-using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.EventArguments.CanvasControl;
@@ -102,7 +101,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             BitmapEncoder encoder = null;
             result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
             {
-                using (IRandomAccessStream fileStream = await sourceFile.OpenAsync(FileAccessMode.ReadWrite))
+            using (IRandomAccessStream fileStream = await (await sourceFile).OpenAsync(FileAccessMode.ReadWrite))
                 {
                     encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
 
@@ -121,7 +120,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 {
                     if (hresult == WINCODEC_ERR_UNSUPPORTEDOPERATION)
                     {
-                        using (IRandomAccessStream fileStream = await sourceFile.OpenAsync(FileAccessMode.ReadWrite))
+                        using (IRandomAccessStream fileStream = await (await sourceFile).OpenAsync(FileAccessMode.ReadWrite))
                         {
                             encoder.IsThumbnailGenerated = false;
 
@@ -133,7 +132,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (result)
             {
-                RaiseOnFileModifiedEvent(this, new FileModifiedEventArgs(sourceFile));
+                RaiseOnFileModifiedEvent(this, new FileModifiedEventArgs(await sourceFile));
             }
 
             return result;
@@ -202,7 +201,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
         }
 
-        protected override async Task<SafeWrapperResult> SetData(IStorageItem item)
+        protected override async Task<SafeWrapperResult> SetDataFromExistingFile(IStorageItem item)
         {
             SafeWrapperResult result;
             StorageFile file = item as StorageFile;
@@ -236,11 +235,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return result;
         }
 
-        protected override async Task<SafeWrapper<StorageFile>> TrySetFileWithExtension()
+        protected override async Task<SafeWrapper<CollectionItemViewModel>> TrySetFileWithExtension()
         {
-            SafeWrapper<StorageFile> file = await associatedCollection.GetOrCreateNewCollectionFileFromExtension(".png");
+            SafeWrapper<CollectionItemViewModel> itemViewModel = await associatedCollection.CreateNewCollectionItemFromExtension(".png");
 
-            return file;
+            return itemViewModel;
         }
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()
@@ -271,9 +270,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Public Helpers
 
-        public IReadOnlyList<IStorageItem> ProvideDragData()
+        public async Task<IReadOnlyList<IStorageItem>> ProvideDragData()
         {
-            return new List<IStorageItem>() { sourceItem };
+            return new List<IStorageItem>() { await sourceItem };
         }
 
         #endregion

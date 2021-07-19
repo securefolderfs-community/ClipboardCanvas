@@ -5,25 +5,17 @@ using Windows.Storage;
 using System.Threading.Tasks;
 
 using ClipboardCanvas.Models;
-using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.DataModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
-    public class CollectionItemViewModel : ICollectionItemModel
+    public class CollectionItemViewModel : CanvasFile, ICollectionItemModel
     {
-        #region Private Members
-
-        private IStorageItem _sourceItem;
-
-        #endregion
-
         #region Public Properties
 
         public IStorageItem Item { get; private set; }
-
-        public Task<IStorageItem> SourceItem => GetSourceItem();
 
         public BasePastedContentTypeDataModel ContentType { get; set; }
 
@@ -37,8 +29,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
         }
 
         public CollectionItemViewModel(IStorageItem item, BasePastedContentTypeDataModel contentType)
+            : base(item)
         {
-            DangerousUpdateFile(item);
+            this.Item = item;
+            this.sourceItem = null;
             this.ContentType = contentType;
         }
 
@@ -97,41 +91,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
                 await Launcher.LaunchFolderAsync(parentFolder, launcherOptions);
             }
-        }
-
-        public void DangerousUpdateFile(IStorageItem item)
-        {
-            this.Item = item;
-            this._sourceItem = null;
-        }
-
-        #endregion
-
-        #region Private Helpers
-
-        private async Task<IStorageItem> GetSourceItem()
-        {
-            if (_sourceItem != null)
-            {
-                return _sourceItem;
-            }
-
-            if (Item is StorageFile file && ReferenceFile.IsReferenceFile(file))
-            {
-                ReferenceFile referenceFile = await ReferenceFile.GetFile(file);
-                _sourceItem = referenceFile.ReferencedItem;
-                
-                if (_sourceItem == null)
-                {
-                    _sourceItem = Item;
-                }
-            }
-            else
-            {
-                _sourceItem = Item;
-            }
-
-            return _sourceItem;
         }
 
         #endregion

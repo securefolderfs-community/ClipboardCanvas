@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-
+using ClipboardCanvas.DataModels;
+using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.ContextMenu;
+using ClipboardCanvas.ViewModels.UserControls;
 
 namespace ClipboardCanvas.Models
 {
@@ -35,7 +37,10 @@ namespace ClipboardCanvas.Models
         /// Attempts to load existing data to display
         /// </summary>
         /// <param name="itemData"></param>
-        Task<SafeWrapperResult> TryLoadExistingData(ICollectionItemModel itemData, CancellationToken cancellationToken);
+        Task<SafeWrapperResult> TryLoadExistingData(CollectionItemViewModel itemData, CancellationToken cancellationToken);
+
+        /// <inheritdoc cref="TryLoadExistingData(CollectionItemViewModel, CancellationToken)"/>
+        Task<SafeWrapperResult> TryLoadExistingData(CanvasFile canvasFile, BasePastedContentTypeDataModel contentType, CancellationToken cancellationToken);
 
         /// <summary>
         /// Attempts to delete the file and discard data
@@ -54,6 +59,6 @@ namespace ClipboardCanvas.Models
         /// Sets the data to clipboard determined
         /// </summary>
         /// <returns></returns>
-        bool SetDataToClipboard();
+        Task<bool> SetDataToClipboard();
     }
 }

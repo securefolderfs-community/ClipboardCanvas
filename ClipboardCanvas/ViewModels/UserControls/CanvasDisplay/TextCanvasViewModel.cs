@@ -62,35 +62,30 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return (SafeWrapperResult)text;
         }
 
-        protected override async Task<SafeWrapperResult> SetData(IStorageItem item)
+        protected override async Task<SafeWrapperResult> SetDataFromExistingFile(IStorageItem item)
         {
             if (item is not StorageFile file)
             {
                 return ItemIsNotAFileResult;
             }
 
-            SafeWrapper<string> text = await SafeWrapperRoutines.SafeWrapAsync(async () => await FileIO.ReadTextAsync(file));
+            SafeWrapper<string> text = await FilesystemOperations.ReadFileText(file);
 
             this._ContentText = text;
 
             return text;
         }
 
-        protected override async Task<SafeWrapper<StorageFile>> TrySetFileWithExtension()
+        protected override async Task<SafeWrapper<CollectionItemViewModel>> TrySetFileWithExtension()
         {
-            SafeWrapper<StorageFile> file;
+            SafeWrapper<CollectionItemViewModel> itemViewModel = await associatedCollection.CreateNewCollectionItemFromExtension(".txt");
 
-            file = await associatedCollection.GetOrCreateNewCollectionFileFromExtension(".txt");
-
-            return file;
+            return itemViewModel;
         }
 
         public override async Task<SafeWrapperResult> TrySaveData()
         {
-            SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
-            {
-                await FileIO.WriteTextAsync(sourceFile, ContentText);
-            }, errorReporter);
+            SafeWrapperResult result = await FilesystemOperations.WriteFileText(await sourceFile, ContentText);
 
             return result;
         }
@@ -152,8 +147,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             try
             {
                 // Check if file is binary
-                string text = await FileIO.ReadTextAsync(file);
-                if (text.Contains("\0\0\0\0"))
+                string text = await FilesystemOperations.ReadFileText(file);
+                if (text?.Contains("\0\0\0\0") ?? false)
                 {
                     return false;
                 }

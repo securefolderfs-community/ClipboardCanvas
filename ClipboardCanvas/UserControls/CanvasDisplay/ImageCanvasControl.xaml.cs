@@ -21,9 +21,9 @@ namespace ClipboardCanvas.UserControls.CanvasDisplay
         }
 
         // TODO: Move to ViewModel
-        private void Image_DragStarting(Windows.UI.Xaml.UIElement sender, Windows.UI.Xaml.DragStartingEventArgs args)
+        private async void Image_DragStarting(Windows.UI.Xaml.UIElement sender, Windows.UI.Xaml.DragStartingEventArgs args)
         {
-            IReadOnlyList<IStorageItem> dragData = ViewModel.ProvideDragData();
+            IReadOnlyList<IStorageItem> dragData = await ViewModel.ProvideDragData();
 
             args.Data.SetStorageItems(dragData);
         }

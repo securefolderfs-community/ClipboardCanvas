@@ -30,9 +30,11 @@ namespace ClipboardCanvas.Models
 
         CollectionItemViewModel CurrentCollectionItemViewModel { get; }
 
-        Task<SafeWrapper<StorageFile>> GetOrCreateNewCollectionFileFromExtension(string extension);
+        Task<SafeWrapper<CollectionItemViewModel>> CreateNewCollectionItemFromExtension(string extension);
 
-        Task<SafeWrapper<StorageFile>> GetOrCreateNewCollectionFile(string fileName);
+        Task<SafeWrapper<CollectionItemViewModel>> CreateNewCollectionItemFromFilename(string fileName);
+
+        Task<SafeWrapperResult> DeleteCollectionItem(CollectionItemViewModel itemToDelete, bool permanently);
 
         /// <summary>
         /// Navigates to new canvas
@@ -62,13 +64,7 @@ namespace ClipboardCanvas.Models
         /// <param name="pasteCanvasModel"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task LoadCanvasFromCollection(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken, ICollectionItemModel collectionItemModel = null);
-
-        /// <summary>
-        /// Manually adds item to collection
-        /// </summary>
-        /// <param name="collectionItemViewModel"></param>
-        void AddCollectionItem(CollectionItemViewModel collectionItemViewModel);
+        Task LoadCanvasFromCollection(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken, CollectionItemViewModel collectionItemViewModel = null);
 
         /// <summary>
         /// Manually removes item from collection

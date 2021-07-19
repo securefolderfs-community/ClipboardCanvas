@@ -362,7 +362,7 @@ namespace ClipboardCanvas.ViewModels.Pages
         {
             if (_associatedCollectionModel.CurrentCollectionItemViewModel != null)
             {
-                SelectedItem = Items.FirstOrDefault((item) => item.CollectionItemModel == _associatedCollectionModel.CurrentCollectionItemViewModel);
+                SelectedItem = Items.FirstOrDefault((item) => item.CollectionItemViewModel == _associatedCollectionModel.CurrentCollectionItemViewModel);
 
                 _view?.ScrollIntoItemView(SelectedItem);
             }

@@ -12,6 +12,7 @@ using ClipboardCanvas.Models;
 using ClipboardCanvas.Models.Implementation;
 using ClipboardCanvas.ViewModels.Pages;
 using System.Diagnostics;
+using ClipboardCanvas.ViewModels.UserControls;
 
 namespace ClipboardCanvas.ViewModels
 {
@@ -51,7 +52,7 @@ namespace ClipboardCanvas.ViewModels
 
         public ICollectionModel CollectionModel { get; private set; }
 
-        public ICollectionItemModel CollectionItemModel { get; private set; }
+        public CollectionItemViewModel CollectionItemViewModel { get; private set; }
 
         #endregion
 
@@ -78,7 +79,7 @@ namespace ClipboardCanvas.ViewModels
         {
             if (_loadRequested)
             {
-                await SimpleCanvasPreviewModel.TryLoadExistingData(CollectionItemModel, CollectionPreviewPageViewModel.LoadCancellationToken.Token);
+                await SimpleCanvasPreviewModel.TryLoadExistingData(CollectionItemViewModel, CollectionPreviewPageViewModel.LoadCancellationToken.Token);
                 IsCanvasPreviewVisible = true;
                 Debug.WriteLine("LOADED VIA LOAD");
             }
@@ -99,21 +100,21 @@ namespace ClipboardCanvas.ViewModels
                 return;
             }
 
-            await SimpleCanvasPreviewModel.TryLoadExistingData(CollectionItemModel, CollectionPreviewPageViewModel.LoadCancellationToken.Token);
+            await SimpleCanvasPreviewModel.TryLoadExistingData(CollectionItemViewModel, CollectionPreviewPageViewModel.LoadCancellationToken.Token);
             Debug.WriteLine("LOADED VIA REQUEST");
         }
 
-        public static async Task<CollectionPreviewItemViewModel> GetCollectionPreviewItemModel(ICollectionModel collectionModel, ICollectionItemModel collectionItemModel)
+        public static async Task<CollectionPreviewItemViewModel> GetCollectionPreviewItemModel(ICollectionModel collectionModel, CollectionItemViewModel collectionItemViewModel)
         {
             CollectionPreviewItemViewModel viewModel = new CollectionPreviewItemViewModel()
             {
                 CollectionModel = collectionModel,
-                CollectionItemModel = collectionItemModel
+                CollectionItemViewModel = collectionItemViewModel
             };
 
-            IStorageItem sourceItem = await collectionItemModel.SourceItem;
+            IStorageItem sourceItem = await collectionItemViewModel.SourceItem;
 
-            viewModel.DisplayName = Path.GetFileName(sourceItem.Path);
+            viewModel.DisplayName = Path.GetFileName(sourceItem != null ? sourceItem.Path : collectionItemViewModel.Item?.Path);
 
             return viewModel;
         }

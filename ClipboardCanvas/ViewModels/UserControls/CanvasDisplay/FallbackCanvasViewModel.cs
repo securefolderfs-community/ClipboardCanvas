@@ -78,7 +78,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
-        protected override async Task<SafeWrapperResult> SetData(IStorageItem item)
+        protected override async Task<SafeWrapperResult> SetDataFromExistingFile(IStorageItem item)
         {
             // Read file properties
             if (item is StorageFile file)
@@ -111,7 +111,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 // It was an item, otherwise SetData() is called
 
-                return await SetData(sourceFile as StorageFile);
+                return await SetDataFromExistingFile(await sourceFile);
             }
 
             return result;
@@ -133,18 +133,18 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
         }
 
-        protected override async Task<SafeWrapper<StorageFile>> TrySetFileWithExtension()
+        protected override async Task<SafeWrapper<CollectionItemViewModel>> TrySetFileWithExtension()
         {
-            return await Task.FromResult(new SafeWrapper<StorageFile>(associatedFile, SafeWrapperResult.S_SUCCESS));
+            return await Task.FromResult(new SafeWrapper<CollectionItemViewModel>(null, SafeWrapperResult.S_SUCCESS));
         }
 
         #endregion
 
         #region Public Helpers
 
-        public IReadOnlyList<IStorageItem> ProvideDragData()
+        public async Task<IReadOnlyList<IStorageItem>> ProvideDragData()
         {
-            return new List<IStorageItem>() { sourceFile };
+            return new List<IStorageItem>() { await sourceFile };
         }
 
         #endregion

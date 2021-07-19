@@ -113,17 +113,17 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (_mode == WebViewCanvasMode.ReadWebsite)
             {
-                result = await SafeWrapperRoutines.SafeWrapAsync(() => FileIO.WriteTextAsync(associatedFile, Source).AsTask());
+                result = await FilesystemOperations.WriteFileText(associatedFile, Source);
             }
             else
             {
-                result = await SafeWrapperRoutines.SafeWrapAsync(() => FileIO.WriteTextAsync(associatedFile, TextHtml).AsTask());
+                result = await FilesystemOperations.WriteFileText(associatedFile, TextHtml);
             }
 
             return result;
         }
 
-        protected override async Task<SafeWrapperResult> SetData(IStorageItem item)
+        protected override async Task<SafeWrapperResult> SetDataFromExistingFile(IStorageItem item)
         {
             StorageFile file = item as StorageFile;
             if (file == null)
@@ -145,20 +145,20 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return await Task.FromResult(text);
         }
 
-        protected override async Task<SafeWrapper<StorageFile>> TrySetFileWithExtension()
+        protected override async Task<SafeWrapper<CollectionItemViewModel>> TrySetFileWithExtension()
         {
-            SafeWrapper<StorageFile> file;
+            SafeWrapper<CollectionItemViewModel> itemViewModel;
 
             if (_mode == WebViewCanvasMode.ReadWebsite)
             {
-                file = await associatedCollection.GetOrCreateNewCollectionFileFromExtension(Constants.FileSystem.WEBSITE_LINK_FILE_EXTENSION);
+                itemViewModel = await associatedCollection.CreateNewCollectionItemFromExtension(Constants.FileSystem.WEBSITE_LINK_FILE_EXTENSION);
             }
             else
             {
-                file = await associatedCollection.GetOrCreateNewCollectionFileFromExtension(".html");
+                itemViewModel = await associatedCollection.CreateNewCollectionItemFromExtension(".html");
             }
 
-            return file;
+            return itemViewModel;
         }
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()

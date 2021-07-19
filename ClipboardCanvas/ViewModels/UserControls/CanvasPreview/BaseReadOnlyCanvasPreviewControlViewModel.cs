@@ -14,6 +14,7 @@ using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
+using ClipboardCanvas.DataModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 {
@@ -22,11 +23,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
     {
         #region Protected Members
 
-        protected ICollectionModel associatedContainer => view?.CollectionModel;
+        protected ICollectionModel collectionModel => view?.CollectionModel;
+
+        protected CollectionItemViewModel collectionItemViewModel;
 
         protected readonly IBaseCanvasPreviewControlView view;
 
-        protected IStorageItem associatedItem;
+        protected IStorageItem associatedItem => collectionItemViewModel.AssociatedItem;
 
         protected SafeWrapperResult CanvasNullResult => new SafeWrapperResult(OperationErrorCode.InvalidArgument, new NullReferenceException(), "Invalid Canvas.");
 
@@ -78,15 +81,30 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         #region IReadOnlyCanvasPreviewModel
 
-        public virtual async Task<SafeWrapperResult> TryLoadExistingData(ICollectionItemModel itemData, CancellationToken cancellationToken)
+        public virtual async Task<SafeWrapperResult> TryLoadExistingData(CollectionItemViewModel itemData, CancellationToken cancellationToken)
         {
-            this.associatedItem = itemData.Item;
+            this.collectionItemViewModel = itemData;
 
-            SafeWrapperResult result = await InitializeViewModelFromCollectionItem(itemData);
+            SafeWrapperResult result = await InitializeViewModelFromCollectionItem(itemData, itemData.ContentType);
 
             if (result && CanvasViewModel != null)
             {
                 return await CanvasViewModel.TryLoadExistingData(itemData, cancellationToken);
+            }
+            else
+            {
+                OnErrorOccurredEvent?.Invoke(this, new ErrorOccurredEventArgs(result, result.Message));
+                return result;
+            }
+        }
+
+        public virtual async Task<SafeWrapperResult> TryLoadExistingData(CanvasFile canvasFile, BasePastedContentTypeDataModel contentType, CancellationToken cancellationToken)
+        {
+            SafeWrapperResult result = await InitializeViewModelFromCollectionItem(canvasFile, contentType);
+
+            if (result && CanvasViewModel != null)
+            {
+                return await CanvasViewModel.TryLoadExistingData(canvasFile, contentType, cancellationToken);
             }
             else
             {
@@ -100,7 +118,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             if (CanvasViewModel == null)
             {
                 // The canvas is null, delete the reference file manually
-                SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(associatedItem, hideConfirmation);
+                SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(collectionModel, collectionItemViewModel, hideConfirmation);
 
                 if (result != OperationErrorCode.Cancelled && !result)
                 {
@@ -109,7 +127,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
                 }
                 else if (result != OperationErrorCode.Cancelled)
                 {
-                    associatedContainer.RemoveCollectionItem(associatedContainer.CurrentCollectionItemViewModel);
                     OnFileDeletedEvent?.Invoke(this, new FileDeletedEventArgs(associatedItem));
                 }
 
@@ -126,16 +143,21 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             CanvasViewModel?.DiscardData();
         }
 
-        public virtual bool SetDataToClipboard()
+        public virtual async Task<bool> SetDataToClipboard()
         {
-            return CanvasViewModel?.SetDataToClipboard() ?? false;
+            if (CanvasViewModel == null)
+            {
+                return false;
+            }
+
+            return await CanvasViewModel.SetDataToClipboard();
         }
 
         #endregion
 
         #region Protected Helpers
 
-        protected virtual async Task<SafeWrapperResult> InitializeViewModelFromCollectionItem(ICollectionItemModel collectionItemModel)
+        protected virtual async Task<SafeWrapperResult> InitializeViewModelFromCollectionItem(CanvasFile canvasFile, BasePastedContentTypeDataModel contentType)
         {
             // Clear leftover data
             DiscardData();
@@ -143,18 +165,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             // TODO: Add support for adding previews from extensions
 
             // Decide content type
-            BasePastedContentTypeDataModel contentType = await BasePastedContentTypeDataModel.GetContentType(collectionItemModel.Item, collectionItemModel.ContentType);
+            contentType = await BasePastedContentTypeDataModel.GetContentType(canvasFile, contentType);
 
             // Check if contentType is InvalidContentTypeDataModel
             if (contentType is InvalidContentTypeDataModel invalidContentType)
             {
                 return invalidContentType.error;
-            }
-
-            // If containerItemModel.ContentType was null, assign it to reuse it later
-            if (collectionItemModel.ContentType == null)
-            {
-                collectionItemModel.ContentType = contentType;
             }
 
             return InitializeViewModelFromContentType(contentType) ? SafeWrapperResult.S_SUCCESS : new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Couldn't display content for this file");

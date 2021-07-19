@@ -20,15 +20,5 @@ namespace ClipboardCanvas.Models
         Task OpenContainingFolder();
 
         Task OpenContainingFolder(bool checkForReference);
-
-        /// <summary>
-        /// Updates <see cref="Item"/> with new <paramref name="item"/> and also updates <see cref="SourceItem"/>
-        /// <br/><br/>
-        /// Note:
-        /// <br/>
-        /// This function is considered as *dangerous* since calling it may yield unexpected results
-        /// </summary>
-        /// <param name="item">New item to replace the old one with</param>
-        void DangerousUpdateFile(IStorageItem item);
     }
 }

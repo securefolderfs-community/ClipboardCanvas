@@ -7,6 +7,7 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
+using ClipboardCanvas.Helpers.Filesystem;
 
 namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
 {
@@ -34,14 +35,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
 
         #region Override
 
-        protected override async Task<SafeWrapperResult> SetData(IStorageItem item)
+        protected override async Task<SafeWrapperResult> SetDataFromExistingFile(IStorageItem item)
         {
             if (item is not StorageFile file)
             {
                 return ItemIsNotAFileResult;
             }
 
-            SafeWrapper<string> text = await SafeWrapperRoutines.SafeWrapAsync(async () => await FileIO.ReadTextAsync(file));
+            SafeWrapper<string> text = await FilesystemOperations.ReadFileText(file);
 
             this._ContentText = text;
 

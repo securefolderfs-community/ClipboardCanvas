@@ -47,7 +47,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         public async Task<SafeWrapperResult> TryPasteData(DataPackageView dataPackage, CancellationToken cancellationToken)
         {
-            SafeWrapperResult result = await InitializeViewModelAndPaste(dataPackage, cancellationToken);
+            BasePastedContentTypeDataModel contentType = await BasePastedContentTypeDataModel.GetContentTypeFromDataPackage(dataPackage);
+
+            SafeWrapperResult result = await InitializeViewModelAndPaste(dataPackage, contentType, cancellationToken);
 
             if (!result)
             {
@@ -101,107 +103,29 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
         /// </summary>
         /// <param name="dataPackage"></param>
         /// <returns></returns>
-        protected virtual async Task<SafeWrapperResult> InitializeViewModelAndPaste(DataPackageView dataPackage, CancellationToken cancellationToken)
+        protected virtual async Task<SafeWrapperResult> InitializeViewModelAndPaste(DataPackageView dataPackage, BasePastedContentTypeDataModel contentType, CancellationToken cancellationToken)
         {
             // Decide content type and initialize view model
 
             // Discard any left over data if we're already pasting to canvas that is filled
             DiscardData();
 
-            // From raw clipboard data
-            if (dataPackage.Contains(StandardDataFormats.Bitmap))
+            if (contentType is InvalidContentTypeDataModel invalidContentType)
             {
-                // Image
-                InitializeViewModel(() => new ImageCanvasViewModel(view));
-            }
-            else if (dataPackage.Contains(StandardDataFormats.Text))
-            {
-                SafeWrapper<string> text = await SafeWrapperRoutines.SafeWrapAsync(() => dataPackage.GetTextAsync().AsTask());
-
-                if (!text)
-                {
-                    Debugger.Break(); // What!?
-                    return new SafeWrapperResult(OperationErrorCode.AccessUnauthorized, "Couldn't retrieve clipboard data");
-                }
-
-                // Check if it's url
-                if (StringHelpers.IsUrl(text))
-                {
-                    // The url may point to file
-                    if (StringHelpers.IsUrlFile(text))
-                    {
-                        // Image
-                        InitializeViewModel(() => new ImageCanvasViewModel(view));
-                    }
-                    else
-                    {
-                        // Webpage link
-                        //InitializeViewModel(() => new WebViewCanvasViewModel(_view, WebViewCanvasMode.ReadWebsite, CanvasPreviewMode.InteractionAndPreview));
-                        if (App.AppSettings.UserSettings.PrioritizeMarkdownOverText)
-                        {
-                            // Markdown
-                            InitializeViewModel(() => new MarkdownCanvasViewModel(view));
-                        }
-                        else
-                        {
-                            // Normal text
-                            InitializeViewModel(() => new TextCanvasViewModel(view));
-                        }
-                    }
-                }
-                else
-                {
-                    if (App.AppSettings.UserSettings.PrioritizeMarkdownOverText)
-                    {
-                        // Markdown
-                        InitializeViewModel(() => new MarkdownCanvasViewModel(view));
-                    }
-                    else
-                    {
-                        // Normal text
-                        InitializeViewModel(() => new TextCanvasViewModel(view));
-                    }
-                }
-            }
-            else if (dataPackage.Contains(StandardDataFormats.StorageItems)) // From clipboard storage items
-            {
-                IReadOnlyList<IStorageItem> items = await dataPackage.GetStorageItemsAsync();
-
-                if (items.Count > 1)
-                {
-                    // TODO: More than one item, paste in Boundless Canvas
-                }
-                else if (items.Count == 1)
-                {
-                    // One item, decide view model for it
-                    IStorageItem item = items.First();
-
-                    BasePastedContentTypeDataModel contentType = await BasePastedContentTypeDataModel.GetContentType(item, null);
-                    if (contentType is InvalidContentTypeDataModel)
-                    {
-                        return new SafeWrapperResult(OperationErrorCode.NotFound, "Couldn't get content type for provided data");
-                    }
-
-                    InitializeViewModelFromContentType(contentType);
-                }
-                else
-                {
-                    // No items
-                    return new SafeWrapperResult(OperationErrorCode.AccessUnauthorized, "Couldn't retrieve clipboard data");
-                }
+                return invalidContentType.error;
             }
 
-            if (CanvasViewModel == null)
-            {
-                return new SafeWrapperResult(OperationErrorCode.AccessUnauthorized, "Couldn't retrieve clipboard data");
-            }
-            else
+            if (InitializeViewModelFromContentType(contentType))
             {
                 RaiseOnProgressReportedEvent(this, new ProgressReportedEventArgs(0.0f, true, CanvasPageProgressType.MainCanvasProgressBar));
                 SafeWrapperResult result = await CanvasViewModel.TryPasteData(dataPackage, cancellationToken);
                 RaiseOnProgressReportedEvent(this, new ProgressReportedEventArgs(100.0f, true, CanvasPageProgressType.MainCanvasProgressBar));
 
                 return result;
+            }
+            else
+            {
+                return new SafeWrapperResult(OperationErrorCode.AccessUnauthorized, null, "Cannot paste data.");
             }
         }
 
