@@ -74,7 +74,6 @@ namespace ClipboardCanvas.ViewModels
 
         #region Command Implementation
 
-
         private async void SimpleCanvasLoaded(RoutedEventArgs e)
         {
             if (_loadRequested)
@@ -94,14 +93,29 @@ namespace ClipboardCanvas.ViewModels
 
         public async Task RequestCanvasLoad()
         {
+            await Task.Delay(100);
+
             if (SimpleCanvasPreviewModel == null)
             {
                 _loadRequested = true;
                 return;
             }
 
+            SimpleCanvasPreviewModel.DiscardData();
             await SimpleCanvasPreviewModel.TryLoadExistingData(CollectionItemViewModel, CollectionPreviewPageViewModel.LoadCancellationToken.Token);
-            Debug.WriteLine("LOADED VIA REQUEST");
+        }
+
+        public async Task RequestCanvasUnload()
+        {
+            await Task.Delay(100);
+
+            if (SimpleCanvasPreviewModel == null)
+            {
+                Debugger.Break();
+                return;
+            }
+
+            SimpleCanvasPreviewModel.DiscardData();
         }
 
         public static async Task<CollectionPreviewItemViewModel> GetCollectionPreviewItemModel(ICollectionModel collectionModel, CollectionItemViewModel collectionItemViewModel)

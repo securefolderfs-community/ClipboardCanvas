@@ -63,7 +63,7 @@ namespace ClipboardCanvas.Pages
 
         public void PrepareConnectedAnimation(int itemIndex)
         {
-            UIElement sourceAnimationControl = ((ItemsGrid.ContainerFromIndex(itemIndex) as GridViewItem).ContentTemplateRoot as FrameworkElement).FindName("SimpleCanvasPreviewControl") as UIElement;
+            UIElement sourceAnimationControl = ((ItemsGrid.ContainerFromIndex(itemIndex) as ContentControl).ContentTemplateRoot as FrameworkElement).FindName("SimpleCanvasPreviewControl") as UIElement;
 
             ConnectedAnimation connectedAnimation = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(
                 Constants.UI.Animations.CONNECTED_ANIMATION_COLLECTION_PREVIEW_ITEM_OPEN_REQUESTED_TOKEN,

@@ -9,8 +9,6 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
-using ClipboardCanvas.ViewModels.ContextMenu;
-using System.Collections.Generic;
 
 namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
 {

@@ -191,7 +191,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             OpenNewInfiniteCanvasCommand = new RelayCommand(OpenNewInfiniteCanvas);
             ItemClickCommand = new RelayCommand<ItemClickEventArgs>(ItemClick);
             ShowOrHideSearchCommand = new RelayCommand(ShowOrHideSearch);
-            ContainerChangingCommand = new AsyncRelayCommand<ContainerContentChangingEventArgs>(ContainerContentChanging);
+            ContainerChangingCommand = new RelayCommand<ContainerContentChangingEventArgs>(ContainerContentChanging);
             DefaultKeyboardAcceleratorInvokedCommand = new RelayCommand<KeyboardAcceleratorInvokedEventArgs>(DefaultKeyboardAcceleratorInvoked);
         }
 
@@ -238,14 +238,26 @@ namespace ClipboardCanvas.ViewModels.Pages
             }
         }
 
-        private async Task ContainerContentChanging(ContainerContentChangingEventArgs e)
+        private void ContainerContentChanging(ContainerContentChangingEventArgs e)
         {
             if (!e.InRecycleQueue)
             {
-                if (e.Item is CollectionPreviewItemViewModel itemViewModel && e.ItemContainer is GridViewItem gvi)
+                if (e.Item is CollectionPreviewItemViewModel itemViewModel)
                 {
-                    await itemViewModel.RequestCanvasLoad();
-                    //itemViewModel.SimpleCanvasLoadedCommand.Execute(null);
+                    e.RegisterUpdateCallback(3, async (s, e1) =>
+                    {
+                        await itemViewModel.RequestCanvasLoad();
+                    });
+                }
+            }
+            else
+            {
+                if (e.Item is CollectionPreviewItemViewModel itemViewModel)
+                {
+                    e.RegisterUpdateCallback(3, async (s, e1) =>
+                    {
+                        await itemViewModel.RequestCanvasUnload();
+                    });
                 }
             }
         }
@@ -343,7 +355,7 @@ namespace ClipboardCanvas.ViewModels.Pages
                 }
 
                 CollectionLoadingIndicatorLoad = true;
-                Items.AddRange(await ClipboardCanvas.Extensions.TaskExtensions.WaitAll(itemTaskDelegates));
+                Items.AddRange(await Task.WhenAll(itemTaskDelegates));
                 CollectionLoadingIndicatorLoad = false;
 
                 bool itemsEmpty = Items.IsEmpty();

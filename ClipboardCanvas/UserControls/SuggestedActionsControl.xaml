@@ -151,6 +151,8 @@
                 ItemsSource="{x:Bind ViewModel.Items}"
                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
                 ScrollViewer.HorizontalScrollMode="Auto"
+                ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                ScrollViewer.VerticalScrollMode="Disabled"
                 SelectionMode="None">
                 <i:Interaction.Behaviors>
                     <icore:EventTriggerBehavior EventName="ItemClick">
