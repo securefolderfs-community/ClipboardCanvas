@@ -93,12 +93,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         {
             if (App.IsInRestrictedAccessMode)
             {
-                SetCollectionError(s_RestrictedAccessUnauthorized);
+                SetCollectionError(RestrictedAccessUnauthorized);
                 return false;
             }
             else if (!StorageHelpers.Exists(CollectionPath))
             {
-                SetCollectionError(s_CollectionFolderNotFound);
+                SetCollectionError(CollectionFolderNotFound);
                 return false;
             }
 

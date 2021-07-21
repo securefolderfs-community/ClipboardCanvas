@@ -16,11 +16,11 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
 {
     public abstract class BasePastedContentTypeDataModel
     {
-        private static SafeWrapperResult FoldersNotSupportedResult => new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Displaying content for folders is not yet supported.");
+        private static readonly SafeWrapperResult FoldersNotSupportedResult = new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Displaying content for folders is not yet supported.");
 
-        private static SafeWrapperResult CannotGetContentTypeResult => new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Couldn't display content for this file");
+        private static readonly SafeWrapperResult CannotGetContentTypeResult = new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Couldn't display content for this file");
 
-        private static SafeWrapperResult CannotReceiveClipboardDataResult => new SafeWrapperResult(OperationErrorCode.AccessUnauthorized, "Couldn't retrieve clipboard data");
+        private static readonly SafeWrapperResult CannotReceiveClipboardDataResult = new SafeWrapperResult(OperationErrorCode.AccessUnauthorized, "Couldn't retrieve clipboard data");
 
         public static async Task<BasePastedContentTypeDataModel> GetContentType(CanvasFile canvasFile, BasePastedContentTypeDataModel contentType)
         {

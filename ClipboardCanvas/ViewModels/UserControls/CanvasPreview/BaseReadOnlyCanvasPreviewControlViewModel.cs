@@ -31,7 +31,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         protected IStorageItem associatedItem => collectionItemViewModel.AssociatedItem;
 
-        protected SafeWrapperResult CanvasNullResult => new SafeWrapperResult(OperationErrorCode.InvalidArgument, new NullReferenceException(), "Invalid Canvas.");
+        protected readonly SafeWrapperResult CanvasNullResult = new SafeWrapperResult(OperationErrorCode.InvalidArgument, new NullReferenceException(), "Invalid Canvas.");
 
         #endregion
 
@@ -67,6 +67,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
         public event EventHandler<ErrorOccurredEventArgs> OnErrorOccurredEvent;
 
         public event EventHandler<TipTextUpdateRequestedEventArgs> OnTipTextUpdateRequestedEvent;
+
+        public event EventHandler<ProgressReportedEventArgs> OnProgressReportedEvent;
 
         #endregion
 
@@ -236,6 +238,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             RaiseOnTipTextUpdateRequestedEvent(sender, e);
         }
 
+        private void CanvasViewModel_OnProgressReportedEvent(object sender, ProgressReportedEventArgs e)
+        {
+            RaiseOnProgressReportedEvent(sender, e);
+        }
+
         #endregion
 
         #region Event Raisers
@@ -250,6 +257,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         protected void RaiseOnTipTextUpdateRequestedEvent(object s, TipTextUpdateRequestedEventArgs e) => OnTipTextUpdateRequestedEvent?.Invoke(s, e);
 
+        protected void RaiseOnProgressReportedEvent(object s, ProgressReportedEventArgs e) => OnProgressReportedEvent?.Invoke(s, e);
+
         #endregion
 
         #region Event Hooks
@@ -263,6 +272,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
                 CanvasViewModel.OnFileDeletedEvent += CanvasViewModel_OnFileDeletedEvent;
                 CanvasViewModel.OnErrorOccurredEvent += CanvasViewModel_OnErrorOccurredEvent;
                 CanvasViewModel.OnTipTextUpdateRequestedEvent += CanvasViewModel_OnTipTextUpdateRequestedEvent;
+                CanvasViewModel.OnProgressReportedEvent += CanvasViewModel_OnProgressReportedEvent;
             }
         }
 
@@ -275,6 +285,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
                 CanvasViewModel.OnFileDeletedEvent -= CanvasViewModel_OnFileDeletedEvent;
                 CanvasViewModel.OnErrorOccurredEvent -= CanvasViewModel_OnErrorOccurredEvent;
                 CanvasViewModel.OnTipTextUpdateRequestedEvent -= CanvasViewModel_OnTipTextUpdateRequestedEvent;
+                CanvasViewModel.OnProgressReportedEvent -= CanvasViewModel_OnProgressReportedEvent;
             }
         }
 

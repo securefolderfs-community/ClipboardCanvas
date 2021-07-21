@@ -58,7 +58,7 @@ namespace ClipboardCanvas.Pages
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             await this.ViewModel.InitializeItems();
-            this.ViewModel.CheckSearchData();
+            this.ViewModel.CheckSearchContext();
         }
 
         public void PrepareConnectedAnimation(int itemIndex)

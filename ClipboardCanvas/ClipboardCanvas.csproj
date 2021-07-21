@@ -154,6 +154,7 @@
     <Compile Include="AttachedProperties\TextBoxAttachedProperties.cs" />
     <Compile Include="AttachedProperties\ViewModelAttachedProperties.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Contexts\OperationContext.cs" />
     <Compile Include="DataModels\CanvasFile.cs" />
     <Compile Include="DataModels\Navigation\DisplayFrameNavigationDataModel.cs" />
     <Compile Include="DataModels\Navigation\DisplayFrameNavigationParameterDataModel.cs" />
@@ -166,7 +167,7 @@
     <Compile Include="DataModels\PastedContentDataModels\MediaContentType.cs" />
     <Compile Include="DataModels\PastedContentDataModels\TextContentType.cs" />
     <Compile Include="DataModels\Navigation\SettingsFrameNavigationDataModel.cs" />
-    <Compile Include="DataModels\SearchDataModel.cs" />
+    <Compile Include="Contexts\SearchContext.cs" />
     <Compile Include="Dialogs\DeleteConfirmationDialog.xaml.cs">
       <DependentUpon>DeleteConfirmationDialog.xaml</DependentUpon>
     </Compile>
@@ -185,6 +186,7 @@
     <Compile Include="Enums\WebViewCanvasMode.cs" />
     <Compile Include="EventArguments\CollectionPreviewEventArgs.cs" />
     <Compile Include="EventArguments\InAppNotificationEventArgs.cs" />
+    <Compile Include="EventArguments\OperationContextEventArgs.cs" />
     <Compile Include="EventArguments\SearchControlEventArgs.cs" />
     <Compile Include="Exceptions\ReferencedFileNotFoundException.cs" />
     <Compile Include="Extensions\GenericsExtensions.cs" />

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.EventArguments.CanvasControl;
@@ -22,6 +23,8 @@ namespace ClipboardCanvas.Models
         event EventHandler<ErrorOccurredEventArgs> OnErrorOccurredEvent;
 
         event EventHandler<TipTextUpdateRequestedEventArgs> OnTipTextUpdateRequestedEvent;
+
+        event EventHandler<ProgressReportedEventArgs> OnProgressReportedEvent;
 
         /// <summary>
         /// Determines whether canvas content has been loaded

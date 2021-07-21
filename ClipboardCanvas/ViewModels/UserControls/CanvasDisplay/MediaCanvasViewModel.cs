@@ -24,19 +24,19 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Private Properties
 
-        private TimeSpan __Position
+        private TimeSpan Position
         {
             get => ControlView.Position;
             set => ControlView.Position = value;
         }
 
-        private bool __IsLoopingEnabled
+        private bool IsLoopingEnabled
         {
             get => ControlView.IsLoopingEnabled;
             set => ControlView.IsLoopingEnabled = value;
         }
 
-        private double __Volume
+        private double Volume
         {
             get => ControlView.Volume;
             set => ControlView.Volume = value;
@@ -136,9 +136,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             if (ControlView != null && _mediaContentType != null)
             {
-                this.__Position = _mediaContentType.savedPosition;
-                this.__IsLoopingEnabled = App.AppSettings.CanvasSettings.MediaCanvas_IsLoopingEnabled;
-                this.__Volume = App.AppSettings.CanvasSettings.MediaCanvas_UniversalVolume;
+                this.Position = _mediaContentType.savedPosition;
+                this.IsLoopingEnabled = App.AppSettings.CanvasSettings.MediaCanvas_IsLoopingEnabled;
+                this.Volume = App.AppSettings.CanvasSettings.MediaCanvas_UniversalVolume;
             }
         }
 
@@ -152,11 +152,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 if (associatedCollection.CurrentCollectionItemViewModel?.ContentType is MediaContentType mediaContentType)
                 {
-                    mediaContentType.savedPosition = __Position;
+                    mediaContentType.savedPosition = Position;
                 }
 
-                App.AppSettings.CanvasSettings.MediaCanvas_IsLoopingEnabled = __IsLoopingEnabled;
-                App.AppSettings.CanvasSettings.MediaCanvas_UniversalVolume = __Volume;
+                App.AppSettings.CanvasSettings.MediaCanvas_IsLoopingEnabled = IsLoopingEnabled;
+                App.AppSettings.CanvasSettings.MediaCanvas_UniversalVolume = Volume;
             }
 
             base.Dispose();

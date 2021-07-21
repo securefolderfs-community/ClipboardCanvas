@@ -1,22 +1,23 @@
 ﻿using System;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers.SafetyHelpers;
+using ClipboardCanvas.Contexts;
 
 namespace ClipboardCanvas.Helpers.Filesystem
 {
     public static class FilesystemOperations
     {
-        public static async Task<SafeWrapperResult> CopyFileAsync(IStorageFile source, IStorageFile destination, Action<float> progressReportDelegate, CancellationToken cancellationToken)
+        public static async Task<SafeWrapperResult> CopyFileAsync(IStorageFile source, IStorageFile destination, OperationContext operationContext)
         {
             long fileSize = await StorageHelpers.GetFileSize(source);
             byte[] buffer = new byte[Constants.FileSystem.COPY_FILE_BUFFER_SIZE];
-            SafeWrapperResult result = SafeWrapperResult.S_SUCCESS;
+            SafeWrapperResult result = SafeWrapperResult.S_UNKNOWN_FAIL;
 
+            operationContext.IsOperationOngoing = true;
             using (Stream sourceStream = (await source.OpenReadAsync()).AsStreamForRead())
             {
                 using (Stream destinationStream = (await destination.OpenAsync(FileAccessMode.ReadWrite)).AsStreamForWrite())
@@ -30,17 +31,20 @@ namespace ClipboardCanvas.Helpers.Filesystem
                         float percentage = (float)bytesTransferred * 100.0f / (float)fileSize;
 
                         await destinationStream.WriteAsync(buffer, 0, currentBlockSize);
-                        progressReportDelegate?.Invoke(percentage);
+                        operationContext.ProgressDelegate?.Invoke(percentage);
 
-                        if (cancellationToken.IsCancellationRequested)
+                        if (operationContext.CancellationToken.IsCancellationRequested)
                         {
                             // TODO: Delete copied file there
                             result = SafeWrapperResult.S_CANCEL;
                             break;
                         }
                     }
+
+                    result = SafeWrapperResult.S_SUCCESS;
                 }
             }
+            operationContext.OperationFinished(result);
 
             return result;
         }

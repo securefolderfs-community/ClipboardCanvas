@@ -18,8 +18,9 @@ using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.ReferenceItems;
-using ClipboardCanvas.Extensions;
 using ClipboardCanvas.ModelViews;
+using Windows.ApplicationModel.Core;
+using Microsoft.Toolkit.Uwp;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -40,8 +41,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         public event EventHandler<FileCreatedEventArgs> OnFileCreatedEvent;
 
         public event EventHandler<FileModifiedEventArgs> OnFileModifiedEvent;
-
-        public event EventHandler<ProgressReportedEventArgs> OnProgressReportedEvent;
 
         #endregion
 
@@ -87,7 +86,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 return result;
             }
-
 
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
@@ -155,16 +153,24 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             else
             {
-                if ((await sourceItem).Path != associatedItem.Path) // Make sure we don't copy to the same path
+                if (_temporarySourceItem != null && _temporarySourceItem.Path != associatedItem.Path) // Make sure we don't copy to the same path
                 {
                     // If pasting a file not raw data from clipboard...
 
-                    // Signify that the file is being pasted
+                    // Signalize that the file is being pasted
                     RaiseOnTipTextUpdateRequestedEvent(this, new TipTextUpdateRequestedEventArgs("The file is being pasted, please wait.", TimeSpan.FromMilliseconds(Constants.UI.CanvasContent.FILE_PASTING_TIP_DELAY)));
 
+                    SafeWrapperResult copyResult = SafeWrapperResult.S_UNKNOWN_FAIL;
+
                     // Copy to collection
-                    SafeWrapperResult copyResult = await FilesystemOperations.CopyFileAsync(await sourceFile, associatedFile, ReportProgress, cancellationToken);
-                    
+                    this.associatedItemViewModel.OperationContext.CancellationToken = cancellationToken;
+                    this.associatedItemViewModel.OperationContext.ProgressDelegate = ReportProgress;
+
+                    await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(async () =>
+                    {
+                        copyResult = await FilesystemOperations.CopyFileAsync(_temporarySourceItem as StorageFile, associatedFile, associatedItemViewModel.OperationContext);
+                    });
+
                     return copyResult;
                 }
 
@@ -216,7 +222,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             canvasFile = associatedItemViewModel;
 
             // Copy to the collection
-            SafeWrapperResult copyResult = await FilesystemOperations.CopyFileAsync(savedSourceItem as StorageFile, associatedFile, ReportProgress, cancellationToken);
+            this.associatedItemViewModel.OperationContext.CancellationToken = cancellationToken;
+            this.associatedItemViewModel.OperationContext.ProgressDelegate = ReportProgress;
+
+            SafeWrapperResult copyResult = SafeWrapperResult.S_UNKNOWN_FAIL;
+            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(async () =>
+            {
+                copyResult = await FilesystemOperations.CopyFileAsync(savedSourceItem as StorageFile, associatedFile, associatedItemViewModel.OperationContext);
+            });
+
             if (!AssertNoError(copyResult))
             {
                 // Failed
@@ -318,20 +332,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             await Task.CompletedTask;
         }
 
-        /// <inheritdoc cref="ReportProgress(float, bool, CanvasPageProgressType)"/>
-        protected virtual void ReportProgress(float value)
-        {
-            ReportProgress(value, false, CanvasPageProgressType.OperationProgressBar);
-        }
-
-        /// <summary>
-        /// Wrapper for <see cref="pasteProgress"/> that raises <see cref="OnProgressReportedEvent"/>
-        /// </summary>
-        protected virtual void ReportProgress(float value, bool isIndeterminate, CanvasPageProgressType progressType)
-        {
-            RaiseOnProgressReportedEvent(this, new ProgressReportedEventArgs(value, isIndeterminate, progressType));
-        }
-
         protected virtual async Task<SafeWrapperResult> SetDataInternal(DataPackageView dataPackage)
         {
             if (dataPackage.Contains(StandardDataFormats.StorageItems)
@@ -429,8 +429,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected void RaiseOnFileModifiedEvent(object s, FileModifiedEventArgs e) => OnFileModifiedEvent?.Invoke(s, e);
         
-        protected void RaiseOnProgressReportedEvent(object s, ProgressReportedEventArgs e) => OnProgressReportedEvent?.Invoke(s, e);
-
         #endregion
     }
 }

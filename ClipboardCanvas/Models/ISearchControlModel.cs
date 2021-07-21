@@ -1,5 +1,5 @@
 ﻿using System;
-using ClipboardCanvas.DataModels;
+using ClipboardCanvas.Contexts;
 using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Interfaces.Search;
 
@@ -23,8 +23,8 @@ namespace ClipboardCanvas.Models
 
         void ResetIndex();
 
-        void RestoreSearchData(SearchDataModel searchData);
+        void RestoreSearchContext(SearchContext searchContext);
 
-        SearchDataModel ConstructSearchData();
+        SearchContext ConstructSearchContext();
     }
 }

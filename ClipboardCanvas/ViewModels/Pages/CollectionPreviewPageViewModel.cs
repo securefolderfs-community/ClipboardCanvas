@@ -325,12 +325,12 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         #region Public Helpers
 
-        public void CheckSearchData()
+        public void CheckSearchContext()
         {
-            if (_associatedCollectionModel.SavedSearchData != null)
+            if (_associatedCollectionModel.SearchContext != null)
             {
                 ShowSearch();
-                _searchControlModel.RestoreSearchData(_associatedCollectionModel.SavedSearchData);
+                _searchControlModel.RestoreSearchContext(_associatedCollectionModel.SearchContext);
             }
         }
 
@@ -469,11 +469,11 @@ namespace ClipboardCanvas.ViewModels.Pages
 
             if (SearchControlVisible)
             {
-                _associatedCollectionModel.SavedSearchData = _searchControlModel.ConstructSearchData();
+                _associatedCollectionModel.SearchContext = _searchControlModel.ConstructSearchContext();
             }
             else
             {
-                _associatedCollectionModel.SavedSearchData = null;
+                _associatedCollectionModel.SearchContext = null;
             }
         }
 

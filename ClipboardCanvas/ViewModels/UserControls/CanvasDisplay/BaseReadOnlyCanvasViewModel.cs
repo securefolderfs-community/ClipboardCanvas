@@ -21,6 +21,7 @@ using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.DataModels;
+using ClipboardCanvas.EventArguments;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -67,9 +68,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Protected Properties
 
-        protected SafeWrapperResult ReferencedFileNotFoundResult => new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "The file referenced was not found");
+        protected readonly SafeWrapperResult ReferencedFileNotFoundResult = new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "The file referenced was not found");
 
-        protected SafeWrapperResult ItemIsNotAFileResult => new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentException(), "The provided item is not a file.");
+        protected readonly SafeWrapperResult ItemIsNotAFileResult = new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentException(), "The provided item is not a file.");
 
         protected bool IsDisposed { get; private set; }
 
@@ -95,6 +96,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public event EventHandler<TipTextUpdateRequestedEventArgs> OnTipTextUpdateRequestedEvent;
 
+        public event EventHandler<ProgressReportedEventArgs> OnProgressReportedEvent;
+
         #endregion
 
         #region Constructor
@@ -115,6 +118,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         public virtual async Task<SafeWrapperResult> TryLoadExistingData(CollectionItemViewModel itemData, CancellationToken cancellationToken)
         {
             this.associatedItemViewModel = itemData;
+
             return await TryLoadExistingData(itemData, itemData.ContentType, cancellationToken);
         }
 
@@ -132,6 +136,19 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 // We don't invoke OnErrorOccurredEvent here because we want to discard this canvas immediately and not show the error
                 return new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "Canvas not found.");
+            }
+            else if (associatedItemViewModel?.OperationContext.IsOperationOngoing ?? false) // Check if it's being pasted
+            {
+                // Hook event to operation finished event
+                if (!associatedItemViewModel.OperationContext.IsEventAlreadyHooked)
+                {
+                    associatedItemViewModel.OperationContext.OnOperationFinishedEvent += OperationContext_OnOperationFinishedEvent;
+                    associatedItemViewModel.OperationContext.IsEventAlreadyHooked = true;
+                }
+                this.associatedItemViewModel.OperationContext.ProgressDelegate = ReportProgress;
+
+                RaiseOnTipTextUpdateRequestedEvent(this, new TipTextUpdateRequestedEventArgs("The file is being pasted, please wait."));
+                return new SafeWrapperResult(OperationErrorCode.InProgress, "Pasting is still in progress");
             }
 
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
@@ -287,6 +304,20 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return true;
         }
 
+        /// <inheritdoc cref="ReportProgress(float, bool, CanvasPageProgressType)"/>
+        protected virtual void ReportProgress(float value)
+        {
+            ReportProgress(value, false, CanvasPageProgressType.OperationProgressBar);
+        }
+
+        /// <summary>
+        /// Wrapper for <see cref="pasteProgress"/> that raises <see cref="OnProgressReportedEvent"/>
+        /// </summary>
+        protected virtual void ReportProgress(float value, bool isIndeterminate, CanvasPageProgressType progressType)
+        {
+            RaiseOnProgressReportedEvent(this, new ProgressReportedEventArgs(value, isIndeterminate, progressType));
+        }
+
         protected virtual async Task<SafeWrapperResult> SetContentMode()
         {
             if (ReferenceFile.IsReferenceFile(associatedFile))
@@ -315,6 +346,22 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #endregion
 
+        #region Event Handlers
+
+        private async void OperationContext_OnOperationFinishedEvent(object sender, OperationFinishedEventArgs e)
+        {
+            associatedItemViewModel.OperationContext.OnOperationFinishedEvent -= OperationContext_OnOperationFinishedEvent;
+            associatedItemViewModel.OperationContext.IsEventAlreadyHooked = false;
+
+            // Load data again when it's finished, and check if we are still on the canvas to load
+            if (e.result && associatedCollection.IsOnOpenedCanvas(associatedItemViewModel))
+            {
+                await TryLoadExistingData(associatedItemViewModel, cancellationToken);
+            }
+        }
+
+        #endregion
+
         #region Event Raisers
 
         protected void RaiseOnContentStartedLoadingEvent(object s, ContentStartedLoadingEventArgs e) => OnContentStartedLoadingEvent?.Invoke(s, e);
@@ -326,6 +373,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         protected void RaiseOnErrorOccurredEvent(object s, ErrorOccurredEventArgs e) => OnErrorOccurredEvent?.Invoke(s, e);
 
         protected void RaiseOnTipTextUpdateRequestedEvent(object s, TipTextUpdateRequestedEventArgs e) => OnTipTextUpdateRequestedEvent?.Invoke(s, e);
+
+        protected void RaiseOnProgressReportedEvent(object s, ProgressReportedEventArgs e) => OnProgressReportedEvent?.Invoke(s, e);
 
         #endregion
 

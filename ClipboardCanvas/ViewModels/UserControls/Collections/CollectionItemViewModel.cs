@@ -8,6 +8,7 @@ using ClipboardCanvas.Models;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.DataModels;
+using ClipboardCanvas.Contexts;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -18,6 +19,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
         public IStorageItem Item { get; private set; }
 
         public BasePastedContentTypeDataModel ContentType { get; set; }
+
+        public OperationContext OperationContext { get; set; }
 
         #endregion
 
@@ -34,6 +37,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             this.Item = item;
             this.sourceItem = null;
             this.ContentType = contentType;
+            this.OperationContext = new OperationContext();
         }
 
         #endregion

@@ -5,6 +5,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using System.Windows.Input;
+using System.Collections.ObjectModel;
+using Microsoft.Toolkit.Mvvm.Input;
+using Windows.System;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 using ClipboardCanvas.EventArguments.CanvasControl;
@@ -16,11 +20,7 @@ using ClipboardCanvas.Models;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.Exceptions;
-using System.Windows.Input;
-using System.Collections.ObjectModel;
-using Microsoft.Toolkit.Mvvm.Input;
-using Windows.System;
-using ClipboardCanvas.DataModels;
+using ClipboardCanvas.Contexts;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {
@@ -28,9 +28,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
     {
         #region Protected Members
 
-        protected SafeWrapperResult s_CollectionFolderNotFound => new SafeWrapperResult(OperationErrorCode.NotFound, new DirectoryNotFoundException(), "The folder associated with this collection was not found.");
+        protected readonly SafeWrapperResult CollectionFolderNotFound = new SafeWrapperResult(OperationErrorCode.NotFound, new DirectoryNotFoundException(), "The folder associated with this collection was not found.");
 
-        protected SafeWrapperResult s_RestrictedAccessUnauthorized => StaticExceptionReporters.DefaultSafeWrapperExceptionReporter.GetStatusResult(new UnauthorizedAccessException());
+        protected readonly SafeWrapperResult RestrictedAccessUnauthorized = StaticExceptionReporters.DefaultSafeWrapperExceptionReporter.GetStatusResult(new UnauthorizedAccessException());
 
         protected StorageFolder collectionFolder;
 
@@ -44,7 +44,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public ObservableCollection<CollectionItemViewModel> CollectionItems { get; protected set; }
 
-        public SearchDataModel SavedSearchData { get; set; }
+        public SearchContext SearchContext { get; set; }
 
         public bool IsCollectionAvailable { get; protected set; }
 
@@ -210,7 +210,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         {
             if (collectionFolder == null)
             {
-                return new SafeWrapper<CollectionItemViewModel>(null, s_CollectionFolderNotFound);
+                return new SafeWrapper<CollectionItemViewModel>(null, CollectionFolderNotFound);
             }
 
             SafeWrapper<StorageFile> file = await FilesystemOperations.CreateFile(collectionFolder, fileName);
@@ -318,6 +318,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             }
         }
 
+        public bool IsOnOpenedCanvas(CollectionItemViewModel collectionItemViewModel)
+        {
+            int indexOfRequestedItemViewModel = CollectionItems.IndexOf(collectionItemViewModel);
+
+            return indexOfRequestedItemViewModel == currentIndex;
+        }
+
         public abstract bool CheckCollectionAvailability();
 
         public virtual async Task LoadCanvasFromCollection(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken, CollectionItemViewModel collectionItemViewModel = null)
@@ -348,7 +355,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 {
                     if (!StorageHelpers.Exists(CollectionPath))
                     {
-                        SetCollectionError(s_CollectionFolderNotFound);
+                        SetCollectionError(CollectionFolderNotFound);
 
                         // TODO: Pass error code here in the future
                         OnGoToHomepageRequestedEvent?.Invoke(this, new GoToHomepageRequestedEventArgs());
@@ -400,6 +407,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                             result = await pasteCanvasModel.TryLoadExistingData(collectionItemViewModel, cancellationToken);
                         }
                     }
+                }
+                else if (result.ErrorCode == OperationErrorCode.InProgress)
+                {
+                    // Content is still being pasted...
+                    // TODO: Hook event to collectionItemViewModel.OperationContext.OnOperationFinishedEvent
                 }
                 else if (result.ErrorCode == OperationErrorCode.InvalidOperation)
                 {

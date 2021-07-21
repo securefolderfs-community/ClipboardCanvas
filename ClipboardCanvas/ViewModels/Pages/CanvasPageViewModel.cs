@@ -441,6 +441,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             _contentLoaded = false;
             TitleTextLoad = false;
             TipTextLoad = false;
+            OperationProgressBarLoad = false;
 
             // Await a short delay before showing the loading ring
             await Task.Delay(Constants.UI.CanvasContent.SHOW_LOADING_RING_DELAY);

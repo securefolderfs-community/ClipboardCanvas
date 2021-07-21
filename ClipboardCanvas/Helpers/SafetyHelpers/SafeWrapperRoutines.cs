@@ -8,7 +8,7 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
 {
     public static class SafeWrapperRoutines
     {
-        private static SafeWrapperResult NullFunctionDelegateResult => new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentException(), "Passed-in function delegate is null");
+        private static readonly SafeWrapperResult NullFunctionDelegateResult = new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentException(), "Passed-in function delegate is null");
 
         public static SafeWrapper<T> SafeWrap<T>(Func<T> func, ISafeWrapperExceptionReporter reporter = null)
         {

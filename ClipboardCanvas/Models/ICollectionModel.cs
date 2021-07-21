@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.UserControls;
-using ClipboardCanvas.DataModels;
+using ClipboardCanvas.Contexts;
 
 namespace ClipboardCanvas.Models
 {
@@ -16,7 +16,7 @@ namespace ClipboardCanvas.Models
         /// <summary>
         /// Saved search data by the Search function
         /// </summary>
-        SearchDataModel SavedSearchData { get; set; }
+        SearchContext SearchContext { get; set; }
 
         bool IsCollectionAvailable { get; }
 
@@ -94,6 +94,8 @@ namespace ClipboardCanvas.Models
         /// </summary>
         /// <param name="collectionItemModel"></param>
         void UpdateIndex(ICollectionItemModel collectionItemModel);
+
+        bool IsOnOpenedCanvas(CollectionItemViewModel collectionItemViewModel);
 
         bool CheckCollectionAvailability();
 

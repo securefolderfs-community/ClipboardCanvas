@@ -30,8 +30,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         public event EventHandler<FileModifiedEventArgs> OnFileModifiedEvent;
 
-        public event EventHandler<ProgressReportedEventArgs> OnProgressReportedEvent;
-
         #endregion
 
         #region Constructor
@@ -153,11 +151,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             RaiseOnFileModifiedEvent(sender, e);
         }
 
-        private void CanvasViewModel_OnProgressReportedEvent(object sender, ProgressReportedEventArgs e)
-        {
-            RaiseOnProgressReportedEvent(sender, e);
-        }
-
         #endregion
 
         #region Event Raisers
@@ -169,8 +162,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
         protected void RaiseOnFileCreatedEvent(object s, FileCreatedEventArgs e) => OnFileCreatedEvent?.Invoke(s, e);
 
         protected void RaiseOnFileModifiedEvent(object s, FileModifiedEventArgs e) => OnFileModifiedEvent?.Invoke(s, e);
-
-        protected void RaiseOnProgressReportedEvent(object s, ProgressReportedEventArgs e) => OnProgressReportedEvent?.Invoke(s, e);
 
         #endregion
 
@@ -186,7 +177,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
                 CanvasViewModel.OnPasteInitiatedEvent += CanvasViewModel_OnPasteInitiatedEvent;
                 CanvasViewModel.OnFileCreatedEvent += CanvasViewModel_OnFileCreatedEvent;
                 CanvasViewModel.OnFileModifiedEvent += CanvasViewModel_OnFileModifiedEvent;
-                CanvasViewModel.OnProgressReportedEvent += CanvasViewModel_OnProgressReportedEvent;
             }
         }
 
@@ -200,7 +190,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
                 CanvasViewModel.OnPasteInitiatedEvent -= CanvasViewModel_OnPasteInitiatedEvent;
                 CanvasViewModel.OnFileCreatedEvent -= CanvasViewModel_OnFileCreatedEvent;
                 CanvasViewModel.OnFileModifiedEvent -= CanvasViewModel_OnFileModifiedEvent;
-                CanvasViewModel.OnProgressReportedEvent -= CanvasViewModel_OnProgressReportedEvent;
             }
         }
 
