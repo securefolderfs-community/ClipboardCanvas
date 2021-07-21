@@ -16,6 +16,7 @@ namespace ClipboardCanvas.AttachedProperties
             if (value)
             {
                 textBox.Focus(FocusState.Programmatic);
+                textBox.SelectAll();
             }
             else // Unfocus
             {

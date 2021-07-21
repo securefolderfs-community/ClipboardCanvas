@@ -1,10 +1,19 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.Input;
+using System.Windows.Input;
 
 namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 {
     public class SettingsPastingPageViewModel : ObservableObject
     {
         #region Public Properties
+
+        private bool _IsReferenceFilesTeachingTipVisible;
+        public bool IsReferenceFilesTeachingTipVisible
+        {
+            get => _IsReferenceFilesTeachingTipVisible;
+            set => SetProperty(ref _IsReferenceFilesTeachingTipVisible, value);
+        }
 
         public bool OpenNewCanvasOnPaste
         {
@@ -51,6 +60,31 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
         public bool IsInRestrictedAccessMode
         {
             get => App.IsInRestrictedAccessMode;
+        }
+
+        #endregion
+
+        #region Commands
+
+        public ICommand ShowReferenceFilesTeachingTipCommand { get; private set; }
+
+        #endregion
+
+        #region Constructor
+
+        public SettingsPastingPageViewModel()
+        {
+            // Create commands
+            ShowReferenceFilesTeachingTipCommand = new RelayCommand(ShowReferenceFilesTeachingTip);
+        }
+
+        #endregion
+
+        #region Command Implementation
+
+        private void ShowReferenceFilesTeachingTip()
+        {
+            IsReferenceFilesTeachingTipVisible = true;
         }
 
         #endregion

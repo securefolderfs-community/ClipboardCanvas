@@ -1,24 +1,18 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Controls;
-using Windows.UI.Xaml;
 
 namespace ClipboardCanvas.AttachedProperties
 {
     public class InAppNotificationShowHideControlAttachedProperty : BaseAttachedProperty<InAppNotificationShowHideControlAttachedProperty, bool, InAppNotification>
     {
-        public override void OnValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        public override void OnValueChanged(InAppNotification sender, bool newValue)
         {
-            if (sender is not InAppNotification notification || e.NewValue is not bool value)
+            if (newValue)
             {
-                return;
-            }
-
-            if (value)
-            {
-                notification.Show();
+                sender.Show();
             }
             else
             {
-                notification.Dismiss();
+                sender.Dismiss();
             }
         }
     }

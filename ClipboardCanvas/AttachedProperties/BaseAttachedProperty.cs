@@ -81,7 +81,12 @@ namespace ClipboardCanvas.AttachedProperties
         /// </summary>
         /// <param name="sender">The UI element that this property was changed for</param>
         /// <param name="e">The arguments for this event</param>
-        public virtual void OnValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) { }
+        public virtual void OnValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) 
+        {
+            this.OnValueChanged((TTarget)sender, (TProperty)e.NewValue);
+        }
+
+        public abstract void OnValueChanged(TTarget sender, TProperty newValue);
 
         #endregion
     }

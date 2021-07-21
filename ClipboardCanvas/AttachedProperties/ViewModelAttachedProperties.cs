@@ -7,11 +7,9 @@ namespace ClipboardCanvas.AttachedProperties
         where TViewModel : ObservableObject
         where TTarget : FrameworkElement
     {
-        public override void OnValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        public override void OnValueChanged(TTarget sender, TViewModel newValue)
         {
-            TViewModel viewModel = e.NewValue as TViewModel;
-
-            (sender as FrameworkElement).DataContext = viewModel;
+            sender.DataContext = newValue;
         }
     }
 }

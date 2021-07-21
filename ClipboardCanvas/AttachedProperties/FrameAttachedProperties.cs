@@ -1,5 +1,4 @@
-﻿using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml.Controls;
 
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Pages;
@@ -10,28 +9,25 @@ namespace ClipboardCanvas.AttachedProperties
 {
     public class DisplayFrameNavigationAttachedProperty : BaseAttachedProperty<DisplayFrameNavigationAttachedProperty, DisplayFrameNavigationDataModel, Frame>
     {
-        public override void OnValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        public override void OnValueChanged(Frame sender, DisplayFrameNavigationDataModel newValue)
         {
-            DisplayFrameNavigationDataModel navigationDataModel = e.NewValue as DisplayFrameNavigationDataModel;
-            Frame frame = sender as Frame;
-
-            switch (navigationDataModel.pageType)
+            switch (newValue.pageType)
             {
                 case DisplayPageType.HomePage:
                     {
-                        frame.Navigate(typeof(HomePage), navigationDataModel.parameter, navigationDataModel.transitionInfo);
+                        sender.Navigate(typeof(HomePage), newValue.parameter, newValue.transitionInfo);
                         break;
                     }
 
                 case DisplayPageType.CanvasPage:
                     {
-                        frame.Navigate(typeof(CanvasPage), navigationDataModel.parameter, navigationDataModel.transitionInfo);
+                        sender.Navigate(typeof(CanvasPage), newValue.parameter, newValue.transitionInfo);
                         break;
                     }
 
                 case DisplayPageType.CollectionPreviewPage:
                     {
-                        frame.Navigate(typeof(CollectionPreviewPage), navigationDataModel.parameter, navigationDataModel.transitionInfo);
+                        sender.Navigate(typeof(CollectionPreviewPage), newValue.parameter, newValue.transitionInfo);
                         break;
                     }
             }
@@ -40,28 +36,25 @@ namespace ClipboardCanvas.AttachedProperties
 
     public class SettingsFrameNavigationAttachedProperty : BaseAttachedProperty<SettingsFrameNavigationAttachedProperty, SettingsFrameNavigationDataModel, Frame>
     {
-        public override void OnValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        public override void OnValueChanged(Frame sender, SettingsFrameNavigationDataModel newValue)
         {
-            SettingsFrameNavigationDataModel navigationDataModel = e.NewValue as SettingsFrameNavigationDataModel;
-            Frame frame = sender as Frame;
-
-            switch (navigationDataModel.pageType)
+            switch (newValue.pageType)
             {
                 case SettingsPageType.General:
                     {
-                        frame.Navigate(typeof(SettingsGeneralPage), navigationDataModel, navigationDataModel.transitionInfo);
+                        sender.Navigate(typeof(SettingsGeneralPage), newValue, newValue.transitionInfo);
                         break;
                     }
 
                 case SettingsPageType.Pasting:
                     {
-                        frame.Navigate(typeof(SettingsPastingPage), navigationDataModel, navigationDataModel.transitionInfo);
+                        sender.Navigate(typeof(SettingsPastingPage), newValue, newValue.transitionInfo);
                         break;
                     }
 
                 case SettingsPageType.About:
                     {
-                        frame.Navigate(typeof(SettingsAboutPage), navigationDataModel, navigationDataModel.transitionInfo);
+                        sender.Navigate(typeof(SettingsAboutPage), newValue, newValue.transitionInfo);
                         break;
                     }
             }
