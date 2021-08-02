@@ -1,12 +1,14 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading;
 
 using ClipboardCanvas.ApplicationSettings;
 using ClipboardCanvas.Enums;
@@ -19,10 +21,7 @@ using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
 using ClipboardCanvas.Interfaces.Search;
-using System.Collections.Generic;
 using ClipboardCanvas.EventArguments;
-using System.Threading.Tasks;
-using System.Threading;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {

@@ -9,6 +9,8 @@ using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Contexts;
+using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
+using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -48,6 +50,17 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             if (Item == null)
             {
+                return;
+            }
+
+            string sourceItemPath = (await SourceItem).Path;
+            if (sourceItemPath.EndsWith(".exe"))
+            {
+                IInAppNotification notification = App.DialogService.GetNotification();
+                notification.ViewModel.NotificationText = "UWP cannot open executable (.exe) files";
+                notification.ViewModel.ShownButtons = InAppNotificationButtonType.OkButton;
+
+                await notification.Show(4000);
                 return;
             }
 

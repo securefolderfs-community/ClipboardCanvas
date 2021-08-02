@@ -148,7 +148,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 // Check if file is binary
                 string text = await FilesystemOperations.ReadFileText(file);
-                if (text?.Contains("\0\0\0\0") ?? false)
+                if (text?.Contains("\0\0\0\0") ?? true)
                 {
                     return false;
                 }

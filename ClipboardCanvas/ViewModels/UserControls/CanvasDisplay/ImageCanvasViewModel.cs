@@ -154,16 +154,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                         return items;
                     }
 
-                    StorageFile imageFile = items.Result.As<IEnumerable<IStorageItem>>().First().As<StorageFile>();
+                    StorageFile imageFile = items.Result.First().As<StorageFile>();
 
                     openedStream = await SafeWrapperRoutines.SafeWrapAsync(
                         () => imageFile.OpenReadAsync().AsTask());
-
-                    if (!openedStream)
-                    {
-                        Debugger.Break();
-                        return (SafeWrapperResult)openedStream;
-                    }
                 }
                 else
                 {

@@ -410,7 +410,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected virtual bool CanPasteAsReference()
         {
-            return App.AppSettings.UserSettings.AlwaysPasteFilesAsReference;
+            return _temporarySourceItem != null;
         }
 
         protected abstract Task<SafeWrapperResult> SetData(DataPackageView dataPackage);
