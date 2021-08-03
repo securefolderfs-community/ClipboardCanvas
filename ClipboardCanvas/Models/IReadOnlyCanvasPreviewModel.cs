@@ -18,6 +18,8 @@ namespace ClipboardCanvas.Models
 
         event EventHandler<ContentLoadedEventArgs> OnContentLoadedEvent;
 
+        event EventHandler<ErrorOccurredEventArgs> OnContentLoadFailedEvent;
+
         event EventHandler<FileDeletedEventArgs> OnFileDeletedEvent;
 
         event EventHandler<ErrorOccurredEventArgs> OnErrorOccurredEvent;

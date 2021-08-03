@@ -62,6 +62,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         public event EventHandler<ContentLoadedEventArgs> OnContentLoadedEvent;
 
+        public event EventHandler<ErrorOccurredEventArgs> OnContentLoadFailedEvent;
+
         public event EventHandler<FileDeletedEventArgs> OnFileDeletedEvent;
 
         public event EventHandler<ErrorOccurredEventArgs> OnErrorOccurredEvent;
@@ -223,6 +225,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             RaiseOnContentLoadedEvent(sender, e);
         }
 
+        private void CanvasViewModel_OnContentLoadFailedEvent(object sender, ErrorOccurredEventArgs e)
+        {
+            RaiseOnContentLoadFailedEvent(sender, e);
+        }
+
         private void CanvasViewModel_OnFileDeletedEvent(object sender, FileDeletedEventArgs e)
         {
             RaiseOnFileDeletedEvent(sender, e);
@@ -251,6 +258,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         protected void RaiseOnContentLoadedEvent(object s, ContentLoadedEventArgs e) => OnContentLoadedEvent?.Invoke(s, e);
 
+        protected void RaiseOnContentLoadFailedEvent(object s, ErrorOccurredEventArgs e) => OnContentLoadFailedEvent?.Invoke(s, e);
+
         protected void RaiseOnFileDeletedEvent(object s, FileDeletedEventArgs e) => OnFileDeletedEvent?.Invoke(s, e);
 
         protected void RaiseOnErrorOccurredEvent(object s, ErrorOccurredEventArgs e) => OnErrorOccurredEvent?.Invoke(s, e);
@@ -269,6 +278,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             {
                 CanvasViewModel.OnContentStartedLoadingEvent += CanvasViewModel_OnContentStartedLoadingEvent;
                 CanvasViewModel.OnContentLoadedEvent += CanvasViewModel_OnContentLoadedEvent;
+                CanvasViewModel.OnContentLoadFailedEvent += CanvasViewModel_OnContentLoadFailedEvent;
                 CanvasViewModel.OnFileDeletedEvent += CanvasViewModel_OnFileDeletedEvent;
                 CanvasViewModel.OnErrorOccurredEvent += CanvasViewModel_OnErrorOccurredEvent;
                 CanvasViewModel.OnTipTextUpdateRequestedEvent += CanvasViewModel_OnTipTextUpdateRequestedEvent;
@@ -282,6 +292,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             {
                 CanvasViewModel.OnContentStartedLoadingEvent -= CanvasViewModel_OnContentStartedLoadingEvent;
                 CanvasViewModel.OnContentLoadedEvent -= CanvasViewModel_OnContentLoadedEvent;
+                CanvasViewModel.OnContentLoadFailedEvent -= CanvasViewModel_OnContentLoadFailedEvent;
                 CanvasViewModel.OnFileDeletedEvent -= CanvasViewModel_OnFileDeletedEvent;
                 CanvasViewModel.OnErrorOccurredEvent -= CanvasViewModel_OnErrorOccurredEvent;
                 CanvasViewModel.OnTipTextUpdateRequestedEvent -= CanvasViewModel_OnTipTextUpdateRequestedEvent;

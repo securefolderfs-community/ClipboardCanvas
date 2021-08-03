@@ -32,6 +32,8 @@ namespace ClipboardCanvas.Pages
 
             DisplayFrameNavigationParameterDataModel navigationParameter = e.Parameter as DisplayFrameNavigationParameterDataModel;
             AssociatedCollectionModel = navigationParameter.collectionModel;
+
+            this.ViewModel.RequestedCanvasType = navigationParameter.canvasType;
         }
 
         public CanvasPage()

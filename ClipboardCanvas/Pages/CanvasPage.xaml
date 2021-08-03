@@ -89,14 +89,22 @@
                         MaxHeight="150"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        x:Load="{x:Bind ViewModel.TitleTextLoad, Mode=OneWay}"
+                        x:Load="{x:Bind ViewModel.NewCanvasScreenLoad, Mode=OneWay}"
                         StretchDirection="Both">
-                        <Grid Padding="20">
+                        <StackPanel Padding="20" Spacing="4">
                             <TextBlock
+                                HorizontalAlignment="Center"
                                 AllowDrop="True"
+                                FontSize="24"
                                 FontWeight="Bold"
                                 Text="{x:Bind ViewModel.TitleText, Mode=OneWay}" />
-                        </Grid>
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                AllowDrop="True"
+                                FontSize="8"
+                                Opacity="0.8"
+                                Text="{x:Bind ViewModel.CanvasTypeText, Mode=OneWay}" />
+                        </StackPanel>
                     </Viewbox>
 
                     <!--  Content Loading progress ring  -->
@@ -133,11 +141,12 @@
                     </uc:CanvasPreviewControl.ContextFlyout>
                 </uc:CanvasPreviewControl>
 
-                <!--  TODO: Add teaching tip here: "What's this?"  -->
                 <!--  Pasted as reference hyperlink  -->
                 <HyperlinkButton
                     x:Name="PastedAsReference"
                     Grid.Row="1"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
                     x:Load="{x:Bind ViewModel.PastedAsReferenceLoad, Mode=OneWay}"
                     Click="PastedAsReference_Click"
                     Content="File pasted as reference">
@@ -178,6 +187,14 @@
                         </Flyout>
                     </FlyoutBase.AttachedFlyout>
                 </HyperlinkButton>
+                <HyperlinkButton
+                    x:Name="SwitchCanvasTypeLinkButton"
+                    Grid.Row="1"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    x:Load="{x:Bind ViewModel.NewCanvasScreenLoad, Mode=OneWay}"
+                    Command="{x:Bind ViewModel.SwitchCanvasModeCommand}"
+                    Content="Switch canvases" />
             </Grid>
 
             <!--  Error text  -->

@@ -160,6 +160,7 @@
     <Compile Include="DataModels\Navigation\DisplayFrameNavigationParameterDataModel.cs" />
     <Compile Include="DataModels\PastedContentDataModels\BasePastedContentTypeDataModel.cs" />
     <Compile Include="DataModels\PastedContentDataModels\FallbackContentType.cs" />
+    <Compile Include="DataModels\PastedContentDataModels\InfiniteCanvasContentType.cs" />
     <Compile Include="DataModels\PastedContentDataModels\InvalidContentTypeDataModel.cs" />
     <Compile Include="DataModels\PastedContentDataModels\MarkdownContentType.cs" />
     <Compile Include="DataModels\PastedContentDataModels\WebViewContentType.cs" />
@@ -189,9 +190,11 @@
     <Compile Include="EventArguments\OperationContextEventArgs.cs" />
     <Compile Include="EventArguments\SearchControlEventArgs.cs" />
     <Compile Include="Exceptions\ReferencedFileNotFoundException.cs" />
+    <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\GenericsExtensions.cs" />
     <Compile Include="Extensions\RangeObservableCollection.cs" />
     <Compile Include="Extensions\SafetyExtensions.cs" />
+    <Compile Include="Extensions\ServiceProviderExtensions.cs" />
     <Compile Include="Extensions\TaskExtensions.cs" />
     <Compile Include="Helpers\CanvasHelpers.cs" />
     <Compile Include="Helpers\CollectionsHelpers.cs" />
@@ -223,6 +226,7 @@
     <Compile Include="ModelViews\ICollectionPreviewPageView.cs" />
     <Compile Include="Models\IControlPropertyAccessorModel.cs" />
     <Compile Include="ModelViews\IDisplayControlView.cs" />
+    <Compile Include="ModelViews\IInteractableCanvasControlView.cs" />
     <Compile Include="ModelViews\IMediaCanvasControlView.cs" />
     <Compile Include="ModelViews\ITextCanvasControlView.cs" />
     <Compile Include="ModelViews\IWebViewCanvasControlView.cs" />
@@ -280,8 +284,14 @@
     <Compile Include="UserControls\CanvasDisplay\FallbackCanvasControl.xaml.cs">
       <DependentUpon>FallbackCanvasControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\CanvasDisplay\InfiniteCanvasControl.xaml.cs">
+      <DependentUpon>InfiniteCanvasControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\CanvasDisplay\MarkdownCanvasControl.xaml.cs">
       <DependentUpon>MarkdownCanvasControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\InteractableCanvasControl.xaml.cs">
+      <DependentUpon>InteractableCanvasControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\SimpleCanvasDisplay\TextSimpleCanvasControl.xaml.cs">
       <DependentUpon>TextSimpleCanvasControl.xaml</DependentUpon>
@@ -364,6 +374,7 @@
     <Compile Include="ViewModels\SearchControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\BaseReadOnlyCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\FallbackCanvasViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\CanvasDisplay\InfiniteCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\MarkdownCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\WebViewCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasPreview\BaseCanvasPreviewControlViewModel.cs" />
@@ -375,6 +386,8 @@
     <Compile Include="ViewModels\UserControls\InAppNotifications\IInAppNotification.cs" />
     <Compile Include="ViewModels\UserControls\InAppNotifications\InAppNotificationControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasPreview\SimpleCanvasPreviewControlViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\InteractableCanvasControlViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\InteractableCanvasControlItemViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SimpleCanvasDisplay\TextSimpleCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SimpleCanvasDisplay\ThumbnailSimpleCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SuggestedActionsControlItemViewModel.cs" />
@@ -508,7 +521,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\CanvasDisplay\InfiniteCanvasControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\CanvasDisplay\MarkdownCanvasControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\InteractableCanvasControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

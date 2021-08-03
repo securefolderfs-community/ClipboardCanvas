@@ -212,7 +212,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private void OpenNewCanvas()
         {
-            OnOpenNewCanvasRequestedEvent?.Invoke(this, new OpenNewCanvasRequestedEventArgs(CanvasType.NormalCanvas));
+            OnOpenNewCanvasRequestedEvent?.Invoke(this, new OpenNewCanvasRequestedEventArgs(CanvasType.OneCanvas));
         }
 
         private void OpenNewInfiniteCanvas()

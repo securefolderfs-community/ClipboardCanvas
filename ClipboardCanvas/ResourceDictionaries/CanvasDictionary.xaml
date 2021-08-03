@@ -7,6 +7,11 @@
     xmlns:vm="using:ClipboardCanvas.ViewModels.UserControls.CanvasDisplay"
     xmlns:vm2="using:ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay">
 
+    <!--  Infinite canvas  -->
+    <DataTemplate x:Key="InfiniteCanvasViewModel" x:DataType="vm:InfiniteCanvasViewModel">
+        <uc:InfiniteCanvasControl />
+    </DataTemplate>
+
     <!--  All available views for displaying content  -->
 
     <!--  Image view  -->

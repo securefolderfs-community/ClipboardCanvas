@@ -26,7 +26,7 @@ using ClipboardCanvas.ReferenceItems;
 using System.Runtime.CompilerServices;
 using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.ViewModels.UserControls.CanvasPreview;
-using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.Extensions;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {
@@ -36,11 +36,15 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private readonly ICanvasPageView _view;
 
+        private const string INFINITE_CANVAS_TEXT = "Infinite Canvas";
+
+        private const string ONE_CANVAS_TEXT = "One Canvas";
+
         private const string DEFAULT_TITLE_TEXT = "Press Ctrl+V to paste in content!";
 
         private const string DRAG_TITLE_TEXT = "Release to paste in content!";
 
-        private bool _contentLoaded;
+        private bool _contentFinishedLoading;
 
         #endregion
 
@@ -50,12 +54,28 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public ICanvasPreviewModel PasteCanvasModel => _view?.CanvasPreviewModel;
 
+        private CanvasType _RequestedCanvasType;
+        public CanvasType RequestedCanvasType
+        {
+            get => _RequestedCanvasType;
+            set
+            {
+                if (_RequestedCanvasType != value)
+                {
+                    _RequestedCanvasType = value;
+
+                    OnPropertyChanged(nameof(RequestedCanvasType));
+                    OnPropertyChanged(nameof(CanvasTypeText));
+                }
+            }
+        }
+
         private List<BaseMenuFlyoutItemViewModel> _CanvasContextMenuItems;
         public List<BaseMenuFlyoutItemViewModel> CanvasContextMenuItems
         {
             get
             {
-                if (_contentLoaded)
+                if (_contentFinishedLoading)
                 {
                     return PasteCanvasModel.ContextMenuItems;
                 }
@@ -66,11 +86,11 @@ namespace ClipboardCanvas.ViewModels.Pages
             }
         }
 
-        private bool _TitleTextLoad = true;
-        public bool TitleTextLoad
+        private bool _NewCanvasScreenLoad = true;
+        public bool NewCanvasScreenLoad
         {
-            get => _TitleTextLoad;
-            set => SetProperty(ref _TitleTextLoad, value);
+            get => _NewCanvasScreenLoad;
+            set => SetProperty(ref _NewCanvasScreenLoad, value);
         }
 
         private bool _CanvasRingLoad = false;
@@ -85,6 +105,11 @@ namespace ClipboardCanvas.ViewModels.Pages
         {
             get => _TitleText;
             set => SetProperty(ref _TitleText, value);
+        }
+
+        public string CanvasTypeText
+        {
+            get => RequestedCanvasType == CanvasType.OneCanvas ? ONE_CANVAS_TEXT : INFINITE_CANVAS_TEXT;
         }
 
         private string _TipText;
@@ -166,6 +191,8 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public ICommand CanvasContextMenuOpeningCommand { get; private set; }
 
+        public ICommand SwitchCanvasModeCommand { get; private set; }
+
         #endregion
 
         #region Constructor
@@ -175,6 +202,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             this._view = view;
 
             _CanvasContextMenuItems = new List<BaseMenuFlyoutItemViewModel>();
+            RequestedCanvasType = CanvasHelpers.GetDefaultCanvasType();
 
             HookEvents();
 
@@ -185,6 +213,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             DropCommand = new AsyncRelayCommand<DragEventArgs>(Drop);
             OverrideReferenceCommand = new AsyncRelayCommand(OverrideReference);
             CanvasContextMenuOpeningCommand = new RelayCommand(CanvasContextMenuOpening);
+            SwitchCanvasModeCommand = new RelayCommand(SwitchCanvasMode);
         }
 
         #endregion
@@ -312,6 +341,18 @@ namespace ClipboardCanvas.ViewModels.Pages
             OnPropertyChanged(nameof(CanvasContextMenuItems));
         }
 
+        private void SwitchCanvasMode()
+        {
+            if (RequestedCanvasType == CanvasType.InfiniteCanvas)
+            {
+                RequestedCanvasType = CanvasType.OneCanvas;
+            }
+            else
+            {
+                RequestedCanvasType = CanvasType.InfiniteCanvas;
+            }
+        }
+
         #endregion
 
         #region Event Handlers
@@ -372,13 +413,10 @@ namespace ClipboardCanvas.ViewModels.Pages
 
             if (e.showErrorImage)
             {
-                TitleTextLoad = false;
+                NewCanvasScreenLoad = false;
                 TipTextLoad = false;
                 PasteCanvasModel?.DiscardData();
             }
-
-            // TODO: Move this out of this event to CanvasLoadFailedEvent
-            _view?.OnContentLoaded();
         }
 
         private async void PasteCanvasModel_OnContentStartedLoadingEvent(object sender, ContentStartedLoadingEventArgs e)
@@ -390,10 +428,18 @@ namespace ClipboardCanvas.ViewModels.Pages
         {
             PastedAsReferenceLoad = e.pastedByReference;
             CanvasRingLoad = false;
-            _contentLoaded = true;
-            TitleTextLoad = false;
+            _contentFinishedLoading = true;
+            NewCanvasScreenLoad = false;
             TipTextLoad = false;
             ErrorTextLoad = false;
+            _view?.OnContentLoaded();
+        }
+
+        private void PasteCanvasModel_OnContentLoadFailedEvent(object sender, ErrorOccurredEventArgs e)
+        {
+            _contentFinishedLoading = true;
+            CanvasRingLoad = false;
+
             _view?.OnContentLoaded();
         }
 
@@ -420,7 +466,7 @@ namespace ClipboardCanvas.ViewModels.Pages
                     await Task.Delay(tipShowDelay);
                 }
 
-                if (!_contentLoaded)
+                if (!_contentFinishedLoading)
                 {
                     TipTextLoad = true;
                     TipText = text;
@@ -438,15 +484,15 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private async Task PrepareForContentStartLoading()
         {
-            _contentLoaded = false;
-            TitleTextLoad = false;
+            _contentFinishedLoading = false;
+            NewCanvasScreenLoad = false;
             TipTextLoad = false;
             OperationProgressBarLoad = false;
 
             // Await a short delay before showing the loading ring
             await Task.Delay(Constants.UI.CanvasContent.SHOW_LOADING_RING_DELAY);
 
-            if (!_contentLoaded) // The value might have changed
+            if (!_contentFinishedLoading) // The value might have changed
             {
                 CanvasRingLoad = true;
             }
@@ -464,6 +510,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
                 if (dataPackageWrapper)
                 {
+                    (PasteCanvasModel as BaseCanvasPreviewControlViewModel).RequestedCanvasType = RequestedCanvasType; // TODO: This class casting is bad, refactor entire code
                     result = await PasteCanvasModel.TryPasteData(dataPackageWrapper, CanvasPreviewControlViewModel.CanvasPasteCancellationTokenSource.Token);
                 }
             }
@@ -480,7 +527,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             }
             else if (!result) // Check if anything went wrong
             {
-                Debugger.Break();
+                //Debugger.Break(); TODO: Uncomment later
             }
         }
 
@@ -496,6 +543,7 @@ namespace ClipboardCanvas.ViewModels.Pages
                 PasteCanvasModel.OnPasteInitiatedEvent += PasteCanvasModel_OnPasteInitiatedEvent;
                 PasteCanvasModel.OnContentStartedLoadingEvent += PasteCanvasModel_OnContentStartedLoadingEvent;
                 PasteCanvasModel.OnContentLoadedEvent += PasteCanvasModel_OnContentLoadedEvent;
+                PasteCanvasModel.OnContentLoadFailedEvent += PasteCanvasModel_OnContentLoadFailedEvent;
                 PasteCanvasModel.OnErrorOccurredEvent += PasteCanvasModel_OnErrorOccurredEvent;
                 PasteCanvasModel.OnProgressReportedEvent += PasteCanvasModel_OnProgressReportedEvent;
                 PasteCanvasModel.OnTipTextUpdateRequestedEvent += PasteCanvasModel_OnTipTextUpdateRequestedEvent;
@@ -509,6 +557,7 @@ namespace ClipboardCanvas.ViewModels.Pages
                 PasteCanvasModel.OnPasteInitiatedEvent -= PasteCanvasModel_OnPasteInitiatedEvent;
                 PasteCanvasModel.OnContentStartedLoadingEvent -= PasteCanvasModel_OnContentStartedLoadingEvent;
                 PasteCanvasModel.OnContentLoadedEvent -= PasteCanvasModel_OnContentLoadedEvent;
+                PasteCanvasModel.OnContentLoadFailedEvent -= PasteCanvasModel_OnContentLoadFailedEvent;
                 PasteCanvasModel.OnErrorOccurredEvent -= PasteCanvasModel_OnErrorOccurredEvent;
                 PasteCanvasModel.OnProgressReportedEvent -= PasteCanvasModel_OnProgressReportedEvent;
                 PasteCanvasModel.OnTipTextUpdateRequestedEvent -= PasteCanvasModel_OnTipTextUpdateRequestedEvent;

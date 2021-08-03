@@ -19,7 +19,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
         #region Constructor
 
         public CanvasPreviewControlViewModel(IBaseCanvasPreviewControlView view)
-            :base(view)
+            : base(view)
         {
         }
 
@@ -29,6 +29,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         protected override bool InitializeViewModelFromContentType(BasePastedContentTypeDataModel contentType)
         {
+            // Try for infinite canvas
+            if (InitializeViewModelForType<InfiniteCanvasContentType, InfiniteCanvasViewModel>(contentType, () => new InfiniteCanvasViewModel(view)))
+            {
+                return true;
+            }
+
             // Try for image
             if (InitializeViewModelForType<ImageContentType, ImageCanvasViewModel>(contentType, () => new ImageCanvasViewModel(view)))
             {

@@ -2,7 +2,7 @@
 {
     public enum CanvasType
     {
-        NormalCanvas = 0,
+        OneCanvas = 0,
         InfiniteCanvas = 1
     }
 }

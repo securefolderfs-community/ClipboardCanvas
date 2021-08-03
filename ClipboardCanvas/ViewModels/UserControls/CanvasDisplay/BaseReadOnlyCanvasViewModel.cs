@@ -90,6 +90,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public event EventHandler<ContentLoadedEventArgs> OnContentLoadedEvent;
 
+        public event EventHandler<ErrorOccurredEventArgs> OnContentLoadFailedEvent;
+
         public event EventHandler<FileDeletedEventArgs> OnFileDeletedEvent;
 
         public event EventHandler<ErrorOccurredEventArgs> OnErrorOccurredEvent;
@@ -293,11 +295,17 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Protected Helpers
 
+        /// <summary>
+        /// Use this in critical functions to check if sub-functions returned SUCCESS
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
         protected bool AssertNoError(SafeWrapperResult result)
         {
             if (result == null || !result)
             {
                 RaiseOnErrorOccurredEvent(this, new ErrorOccurredEventArgs(result, result?.Message));
+                RaiseOnContentLoadFailedEvent(this, new ErrorOccurredEventArgs(result, result?.Message));
                 return false;
             }
 
@@ -367,6 +375,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         protected void RaiseOnContentStartedLoadingEvent(object s, ContentStartedLoadingEventArgs e) => OnContentStartedLoadingEvent?.Invoke(s, e);
 
         protected void RaiseOnContentLoadedEvent(object s, ContentLoadedEventArgs e) => OnContentLoadedEvent?.Invoke(s, e);
+
+        protected void RaiseOnContentLoadFailedEvent(object s, ErrorOccurredEventArgs e) => OnContentLoadFailedEvent?.Invoke(s, e);
 
         protected void RaiseOnFileDeletedEvent(object s, FileDeletedEventArgs e) => OnFileDeletedEvent?.Invoke(s, e);
 

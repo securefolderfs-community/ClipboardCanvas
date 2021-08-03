@@ -20,6 +20,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 {
     public abstract class BaseCanvasPreviewControlViewModel : BaseReadOnlyCanvasPreviewControlViewModel<BaseCanvasViewModel>, ICanvasPreviewModel, IDisposable
     {
+        #region Public Properties
+
+        public CanvasType RequestedCanvasType { get; set; }
+
+        #endregion
+
         #region Events
 
         public event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
@@ -45,7 +51,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         public async Task<SafeWrapperResult> TryPasteData(DataPackageView dataPackage, CancellationToken cancellationToken)
         {
-            BasePastedContentTypeDataModel contentType = await BasePastedContentTypeDataModel.GetContentTypeFromDataPackage(dataPackage);
+            BasePastedContentTypeDataModel contentType;
+            
+            if (RequestedCanvasType == CanvasType.OneCanvas)
+            {
+                contentType = await BasePastedContentTypeDataModel.GetContentTypeFromDataPackage(dataPackage);
+            }
+            else
+            {
+                contentType = new InfiniteCanvasContentType();
+            }
 
             SafeWrapperResult result = await InitializeViewModelAndPaste(dataPackage, contentType, cancellationToken);
 

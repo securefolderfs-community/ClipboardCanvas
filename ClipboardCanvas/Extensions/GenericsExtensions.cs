@@ -28,7 +28,7 @@ namespace ClipboardCanvas.Extensions
         /// <param name="value1">The first value</param>
         /// <param name="value2">The second value</param>
         /// <returns><see cref="bool"/> true if both <typeparamref name="T"/> <paramref name="value1"/> and <typeparamref name="T"/> <paramref name="value2"/> are equal</returns>
-        public static bool Equals<T>(this T value1, T value2) =>
+        public static bool GenericEquals<T>(this T value1, T value2) =>
             EqualityComparer<T>.Default.Equals(value1, value2);
 
         /// <summary>

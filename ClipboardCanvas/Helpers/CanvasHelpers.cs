@@ -43,7 +43,7 @@ namespace ClipboardCanvas.Helpers
             }
             else
             {
-                return CanvasType.NormalCanvas;
+                return CanvasType.OneCanvas;
             }
         }
     }
