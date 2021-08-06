@@ -45,12 +45,12 @@ namespace ClipboardCanvas.Models
         Task<SafeWrapperResult> TryLoadExistingData(CollectionItemViewModel itemData, CancellationToken cancellationToken);
 
         /// <inheritdoc cref="TryLoadExistingData(CollectionItemViewModel, CancellationToken)"/>
-        Task<SafeWrapperResult> TryLoadExistingData(CanvasFile canvasFile, BasePastedContentTypeDataModel contentType, CancellationToken cancellationToken);
+        Task<SafeWrapperResult> TryLoadExistingData(CanvasItem canvasFile, BaseContentTypeModel contentType, CancellationToken cancellationToken);
 
         /// <summary>
         /// Attempts to delete the file and discard data
         /// </summary>
-        /// <param name="hideConfirmation">Hides the delete confirmation dialog, overrides <see cref="ApplicationSettings.Interfaces.IUserSettings.ShowDeleteConfirmationDialog"/> if necessary</param>
+        /// <param name="hideConfirmation">Hides the delete confirmation dialog, overrides <see cref="ApplicationSettings.Interfaces.IUserSettingsService.ShowDeleteConfirmationDialog"/> if necessary</param>
         /// <returns></returns>
         Task<SafeWrapperResult> TryDeleteData(bool hideConfirmation = false);
 

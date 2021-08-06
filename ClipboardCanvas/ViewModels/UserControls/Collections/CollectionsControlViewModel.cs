@@ -18,6 +18,8 @@ using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Interfaces.Collections;
+using ClipboardCanvas.Services;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {
@@ -282,7 +284,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public static async Task ReloadAllCollections()
         {
-            IEnumerable<string> savedCollectionPaths = App.AppSettings.CollectionsSettings.SavedCollectionLocations;
+            ICollectionsSettingsService collectionsSettings = Ioc.Default.GetService<ICollectionsSettingsService>();
+
+            IEnumerable<string> savedCollectionPaths = collectionsSettings.SavedCollectionLocations;
 
             // Add default collection
             StorageFolder defaultCollectionFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Default Collection", CreationCollisionOption.OpenIfExists);
@@ -331,13 +335,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public static void FallbackSetSelectedCollection()
         {
-            string lastSelectedCollection = App.AppSettings.CollectionsSettings.LastSelectedCollection;
+            ICollectionsSettingsService collectionsSettings = Ioc.Default.GetService<ICollectionsSettingsService>();
+
+            string lastSelectedCollection = collectionsSettings.LastSelectedCollection;
 
             if (string.IsNullOrWhiteSpace(lastSelectedCollection))
             {
                 // The last selected collection setting is not set
                 lastSelectedCollection = Constants.Collections.DEFAULT_COLLECTION_TOKEN;
-                App.AppSettings.CollectionsSettings.LastSelectedCollection = lastSelectedCollection;
+                collectionsSettings.LastSelectedCollection = lastSelectedCollection;
             }
 
             if (lastSelectedCollection == Constants.Collections.DEFAULT_COLLECTION_TOKEN)
@@ -443,7 +449,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public static async Task<bool> AddCollectionViaUi()
         {
-            StorageFolder folder = await App.DialogService.PickSingleFolder();
+            IDialogService dialogService = Ioc.Default.GetService<IDialogService>();
+
+            StorageFolder folder = await dialogService.PickSingleFolder();
 
             // We retrieve the folder again this time using ToStorageItem<>() because items picked by the FilePicker
             // or FolderPicker cannot be modified - i.e. Renamed etc.

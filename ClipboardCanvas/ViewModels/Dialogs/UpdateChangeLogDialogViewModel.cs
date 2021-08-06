@@ -13,6 +13,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.System;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace ClipboardCanvas.ViewModels.Dialogs
 {
@@ -144,7 +146,8 @@ namespace ClipboardCanvas.ViewModels.Dialogs
             }
             catch (Exception e)
             {
-                App.ExceptionLogger.Log(e.Message);
+                ILogger exceptionLogger = Ioc.Default.GetService<ILogger>();
+                exceptionLogger.LogInformation(e.Message);
             }
 
             if (!_dataFetchedSuccessfully || preparedReleases.IsEmpty())

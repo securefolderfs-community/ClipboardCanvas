@@ -13,7 +13,7 @@ namespace ClipboardCanvas.Models
 
         Task<IStorageItem> SourceItem { get; }
 
-        BasePastedContentTypeDataModel ContentType { get; set; }
+        BaseContentTypeModel ContentType { get; set; }
 
         Task OpenFile();
 

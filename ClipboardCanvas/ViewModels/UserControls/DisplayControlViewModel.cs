@@ -19,12 +19,15 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
 using ClipboardCanvas.EventArguments.CollectionPreview;
+using ClipboardCanvas.Services;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using ClipboardCanvas.DisplayFrameEventArgs;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
     public class DisplayControlViewModel : ObservableObject, IDisposable
     {
-        #region Private Members
+        #region Members
 
         private readonly IDisplayControlView _view;
 
@@ -50,55 +53,15 @@ namespace ClipboardCanvas.ViewModels.UserControls
         /// </summary>
         private ICollectionPreviewPageModel CollectionPreviewPageModel => _view?.CollectionPreviewPageModel;
 
-        private DisplayPageType CurrentPage => CurrentPageNavigation.pageType;
+        private DisplayPageType CurrentPage => NavigationService.CurrentPage;
 
-        private DisplayPageType _lastPage = DisplayPageType.CanvasPage;
+        private DisplayPageType LastPage => NavigationService.LastPage;
 
         #endregion
 
-        #region Public Properties
+        #region Properties
 
-        private DisplayFrameNavigationDataModel _CurrentPageNavigation;
-        public DisplayFrameNavigationDataModel CurrentPageNavigation
-        {
-            get => _CurrentPageNavigation;
-            private set
-            {
-                // Page switch requested so we need to unhook events
-                if (_CurrentPageNavigation != null)
-                {
-                    // Set last page type
-                    _lastPage = _CurrentPageNavigation.pageType;
-
-                    // Unhook events
-                    UnhookCanvasControlEvents();
-                    UnhookCollectionPreviewEvents();
-
-                    PasteCanvasPageModel?.Dispose(); // Dispose stuff
-                }
-
-                if (SetProperty(ref _CurrentPageNavigation, value))
-                {
-                    _CurrentPageNavigation.simulateNavigation = false;
-                    NavigationToolBarControlModel?.NotifyCurrentPageChanged(CurrentPage);
-
-                    if (_CurrentPageNavigation != null)
-                    {
-                        // Hook events for requested pages
-                        if (CurrentPage == DisplayPageType.CanvasPage)
-                        {
-                            HookCanvasControlEvents();
-                        }
-                        else if (CurrentPage == DisplayPageType.CollectionPreviewPage)
-                        {
-                            HookCollectionPreviewEvents();
-                        }
-                    }
-
-                    OnPageNavigated();
-                }
-            }
-        }
+        private INavigationService NavigationService { get; } = Ioc.Default.GetService<INavigationService>();
 
         #endregion
 
@@ -115,6 +78,63 @@ namespace ClipboardCanvas.ViewModels.UserControls
         #endregion
 
         #region Event Handlers
+
+        #region NavigationService Events
+
+        private void NavigationService_OnNavigationStartedEvent(object sender, NavigationStartedEventArgs e)
+        {
+            // Page switch requested so we need to unhook events
+
+            // Unhook all views events
+            UnhookCanvasControlEvents();
+            UnhookCollectionPreviewEvents();
+
+            // Dispose canvas
+            PasteCanvasPageModel?.Dispose();
+            CollectionPreviewPageModel?.Dispose();
+        }
+
+        private async void NavigationService_OnNavigationFinishedEvent(object sender, NavigationFinishedEventArgs e)
+        {
+            NavigationToolBarControlModel?.NotifyCurrentPageChanged(CurrentPage);
+
+            // Hook up correct events
+            if (CurrentPage == DisplayPageType.CanvasPage)
+            {
+                HookCanvasControlEvents();
+            }
+            else if (CurrentPage == DisplayPageType.CollectionPreviewPage)
+            {
+                HookCollectionPreviewEvents();
+            }
+
+            // Hide underline
+            WindowTitleBarControlModel.ShowTitleUnderline = false;
+
+            // Update title bar text
+            UpdateTitleBar();
+
+            // We might navigate from home to a canvas that's already filled, so initialize the content
+            if (_currentCollectionModel.IsCollectionInitialized
+                && !_currentCollectionModel.IsCollectionInitializing
+                && !_currentCollectionModel.IsOnNewCanvas
+                && e.collectionItemToLoad != null)
+            {
+                _canvasLoadCancellationTokenSource.Cancel();
+                _canvasLoadCancellationTokenSource.Dispose();
+                _canvasLoadCancellationTokenSource = new CancellationTokenSource();
+
+                await e.collection.LoadCanvasFromCollection(PasteCanvasPageModel.PasteCanvasModel, _canvasLoadCancellationTokenSource.Token, e.collectionItemToLoad);
+            }
+
+            // Update navigation buttons
+            await UpdateNavigationOnPageNavigation();
+
+            // Update Suggested Actions
+            await SetSuggestedActions();
+        }
+
+        #endregion
 
         #region WindowTitleBarControlModel
 
@@ -188,33 +208,33 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        private async void NavigationControlModel_OnGoToHomepageRequestedEvent(object sender, EventArgs e)
+        private void NavigationControlModel_OnGoToHomepageRequestedEvent(object sender, EventArgs e)
         {
-            await OpenPage(DisplayPageType.HomePage);
+            NavigationService.OpenHomepage();
         }
 
-        private async void NavigationControlModel_OnGoToCanvasRequestedEvent(object sender, EventArgs e)
+        private void NavigationControlModel_OnGoToCanvasRequestedEvent(object sender, EventArgs e)
         {
-            await OpenPage(DisplayPageType.CanvasPage);
+            NavigationService.OpenCanvasPage(_currentCollectionModel);
         }
 
-        private async void NavigationControlModel_OnCollectionPreviewNavigateBackRequestedEvent(object sender, EventArgs e)
+        private void NavigationControlModel_OnCollectionPreviewNavigateBackRequestedEvent(object sender, EventArgs e)
         {
             // Go back to page before Collection Preview page
-            await OpenPage(_lastPage);
+            OpenPage(LastPage);
         }
 
-        private async void NavigationControlModel_OnCollectionPreviewGoToCanvasRequestedEvent(object sender, EventArgs e)
+        private void NavigationControlModel_OnCollectionPreviewGoToCanvasRequestedEvent(object sender, EventArgs e)
         {
             if (CollectionPreviewPageModel.SelectedItem == null)
             {
                 // No item is selected, open new canvas
-                OpenNewCanvas();
+                NavigationService.OpenNewCanvas(_currentCollectionModel);
             }
             else
             {
                 // An item is selected, open that canvas
-                await OpenPage(DisplayPageType.CanvasPage, false, null, CollectionPreviewPageModel.SelectedItem.CollectionItemViewModel);
+                NavigationService.OpenCanvasPage(_currentCollectionModel, CollectionPreviewPageModel.SelectedItem.CollectionItemViewModel);
             }
         }
 
@@ -229,7 +249,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async void CollectionsControlViewModel_OnCanvasLoadFailedEvent(object sender, CanvasLoadFailedEventArgs e)
         {
-            CheckCanvasPageNavigation();
+            UpdateCanvasPageNavigation();
 
             await SetSuggestedActions(e.error);
         }
@@ -246,14 +266,14 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        private async void CollectionsControlViewModel_OnGoToHomepageRequestedEvent(object sender, GoToHomepageRequestedEventArgs e)
+        private void CollectionsControlViewModel_OnGoToHomepageRequestedEvent(object sender, GoToHomepageRequestedEventArgs e)
         {
-            await OpenPage(DisplayPageType.HomePage);
+            NavigationService.OpenHomepage();
         }
 
         private void CollectionsControlViewModel_OnOpenNewCanvasRequestedEvent(object sender, OpenNewCanvasRequestedEventArgs e)
         {
-            OpenNewCanvas();
+            NavigationService.OpenNewCanvas(_currentCollectionModel);
         }
 
         private void CollectionsControlViewModel_OnCollectionItemsInitializationFinishedEvent(object sender, CollectionItemsInitializationFinishedEventArgs e)
@@ -303,9 +323,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        private async void CollectionsControlViewModel_OnCollectionOpenRequestedEvent(object sender, CollectionOpenRequestedEventArgs e)
+        private void CollectionsControlViewModel_OnCollectionOpenRequestedEvent(object sender, CollectionOpenRequestedEventArgs e)
         {
-            await OpenPage(DisplayPageType.CollectionPreviewPage);
+            NavigationService.OpenCollectionPreviewPage(_currentCollectionModel);
         }
 
         #endregion
@@ -339,10 +359,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async void PasteCanvasModel_OnPasteInitiatedEvent(object sender, PasteInitiatedEventArgs e)
         {
-            if (e.isFilled)
+            if (e.pasteInNewCanvas)
             {
                 // Already has content, meaning we need to switch to the next page
-                OpenNewCanvas();
+                NavigationService.OpenNewCanvas(_currentCollectionModel);
 
                 // Forward the paste operation
                 SafeWrapperResult result = await PasteCanvasPageModel.PasteCanvasModel.TryPasteData(e.forwardedDataPackage, _canvasLoadCancellationTokenSource.Token);
@@ -367,30 +387,15 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 WindowTitleBarControlModel.ShowTitleUnderline = false;
             }
 
-            CheckCanvasPageNavigation();
+            UpdateCanvasPageNavigation();
 
             await SetSuggestedActions();
             NavigationToolBarControlModel.SuggestedActionsControlModel.ShowNoActionsLabelSuppressed = false;
         }
 
-        private void PasteCanvasModel_OnOpenNewCanvasRequestedEvent(object sender, OpenNewCanvasRequestedEventArgs e)
-        {
-            OpenNewCanvas();
-        }
-
         #endregion
 
         #region CollectionPreviewPageViewModel
-
-        private void CollectionPreviewPageModel_OnOpenNewCanvasRequestedEvent(object sender, OpenNewCanvasRequestedEventArgs e)
-        {
-            OpenNewCanvas(e.canvasType);
-        }
-
-        private async void CollectionPreviewPageModel_OnCanvasPreviewOpenRequestedEvent(object sender, CanvasPreviewOpenRequestedEventArgs e)
-        {
-            await OpenCanvasPageFromCollectionItem(e.collectionPreviewItemViewModel.CollectionItemViewModel, new SuppressNavigationTransitionInfo());
-        }
 
         private void CollectionPreviewPageModel_OnCanvasPreviewSelectedItemChangedEvent(object sender, CanvasPreviewSelectedItemChangedEventArgs e)
         {
@@ -416,6 +421,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task InitializeAfterLoad()
         {
+            // Important first-checks
+            await InitialApplicationChecksHelpers.HandleFileSystemPermissionDialog(WindowTitleBarControlModel);
+            await InitialApplicationChecksHelpers.CheckVersionAndShowDialog();
+
+            HookNavigationServiceEvents();
             HookTitleBarEvents();
             HookToolbarEvents();
 
@@ -423,12 +433,27 @@ namespace ClipboardCanvas.ViewModels.UserControls
             NavigationToolBarControlModel.NavigationControlModel.NavigateForwardEnabled = false;
 
             await CollectionsControlViewModel.ReloadAllCollections();
-            await OpenPage(DisplayPageType.CanvasPage);
 
+            NavigationService.OpenCanvasPage(_currentCollectionModel);
             NavigationToolBarControlModel.NotifyCurrentPageChanged(CurrentPage);
 
             //UpdateTitleBar();
-            CheckCanvasPageNavigation();
+            UpdateCanvasPageNavigation();
+        }
+
+        public bool CheckCollectionAvailabilityBeforePageNavigation()
+        {
+            _currentCollectionModel?.CheckCollectionAvailability();
+
+            if (_currentCollectionModel == null || !_currentCollectionModel.IsCollectionAvailable)
+            {
+                // Something went wrong, cannot use collection - stay on homepage
+                NavigationService.OpenHomepage();
+
+                return false;
+            }
+
+            return true;
         }
 
         #endregion
@@ -443,110 +468,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
         }
 
-        // TODO: Refactor this - split into separate functions: OpenCanvasPage, OpenHomePage, OpenCollectionPreviewPage
-        private bool OpenHomepage(NavigationTransitionInfo navigationTransition = null)
-        {
-            if (navigationTransition == null)
-            {
-                navigationTransition = new DrillInNavigationTransitionInfo();
-            }
-
-            // Navigate
-            CurrentPageNavigation = new DisplayFrameNavigationDataModel(DisplayPageType.HomePage, new DisplayFrameNavigationParameterDataModel(_currentCollectionModel, CanvasHelpers.GetDefaultCanvasType()), navigationTransition, false);
-
-            return true;
-        }
-
-        private async Task<bool> OpenCanvasPage(NavigationTransitionInfo navigationTransition = null, bool checkOpenedCanvas = true)
-        {
-            if (navigationTransition == null)
-            {
-                navigationTransition = new DrillInNavigationTransitionInfo();
-            }
-
-            if (!CheckCollectionAvailabilityBeforePageNavigation())
-            {
-                return false;
-            }
-
-            // Navigate
-            CurrentPageNavigation = new DisplayFrameNavigationDataModel(DisplayPageType.CanvasPage, new DisplayFrameNavigationParameterDataModel(_currentCollectionModel, CanvasHelpers.GetDefaultCanvasType()), navigationTransition, false);
-
-            await CheckCollectionStateOnPageNavigation();
-
-            if (checkOpenedCanvas)
-            {
-                // We might navigate from home to a canvas that's already filled, so initialize the content
-                if (!_currentCollectionModel.IsCollectionInitializing && !_currentCollectionModel.IsOnNewCanvas)
-                {
-                    _canvasLoadCancellationTokenSource.Cancel();
-                    _canvasLoadCancellationTokenSource.Dispose();
-                    _canvasLoadCancellationTokenSource = new CancellationTokenSource();
-
-                    await _currentCollectionModel.LoadCanvasFromCollection(PasteCanvasPageModel.PasteCanvasModel, _canvasLoadCancellationTokenSource.Token);
-                }
-            }
-
-            return true;
-        }
-
-        private async Task<bool> OpenCanvasPageFromCollectionItem(CollectionItemViewModel collectionItemViewModel, NavigationTransitionInfo navigationTransition = null)
-        {
-            bool result = await OpenCanvasPage(navigationTransition, false);
-
-            if (result && !_currentCollectionModel.IsCollectionInitializing)
-            {
-                _canvasLoadCancellationTokenSource.Cancel();
-                _canvasLoadCancellationTokenSource.Dispose();
-                _canvasLoadCancellationTokenSource = new CancellationTokenSource();
-
-                await _currentCollectionModel.LoadCanvasFromCollection(PasteCanvasPageModel.PasteCanvasModel, _canvasLoadCancellationTokenSource.Token, collectionItemViewModel);
-            }
-
-            return result;
-        }
-
-        private async Task<bool> OpenCollectionPreviewPage(NavigationTransitionInfo navigationTransition = null)
-        {
-            if (navigationTransition == null)
-            {
-                navigationTransition = new EntranceNavigationTransitionInfo();
-            }
-
-            if (!CheckCollectionAvailabilityBeforePageNavigation())
-            {
-                return false;
-            }
-
-            // Navigate
-            CurrentPageNavigation = new DisplayFrameNavigationDataModel(DisplayPageType.CollectionPreviewPage, new DisplayFrameNavigationParameterDataModel(_currentCollectionModel, CanvasHelpers.GetDefaultCanvasType()), navigationTransition, false);
-
-            await CheckCollectionStateOnPageNavigation();
-
-            return true;
-        }
-
-        private bool CheckCollectionAvailabilityBeforePageNavigation()
-        {
-            _currentCollectionModel?.CheckCollectionAvailability();
-            if (_currentCollectionModel == null || !_currentCollectionModel.IsCollectionAvailable)
-            {
-                // Something went wrong, cannot open CanvasPage
-                // TODO: Inform the user about the error
-                if (CurrentPageNavigation == null)
-                {
-                    // Avoid unwanted exceptions
-                    CurrentPageNavigation = new DisplayFrameNavigationDataModel(DisplayPageType.HomePage,
-                        new DisplayFrameNavigationParameterDataModel(_currentCollectionModel, CanvasHelpers.GetDefaultCanvasType()));
-                }
-
-                return false;
-            }
-
-            return true;
-        }
-
-        private async Task CheckCollectionStateOnPageNavigation()
+        private async Task UpdateNavigationOnPageNavigation()
         {
             // Handle event where user opens canvas - and show loading rings if needed
             if (_currentCollectionModel.IsCollectionInitializing)
@@ -566,7 +488,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     CheckCollectionPreviewPageNavigation();
                 }
 
-                CheckCanvasPageNavigation();
+                UpdateCanvasPageNavigation();
             }
             // Handle event when the collection is not initialized
             else if (!_currentCollectionModel.IsCollectionInitialized)
@@ -575,7 +497,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 // initialize the one that's being opened
                 await _currentCollectionModel.InitializeCollectionItems();
                 CheckCollectionPreviewPageNavigation();
-                CheckCanvasPageNavigation();
+                UpdateCanvasPageNavigation();
             }
             // Handle event where the loading rings were shown and the collection is no longer initializing - hide them
             else
@@ -587,38 +509,14 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading = false;
 
                     NavigationToolBarControlModel.NavigationControlModel.CollectionPreviewGoToCanvasLoading = false;
-                    CheckCanvasPageNavigation();
+                    UpdateCanvasPageNavigation();
                     CheckCollectionPreviewPageNavigation();
                 }
             }
         }
 
-        private async Task<bool> OpenPage(DisplayPageType pageType, bool simulateNavigation = false, NavigationTransitionInfo navigationTransition = null, ICollectionItemModel collectionItemModel = null)
-        {
-            switch (pageType)
-            {
-                case DisplayPageType.HomePage:
-                    {
-                        return OpenHomepage(navigationTransition);
-                    }
-            
 
-                case DisplayPageType.CanvasPage:
-                    {
-                        return await OpenCanvasPage(navigationTransition);
-                    }
-
-                case DisplayPageType.CollectionPreviewPage:
-                    {
-                        return await OpenCollectionPreviewPage(navigationTransition);
-                    }
-
-                default:
-                    return false;
-            }
-        }
-
-        private void CheckCanvasPageNavigation()
+        private void UpdateCanvasPageNavigation()
         {
             if (CurrentPage != DisplayPageType.CanvasPage)
             {
@@ -647,6 +545,30 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
+        private bool OpenPage(DisplayPageType pageType)
+        {
+            switch (pageType)
+            {
+                case DisplayPageType.Homepage:
+                    {
+                        return NavigationService.OpenHomepage();
+                    }
+
+                case DisplayPageType.CanvasPage:
+                    {
+                        return NavigationService.OpenCanvasPage(_currentCollectionModel);
+                    }
+
+                case DisplayPageType.CollectionPreviewPage:
+                    {
+                        return NavigationService.OpenCollectionPreviewPage(_currentCollectionModel);
+                    }
+
+                default:
+                    return false;
+            }
+        }
+
         private void CheckCollectionPreviewPageNavigation()
         {
             if (CurrentPage != DisplayPageType.CollectionPreviewPage)
@@ -664,28 +586,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        private void OpenNewCanvas(CanvasType? canvasType = null)
-        {
-            if (canvasType == null)
-            {
-                canvasType = CanvasHelpers.GetDefaultCanvasType();
-            }
-
-            _currentCollectionModel.SetIndexOnNewCanvas();
-
-            CurrentPageNavigation = new DisplayFrameNavigationDataModel(
-                    DisplayPageType.CanvasPage,
-                    new DisplayFrameNavigationParameterDataModel(_currentCollectionModel, (CanvasType)canvasType),
-                    new DrillInNavigationTransitionInfo(),
-                    true);
-        }
-
         private async void OnPageNavigated()
         {
             WindowTitleBarControlModel.ShowTitleUnderline = false;
 
             UpdateTitleBar();
-            CheckCanvasPageNavigation();
+            UpdateCanvasPageNavigation();
             await SetSuggestedActions();
         }
 
@@ -717,7 +623,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 {
                     switch (CurrentPage)
                     {
-                        case DisplayPageType.HomePage:
+                        case DisplayPageType.Homepage:
                             {
                                 NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(SuggestedActionsHelpers.GetActionsForHomepage());
 
@@ -775,7 +681,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             switch(CurrentPage)
             {
-                case DisplayPageType.HomePage:
+                case DisplayPageType.Homepage:
                     {
                         WindowTitleBarControlModel.SetTitleBarForCollectionsView();
 
@@ -801,6 +707,25 @@ namespace ClipboardCanvas.ViewModels.UserControls
         #endregion
 
         #region Event Hooks
+
+        private void UnhookNavigationServiceEvents()
+        {
+            if (NavigationService != null)
+            {
+                NavigationService.OnNavigationStartedEvent -= NavigationService_OnNavigationStartedEvent;
+                NavigationService.OnNavigationFinishedEvent -= NavigationService_OnNavigationFinishedEvent;
+            }
+        }
+
+        private void HookNavigationServiceEvents()
+        {
+            UnhookNavigationServiceEvents();
+            if (NavigationService != null)
+            {
+                NavigationService.OnNavigationStartedEvent += NavigationService_OnNavigationStartedEvent;
+                NavigationService.OnNavigationFinishedEvent += NavigationService_OnNavigationFinishedEvent;
+            }
+        }
 
         private void UnhookTitleBarEvents()
         {
@@ -886,7 +811,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
             UnhookCanvasControlEvents();
             if (PasteCanvasPageModel != null)
             {
-                this.PasteCanvasPageModel.PasteCanvasModel.OnOpenNewCanvasRequestedEvent += PasteCanvasModel_OnOpenNewCanvasRequestedEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnContentLoadedEvent += PasteCanvasModel_OnContentLoadedEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnContentStartedLoadingEvent += PasteCanvasModel_OnContentStartedLoadingEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnPasteInitiatedEvent += PasteCanvasModel_OnPasteInitiatedEvent;
@@ -902,7 +826,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             if (PasteCanvasPageModel != null)
             {
-                this.PasteCanvasPageModel.PasteCanvasModel.OnOpenNewCanvasRequestedEvent -= PasteCanvasModel_OnOpenNewCanvasRequestedEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnContentLoadedEvent -= PasteCanvasModel_OnContentLoadedEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnContentStartedLoadingEvent -= PasteCanvasModel_OnContentStartedLoadingEvent;
                 this.PasteCanvasPageModel.PasteCanvasModel.OnPasteInitiatedEvent -= PasteCanvasModel_OnPasteInitiatedEvent;
@@ -919,8 +842,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
             UnhookCollectionPreviewEvents();
             if (CollectionPreviewPageModel != null)
             {
-                this.CollectionPreviewPageModel.OnOpenNewCanvasRequestedEvent += CollectionPreviewPageModel_OnOpenNewCanvasRequestedEvent;
-                this.CollectionPreviewPageModel.OnCanvasPreviewOpenRequestedEvent += CollectionPreviewPageModel_OnCanvasPreviewOpenRequestedEvent;
                 this.CollectionPreviewPageModel.OnCanvasPreviewSelectedItemChangedEvent += CollectionPreviewPageModel_OnCanvasPreviewSelectedItemChangedEvent;
             }
         }
@@ -929,8 +850,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             if (CollectionPreviewPageModel != null)
             {
-                this.CollectionPreviewPageModel.OnOpenNewCanvasRequestedEvent -= CollectionPreviewPageModel_OnOpenNewCanvasRequestedEvent;
-                this.CollectionPreviewPageModel.OnCanvasPreviewOpenRequestedEvent -= CollectionPreviewPageModel_OnCanvasPreviewOpenRequestedEvent;
                 this.CollectionPreviewPageModel.OnCanvasPreviewSelectedItemChangedEvent -= CollectionPreviewPageModel_OnCanvasPreviewSelectedItemChangedEvent;
             }
         }

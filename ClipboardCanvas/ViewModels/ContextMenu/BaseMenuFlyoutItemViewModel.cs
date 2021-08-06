@@ -9,7 +9,5 @@ namespace ClipboardCanvas.ViewModels.ContextMenu
         public bool IsShown { get; set; } = true;
 
         public bool IsEnabled { get; set; } = true;
-
-        public bool ShowOnShift { get; set; }
     }
 }

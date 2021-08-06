@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.Enums;
@@ -22,6 +23,7 @@ using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.EventArguments;
+using ClipboardCanvas.Services;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -29,13 +31,19 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
     {
         #region Protected Members
 
+        protected IUserSettingsService UserSettings { get; } = Ioc.Default.GetService<IUserSettingsService>();
+
+        protected ICanvasSettingsService CanvasSettings { get; } = Ioc.Default.GetService<ICanvasSettingsService>();
+
+        protected INavigationService NavigationService { get; } = Ioc.Default.GetService<INavigationService>();
+
         protected readonly IBaseCanvasPreviewControlView view;
 
         protected readonly ISafeWrapperExceptionReporter errorReporter;
 
         protected CancellationToken cancellationToken;
 
-        protected BasePastedContentTypeDataModel contentType;
+        protected BaseContentTypeModel contentType;
 
         /// <inheritdoc cref="associatedItem"/>
         protected StorageFile associatedFile => associatedItem as StorageFile;
@@ -46,12 +54,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         /// <summary>
         /// The item that's associated with the canvas. For guaranteed true file, use <see cref="sourceItem"/> instead.
         /// </summary>
-        protected IStorageItem associatedItem => canvasFile.AssociatedItem;
+        protected IStorageItem associatedItem => canvasItem?.AssociatedItem;
 
         /// <summary>
         /// The source item. If not in reference mode, points to <see cref="associatedItem"/>
         /// </summary>
-        protected Task<IStorageItem> sourceItem => canvasFile.SourceItem;
+        protected Task<IStorageItem> sourceItem => canvasItem?.SourceItem;
 
         /// <summary>
         /// Determines whether content is in reference mode
@@ -62,7 +70,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected CollectionItemViewModel associatedItemViewModel;
 
-        protected CanvasFile canvasFile;
+        protected CanvasItem canvasItem;
 
         #endregion
 
@@ -104,7 +112,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public BaseReadOnlyCanvasViewModel(ISafeWrapperExceptionReporter errorReporter, BasePastedContentTypeDataModel contentType, IBaseCanvasPreviewControlView view)
+        public BaseReadOnlyCanvasViewModel(ISafeWrapperExceptionReporter errorReporter, BaseContentTypeModel contentType, IBaseCanvasPreviewControlView view)
         {
             this.errorReporter = errorReporter;
             this.contentType = contentType;
@@ -124,13 +132,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return await TryLoadExistingData(itemData, itemData.ContentType, cancellationToken);
         }
 
-        public virtual async Task<SafeWrapperResult> TryLoadExistingData(CanvasFile canvasFile, BasePastedContentTypeDataModel contentType, CancellationToken cancellationToken)
+        public virtual async Task<SafeWrapperResult> TryLoadExistingData(CanvasItem canvasItem, BaseContentTypeModel contentType, CancellationToken cancellationToken)
         {
             SafeWrapperResult result;
 
             this.cancellationToken = cancellationToken;
             this.contentType = contentType;
-            this.canvasFile = canvasFile;
+            this.canvasItem = canvasItem;
 
             RaiseOnContentStartedLoadingEvent(this, new ContentStartedLoadingEventArgs(contentType));
 
@@ -156,7 +164,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
                 DiscardData();
-                return SafeWrapperResult.S_CANCEL;
+                return SafeWrapperResult.CANCEL;
             }
 
             result = await SetContentMode();
@@ -168,7 +176,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
                 DiscardData();
-                return SafeWrapperResult.S_CANCEL;
+                return SafeWrapperResult.CANCEL;
             }
 
             result = await SetDataFromExistingFile(await sourceItem);
@@ -180,7 +188,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
                 DiscardData();
-                return SafeWrapperResult.S_CANCEL;
+                return SafeWrapperResult.CANCEL;
             }
 
             result = await TryFetchDataToView();
@@ -340,7 +348,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 }
                 else
                 {
-                    return SafeWrapperResult.S_SUCCESS;
+                    return SafeWrapperResult.SUCCESS;
                 }
             }
             else
@@ -348,7 +356,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 // Not a reference
                 isContentAsReference = false;
 
-                return SafeWrapperResult.S_SUCCESS;
+                return SafeWrapperResult.SUCCESS;
             }
         }
 

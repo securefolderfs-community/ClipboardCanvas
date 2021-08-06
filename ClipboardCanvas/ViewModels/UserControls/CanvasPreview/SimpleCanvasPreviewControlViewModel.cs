@@ -32,7 +32,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         #region Override
 
-        protected override bool InitializeViewModelFromContentType(BasePastedContentTypeDataModel contentType)
+        protected override bool InitializeViewModelFromContentType(BaseContentTypeModel contentType)
         {
             // Try for image
             if (InitializeViewModelForType<ImageContentType, ThumbnailSimpleCanvasViewModel>(contentType, () => new ThumbnailSimpleCanvasViewModel(view)))

@@ -23,7 +23,7 @@
                 VerticalAlignment="Stretch"
                 HorizontalContentAlignment="Stretch"
                 VerticalContentAlignment="Stretch"
-                ap:DisplayFrameNavigationAttachedProperty.Value="{x:Bind ViewModel.CurrentPageNavigation, Mode=OneWay}" />
+                CacheSize="0" />
         </Grid>
     </Border>
 </UserControl>

@@ -1,10 +1,12 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Storage;
 using Windows.System;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+
 using ClipboardCanvas.ViewModels.Dialogs;
 using ClipboardCanvas.Services;
 
@@ -12,16 +14,12 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 {
     public class SettingsAboutPageViewModel : ObservableObject
     {
-        #region Public Properties
+        private IDialogService DialogService { get; } = Ioc.Default.GetService<IDialogService>();
 
         public string VersionNumber
         {
             get => App.AppVersion;
         }
-
-        #endregion
-
-        #region Commands
 
         public ICommand OpenLogLocationCommand { get; private set; }
 
@@ -31,10 +29,6 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         public ICommand OpenPrivacyPolicyCommand { get; private set; }
 
-        #endregion
-
-        #region Constructor
-
         public SettingsAboutPageViewModel()
         {
             // Create commands
@@ -43,10 +37,6 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
             SubmitFeedbackCommand = new AsyncRelayCommand(SubmitFeedback);
             OpenPrivacyPolicyCommand = new AsyncRelayCommand(OpenPrivacyPolicy);
         }
-
-        #endregion
-
-        #region Command Implementation
 
         private async Task OpenPrivacyPolicy()
         {
@@ -60,14 +50,12 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         private async Task ShowChangeLog()
         {
-            await App.DialogService.ShowDialog(new UpdateChangeLogDialogViewModel());
+            await DialogService.ShowDialog(new UpdateChangeLogDialogViewModel());
         }
 
         private async Task OpenLogLocation()
         {
             await Launcher.LaunchFolderAsync(ApplicationData.Current.LocalFolder);
         }
-
-        #endregion
     }
 }

@@ -13,15 +13,11 @@ namespace ClipboardCanvas.Models
 {
     public interface ICanvasPreviewModel : IReadOnlyCanvasPreviewModel
     {
-        event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
-
         event EventHandler<PasteInitiatedEventArgs> OnPasteInitiatedEvent;
 
         event EventHandler<FileCreatedEventArgs> OnFileCreatedEvent;
 
         event EventHandler<FileModifiedEventArgs> OnFileModifiedEvent;
-
-        event EventHandler<ProgressReportedEventArgs> OnProgressReportedEvent;
 
         /// <summary>
         /// Attempts to paste data from provided <see cref="DataPackageView"/> <paramref name="dataPackage"/>

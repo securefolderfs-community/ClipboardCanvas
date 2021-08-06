@@ -9,6 +9,7 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ViewModels.Dialogs;
 using ClipboardCanvas.Services;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace ClipboardCanvas.Helpers
 {
@@ -16,14 +17,17 @@ namespace ClipboardCanvas.Helpers
     {
         public static async Task CheckVersionAndShowDialog()
         {
-            string lastVersion = App.AppSettings.ApplicationSettings.LastVersionNumber;
+            IApplicationSettingsService applicationSettings = Ioc.Default.GetService<IApplicationSettingsService>();
+            IDialogService dialogService = Ioc.Default.GetService<IDialogService>();
+
+            string lastVersion = applicationSettings.LastVersionNumber;
             string currentVersion = App.AppVersion;
 
             if (string.IsNullOrEmpty(lastVersion))
             {
                 // No version yet, Clipboard Canvas is freshly installed
                 // update the version setting with current version
-                App.AppSettings.ApplicationSettings.LastVersionNumber = currentVersion;
+                applicationSettings.LastVersionNumber = currentVersion;
             }
             else
             {
@@ -31,16 +35,18 @@ namespace ClipboardCanvas.Helpers
                 if (VersionHelpers.IsVersionDifferentThan(lastVersion, currentVersion))
                 {
                     // Update the last version number to be the current number
-                    App.AppSettings.ApplicationSettings.LastVersionNumber = currentVersion;
+                    applicationSettings.LastVersionNumber = currentVersion;
 
                     // Show the update dialog
-                    await App.DialogService.ShowDialog(new UpdateChangeLogDialogViewModel());
+                    await dialogService.ShowDialog(new UpdateChangeLogDialogViewModel());
                 }
             }
         }
 
         public static async Task HandleFileSystemPermissionDialog(IWindowTitleBarControlModel windowTitleBar)
         {
+            IDialogService dialogService = Ioc.Default.GetService<IDialogService>();
+
             string testForFolderOnFS = Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
             SafeWrapper<StorageFolder> testFolderResult = await StorageHelpers.ToStorageItemWithError<StorageFolder>(testForFolderOnFS);
 
@@ -48,7 +54,7 @@ namespace ClipboardCanvas.Helpers
             {
                 App.IsInRestrictedAccessMode = true;
 
-                DialogResult dialogResult = await App.DialogService.ShowDialog(new FileSystemAccessDialogViewModel());
+                DialogResult dialogResult = await dialogService.ShowDialog(new FileSystemAccessDialogViewModel());
 
                 if (dialogResult == DialogResult.Primary)
                 {

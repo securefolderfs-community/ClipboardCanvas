@@ -17,7 +17,7 @@ namespace ClipboardCanvas.ReferenceItems
     {
         private readonly StorageFile _innerReferenceFile;
 
-        public SafeWrapperResult LastError { get; private set; } = SafeWrapperResult.S_SUCCESS;
+        public SafeWrapperResult LastError { get; private set; } = SafeWrapperResult.SUCCESS;
 
         public IStorageItem ReferencedItem { get; private set; }
 
@@ -48,7 +48,7 @@ namespace ClipboardCanvas.ReferenceItems
 
             ReferenceFileData referenceFileData = JsonConvert.DeserializeObject<ReferenceFileData>(data);
 
-            return new SafeWrapper<ReferenceFileData>(referenceFileData, SafeWrapperResult.S_SUCCESS);
+            return new SafeWrapper<ReferenceFileData>(referenceFileData, SafeWrapperResult.SUCCESS);
         }
 
         public static async Task<ReferenceFile> GetFile(StorageFile referenceFile)

@@ -1,39 +1,11 @@
 ﻿using Windows.UI.Xaml.Controls;
 
 using ClipboardCanvas.Enums;
-using ClipboardCanvas.Pages;
 using ClipboardCanvas.Pages.SettingsPages;
 using ClipboardCanvas.DataModels.Navigation;
 
 namespace ClipboardCanvas.AttachedProperties
 {
-    public class DisplayFrameNavigationAttachedProperty : BaseAttachedProperty<DisplayFrameNavigationAttachedProperty, DisplayFrameNavigationDataModel, Frame>
-    {
-        public override void OnValueChanged(Frame sender, DisplayFrameNavigationDataModel newValue)
-        {
-            switch (newValue.pageType)
-            {
-                case DisplayPageType.HomePage:
-                    {
-                        sender.Navigate(typeof(HomePage), newValue.parameter, newValue.transitionInfo);
-                        break;
-                    }
-
-                case DisplayPageType.CanvasPage:
-                    {
-                        sender.Navigate(typeof(CanvasPage), newValue.parameter, newValue.transitionInfo);
-                        break;
-                    }
-
-                case DisplayPageType.CollectionPreviewPage:
-                    {
-                        sender.Navigate(typeof(CollectionPreviewPage), newValue.parameter, newValue.transitionInfo);
-                        break;
-                    }
-            }
-        }
-    }
-
     public class SettingsFrameNavigationAttachedProperty : BaseAttachedProperty<SettingsFrameNavigationAttachedProperty, SettingsFrameNavigationDataModel, Frame>
     {
         public override void OnValueChanged(Frame sender, SettingsFrameNavigationDataModel newValue)

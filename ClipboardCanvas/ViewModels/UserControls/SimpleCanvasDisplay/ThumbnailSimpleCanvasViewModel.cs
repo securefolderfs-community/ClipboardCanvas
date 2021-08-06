@@ -60,14 +60,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             _FileIcon = new BitmapImage();
             await _FileIcon.SetSourceAsync(_thumbnail);
 
-            return SafeWrapperResult.S_SUCCESS;
+            return SafeWrapperResult.SUCCESS;
         }
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()
         {
             OnPropertyChanged(nameof(FileIcon));
 
-            return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
+            return await Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
         protected override void RefreshContextMenuItems()

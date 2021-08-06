@@ -5,12 +5,8 @@ using ClipboardCanvas.ViewModels;
 
 namespace ClipboardCanvas.Models
 {
-    public interface ICollectionPreviewPageModel
+    public interface ICollectionPreviewPageModel : IDisposable
     {
-        event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
-
-        event EventHandler<CanvasPreviewOpenRequestedEventArgs> OnCanvasPreviewOpenRequestedEvent;
-
         event EventHandler<CanvasPreviewSelectedItemChangedEventArgs> OnCanvasPreviewSelectedItemChangedEvent;
 
         CollectionPreviewItemViewModel SelectedItem { get; }

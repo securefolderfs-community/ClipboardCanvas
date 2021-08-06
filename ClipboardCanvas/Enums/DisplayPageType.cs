@@ -2,7 +2,7 @@
 {
     public enum DisplayPageType
     {
-        HomePage = 0,
+        Homepage = 0,
         CanvasPage = 1,
         CollectionPreviewPage = 2
     }

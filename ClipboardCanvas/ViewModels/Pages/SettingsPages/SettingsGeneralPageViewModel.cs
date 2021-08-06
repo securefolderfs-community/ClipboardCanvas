@@ -1,19 +1,22 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+
+using ClipboardCanvas.Services;
 
 namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 {
     public class SettingsGeneralPageViewModel : ObservableObject
     {
-        #region Public Properties
+        private IUserSettingsService UserSettings { get; } = Ioc.Default.GetService<IUserSettingsService>();
 
         public bool UseInfiniteCanvasAsDefault
         {
-            get => App.AppSettings.UserSettings.UseInfiniteCanvasAsDefault;
+            get => UserSettings.UseInfiniteCanvasAsDefault;
             set
             {
-                if (value != App.AppSettings.UserSettings.UseInfiniteCanvasAsDefault)
+                if (value != UserSettings.UseInfiniteCanvasAsDefault)
                 {
-                    App.AppSettings.UserSettings.UseInfiniteCanvasAsDefault = value;
+                    UserSettings.UseInfiniteCanvasAsDefault = value;
 
                     OnPropertyChanged(nameof(UseInfiniteCanvasAsDefault));
                 }
@@ -22,18 +25,16 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         public bool ShowDeleteConfirmationDialog
         {
-            get => App.AppSettings.UserSettings.ShowDeleteConfirmationDialog;
+            get => UserSettings.ShowDeleteConfirmationDialog;
             set
             {
-                if (value != App.AppSettings.UserSettings.ShowDeleteConfirmationDialog)
+                if (value != UserSettings.ShowDeleteConfirmationDialog)
                 {
-                    App.AppSettings.UserSettings.ShowDeleteConfirmationDialog = value;
+                    UserSettings.ShowDeleteConfirmationDialog = value;
 
                     OnPropertyChanged(nameof(ShowDeleteConfirmationDialog));
                 }
             }
         }
-
-        #endregion
     }
 }

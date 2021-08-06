@@ -1,15 +1,16 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Windows.Storage;
 using System.Collections.ObjectModel;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.UserControls;
 using ClipboardCanvas.Contexts;
+using ClipboardCanvas.CanvasFileReceivers;
+using ClipboardCanvas.DataModels;
 
 namespace ClipboardCanvas.Models
 {
-    public interface ICollectionModel
+    public interface ICollectionModel : ICanvasFileReceiverModel
     {
         ObservableCollection<CollectionItemViewModel> CollectionItems { get; }
 
@@ -32,9 +33,11 @@ namespace ClipboardCanvas.Models
 
         Task<SafeWrapper<CollectionItemViewModel>> CreateNewCollectionItemFromExtension(string extension);
 
-        Task<SafeWrapper<CollectionItemViewModel>> CreateNewCollectionItemFromFilename(string fileName);
+        Task<SafeWrapper<CollectionItemViewModel>> CreateNewCollectionItem(string fileName);
 
         Task<SafeWrapperResult> DeleteCollectionItem(CollectionItemViewModel itemToDelete, bool permanently);
+
+        CollectionItemViewModel FindCollectionItem(CanvasItem canvasItem);
 
         /// <summary>
         /// Navigates to new canvas

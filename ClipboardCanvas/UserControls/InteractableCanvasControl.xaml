@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uc="using:ClipboardCanvas.UserControls.SimpleCanvasDisplay"
     xmlns:vm="using:ClipboardCanvas.ViewModels.UserControls"
     d:DesignHeight="300"
     d:DesignWidth="400"
@@ -29,13 +30,59 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="vm:InteractableCanvasControlItemViewModel">
                     <Grid
-                        Width="60"
-                        Height="60"
-                        Padding="8"
-                        Background="Red"
+                        x:Name="RootContentGrid"
+                        Padding="2"
+                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                        BorderBrush="{ThemeResource SubtleBackgroundBrush}"
+                        BorderThickness="1"
                         CanDrag="True"
-                        DragStarting="Grid_DragStarting">
-                        <TextBlock Text="{x:Bind TestText}" />
+                        DragStarting="RootContentGrid_DragStarting"
+                        RowSpacing="2">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Viewbox
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Top"
+                            StretchDirection="Both">
+                            <uc:SimpleCanvasPreviewControl CollectionModel="{x:Bind CollectionModel, Mode=OneWay}" SimpleCanvasPreviewModel="{x:Bind ReadOnlyCanvasPreviewModel, Mode=TwoWay}" />
+                        </Viewbox>
+
+                        <!--  Info bar  -->
+                        <StackPanel
+                            Grid.Row="1"
+                            Margin="2"
+                            Orientation="Horizontal"
+                            Spacing="8">
+
+                            <!--  Pasted as Reference button  -->
+                            <Button
+                                x:Name="PastedAsReferenceButton"
+                                Grid.Row="1"
+                                Width="30"
+                                Height="30"
+                                Padding="4"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                x:Load="{x:Bind IsPastedAsReference, Mode=OneWay}"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                ToolTipService.ToolTip="Item pasted as Reference">
+                                <FontIcon FontSize="18" Glyph="&#xE71B;" />
+                            </Button>
+
+                            <!--  Filename  -->
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Opacity="0.8"
+                                Text="{x:Bind DisplayName, Mode=OneWay}"
+                                TextTrimming="CharacterEllipsis"
+                                ToolTipService.ToolTip="{x:Bind DisplayName, Mode=OneWay}" />
+                        </StackPanel>
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

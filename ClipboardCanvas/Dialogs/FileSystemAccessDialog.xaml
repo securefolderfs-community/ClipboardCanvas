@@ -16,10 +16,7 @@
 
         <StackPanel>
             <TextBlock Text="You can grant this permission by heading to settings, whereupon the app will be closed." TextWrapping="WrapWholeWords" />
-            <HyperlinkButton
-                Padding="0,4,0,4"
-                Command="{x:Bind ViewModel.OpenSettingsCommand}"
-                Content="Open Settings" />
+            <HyperlinkButton Command="{x:Bind ViewModel.OpenSettingsCommand}" Content="Open Settings" />
         </StackPanel>
 
         <TextBlock

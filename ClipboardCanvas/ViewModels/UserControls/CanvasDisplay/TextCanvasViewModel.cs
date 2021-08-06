@@ -13,12 +13,15 @@ using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.ViewModels.ContextMenu;
+using ClipboardCanvas.CanavsPasteModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
     public class TextCanvasViewModel : BaseCanvasViewModel
     {
         #region Public Properties
+
+        protected override IPasteModel CanvasPasteModel => null;
 
         private string _ContentText;
         public string ContentText
@@ -94,7 +97,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             OnPropertyChanged(nameof(ContentText));
 
-            return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
+            return await Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
         protected override void RefreshContextMenuItems()

@@ -7,6 +7,8 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Toolkit.Mvvm.Input;
+using Windows.ApplicationModel.Core;
+using Microsoft.Toolkit.Uwp;
 using System.Linq;
 
 using ClipboardCanvas.DataModels.PastedContentDataModels;
@@ -15,26 +17,28 @@ using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers.Filesystem;
-using ClipboardCanvas.Helpers;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.ModelViews;
-using Windows.ApplicationModel.Core;
-using Microsoft.Toolkit.Uwp;
+using ClipboardCanvas.CanavsPasteModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
     public abstract class BaseCanvasViewModel : BaseReadOnlyCanvasViewModel, ICanvasPreviewModel, IDisposable
     {
-        #region Private Members
+        #region Members
 
         protected IStorageItem _temporarySourceItem;
 
         #endregion
 
-        #region Events
+        #region Properties
 
-        public event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
+        protected abstract IPasteModel CanvasPasteModel { get; }
+
+        #endregion
+
+        #region Events
 
         public event EventHandler<PasteInitiatedEventArgs> OnPasteInitiatedEvent;
 
@@ -46,7 +50,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public BaseCanvasViewModel(ISafeWrapperExceptionReporter errorReporter, BasePastedContentTypeDataModel contentType, IBaseCanvasPreviewControlView view)
+        public BaseCanvasViewModel(ISafeWrapperExceptionReporter errorReporter, BaseContentTypeModel contentType, IBaseCanvasPreviewControlView view)
             : base(errorReporter, contentType, view)
         {
         }
@@ -78,7 +82,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
                 DiscardData();
-                return SafeWrapperResult.S_CANCEL;
+                return SafeWrapperResult.CANCEL;
             }
 
             result = await SetDataInternal(dataPackage);
@@ -90,12 +94,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
                 DiscardData();
-                return SafeWrapperResult.S_CANCEL;
+                return SafeWrapperResult.CANCEL;
             }
 
             SetContentModeForPasting();
 
-            result = await CreateAndSetCanvasFile();
+            result = await CreateAndSetCanvasItem();
             if (!AssertNoError(result))
             {
                 return result;
@@ -104,7 +108,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
                 DiscardData();
-                return SafeWrapperResult.S_CANCEL;
+                return SafeWrapperResult.CANCEL;
             }
 
             result = await TrySaveDataInternal();
@@ -116,10 +120,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
                 DiscardData();
-                return SafeWrapperResult.S_CANCEL;
+                return SafeWrapperResult.CANCEL;
             }
 
-            if (App.AppSettings.UserSettings.OpenNewCanvasOnPaste)
+            if (UserSettings.OpenNewCanvasOnPaste)
             {
                 OpenNewCanvas();
             }
@@ -147,9 +151,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 ReferenceFile referenceFile = await ReferenceFile.GetFile(associatedFile);
 
                 // We need to update it since it's empty
-                await referenceFile.UpdateReferenceFile(new ReferenceFileData(_temporarySourceItem.Path));
-
-                return SafeWrapperResult.S_SUCCESS;
+                return await referenceFile.UpdateReferenceFile(new ReferenceFileData(_temporarySourceItem.Path));
             }
             else
             {
@@ -160,7 +162,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     // Signalize that the file is being pasted
                     RaiseOnTipTextUpdateRequestedEvent(this, new TipTextUpdateRequestedEventArgs("The file is being pasted, please wait.", TimeSpan.FromMilliseconds(Constants.UI.CanvasContent.FILE_PASTING_TIP_DELAY)));
 
-                    SafeWrapperResult copyResult = SafeWrapperResult.S_UNKNOWN_FAIL;
+                    SafeWrapperResult copyResult = SafeWrapperResult.UNKNOWN_FAIL;
 
                     // Copy to collection
                     this.associatedItemViewModel.OperationContext.CancellationToken = cancellationToken;
@@ -211,7 +213,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             string fileName = Path.GetFileName((await sourceFile).Path);
-            SafeWrapper<CollectionItemViewModel> newItemViewModel = await associatedCollection.CreateNewCollectionItemFromFilename(fileName);
+            SafeWrapper<CollectionItemViewModel> newItemViewModel = await associatedCollection.CreateNewCollectionItem(fileName);
 
             if (!AssertNoError(newItemViewModel))
             {
@@ -219,13 +221,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             associatedItemViewModel = newItemViewModel.Result;
-            canvasFile = associatedItemViewModel;
+            canvasItem = associatedItemViewModel;
 
             // Copy to the collection
             this.associatedItemViewModel.OperationContext.CancellationToken = cancellationToken;
             this.associatedItemViewModel.OperationContext.ProgressDelegate = ReportProgress;
 
-            SafeWrapperResult copyResult = SafeWrapperResult.S_UNKNOWN_FAIL;
+            SafeWrapperResult copyResult = SafeWrapperResult.UNKNOWN_FAIL;
             await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(async () =>
             {
                 copyResult = await FilesystemOperations.CopyFileAsync(savedSourceItem as StorageFile, associatedFile, associatedItemViewModel.OperationContext);
@@ -252,7 +254,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         public virtual void OpenNewCanvas()
         {
             DiscardData();
-            RaiseOnOpenNewCanvasRequestedEvent(this, new OpenNewCanvasRequestedEventArgs());
+            NavigationService.OpenNewCanvas(associatedCollection);
         }
 
         public virtual async Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions()
@@ -327,9 +329,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Protected Helpers
 
-        protected virtual async Task OnReferencePasted()
+        protected virtual Task OnReferencePasted()
         {
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         protected virtual async Task<SafeWrapperResult> SetDataInternal(DataPackageView dataPackage)
@@ -364,7 +366,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
         }
 
-        protected virtual async Task<SafeWrapperResult> CreateAndSetCanvasFile()
+        protected virtual async Task<SafeWrapperResult> CreateAndSetCanvasItem()
         {
             SafeWrapper<CollectionItemViewModel> itemViewModel;
 
@@ -377,7 +379,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 if (_temporarySourceItem != null)
                 {
                     string fileName = Path.GetFileName(_temporarySourceItem.Path);
-                    itemViewModel = await associatedCollection.CreateNewCollectionItemFromFilename(fileName);
+                    itemViewModel = await associatedCollection.CreateNewCollectionItem(fileName);
                 }
                 else
                 {
@@ -386,7 +388,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             this.associatedItemViewModel = itemViewModel;
-            this.canvasFile = associatedItemViewModel;
+            this.canvasItem = associatedItemViewModel;
 
             if (itemViewModel)
             {
@@ -398,7 +400,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected void SetContentModeForPasting()
         {
-            if (App.AppSettings.UserSettings.AlwaysPasteFilesAsReference && CanPasteAsReference())
+            if (UserSettings.AlwaysPasteFilesAsReference && CanPasteAsReference())
             {
                 isContentAsReference = true;
             }
@@ -420,8 +422,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #endregion
 
         #region Event Raisers
-
-        protected void RaiseOnOpenNewCanvasRequestedEvent(object s, OpenNewCanvasRequestedEventArgs e) => OnOpenNewCanvasRequestedEvent?.Invoke(s, e);
 
         protected void RaiseOnPasteInitiatedEvent(object s, PasteInitiatedEventArgs e) => OnPasteInitiatedEvent?.Invoke(s, e);
 

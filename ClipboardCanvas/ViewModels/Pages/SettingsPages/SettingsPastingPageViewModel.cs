@@ -1,28 +1,24 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using System.Windows.Input;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
-using System.Windows.Input;
+
+using ClipboardCanvas.Services;
 
 namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 {
     public class SettingsPastingPageViewModel : ObservableObject
     {
-        #region Public Properties
-
-        private bool _IsReferenceFilesTeachingTipVisible;
-        public bool IsReferenceFilesTeachingTipVisible
-        {
-            get => _IsReferenceFilesTeachingTipVisible;
-            set => SetProperty(ref _IsReferenceFilesTeachingTipVisible, value);
-        }
+        private IUserSettingsService UserSettings { get; } = Ioc.Default.GetService<IUserSettingsService>();
 
         public bool OpenNewCanvasOnPaste
         {
-            get => App.AppSettings.UserSettings.OpenNewCanvasOnPaste;
+            get => UserSettings.OpenNewCanvasOnPaste;
             set
             {
-                if (value != App.AppSettings.UserSettings.OpenNewCanvasOnPaste)
+                if (value != UserSettings.OpenNewCanvasOnPaste)
                 {
-                    App.AppSettings.UserSettings.OpenNewCanvasOnPaste = value;
+                    UserSettings.OpenNewCanvasOnPaste = value;
 
                     OnPropertyChanged(nameof(OpenNewCanvasOnPaste));
                 }
@@ -31,12 +27,12 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         public bool AlwaysPasteFilesAsReference
         {
-            get => App.IsInRestrictedAccessMode ? false : App.AppSettings.UserSettings.AlwaysPasteFilesAsReference;
+            get => App.IsInRestrictedAccessMode ? false : UserSettings.AlwaysPasteFilesAsReference;
             set
             {
-                if (value != App.AppSettings.UserSettings.AlwaysPasteFilesAsReference)
+                if (value != UserSettings.AlwaysPasteFilesAsReference)
                 {
-                    App.AppSettings.UserSettings.AlwaysPasteFilesAsReference = value;
+                    UserSettings.AlwaysPasteFilesAsReference = value;
 
                     OnPropertyChanged(nameof(AlwaysPasteFilesAsReference));
                 }
@@ -45,16 +41,23 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         public bool PrioritizeMarkdownOverText
         {
-            get => App.AppSettings.UserSettings.PrioritizeMarkdownOverText;
+            get => UserSettings.PrioritizeMarkdownOverText;
             set
             {
-                if (value != App.AppSettings.UserSettings.PrioritizeMarkdownOverText)
+                if (value != UserSettings.PrioritizeMarkdownOverText)
                 {
-                    App.AppSettings.UserSettings.PrioritizeMarkdownOverText = value;
+                    UserSettings.PrioritizeMarkdownOverText = value;
 
                     OnPropertyChanged(nameof(PrioritizeMarkdownOverText));
                 }
             }
+        }
+
+        private bool _IsReferenceFilesTeachingTipVisible;
+        public bool IsReferenceFilesTeachingTipVisible
+        {
+            get => _IsReferenceFilesTeachingTipVisible;
+            set => SetProperty(ref _IsReferenceFilesTeachingTipVisible, value);
         }
 
         public bool IsInRestrictedAccessMode
@@ -62,15 +65,7 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
             get => App.IsInRestrictedAccessMode;
         }
 
-        #endregion
-
-        #region Commands
-
         public ICommand ShowReferenceFilesTeachingTipCommand { get; private set; }
-
-        #endregion
-
-        #region Constructor
 
         public SettingsPastingPageViewModel()
         {
@@ -78,15 +73,9 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
             ShowReferenceFilesTeachingTipCommand = new RelayCommand(ShowReferenceFilesTeachingTip);
         }
 
-        #endregion
-
-        #region Command Implementation
-
         private void ShowReferenceFilesTeachingTip()
         {
             IsReferenceFilesTeachingTipVisible = true;
         }
-
-        #endregion
     }
 }

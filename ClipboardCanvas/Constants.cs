@@ -8,7 +8,7 @@
 
             public const string USER_SETTINGS_FILENAME = "user_settings.json";
 
-            public const string COLLECTION_LOCATIONS_FILENAME = "saved_collections.json";
+            public const string COLLECTION_SETTINGS_FILENAME = "collection_settings.json";
 
             public const string CANVAS_SETTINGS_FILENAME = "canvas_settings.json";
 
@@ -28,6 +28,8 @@
                 public const int FILE_PASTING_TIP_DELAY = 150;
 
                 public const uint SIMPLE_CANVAS_THUMBNAIL_SIZE = 128u;
+
+                public const string INFINITE_CANVAS_DRAGGED_OBJECT_ID = "clipboard_canvas__dragged_control_object";
             }
 
             public static class Notifications
@@ -43,11 +45,17 @@
 
         public static class FileSystem
         {
-            public const string REFERENCE_FILELIST_EXTENSION = ".ccvrx";
-
             public const string REFERENCE_FILE_EXTENSION = ".ccvr";
 
             public const string WEBSITE_LINK_FILE_EXTENSION = ".ccvwl";
+
+            public const string INFINITE_CANVAS_EXTENSION = ".ccvic";
+
+            public const string INFINITE_CANVAS_CONFIGURATION_FILE_EXTENSION = ".ccviccfg";
+
+            public const string INFINITE_CANVAS_CONFIGURATION_FILENAME = "infinite_canvas_configuration";
+
+            public const string CANVAS_FILE_FILENAME_DATE_FORMAT = "dd.mm.yyyy HH_mm_ss";
 
             public const int COPY_FILE_BUFFER_SIZE = 1024 * 1024; // 1mb
         }

@@ -18,6 +18,7 @@ using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.CanavsPasteModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -32,6 +33,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #endregion
 
         #region Public Properties
+
+        protected override IPasteModel CanvasPasteModel => null;
 
         public static List<string> Extensions => new List<string>() {
             ".png", ".jpg", ".jpeg", ".bmp", ".gif", ".tiff", ".ico", ".svg", ".webp"
@@ -83,7 +86,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
                 _softwareBitmap = await decoder.GetSoftwareBitmapAsync();
 
-                return SafeWrapperResult.S_SUCCESS;
+                return SafeWrapperResult.SUCCESS;
             }
 
             return new SafeWrapperResult(OperationErrorCode.AccessUnauthorized, "Couldn't retrieve clipboard data");
@@ -93,7 +96,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             SafeWrapperResult result;
 
-            if (sourceFile == null)
+            if (await sourceFile == null)
             {
                 return ItemIsNotAFileResult;
             }

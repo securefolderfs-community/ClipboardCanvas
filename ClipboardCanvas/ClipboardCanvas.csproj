@@ -136,16 +136,31 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ApplicationSettings\ApplicationSettingsModel.cs" />
-    <Compile Include="ApplicationSettings\BaseJsonSettingsModel.cs" />
-    <Compile Include="ApplicationSettings\CanvasSettingsModel.cs" />
-    <Compile Include="ApplicationSettings\CollectionsSettingsModel.cs" />
-    <Compile Include="ApplicationSettings\Interfaces\IApplicationSettings.cs" />
-    <Compile Include="ApplicationSettings\Interfaces\ICanvasSettings.cs" />
-    <Compile Include="ApplicationSettings\Interfaces\ICollectionsSettings.cs" />
-    <Compile Include="ApplicationSettings\Interfaces\IUserSettings.cs" />
-    <Compile Include="ApplicationSettings\SettingsInstance.cs" />
-    <Compile Include="ApplicationSettings\UserSettingsModel.cs" />
+    <Compile Include="CanavsPasteModels\BasePasteModel.cs" />
+    <Compile Include="CanavsPasteModels\MarkdownPasteModel.cs" />
+    <Compile Include="CanavsPasteModels\MediaPasteModel.cs" />
+    <Compile Include="CanvasFileReceivers\ICanvasFileReceiverModel.cs" />
+    <Compile Include="CanvasFileReceivers\InfiniteCanvasFileReceiver.cs" />
+    <Compile Include="Contexts\IOperationContext.cs" />
+    <Compile Include="Enums\DragDataType.cs" />
+    <Compile Include="Enums\NavigationTransitionType.cs" />
+    <Compile Include="EventArguments\DisplayFrameEventArgs.cs" />
+    <Compile Include="Helpers\AnimationHelpers.cs" />
+    <Compile Include="Models\IDragDataProviderModel.cs" />
+    <Compile Include="Models\IInteractableCanvasControlModel.cs" />
+    <Compile Include="Models\IInteractableCanvasControlItemModel.cs" />
+    <Compile Include="ModelViews\IInfiniteCanvasControlView.cs" />
+    <Compile Include="Services\Implementation\NavigationService.cs" />
+    <Compile Include="Services\INavigationService.cs" />
+    <Compile Include="Services\Implementation\ApplicationSettingsService.cs" />
+    <Compile Include="Serialization\BaseJsonSettingsModel.cs" />
+    <Compile Include="Services\Implementation\CanvasSettingsService.cs" />
+    <Compile Include="Services\Implementation\CollectionsSettingsService.cs" />
+    <Compile Include="Services\IApplicationSettingsService.cs" />
+    <Compile Include="Services\ICanvasSettingsService.cs" />
+    <Compile Include="Services\ICollectionsSettingsService.cs" />
+    <Compile Include="Services\IUserSettingsService.cs" />
+    <Compile Include="Services\Implementation\UserSettingsService.cs" />
     <Compile Include="AttachedProperties\BaseAttachedProperty.cs" />
     <Compile Include="AttachedProperties\BaseGenericAttachedProperty.cs" />
     <Compile Include="AttachedProperties\FrameAttachedProperties.cs" />
@@ -155,18 +170,18 @@
     <Compile Include="AttachedProperties\ViewModelAttachedProperties.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Contexts\OperationContext.cs" />
-    <Compile Include="DataModels\CanvasFile.cs" />
+    <Compile Include="DataModels\CanvasItem.cs" />
     <Compile Include="DataModels\Navigation\DisplayFrameNavigationDataModel.cs" />
-    <Compile Include="DataModels\Navigation\DisplayFrameNavigationParameterDataModel.cs" />
-    <Compile Include="DataModels\PastedContentDataModels\BasePastedContentTypeDataModel.cs" />
-    <Compile Include="DataModels\PastedContentDataModels\FallbackContentType.cs" />
-    <Compile Include="DataModels\PastedContentDataModels\InfiniteCanvasContentType.cs" />
-    <Compile Include="DataModels\PastedContentDataModels\InvalidContentTypeDataModel.cs" />
-    <Compile Include="DataModels\PastedContentDataModels\MarkdownContentType.cs" />
-    <Compile Include="DataModels\PastedContentDataModels\WebViewContentType.cs" />
-    <Compile Include="DataModels\PastedContentDataModels\ImageContentType.cs" />
-    <Compile Include="DataModels\PastedContentDataModels\MediaContentType.cs" />
-    <Compile Include="DataModels\PastedContentDataModels\TextContentType.cs" />
+    <Compile Include="DataModels\Navigation\DisplayFrameParameterDataModel.cs" />
+    <Compile Include="DataModels\ContentDataModels\BaseContentTypeModel.cs" />
+    <Compile Include="DataModels\ContentDataModels\FallbackContentType.cs" />
+    <Compile Include="DataModels\ContentDataModels\InfiniteCanvasContentType.cs" />
+    <Compile Include="DataModels\ContentDataModels\InvalidContentTypeDataModel.cs" />
+    <Compile Include="DataModels\ContentDataModels\MarkdownContentType.cs" />
+    <Compile Include="DataModels\ContentDataModels\WebViewContentType.cs" />
+    <Compile Include="DataModels\ContentDataModels\ImageContentType.cs" />
+    <Compile Include="DataModels\ContentDataModels\MediaContentType.cs" />
+    <Compile Include="DataModels\ContentDataModels\TextContentType.cs" />
     <Compile Include="DataModels\Navigation\SettingsFrameNavigationDataModel.cs" />
     <Compile Include="Contexts\SearchContext.cs" />
     <Compile Include="Dialogs\DeleteConfirmationDialog.xaml.cs">
@@ -194,7 +209,6 @@
     <Compile Include="Extensions\GenericsExtensions.cs" />
     <Compile Include="Extensions\RangeObservableCollection.cs" />
     <Compile Include="Extensions\SafetyExtensions.cs" />
-    <Compile Include="Extensions\ServiceProviderExtensions.cs" />
     <Compile Include="Extensions\TaskExtensions.cs" />
     <Compile Include="Helpers\CanvasHelpers.cs" />
     <Compile Include="Helpers\CollectionsHelpers.cs" />
@@ -209,12 +223,13 @@
     <Compile Include="Helpers\StringHelpers.cs" />
     <Compile Include="Helpers\ThemeHelper.cs" />
     <Compile Include="Helpers\VersionHelpers.cs" />
+    <Compile Include="Services\Implementation\ExceptionToFileLogger.cs" />
+    <Compile Include="CanavsPasteModels\TextPasteModel.cs" />
+    <Compile Include="CanavsPasteModels\IPasteModel.cs" />
     <Compile Include="Interfaces\Collections\ICollectionNameEditable.cs" />
     <Compile Include="Interfaces\Collections\ICollectionRemovable.cs" />
     <Compile Include="Interfaces\Search\ISearchItem.cs" />
     <Compile Include="Interfaces\Search\ISearchItems.cs" />
-    <Compile Include="Logging\ExceptionLogger.cs" />
-    <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Models\ICollectionModel.cs" />
     <Compile Include="Models\ICollectionPreviewPageModel.cs" />
     <Compile Include="Models\Implementation\ControlPropertyAccessorModel.cs" />
@@ -230,7 +245,7 @@
     <Compile Include="ModelViews\IMediaCanvasControlView.cs" />
     <Compile Include="ModelViews\ITextCanvasControlView.cs" />
     <Compile Include="ModelViews\IWebViewCanvasControlView.cs" />
-    <Compile Include="Services\DefaultDialogService.cs" />
+    <Compile Include="Services\Implementation\DefaultDialogService.cs" />
     <Compile Include="ReferenceItems\ReferenceFile.cs" />
     <Compile Include="ReferenceItems\ReferenceFileData.cs" />
     <Compile Include="Helpers\SafetyHelpers\SafeWrapperRoutines.cs" />
@@ -247,6 +262,7 @@
     <Compile Include="Pages\SettingsPages\SettingsPastingPage.xaml.cs">
       <DependentUpon>SettingsPastingPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CanavsPasteModels\ImagePasteModel.cs" />
     <Compile Include="UnsafeNative\UnsafeNativeDataModels.cs" />
     <Compile Include="Enums\DisplayPageType.cs" />
     <Compile Include="Enums\OperationStatus.cs" />
@@ -609,6 +625,12 @@
     <PackageReference Include="Microsoft.AppCenter.Crashes">
       <Version>4.3.0</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection">
+      <Version>5.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging">
+      <Version>5.0.0</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.12</Version>
     </PackageReference>
@@ -637,7 +659,9 @@
       <Version>0.50.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Interfaces\Canvas\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Fonts\CalcMDL2.ttf" />
   </ItemGroup>

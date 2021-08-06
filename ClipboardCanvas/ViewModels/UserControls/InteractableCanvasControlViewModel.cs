@@ -1,15 +1,16 @@
-﻿using ClipboardCanvas.ModelViews;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+
+using ClipboardCanvas.DataModels;
+using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.Models;
+using ClipboardCanvas.ModelViews;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
-    public class InteractableCanvasControlViewModel : ObservableObject
+    public class InteractableCanvasControlViewModel : ObservableObject, IInteractableCanvasControlModel
     {
         #region Private Members
 
@@ -29,29 +30,20 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             this._view = view;
 
-            Items = new ObservableCollection<InteractableCanvasControlItemViewModel>()
-            {
-                new InteractableCanvasControlItemViewModel(_view)
-                {
-                    TestText = "Hi 1"
-                },
-                new InteractableCanvasControlItemViewModel(_view)
-                {
-                    TestText = "Hi 2"
-                }
-            };
+            this.Items = new ObservableCollection<InteractableCanvasControlItemViewModel>();
         }
 
         #endregion
 
-        #region Public Helpers
+        #region IInteractableCanvasControlModel
 
-        public void NotifyCanvasLoaded()
+        public async Task<InteractableCanvasControlItemViewModel> AddItem(ICollectionModel collectionModel, BaseContentTypeModel contentType, CanvasItem canvasFile, CancellationToken cancellationToken)
         {
-            foreach (var item in Items)
-            {
-                item.NotifyCanvasLoaded();
-            }
+            var item = new InteractableCanvasControlItemViewModel(_view, collectionModel, contentType, canvasFile, cancellationToken);
+            Items.Add(item);
+            await item.InitializeItem();
+
+            return item;
         }
 
         #endregion

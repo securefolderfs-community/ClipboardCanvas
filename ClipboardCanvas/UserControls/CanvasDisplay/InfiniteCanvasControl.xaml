@@ -8,9 +8,10 @@
     xmlns:uc="using:ClipboardCanvas.UserControls"
     d:DesignHeight="300"
     d:DesignWidth="400"
+    Loaded="UserControl_Loaded"
     mc:Ignorable="d">
 
     <Grid>
-        <uc:InteractableCanvasControl />
+        <uc:InteractableCanvasControl x:Name="InteractableCanvas" />
     </Grid>
 </UserControl>

@@ -22,13 +22,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
     {
         #region Public Properties
 
-        public CanvasType RequestedCanvasType { get; set; }
+        public Func<CanvasType> GetRequestedCanvasTypeFunc;
 
         #endregion
 
         #region Events
-
-        public event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
 
         public event EventHandler<PasteInitiatedEventArgs> OnPasteInitiatedEvent;
 
@@ -51,11 +49,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         public async Task<SafeWrapperResult> TryPasteData(DataPackageView dataPackage, CancellationToken cancellationToken)
         {
-            BasePastedContentTypeDataModel contentType;
+            BaseContentTypeModel contentType;
             
-            if (RequestedCanvasType == CanvasType.OneCanvas)
+            if (GetRequestedCanvasTypeFunc() == CanvasType.OneCanvas)
             {
-                contentType = await BasePastedContentTypeDataModel.GetContentTypeFromDataPackage(dataPackage);
+                contentType = await BaseContentTypeModel.GetContentTypeFromDataPackage(dataPackage);
             }
             else
             {
@@ -116,7 +114,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
         /// </summary>
         /// <param name="dataPackage"></param>
         /// <returns></returns>
-        protected virtual async Task<SafeWrapperResult> InitializeViewModelAndPaste(DataPackageView dataPackage, BasePastedContentTypeDataModel contentType, CancellationToken cancellationToken)
+        protected virtual async Task<SafeWrapperResult> InitializeViewModelAndPaste(DataPackageView dataPackage, BaseContentTypeModel contentType, CancellationToken cancellationToken)
         {
             // Decide content type and initialize view model
 
@@ -146,11 +144,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         #region Event Handlers
 
-        private void CanvasViewModel_OnOpenNewCanvasRequestedEvent(object sender, OpenNewCanvasRequestedEventArgs e)
-        {
-            RaiseOnOpenNewCanvasRequestedEvent(sender, e);
-        }
-
         private void CanvasViewModel_OnPasteInitiatedEvent(object sender, PasteInitiatedEventArgs e)
         {
             RaiseOnPasteInitiatedEvent(sender, e);
@@ -170,8 +163,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         #region Event Raisers
 
-        protected void RaiseOnOpenNewCanvasRequestedEvent(object s, OpenNewCanvasRequestedEventArgs e) => OnOpenNewCanvasRequestedEvent?.Invoke(s, e);
-
         protected void RaiseOnPasteInitiatedEvent(object s, PasteInitiatedEventArgs e) => OnPasteInitiatedEvent?.Invoke(s, e);
 
         protected void RaiseOnFileCreatedEvent(object s, FileCreatedEventArgs e) => OnFileCreatedEvent?.Invoke(s, e);
@@ -188,7 +179,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
             if (CanvasViewModel != null)
             {
-                CanvasViewModel.OnOpenNewCanvasRequestedEvent += CanvasViewModel_OnOpenNewCanvasRequestedEvent;
                 CanvasViewModel.OnPasteInitiatedEvent += CanvasViewModel_OnPasteInitiatedEvent;
                 CanvasViewModel.OnFileCreatedEvent += CanvasViewModel_OnFileCreatedEvent;
                 CanvasViewModel.OnFileModifiedEvent += CanvasViewModel_OnFileModifiedEvent;
@@ -201,7 +191,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
             if (CanvasViewModel != null)
             {
-                CanvasViewModel.OnOpenNewCanvasRequestedEvent -= CanvasViewModel_OnOpenNewCanvasRequestedEvent;
                 CanvasViewModel.OnPasteInitiatedEvent -= CanvasViewModel_OnPasteInitiatedEvent;
                 CanvasViewModel.OnFileCreatedEvent -= CanvasViewModel_OnFileCreatedEvent;
                 CanvasViewModel.OnFileModifiedEvent -= CanvasViewModel_OnFileModifiedEvent;

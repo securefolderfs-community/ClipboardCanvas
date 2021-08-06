@@ -1,11 +1,13 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
-using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.Pages;
 using ClipboardCanvas.ViewModels.UserControls;
+using ClipboardCanvas.Services;
+using System.Diagnostics;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -13,6 +15,8 @@ namespace ClipboardCanvas.UserControls
 {
     public sealed partial class DisplayControl : UserControl, IDisplayControlView
     {
+        private INavigationService NavigationService { get; } = Ioc.Default.GetService<INavigationService>();
+
         public DisplayControlViewModel ViewModel
         {
             get => (DisplayControlViewModel)DataContext;
@@ -52,18 +56,24 @@ namespace ClipboardCanvas.UserControls
         public DisplayControl()
         {
             this.InitializeComponent();
-
+            
             this.ViewModel = new DisplayControlViewModel(this);
         }
 
-        // TODO: Move the event handler to the ViewModel
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            // Configure navigation
+            if (this.NavigationService is Services.Implementation.NavigationService navigationServiceImpl)
+            {
+                navigationServiceImpl.DisplayFrame = this.DisplayFrame;
+                navigationServiceImpl.CheckCollectionAvailabilityBeforePageNavigation = this.ViewModel.CheckCollectionAvailabilityBeforePageNavigation;
+            }
+            else
+            {
+                Debugger.Break(); // Shouldn't happen
+            }
+
             // Initialize the rest when the view is loaded
-            await InitialApplicationChecksHelpers.HandleFileSystemPermissionDialog(WindowTitleBarControlModel);
-
-            await InitialApplicationChecksHelpers.CheckVersionAndShowDialog();
-
             await this.ViewModel.InitializeAfterLoad();
         }
     }

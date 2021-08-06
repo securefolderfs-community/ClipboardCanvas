@@ -12,6 +12,7 @@ using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.CanavsPasteModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -24,6 +25,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #endregion
 
         #region Public Properties
+
+        protected override IPasteModel CanvasPasteModel => null;
 
         private string _FileName;
         public string FileName
@@ -75,7 +78,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public override async Task<SafeWrapperResult> TrySaveData()
         {
-            return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
+            return await Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
         protected override async Task<SafeWrapperResult> SetDataFromExistingFile(IStorageItem item)
@@ -100,7 +103,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             _FileIcon = new BitmapImage();
             await _FileIcon.SetSourceAsync(_thumbnail);
 
-            return SafeWrapperResult.S_SUCCESS;
+            return SafeWrapperResult.SUCCESS;
         }
 
         protected override async Task<SafeWrapperResult> SetDataInternal(DataPackageView dataPackage)
@@ -119,7 +122,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task<SafeWrapperResult> SetData(DataPackageView dataPackage)
         {
-            return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
+            return await Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()
@@ -130,12 +133,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             OnPropertyChanged(nameof(DateModified));
             OnPropertyChanged(nameof(FileIcon));
 
-            return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
+            return await Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
         protected override async Task<SafeWrapper<CollectionItemViewModel>> TrySetFileWithExtension()
         {
-            return await Task.FromResult(new SafeWrapper<CollectionItemViewModel>(null, SafeWrapperResult.S_SUCCESS));
+            return await Task.FromResult(new SafeWrapper<CollectionItemViewModel>(null, SafeWrapperResult.SUCCESS));
         }
 
         #endregion

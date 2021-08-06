@@ -11,6 +11,7 @@ using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using System.Threading;
+using ClipboardCanvas.CanavsPasteModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -45,6 +46,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #endregion
 
         #region Public Properties
+
+        protected override IPasteModel CanvasPasteModel => null;
 
         public static List<string> Extensions => new List<string>() {
             // Video
@@ -96,22 +99,22 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public override async Task<SafeWrapperResult> TrySaveData()
         {
-            return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
+            return await Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
         protected override async Task<SafeWrapperResult> SetData(DataPackageView dataPackage)
         {
-            return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
+            return await Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
         protected override async Task<SafeWrapperResult> SetDataFromExistingFile(IStorageItem item)
         {
-            return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
+            return await Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
         protected override async Task<SafeWrapper<CollectionItemViewModel>> TrySetFileWithExtension()
         {
-            return await Task.FromResult(new SafeWrapper<CollectionItemViewModel>(null, SafeWrapperResult.S_SUCCESS));
+            return await Task.FromResult(new SafeWrapper<CollectionItemViewModel>(null, SafeWrapperResult.SUCCESS));
         }
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()
@@ -119,7 +122,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             ContentMediaLoad = true;
             ContentMedia = MediaSource.CreateFromStorageFile(await sourceFile);
 
-            return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
+            return await Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
         protected override async Task OnReferencePasted()
@@ -137,8 +140,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (ControlView != null && _mediaContentType != null)
             {
                 this.Position = _mediaContentType.savedPosition;
-                this.IsLoopingEnabled = App.AppSettings.CanvasSettings.MediaCanvas_IsLoopingEnabled;
-                this.Volume = App.AppSettings.CanvasSettings.MediaCanvas_UniversalVolume;
+                this.IsLoopingEnabled = CanvasSettings.MediaCanvas_IsLoopingEnabled;
+                this.Volume = CanvasSettings.MediaCanvas_UniversalVolume;
             }
         }
 
@@ -155,8 +158,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     mediaContentType.savedPosition = Position;
                 }
 
-                App.AppSettings.CanvasSettings.MediaCanvas_IsLoopingEnabled = IsLoopingEnabled;
-                App.AppSettings.CanvasSettings.MediaCanvas_UniversalVolume = Volume;
+                CanvasSettings.MediaCanvas_IsLoopingEnabled = IsLoopingEnabled;
+                CanvasSettings.MediaCanvas_UniversalVolume = Volume;
             }
 
             base.Dispose();

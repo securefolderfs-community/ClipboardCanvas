@@ -30,5 +30,7 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
         }
 
         public static implicit operator T(SafeWrapper<T> safeWrapper) => safeWrapper.Result;
+
+        public static implicit operator SafeWrapper<T>((T, SafeWrapperResult) safeWrapper) => new SafeWrapper<T>(safeWrapper.Item1, safeWrapper.Item2);
     }
 }

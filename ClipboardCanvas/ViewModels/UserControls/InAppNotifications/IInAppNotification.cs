@@ -10,7 +10,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.InAppNotifications
 
         event EventHandler<InAppNotificationDismissedEventArgs> OnInAppNotificationDismissedEvent;
 
-        Task Show(int milliseconds = 0);
+        Task ShowAsync(int milliseconds = 0);
 
         void Dismiss();
     }

@@ -1,31 +1,24 @@
 ﻿using System.IO;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Diagnostics;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Media.Core;
 using Windows.Storage;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
-using ClipboardCanvas.Models;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Helpers.Filesystem;
-using ClipboardCanvas.ReferenceItems;
-using ClipboardCanvas.Helpers;
-using ClipboardCanvas.EventArguments.CanvasControl;
-using ClipboardCanvas.Extensions;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.UnsafeNative;
+using ClipboardCanvas.CanavsPasteModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
     public class WebViewCanvasViewModel : BaseCanvasViewModel
     {
-        #region Private Members
+        #region Members
 
         private readonly WebViewCanvasMode _mode;
 
@@ -35,17 +28,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #endregion
 
-        #region Constructor
+        #region Properties
 
-        public WebViewCanvasViewModel(IBaseCanvasPreviewControlView view, WebViewCanvasMode mode)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new WebViewContentType(mode), view)
-        {
-            this._mode = mode;
-        }
-
-        #endregion
-
-        #region Public Properties
+        protected override IPasteModel CanvasPasteModel => null;
 
         public static List<string> Extensions => new List<string>() {
             ".html", ".htm", Constants.FileSystem.WEBSITE_LINK_FILE_EXTENSION,
@@ -63,6 +48,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         public string Source { get; private set; }
 
         public IWebViewCanvasControlView ControlView { get; set; }
+
+        #endregion
+
+        #region Constructor
+
+        public WebViewCanvasViewModel(IBaseCanvasPreviewControlView view, WebViewCanvasMode mode)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new WebViewContentType(mode), view)
+        {
+            this._mode = mode;
+        }
 
         #endregion
 
@@ -181,7 +176,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 }
             }
 
-            return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
+            return await Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
         #endregion

@@ -36,11 +36,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private readonly ICanvasPageView _view;
 
-        private const string INFINITE_CANVAS_TEXT = "Infinite Canvas";
-
-        private const string ONE_CANVAS_TEXT = "One Canvas";
-
-        private const string DEFAULT_TITLE_TEXT = "Press Ctrl+V to paste in content!";
+        private const string DEFAULT_TITLE_TEXT = "Press Ctrl + V to paste in content!";
 
         private const string DRAG_TITLE_TEXT = "Release to paste in content!";
 
@@ -64,7 +60,7 @@ namespace ClipboardCanvas.ViewModels.Pages
                 {
                     _RequestedCanvasType = value;
 
-                    OnPropertyChanged(nameof(RequestedCanvasType));
+                    OnPropertyChanged(nameof(SwitchCanvasModeText));
                     OnPropertyChanged(nameof(CanvasTypeText));
                 }
             }
@@ -93,6 +89,18 @@ namespace ClipboardCanvas.ViewModels.Pages
             set => SetProperty(ref _NewCanvasScreenLoad, value);
         }
 
+        public string SwitchCanvasModeText
+        {
+            get => RequestedCanvasType == CanvasType.OneCanvas ? "Switch to Infinite Canvas" : "Switch to One Canvas";
+        }
+
+        private bool _InfiniteCanvasHeaderLoad;
+        public bool InfiniteCanvasHeaderLoad
+        {
+            get => _InfiniteCanvasHeaderLoad;
+            set => SetProperty(ref _InfiniteCanvasHeaderLoad, value);
+        }
+
         private bool _CanvasRingLoad = false;
         public bool CanvasRingLoad
         {
@@ -109,7 +117,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public string CanvasTypeText
         {
-            get => RequestedCanvasType == CanvasType.OneCanvas ? ONE_CANVAS_TEXT : INFINITE_CANVAS_TEXT;
+            get => RequestedCanvasType == CanvasType.OneCanvas ? "One Canvas" : "Infinite Canvas";
         }
 
         private string _TipText;
@@ -206,6 +214,8 @@ namespace ClipboardCanvas.ViewModels.Pages
 
             HookEvents();
 
+            (PasteCanvasModel as BaseCanvasPreviewControlViewModel).GetRequestedCanvasTypeFunc = () => RequestedCanvasType; // TODO: This class casting is bad, refactor entire code
+
             // Create commands
             DefaultKeyboardAcceleratorInvokedCommand = new AsyncRelayCommand<KeyboardAcceleratorInvokedEventArgs>(DefaultKeyboardAcceleratorInvoked);
             DragEnterCommand = new AsyncRelayCommand<DragEventArgs>(DragEnter);
@@ -254,7 +264,12 @@ namespace ClipboardCanvas.ViewModels.Pages
             {
                 deferral = e.GetDeferral();
 
-                if (e.DataView.Contains(StandardDataFormats.Text))
+                // Make sure we don't check dragged Infinite Canvas object
+                if (e.DataView.Properties.ContainsKey(Constants.UI.CanvasContent.INFINITE_CANVAS_DRAGGED_OBJECT_ID))
+                {
+                    e.AcceptedOperation = DataPackageOperation.Copy;
+                }
+                else if (e.DataView.Contains(StandardDataFormats.Text))
                 {
                     e.AcceptedOperation = DataPackageOperation.Copy;
                     TitleText = DRAG_TITLE_TEXT;
@@ -314,8 +329,26 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private async Task Drop(DragEventArgs e)
         {
-            DataPackageView dataPackage = e.DataView;
-            await PasteDataInternal(dataPackage);
+            DragOperationDeferral deferral = null;
+            
+            try
+            {
+                deferral = e.GetDeferral();
+
+                // Ignore dragged Infinite Canvas object
+                if (e.DataView.Properties.ContainsKey(Constants.UI.CanvasContent.INFINITE_CANVAS_DRAGGED_OBJECT_ID))
+                {
+                    return;
+                }
+
+                DataPackageView dataPackage = e.DataView;
+                await PasteDataInternal(dataPackage);
+            }
+            finally
+            {
+                e.Handled = true;
+                deferral?.Complete();
+            }
         }
 
         private async Task OverrideReference()
@@ -427,6 +460,7 @@ namespace ClipboardCanvas.ViewModels.Pages
         private void PasteCanvasModel_OnContentLoadedEvent(object sender, ContentLoadedEventArgs e)
         {
             PastedAsReferenceLoad = e.pastedByReference;
+            InfiniteCanvasHeaderLoad = e.isInfiniteCanvas;
             CanvasRingLoad = false;
             _contentFinishedLoading = true;
             NewCanvasScreenLoad = false;
@@ -510,7 +544,6 @@ namespace ClipboardCanvas.ViewModels.Pages
 
                 if (dataPackageWrapper)
                 {
-                    (PasteCanvasModel as BaseCanvasPreviewControlViewModel).RequestedCanvasType = RequestedCanvasType; // TODO: This class casting is bad, refactor entire code
                     result = await PasteCanvasModel.TryPasteData(dataPackageWrapper, CanvasPreviewControlViewModel.CanvasPasteCancellationTokenSource.Token);
                 }
             }

@@ -10,16 +10,16 @@ namespace ClipboardCanvas.DataModels.Navigation
 
         public readonly NavigationTransitionInfo transitionInfo;
 
-        public readonly DisplayFrameNavigationParameterDataModel parameter;
+        public readonly DisplayFrameParameterDataModel parameter;
 
         public bool simulateNavigation;
 
-        public DisplayFrameNavigationDataModel(DisplayPageType pageType, DisplayFrameNavigationParameterDataModel parameter, bool simulateNavigation = false)
+        public DisplayFrameNavigationDataModel(DisplayPageType pageType, DisplayFrameParameterDataModel parameter, bool simulateNavigation = false)
             : this(pageType, parameter, new DrillInNavigationTransitionInfo(), simulateNavigation)
         {
         }
 
-        public DisplayFrameNavigationDataModel(DisplayPageType pageType, DisplayFrameNavigationParameterDataModel parameter, NavigationTransitionInfo transitionInfo, bool simulateNavigation)
+        public DisplayFrameNavigationDataModel(DisplayPageType pageType, DisplayFrameParameterDataModel parameter, NavigationTransitionInfo transitionInfo, bool simulateNavigation)
         {
             this.pageType = pageType;
             this.parameter = parameter;

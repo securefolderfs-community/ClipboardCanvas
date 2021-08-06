@@ -27,7 +27,7 @@ namespace ClipboardCanvas.UserControls
             this.ViewModel.OnInAppNotificationDismissedEvent += ViewModel_OnInAppNotificationDismissedEvent;
         }
 
-        public async Task Show(int milliseconds = 0)
+        public async Task ShowAsync(int milliseconds = 0)
         {
             await ViewModel.Show(milliseconds);
         }

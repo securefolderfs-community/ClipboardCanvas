@@ -53,7 +53,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
         {
             OnPropertyChanged(nameof(ContentText));
 
-            return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
+            return await Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
         protected override void RefreshContextMenuItems()

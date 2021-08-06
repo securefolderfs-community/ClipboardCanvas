@@ -18,7 +18,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public override bool CheckCollectionAvailability()
         {
-            SetCollectionError(SafeWrapperResult.S_SUCCESS);
+            SetCollectionError(SafeWrapperResult.SUCCESS);
             return true;
         }
 

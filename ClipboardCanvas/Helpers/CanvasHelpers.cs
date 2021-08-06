@@ -1,11 +1,20 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using ClipboardCanvas.Enums;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Windows.Storage;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.Dialogs;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ViewModels.UserControls;
+using ClipboardCanvas.Services;
+using ClipboardCanvas.CanavsPasteModels;
+using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.Contexts;
+using ClipboardCanvas.CanvasFileReceivers;
+using ClipboardCanvas.DataModels;
+using ClipboardCanvas.Helpers.Filesystem;
 
 namespace ClipboardCanvas.Helpers
 {
@@ -15,10 +24,13 @@ namespace ClipboardCanvas.Helpers
         {
             bool deletePermanently = false;
 
-            if (App.AppSettings.UserSettings.ShowDeleteConfirmationDialog && !hideConfirmation)
+            IUserSettingsService userSettings = Ioc.Default.GetService<IUserSettingsService>();
+            IDialogService dialogService = Ioc.Default.GetService<IDialogService>();
+
+            if (userSettings.ShowDeleteConfirmationDialog && !hideConfirmation)
             {
                 DeleteConfirmationDialogViewModel deleteConfirmationDialogViewModel = new DeleteConfirmationDialogViewModel(Path.GetFileName(item.AssociatedItem.Path));
-                DialogResult dialogOption = await App.DialogService.ShowDialog(deleteConfirmationDialogViewModel);
+                DialogResult dialogOption = await dialogService.ShowDialog(deleteConfirmationDialogViewModel);
 
                 if (dialogOption == DialogResult.Primary)
                 {
@@ -26,7 +38,7 @@ namespace ClipboardCanvas.Helpers
                 }
                 else
                 {
-                    return SafeWrapperResult.S_CANCEL;
+                    return SafeWrapperResult.CANCEL;
                 }
             }
 
@@ -37,7 +49,9 @@ namespace ClipboardCanvas.Helpers
 
         public static CanvasType GetDefaultCanvasType()
         {
-            if (App.AppSettings.UserSettings.UseInfiniteCanvasAsDefault)
+            IUserSettingsService userSettings = Ioc.Default.GetService<IUserSettingsService>();
+
+            if (userSettings.UseInfiniteCanvasAsDefault)
             {
                 return CanvasType.InfiniteCanvas;
             }
@@ -45,6 +59,36 @@ namespace ClipboardCanvas.Helpers
             {
                 return CanvasType.OneCanvas;
             }
+        }
+
+        public static IPasteModel GetPasteModelFromContentType(this BaseContentTypeModel contentType, ICanvasFileReceiverModel canvasFileReceiver, IOperationContext operationContext)
+        {
+            switch (contentType)
+            {
+                case ImageContentType:
+                    return new ImagePasteModel(canvasFileReceiver, operationContext);
+
+                case TextContentType:
+                    return new TextPasteModel(canvasFileReceiver, operationContext);
+
+                case MediaContentType:
+                    return new MediaPasteModel(canvasFileReceiver, operationContext);
+
+                case MarkdownContentType:
+                    return new MarkdownPasteModel(canvasFileReceiver, operationContext);
+
+                default:
+                    return null;
+            }
+        }
+
+        public static async Task<SafeWrapperResult> InitializeInfiniteCanvas(CanvasItem infiniteCanvasFolder)
+        {
+            StorageFolder folder = infiniteCanvasFolder.AssociatedItem as StorageFolder;
+
+            string configurationFileName = $"{Constants.FileSystem.INFINITE_CANVAS_CONFIGURATION_FILENAME}{Constants.FileSystem.INFINITE_CANVAS_CONFIGURATION_FILE_EXTENSION}";
+
+            return await FilesystemOperations.CreateFile(folder, configurationFileName, CreationCollisionOption.OpenIfExists);
         }
     }
 }

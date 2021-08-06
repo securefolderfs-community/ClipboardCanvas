@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClipboardCanvas.Extensions
 {
@@ -41,7 +38,7 @@ namespace ClipboardCanvas.Extensions
         {
             try
             {
-                return (TOut)(object)obj;
+                return (TOut)obj;
             }
             catch
             {

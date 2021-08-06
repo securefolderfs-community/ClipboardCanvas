@@ -48,7 +48,7 @@ namespace ClipboardCanvas.ViewModels
             set => SetProperty(ref _IsCanvasPreviewVisible, value);
         }
 
-        public IReadOnlyCanvasPreviewModel SimpleCanvasPreviewModel { get; set; }
+        public IReadOnlyCanvasPreviewModel ReadOnlyCanvasPreviewModel { get; set; }
 
         public ICollectionModel CollectionModel { get; private set; }
 
@@ -78,7 +78,7 @@ namespace ClipboardCanvas.ViewModels
         {
             if (_loadRequested)
             {
-                await SimpleCanvasPreviewModel.TryLoadExistingData(CollectionItemViewModel, CollectionPreviewPageViewModel.LoadCancellationToken.Token);
+                await ReadOnlyCanvasPreviewModel.TryLoadExistingData(CollectionItemViewModel, CollectionPreviewPageViewModel.LoadCancellationToken.Token);
                 IsCanvasPreviewVisible = true;
                 Debug.WriteLine("LOADED VIA LOAD");
             }
@@ -95,27 +95,27 @@ namespace ClipboardCanvas.ViewModels
         {
             await Task.Delay(100);
 
-            if (SimpleCanvasPreviewModel == null)
+            if (ReadOnlyCanvasPreviewModel == null)
             {
                 _loadRequested = true;
                 return;
             }
 
-            SimpleCanvasPreviewModel.DiscardData();
-            await SimpleCanvasPreviewModel.TryLoadExistingData(CollectionItemViewModel, CollectionPreviewPageViewModel.LoadCancellationToken.Token);
+            ReadOnlyCanvasPreviewModel.DiscardData();
+            await ReadOnlyCanvasPreviewModel.TryLoadExistingData(CollectionItemViewModel, CollectionPreviewPageViewModel.LoadCancellationToken.Token);
         }
 
         public async Task RequestCanvasUnload()
         {
             await Task.Delay(100);
 
-            if (SimpleCanvasPreviewModel == null)
+            if (ReadOnlyCanvasPreviewModel == null)
             {
                 Debugger.Break();
                 return;
             }
 
-            SimpleCanvasPreviewModel.DiscardData();
+            ReadOnlyCanvasPreviewModel.DiscardData();
         }
 
         public static async Task<CollectionPreviewItemViewModel> GetCollectionPreviewItemModel(ICollectionModel collectionModel, CollectionItemViewModel collectionItemViewModel)
@@ -139,7 +139,7 @@ namespace ClipboardCanvas.ViewModels
 
         public void Dispose()
         {
-            SimpleCanvasPreviewModel?.Dispose();
+            ReadOnlyCanvasPreviewModel?.Dispose();
         }
 
         #endregion

@@ -1,33 +1,24 @@
-﻿using ClipboardCanvas.ApplicationSettings;
-using ClipboardCanvas.Logging;
-using ClipboardCanvas.Services;
-using ClipboardCanvas.ViewModels.Dialogs;
-using Microsoft.AppCenter;
+﻿using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Runtime.ExceptionServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+
+using ClipboardCanvas.Services;
+using ClipboardCanvas.Services.Implementation;
 
 namespace ClipboardCanvas
 {
@@ -36,15 +27,14 @@ namespace ClipboardCanvas
     /// </summary>
     sealed partial class App : Application
     {
-        public static SettingsInstance AppSettings = new SettingsInstance();
-
-        public static ILogger ExceptionLogger = new ExceptionLogger();
-
         public static bool IsInRestrictedAccessMode = false;
 
         public static string AppVersion = $"{Package.Current.Id.Version.Major}.{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}.{Package.Current.Id.Version.Revision}";
 
-        public static IDialogService DialogService = new DefaultDialogService();
+        /// <summary>
+        /// <see cref="IServiceProvider"/> to resolve application services.
+        /// </summary>
+        public IServiceProvider Services { get; private set; }
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -53,17 +43,41 @@ namespace ClipboardCanvas
         public App()
         {
             this.InitializeComponent();
+
+            // Configure exception handlers
             this.Suspending += OnSuspending;
             this.UnhandledException += App_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-
             if (Constants.Debugging.FIRST_CHANCE_EXCEPTION_DEBUGGING)
             {
                 AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
             }
+
+            // Configure services
+            Services = ConfigureServices();
+            Ioc.Default.ConfigureServices(Services);
+
+            // Start AppCenter
 #if !DEBUG
             AppCenter.Start("c7fb111e-c2ba-4c4e-80f9-a919c9939224", typeof(Analytics), typeof(Crashes));
 #endif
+        }
+
+        private IServiceProvider ConfigureServices()
+        {
+            ServiceCollection services = new ServiceCollection();
+
+            services
+                .AddSingleton<INavigationService, NavigationService>()
+                .AddSingleton<IDialogService, DefaultDialogService>()
+                .AddSingleton<ILogger, ExceptionToFileLogger>()
+
+                .AddSingleton<IUserSettingsService, UserSettingsService>()
+                .AddSingleton<ICollectionsSettingsService, CollectionsSettingsService>()
+                .AddSingleton<ICanvasSettingsService, CanvasSettingsService>()
+                .AddSingleton<IApplicationSettingsService, ApplicationSettingsService>();
+
+            return services.BuildServiceProvider();
         }
 
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e) => LogException(e.Exception);
@@ -127,7 +141,7 @@ namespace ClipboardCanvas
             exceptionString += $"STACKTRACE {e.StackTrace}\n";
             exceptionString += $"SOURCE {e.Source}\n";
 
-            ExceptionLogger.Log(exceptionString);
+            Ioc.Default.GetService<ILogger>().LogError(exceptionString);
         }
 
         /// <summary>

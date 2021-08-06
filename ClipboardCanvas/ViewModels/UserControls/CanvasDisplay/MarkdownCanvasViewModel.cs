@@ -18,12 +18,15 @@ using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.CanavsPasteModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
     public class MarkdownCanvasViewModel : BaseCanvasViewModel
     {
         #region Public Properties
+
+        protected override IPasteModel CanvasPasteModel => null;
 
         public static List<string> Extensions => new List<string>() {
             ".md", ".markdown",
@@ -90,7 +93,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             OnPropertyChanged(nameof(TextMarkdown));
 
-            return await Task.FromResult(SafeWrapperResult.S_SUCCESS);
+            return await Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
         protected override async Task<SafeWrapper<CollectionItemViewModel>> TrySetFileWithExtension()

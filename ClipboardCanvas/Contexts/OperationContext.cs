@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading;
+
 using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 
 namespace ClipboardCanvas.Contexts
 {
-    public sealed class OperationContext
+    public sealed class OperationContext : IOperationContext
     {
         public event EventHandler<OperationFinishedEventArgs> OnOperationFinishedEvent;
 

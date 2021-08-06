@@ -17,6 +17,7 @@
     xmlns:vm="using:ClipboardCanvas.ViewModels"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Loaded="Page_Loaded"
+    NavigationCacheMode="Disabled"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -110,6 +111,7 @@
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="vm:CollectionPreviewItemViewModel">
                     <tuc:DropShadowPanel
+                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                         BlurRadius="10"
                         IsMasked="True"
                         ShadowOpacity="{x:Bind IsHighlighted, Mode=OneWay, Converter={StaticResource BooleanSearchedItemToShadowOpacityConverter}}"
@@ -140,7 +142,7 @@
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Top"
                                     StretchDirection="Both">
-                                    <uc2:SimpleCanvasPreviewControl CollectionModel="{x:Bind CollectionModel, Mode=OneWay}" SimpleCanvasPreviewModel="{x:Bind SimpleCanvasPreviewModel, Mode=TwoWay}" />
+                                    <uc2:SimpleCanvasPreviewControl CollectionModel="{x:Bind CollectionModel, Mode=OneWay}" SimpleCanvasPreviewModel="{x:Bind ReadOnlyCanvasPreviewModel, Mode=TwoWay}" />
                                 </Viewbox>
 
                                 <i:Interaction.Behaviors>

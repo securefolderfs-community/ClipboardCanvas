@@ -1,5 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
 using System.Linq;
 using System.Windows.Input;
@@ -10,9 +11,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
 
-using ClipboardCanvas.ApplicationSettings;
 using ClipboardCanvas.Enums;
-using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.EventArguments.CollectionPreview;
 using ClipboardCanvas.EventArguments.Collections;
 using ClipboardCanvas.Extensions;
@@ -22,6 +21,8 @@ using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
 using ClipboardCanvas.Interfaces.Search;
 using ClipboardCanvas.EventArguments;
+using ClipboardCanvas.Services;
+using ClipboardCanvas.Serialization;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {
@@ -32,6 +33,8 @@ namespace ClipboardCanvas.ViewModels.Pages
         private ICollectionModel _associatedCollectionModel => _view?.AssociatedCollectionModel;
 
         private ISearchControlModel _searchControlModel => _view?.SearchControlModel;
+
+        private IUserSettingsService UserSettings { get; } = Ioc.Default.GetService<IUserSettingsService>();
 
         private readonly ICollectionPreviewPageView _view;
 
@@ -44,6 +47,8 @@ namespace ClipboardCanvas.ViewModels.Pages
         #endregion
 
         #region Public Properties
+
+        private INavigationService NavigationService { get; } = Ioc.Default.GetService<INavigationService>();
 
         public RangeObservableCollection<CollectionPreviewItemViewModel> Items { get; private set; }
 
@@ -108,7 +113,7 @@ namespace ClipboardCanvas.ViewModels.Pages
         {
             get
             {
-                if (App.AppSettings.UserSettings.UseInfiniteCanvasAsDefault)
+                if (UserSettings.UseInfiniteCanvasAsDefault)
                 {
                     return "Open new Infinite Canvas";
                 }
@@ -123,7 +128,7 @@ namespace ClipboardCanvas.ViewModels.Pages
         {
             get
             {
-                if (App.AppSettings.UserSettings.UseInfiniteCanvasAsDefault)
+                if (UserSettings.UseInfiniteCanvasAsDefault)
                 {
                     // Infinite Canvas is default, so show normal Canvas -> return false
                     return false;
@@ -141,10 +146,6 @@ namespace ClipboardCanvas.ViewModels.Pages
         #endregion
 
         #region Events
-
-        public event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
-
-        public event EventHandler<CanvasPreviewOpenRequestedEventArgs> OnCanvasPreviewOpenRequestedEvent;
 
         public event EventHandler<CanvasPreviewSelectedItemChangedEventArgs> OnCanvasPreviewSelectedItemChangedEvent;
 
@@ -200,7 +201,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private void SplitButtonDefaultOption()
         {
-            if (App.AppSettings.UserSettings.UseInfiniteCanvasAsDefault)
+            if (UserSettings.UseInfiniteCanvasAsDefault)
             {
                 OpenNewInfiniteCanvas();
             }
@@ -212,12 +213,12 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private void OpenNewCanvas()
         {
-            OnOpenNewCanvasRequestedEvent?.Invoke(this, new OpenNewCanvasRequestedEventArgs(CanvasType.OneCanvas));
+            NavigationService.OpenNewCanvas(_associatedCollectionModel, canvasType: CanvasType.OneCanvas);
         }
 
         private void OpenNewInfiniteCanvas()
         {
-            OnOpenNewCanvasRequestedEvent?.Invoke(this, new OpenNewCanvasRequestedEventArgs(CanvasType.InfiniteCanvas));
+            NavigationService.OpenNewCanvas(_associatedCollectionModel, canvasType: CanvasType.InfiniteCanvas);
         }
 
         private void ItemClick(ItemClickEventArgs e)
@@ -383,7 +384,9 @@ namespace ClipboardCanvas.ViewModels.Pages
         {
             int indexOfSelectedItem = Items.IndexOf(SelectedItem);
             _view?.PrepareConnectedAnimation(indexOfSelectedItem);
-            OnCanvasPreviewOpenRequestedEvent?.Invoke(this, new CanvasPreviewOpenRequestedEventArgs(SelectedItem));
+
+            // Navigate to canvas and suppress transition since we use ConnectedAnimation
+            NavigationService.OpenCanvasPage(_associatedCollectionModel, SelectedItem.CollectionItemViewModel);
         }
 
         private void ShowSearch()
@@ -405,7 +408,7 @@ namespace ClipboardCanvas.ViewModels.Pages
         private void UserSettings_OnSettingChangedEvent(object sender, SettingChangedEventArgs e)
         {
             // If the setting corresponding to new canvas button changed, update the split button
-            if (e.settingName == nameof(App.AppSettings.UserSettings.UseInfiniteCanvasAsDefault))
+            if (e.settingName == nameof(UserSettings.UseInfiniteCanvasAsDefault))
             {
                 OnPropertyChanged(nameof(SplitButtonMainOptionText));
                 OnPropertyChanged(nameof(SplitButtonShowInfiniteCanvasOption));
@@ -433,7 +436,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private void HookEvents()
         {
-            App.AppSettings.UserSettings.OnSettingChangedEvent += UserSettings_OnSettingChangedEvent;
+            UserSettings.OnSettingChangedEvent += UserSettings_OnSettingChangedEvent;
 
             if (_view.SearchControlModel != null)
             {
@@ -443,7 +446,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private void UnhookEvents()
         {
-            App.AppSettings.UserSettings.OnSettingChangedEvent -= UserSettings_OnSettingChangedEvent;
+            UserSettings.OnSettingChangedEvent -= UserSettings_OnSettingChangedEvent;
 
             if (_view.SearchControlModel != null)
             {

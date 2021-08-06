@@ -12,6 +12,7 @@
     xmlns:vc="using:ClipboardCanvas.ValueConverters"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     IsTabStop="False"
+    NavigationCacheMode="Disabled"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -34,197 +35,199 @@
         </KeyboardAccelerator>
     </Page.KeyboardAccelerators>
 
-    <Border>
-        <Grid>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="14*" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Grid
+            Grid.Row="0"
+            Grid.ColumnSpan="2"
+            AllowDrop="True"
+            Background="Transparent"
+            RowSpacing="8">
+            <i:Interaction.Behaviors>
+                <icore:EventTriggerBehavior EventName="DragEnter">
+                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DragEnterCommand}" />
+                </icore:EventTriggerBehavior>
+                <icore:EventTriggerBehavior EventName="Drop">
+                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DropCommand}" />
+                </icore:EventTriggerBehavior>
+                <icore:EventTriggerBehavior EventName="DragLeave">
+                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DragLeaveCommand}" />
+                </icore:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
 
             <Grid
                 Grid.Row="0"
-                Grid.ColumnSpan="2"
-                Margin="0,0,0,25"
-                Padding="15,10,15,0"
-                AllowDrop="True"
-                Background="Transparent"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
                 RowSpacing="8">
-                <i:Interaction.Behaviors>
-                    <icore:EventTriggerBehavior EventName="DragEnter">
-                        <icore:InvokeCommandAction Command="{x:Bind ViewModel.DragEnterCommand}" />
-                    </icore:EventTriggerBehavior>
-                    <icore:EventTriggerBehavior EventName="Drop">
-                        <icore:InvokeCommandAction Command="{x:Bind ViewModel.DropCommand}" />
-                    </icore:EventTriggerBehavior>
-                    <icore:EventTriggerBehavior EventName="DragLeave">
-                        <icore:InvokeCommandAction Command="{x:Bind ViewModel.DragLeaveCommand}" />
-                    </icore:EventTriggerBehavior>
-                </i:Interaction.Behaviors>
 
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Grid
+                <!--  Title text  -->
+                <Viewbox
+                    x:Name="TitleTextViewBox"
+                    MaxWidth="680"
+                    MaxHeight="150"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    x:Load="{x:Bind ViewModel.NewCanvasScreenLoad, Mode=OneWay}"
+                    StretchDirection="Both">
+                    <StackPanel Padding="20" Spacing="4">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            AllowDrop="True"
+                            FontSize="24"
+                            FontWeight="Bold"
+                            Text="{x:Bind ViewModel.TitleText, Mode=OneWay}" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            AllowDrop="True"
+                            FontSize="8"
+                            Opacity="0.8"
+                            Text="{x:Bind ViewModel.CanvasTypeText, Mode=OneWay}" />
+                    </StackPanel>
+                </Viewbox>
+
+                <!--  Content Loading progress ring  -->
+                <ProgressRing
+                    x:Name="LoadingRing"
                     Grid.Row="0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    RowSpacing="8">
+                    x:Load="{x:Bind ViewModel.CanvasRingLoad, Mode=OneWay}"
+                    IsActive="True" />
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <!--  Title text  -->
-                    <Viewbox
-                        x:Name="TitleTextViewBox"
-                        MaxWidth="680"
-                        MaxHeight="150"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        x:Load="{x:Bind ViewModel.NewCanvasScreenLoad, Mode=OneWay}"
-                        StretchDirection="Both">
-                        <StackPanel Padding="20" Spacing="4">
-                            <TextBlock
-                                HorizontalAlignment="Center"
-                                AllowDrop="True"
-                                FontSize="24"
-                                FontWeight="Bold"
-                                Text="{x:Bind ViewModel.TitleText, Mode=OneWay}" />
-                            <TextBlock
-                                HorizontalAlignment="Center"
-                                AllowDrop="True"
-                                FontSize="8"
-                                Opacity="0.8"
-                                Text="{x:Bind ViewModel.CanvasTypeText, Mode=OneWay}" />
-                        </StackPanel>
-                    </Viewbox>
-
-                    <!--  Content Loading progress ring  -->
-                    <ProgressRing
-                        x:Name="LoadingRing"
-                        Grid.Row="0"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        x:Load="{x:Bind ViewModel.CanvasRingLoad, Mode=OneWay}"
-                        IsActive="True" />
-
-                    <!--  Tip text  -->
-                    <TextBlock
-                        x:Name="TipText"
-                        Grid.Row="1"
-                        x:Load="{x:Bind ViewModel.TipTextLoad, Mode=OneWay}"
-                        Opacity="0.7"
-                        Text="{x:Bind ViewModel.TipText, Mode=OneWay}" />
-                </Grid>
-
-                <!--  The canvas  -->
-                <uc:CanvasPreviewControl
-                    x:Name="CanvasPreviewControl"
-                    Grid.Row="0"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    Background="Transparent"
-                    CollectionModel="{x:Bind ViewModel.CollectionModel, Mode=OneWay}">
-                    <uc:CanvasPreviewControl.ContextFlyout>
-                        <MenuFlyout
-                            x:Name="CanvasContextMenu"
-                            ap:FlyoutItemsSourceAttachedProperty.Value="{x:Bind ViewModel.CanvasContextMenuItems, Mode=OneWay}"
-                            Opening="CanvasContextMenu_Opening" />
-                    </uc:CanvasPreviewControl.ContextFlyout>
-                </uc:CanvasPreviewControl>
-
-                <!--  Pasted as reference hyperlink  -->
-                <HyperlinkButton
-                    x:Name="PastedAsReference"
+                <!--  Tip text  -->
+                <TextBlock
+                    x:Name="TipText"
                     Grid.Row="1"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Bottom"
-                    x:Load="{x:Bind ViewModel.PastedAsReferenceLoad, Mode=OneWay}"
-                    Click="PastedAsReference_Click"
-                    Content="File pasted as reference">
-                    <FlyoutBase.AttachedFlyout>
-                        <Flyout x:Name="LinkButtonFlyout" Placement="Right">
-                            <Grid RowSpacing="8">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-
-                                <!--  Title  -->
-                                <TextBlock
-                                    Grid.Row="0"
-                                    FontSize="16"
-                                    FontWeight="SemiBold"
-                                    Text="Reference Files" />
-
-                                <!--  Content text  -->
-                                <TextBlock
-                                    Grid.Row="1"
-                                    Width="300"
-                                    Text="This file has been pasted as a reference to the original file. Clipboard Canvas loads the original file that the reference is pointing to.&#x0a;&#x0a;You can override the reference and copy the item directly to this collection by pressing the button below."
-                                    TextTrimming="WordEllipsis"
-                                    TextWrapping="Wrap" />
-
-                                <!--  Paste reference  -->
-                                <Button
-                                    Grid.Row="2"
-                                    Margin="0,16,0,0"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Center"
-                                    Command="{x:Bind ViewModel.OverrideReferenceCommand}"
-                                    Content="Paste reference"
-                                    IsEnabled="{x:Bind ViewModel.OverrideReferenceEnabled, Mode=OneWay}" />
-                            </Grid>
-                        </Flyout>
-                    </FlyoutBase.AttachedFlyout>
-                </HyperlinkButton>
-                <HyperlinkButton
-                    x:Name="SwitchCanvasTypeLinkButton"
-                    Grid.Row="1"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Bottom"
-                    x:Load="{x:Bind ViewModel.NewCanvasScreenLoad, Mode=OneWay}"
-                    Command="{x:Bind ViewModel.SwitchCanvasModeCommand}"
-                    Content="Switch canvases" />
+                    x:Load="{x:Bind ViewModel.TipTextLoad, Mode=OneWay}"
+                    Opacity="0.7"
+                    Text="{x:Bind ViewModel.TipText, Mode=OneWay}" />
             </Grid>
 
-            <!--  Error text  -->
-            <TextBlock
-                x:Name="ErrorText"
-                Grid.Row="1"
-                Grid.ColumnSpan="2"
-                Margin="0,0,0,10"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                x:Load="{x:Bind ViewModel.ErrorTextLoad, Mode=OneWay}"
-                Opacity="0.7"
-                Text="{x:Bind ViewModel.ErrorText, Mode=OneWay}" />
-
-            <!--  Large file paste progress  -->
-            <ProgressBar
-                x:Name="OperationProgressBar"
-                Grid.Row="2"
-                Grid.ColumnSpan="2"
-                x:Load="{x:Bind ViewModel.OperationProgressBarLoad, Mode=OneWay}"
-                IsIndeterminate="{x:Bind ViewModel.OperationProgressBarIndeterminate, Mode=OneWay}"
-                Value="{x:Bind ViewModel.OperationProgressBarValue, Mode=OneWay}" />
-
-            <!--  File name  -->
-            <!--<TextBlock
-                x:Name="FileNameText"
-                Grid.Row="1"
-                Grid.Column="1"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"/>-->
+            <!--  The canvas  -->
+            <uc:CanvasPreviewControl
+                x:Name="CanvasPreviewControl"
+                Grid.Row="0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="Transparent"
+                CollectionModel="{x:Bind ViewModel.CollectionModel, Mode=OneWay}">
+                <uc:CanvasPreviewControl.ContextFlyout>
+                    <MenuFlyout
+                        x:Name="CanvasContextMenu"
+                        ap:FlyoutItemsSourceAttachedProperty.Value="{x:Bind ViewModel.CanvasContextMenuItems, Mode=OneWay}"
+                        Opening="CanvasContextMenu_Opening" />
+                </uc:CanvasPreviewControl.ContextFlyout>
+            </uc:CanvasPreviewControl>
         </Grid>
-    </Border>
+
+        <!--  Pasted as reference link button  -->
+        <HyperlinkButton
+            x:Name="PastedAsReference"
+            Grid.Row="1"
+            Margin="15,0,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            x:Load="{x:Bind ViewModel.PastedAsReferenceLoad, Mode=OneWay}"
+            Click="PastedAsReference_Click"
+            Content="File pasted as reference">
+            <FlyoutBase.AttachedFlyout>
+                <Flyout x:Name="LinkButtonFlyout" Placement="Right">
+                    <Grid RowSpacing="8">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!--  Title  -->
+                        <TextBlock
+                            Grid.Row="0"
+                            FontSize="16"
+                            FontWeight="SemiBold"
+                            Text="Reference Files" />
+
+                        <!--  Content text  -->
+                        <TextBlock
+                            Grid.Row="1"
+                            Width="300"
+                            Text="This file has been pasted as a reference to the original file. Clipboard Canvas loads the original file that the reference is pointing to.&#x0a;&#x0a;You can override the reference and copy the item directly to this collection by pressing the button below."
+                            TextTrimming="WordEllipsis"
+                            TextWrapping="Wrap" />
+
+                        <!--  Paste reference  -->
+                        <Button
+                            Grid.Row="2"
+                            Margin="0,16,0,0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            Command="{x:Bind ViewModel.OverrideReferenceCommand}"
+                            Content="Paste reference"
+                            IsEnabled="{x:Bind ViewModel.OverrideReferenceEnabled, Mode=OneWay}" />
+                    </Grid>
+                </Flyout>
+            </FlyoutBase.AttachedFlyout>
+        </HyperlinkButton>
+
+        <!--  Switch canvases link button  -->
+        <HyperlinkButton
+            x:Name="SwitchCanvasTypeLinkButton"
+            Grid.Row="1"
+            Margin="15,0,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            x:Load="{x:Bind ViewModel.NewCanvasScreenLoad, Mode=OneWay}"
+            Command="{x:Bind ViewModel.SwitchCanvasModeCommand}"
+            Content="{x:Bind ViewModel.SwitchCanvasModeText, Mode=OneWay}" />
+
+        <!--  Infinite Canvas header  -->
+        <TextBlock
+            x:Name="InfiniteCanvasHeader"
+            Grid.Row="1"
+            Margin="15,0,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            x:Load="{x:Bind ViewModel.InfiniteCanvasHeaderLoad, Mode=OneWay}"
+            Opacity="0.8"
+            Text="Infinite Canvas" />
+
+        <!--  Error text  -->
+        <TextBlock
+            x:Name="ErrorText"
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            x:Load="{x:Bind ViewModel.ErrorTextLoad, Mode=OneWay}"
+            Opacity="0.8"
+            Text="{x:Bind ViewModel.ErrorText, Mode=OneWay}" />
+
+        <!--  Large file paste progress  -->
+        <ProgressBar
+            x:Name="OperationProgressBar"
+            Grid.Row="2"
+            Grid.ColumnSpan="2"
+            x:Load="{x:Bind ViewModel.OperationProgressBarLoad, Mode=OneWay}"
+            IsIndeterminate="{x:Bind ViewModel.OperationProgressBarIndeterminate, Mode=OneWay}"
+            Value="{x:Bind ViewModel.OperationProgressBarValue, Mode=OneWay}" />
+    </Grid>
 </Page>

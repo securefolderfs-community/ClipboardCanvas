@@ -102,7 +102,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 return false;
             }
 
-            SetCollectionError(SafeWrapperResult.S_SUCCESS);
+            SetCollectionError(SafeWrapperResult.SUCCESS);
             return true;
         }
 
@@ -144,11 +144,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 else
                 {
                     // Post a notification informing that rename had failed
-                    IInAppNotification notification = App.DialogService.GetNotification();
+                    IInAppNotification notification = DialogService.GetNotification();
                     notification.ViewModel.NotificationText = $"Couldn't rename the collection. Error: {result.ErrorCode}";
                     notification.ViewModel.ShownButtons = InAppNotificationButtonType.OkButton;
 
-                    notification.Show(4000);
+                    notification.ShowAsync(4000);
                 }
             }
 

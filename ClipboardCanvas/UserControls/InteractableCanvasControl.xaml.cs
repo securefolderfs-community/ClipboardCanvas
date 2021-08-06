@@ -7,6 +7,7 @@ using System.Numerics;
 using ClipboardCanvas.ViewModels.UserControls;
 using ClipboardCanvas.ModelViews;
 using Windows.UI.Core;
+using ClipboardCanvas.Models;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -17,8 +18,6 @@ namespace ClipboardCanvas.UserControls
         private Canvas _canvasPanel;
 
         private Point _savedClickPosition;
-
-        const string DRAGGING_OBJECT_ID = "clipboard_canvas__dragged_control_object";
 
         public InteractableCanvasControlViewModel ViewModel
         {
@@ -36,13 +35,16 @@ namespace ClipboardCanvas.UserControls
         private void Canvas_Loaded(object sender, RoutedEventArgs e)
         {
             _canvasPanel = sender as Canvas;
-
-            this.ViewModel.NotifyCanvasLoaded();
         }
 
         private void Canvas_Drop(object sender, DragEventArgs e)
         {
-            FrameworkElement element = e.DataView.Properties[DRAGGING_OBJECT_ID] as FrameworkElement;
+            FrameworkElement element = e.DataView.Properties[Constants.UI.CanvasContent.INFINITE_CANVAS_DRAGGED_OBJECT_ID] as FrameworkElement;
+            if (element?.DataContext == null)
+            {
+                return;
+            }
+
             int indexOfItem = this.ViewModel.Items.IndexOf(element.DataContext as InteractableCanvasControlItemViewModel);
             UIElement container = ItemsHolder.ContainerFromIndex(indexOfItem) as UIElement;
 
@@ -61,14 +63,14 @@ namespace ClipboardCanvas.UserControls
             e.DragUIOverride.IsGlyphVisible = false;
 
             // Hide element when dragging over the canvas
-            if (e.DataView.Properties[DRAGGING_OBJECT_ID] is FrameworkElement element 
+            if (e.DataView.Properties[Constants.UI.CanvasContent.INFINITE_CANVAS_DRAGGED_OBJECT_ID] is FrameworkElement element 
                 && this.ViewModel.Items.Contains(element.DataContext as InteractableCanvasControlItemViewModel))
             {
                 element.Opacity = 0.0d;
             }
         }
 
-        private void Grid_DragStarting(UIElement sender, DragStartingEventArgs args)
+        private async void RootContentGrid_DragStarting(UIElement sender, DragStartingEventArgs args)
         {
             if (sender is FrameworkElement draggedElement)
             {
@@ -76,12 +78,12 @@ namespace ClipboardCanvas.UserControls
                 _savedClickPosition = point;
 
                 // Add the dragged element to properties which we can later retrieve it from
-                args.Data.Properties.Add(DRAGGING_OBJECT_ID, draggedElement);
+                args.Data.Properties.Add(Constants.UI.CanvasContent.INFINITE_CANVAS_DRAGGED_OBJECT_ID, draggedElement);
 
                 // Also set data associated from the dragged element
-                if (draggedElement.DataContext is InteractableCanvasControlItemViewModel itemViewModel)
+                if (draggedElement.DataContext is IDragDataProviderModel dragDataProvider)
                 {
-                    args.Data.SetText(itemViewModel.TestText);
+                    args.Data.SetStorageItems(await dragDataProvider.GetDragData());
                 }
             }
         }
@@ -92,7 +94,7 @@ namespace ClipboardCanvas.UserControls
             e.DragUIOverride.IsCaptionVisible = true;
             e.DragUIOverride.IsGlyphVisible = true;
 
-            if (e.DataView.Properties[DRAGGING_OBJECT_ID] is FrameworkElement draggedElement)
+            if (e.DataView.Properties[Constants.UI.CanvasContent.INFINITE_CANVAS_DRAGGED_OBJECT_ID] is FrameworkElement draggedElement)
             {
                 draggedElement.Opacity = 1.0d;
             }

@@ -58,7 +58,6 @@
         <HyperlinkButton
             x:Name="SeeOnGitHubLink"
             Grid.Row="2"
-            Padding="0"
             x:Load="{x:Bind ViewModel.IsLoadingData, Mode=OneWay, Converter={StaticResource BooleanInvertConverter}}"
             Command="{x:Bind ViewModel.OpenReleasesOnGitHubCommand}"
             Content="Check out on GitHub" />

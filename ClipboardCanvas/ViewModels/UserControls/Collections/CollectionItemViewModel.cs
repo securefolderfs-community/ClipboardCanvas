@@ -3,6 +3,7 @@ using System.IO;
 using Windows.System;
 using Windows.Storage;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 using ClipboardCanvas.Models;
 using ClipboardCanvas.Helpers.Filesystem;
@@ -11,29 +12,26 @@ using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Contexts;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
 using ClipboardCanvas.Enums;
+using ClipboardCanvas.Services;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
-    public class CollectionItemViewModel : CanvasFile, ICollectionItemModel
+    public class CollectionItemViewModel : CanvasItem, ICollectionItemModel
     {
-        #region Public Properties
+        private IDialogService DialogService { get; } = Ioc.Default.GetService<IDialogService>();
 
         public IStorageItem Item { get; private set; }
 
-        public BasePastedContentTypeDataModel ContentType { get; set; }
+        public BaseContentTypeModel ContentType { get; set; }
 
         public OperationContext OperationContext { get; set; }
-
-        #endregion
-
-        #region Constructor
 
         public CollectionItemViewModel(IStorageItem item)
             : this(item, null)
         {
         }
 
-        public CollectionItemViewModel(IStorageItem item, BasePastedContentTypeDataModel contentType)
+        public CollectionItemViewModel(IStorageItem item, BaseContentTypeModel contentType)
             : base(item)
         {
             this.Item = item;
@@ -41,10 +39,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
             this.ContentType = contentType;
             this.OperationContext = new OperationContext();
         }
-
-        #endregion
-
-        #region ICollectionsContainerItemModel
 
         public async Task OpenFile()
         {
@@ -56,11 +50,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
             string sourceItemPath = (await SourceItem).Path;
             if (sourceItemPath.EndsWith(".exe"))
             {
-                IInAppNotification notification = App.DialogService.GetNotification();
+                IInAppNotification notification = DialogService.GetNotification();
                 notification.ViewModel.NotificationText = "UWP cannot open executable (.exe) files";
                 notification.ViewModel.ShownButtons = InAppNotificationButtonType.OkButton;
 
-                await notification.Show(4000);
+                await notification.ShowAsync(4000);
                 return;
             }
 
@@ -109,7 +103,5 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 await Launcher.LaunchFolderAsync(parentFolder, launcherOptions);
             }
         }
-
-        #endregion
     }
 }

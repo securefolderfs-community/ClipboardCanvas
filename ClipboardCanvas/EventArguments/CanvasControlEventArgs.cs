@@ -1,10 +1,9 @@
 ﻿using System;
 using Windows.Storage;
-using ClipboardCanvas.Models;
-using ClipboardCanvas.DataModels;
+using Windows.ApplicationModel.DataTransfer;
+
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
-using Windows.ApplicationModel.DataTransfer;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers;
 
@@ -12,25 +11,28 @@ namespace ClipboardCanvas.EventArguments.CanvasControl
 {
     public class ContentLoadedEventArgs : EventArgs
     {
-        public readonly BasePastedContentTypeDataModel contentDataModel;
+        public readonly BaseContentTypeModel contentDataModel;
 
         public readonly bool isFilled;
 
         public readonly bool pastedByReference;
 
-        public ContentLoadedEventArgs(BasePastedContentTypeDataModel contentDataModel, bool isFilled, bool pastedByReference)
+        public readonly bool isInfiniteCanvas;
+
+        public ContentLoadedEventArgs(BaseContentTypeModel contentDataModel, bool isFilled, bool pastedByReference, bool isInfiniteCanvas = false)
         {
             this.contentDataModel = contentDataModel;
             this.isFilled = isFilled;
             this.pastedByReference = pastedByReference;
+            this.isInfiniteCanvas = isInfiniteCanvas;
         }
     }
 
     public class ContentStartedLoadingEventArgs : EventArgs
     {
-        public readonly BasePastedContentTypeDataModel contentDataModel;
+        public readonly BaseContentTypeModel contentDataModel;
 
-        public ContentStartedLoadingEventArgs(BasePastedContentTypeDataModel contentDataModel)
+        public ContentStartedLoadingEventArgs(BaseContentTypeModel contentDataModel)
         {
             this.contentDataModel = contentDataModel;
         }
@@ -38,24 +40,24 @@ namespace ClipboardCanvas.EventArguments.CanvasControl
 
     public class PasteInitiatedEventArgs : EventArgs
     {
-        public readonly bool isFilled;
+        public readonly bool pasteInNewCanvas;
 
         public readonly DataPackageView forwardedDataPackage;
 
-        public PasteInitiatedEventArgs(bool isFilled, DataPackageView forwardedDataPackage)
+        public PasteInitiatedEventArgs(bool pasteInNewCanvas, DataPackageView forwardedDataPackage)
         {
-            this.isFilled = isFilled;
+            this.pasteInNewCanvas = pasteInNewCanvas;
             this.forwardedDataPackage = forwardedDataPackage;
         }
     }
 
     public class FileCreatedEventArgs : EventArgs
     {
-        public readonly BasePastedContentTypeDataModel contentType;
+        public readonly BaseContentTypeModel contentType;
 
         public readonly IStorageItem item;
 
-        public FileCreatedEventArgs(BasePastedContentTypeDataModel contentType, IStorageItem item)
+        public FileCreatedEventArgs(BaseContentTypeModel contentType, IStorageItem item)
         {
             this.contentType = contentType;
             this.item = item;

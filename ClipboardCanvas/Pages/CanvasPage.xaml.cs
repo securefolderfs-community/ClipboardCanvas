@@ -30,7 +30,7 @@ namespace ClipboardCanvas.Pages
         {
             base.OnNavigatedTo(e);
 
-            DisplayFrameNavigationParameterDataModel navigationParameter = e.Parameter as DisplayFrameNavigationParameterDataModel;
+            DisplayFrameParameterDataModel navigationParameter = e.Parameter as DisplayFrameParameterDataModel;
             AssociatedCollectionModel = navigationParameter.collectionModel;
 
             this.ViewModel.RequestedCanvasType = navigationParameter.canvasType;

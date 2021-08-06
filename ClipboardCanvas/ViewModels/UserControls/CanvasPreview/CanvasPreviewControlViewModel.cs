@@ -27,7 +27,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         #region Private Helpers
 
-        protected override bool InitializeViewModelFromContentType(BasePastedContentTypeDataModel contentType)
+        protected override bool InitializeViewModelFromContentType(BaseContentTypeModel contentType)
         {
             // Try for infinite canvas
             if (InitializeViewModelForType<InfiniteCanvasContentType, InfiniteCanvasViewModel>(contentType, () => new InfiniteCanvasViewModel(view)))

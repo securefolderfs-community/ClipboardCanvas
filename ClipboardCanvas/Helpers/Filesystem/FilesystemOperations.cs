@@ -11,13 +11,17 @@ namespace ClipboardCanvas.Helpers.Filesystem
 {
     public static class FilesystemOperations
     {
-        public static async Task<SafeWrapperResult> CopyFileAsync(IStorageFile source, IStorageFile destination, OperationContext operationContext)
+        public static async Task<SafeWrapperResult> CopyFileAsync(IStorageFile source, IStorageFile destination, IOperationContext operationContext)
         {
             long fileSize = await StorageHelpers.GetFileSize(source);
             byte[] buffer = new byte[Constants.FileSystem.COPY_FILE_BUFFER_SIZE];
-            SafeWrapperResult result = SafeWrapperResult.S_UNKNOWN_FAIL;
+            SafeWrapperResult result = SafeWrapperResult.UNKNOWN_FAIL;
 
-            operationContext.IsOperationOngoing = true;
+            if (operationContext != null)
+            {
+                operationContext.IsOperationOngoing = true;
+            }
+
             using (Stream sourceStream = (await source.OpenReadAsync()).AsStreamForRead())
             {
                 using (Stream destinationStream = (await destination.OpenAsync(FileAccessMode.ReadWrite)).AsStreamForWrite())
@@ -31,20 +35,20 @@ namespace ClipboardCanvas.Helpers.Filesystem
                         float percentage = (float)bytesTransferred * 100.0f / (float)fileSize;
 
                         await destinationStream.WriteAsync(buffer, 0, currentBlockSize);
-                        operationContext.ProgressDelegate?.Invoke(percentage);
+                        operationContext?.ProgressDelegate?.Invoke(percentage);
 
-                        if (operationContext.CancellationToken.IsCancellationRequested)
+                        if (operationContext?.CancellationToken.IsCancellationRequested ?? false)
                         {
                             // TODO: Delete copied file there
-                            result = SafeWrapperResult.S_CANCEL;
+                            result = SafeWrapperResult.CANCEL;
                             break;
                         }
                     }
 
-                    result = SafeWrapperResult.S_SUCCESS;
+                    result = SafeWrapperResult.SUCCESS;
                 }
             }
-            operationContext.OperationFinished(result);
+            operationContext?.OperationFinished(result);
 
             return result;
         }
@@ -82,7 +86,7 @@ namespace ClipboardCanvas.Helpers.Filesystem
             return result;
         }
 
-        public static async Task<SafeWrapper<StorageFile>> CreateFile(string path)
+        public static async Task<SafeWrapper<StorageFile>> CreateFile(string path, CreationCollisionOption collision = CreationCollisionOption.GenerateUniqueName)
         {
             string parentFolderPath = Path.GetDirectoryName(path);
             SafeWrapper<StorageFolder> parentFolder = await StorageHelpers.ToStorageItemWithError<StorageFolder>(parentFolderPath);
@@ -94,18 +98,42 @@ namespace ClipboardCanvas.Helpers.Filesystem
 
             string fileName = Path.GetFileName(path);
 
-            return await CreateFile(parentFolder, fileName);
+            return await CreateFile(parentFolder, fileName, collision);
         }
 
-        public static async Task<SafeWrapper<StorageFile>> CreateFile(StorageFolder parentFolder, string fileName)
+        public static async Task<SafeWrapper<StorageFile>> CreateFile(StorageFolder parentFolder, string fileName, CreationCollisionOption collision = CreationCollisionOption.GenerateUniqueName)
         {
             if (parentFolder == null)
             {
                 return new SafeWrapper<StorageFile>(null, OperationErrorCode.InvalidArgument, new ArgumentNullException(), "The provided folder is null.");
             }
 
-            SafeWrapper<StorageFile> file = await SafeWrapperRoutines.SafeWrapAsync(async () => await parentFolder.CreateFileAsync(fileName, CreationCollisionOption.GenerateUniqueName));
-            return file;
+            return await SafeWrapperRoutines.SafeWrapAsync(() => parentFolder.CreateFileAsync(fileName, collision).AsTask());
+        }
+
+        public static async Task<SafeWrapper<StorageFolder>> CreateFolder(string path, CreationCollisionOption collision = CreationCollisionOption.GenerateUniqueName)
+        {
+            string parentFolderPath = Path.GetDirectoryName(path);
+            SafeWrapper<StorageFolder> parentFolder = await StorageHelpers.ToStorageItemWithError<StorageFolder>(parentFolderPath);
+
+            if (!parentFolder)
+            {
+                return parentFolder;
+            }
+
+            string folderName = Path.GetFileName(path);
+
+            return await CreateFolder(parentFolder, folderName, collision);
+        }
+
+        public static async Task<SafeWrapper<StorageFolder>> CreateFolder(StorageFolder parentFolder, string name, CreationCollisionOption collision = CreationCollisionOption.GenerateUniqueName)
+        {
+            if (parentFolder == null)
+            {
+                return new SafeWrapper<StorageFolder>(null, OperationErrorCode.InvalidArgument, new ArgumentNullException(), "The provided folder is null.");
+            }
+
+            return await SafeWrapperRoutines.SafeWrapAsync(() => parentFolder.CreateFolderAsync(name, collision).AsTask());
         }
     }
 }

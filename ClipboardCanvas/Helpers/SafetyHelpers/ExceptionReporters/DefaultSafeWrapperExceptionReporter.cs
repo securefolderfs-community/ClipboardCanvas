@@ -40,7 +40,7 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters
             }
             else
             {
-                return SafeWrapperResult.S_UNKNOWN_FAIL.Details;
+                return SafeWrapperResult.UNKNOWN_FAIL.Details;
             }
         }
     }

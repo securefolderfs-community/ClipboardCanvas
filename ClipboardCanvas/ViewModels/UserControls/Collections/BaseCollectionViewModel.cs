@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Windows.System;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.EventArguments.Collections;
@@ -21,6 +22,8 @@ using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.Exceptions;
 using ClipboardCanvas.Contexts;
+using ClipboardCanvas.Services;
+using ClipboardCanvas.DataModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {
@@ -37,6 +40,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         protected CanvasNavigationDirection canvasNavigationDirection;
 
         protected int currentIndex;
+
+        protected IDialogService DialogService { get; } = Ioc.Default.GetService<IDialogService>();
 
         #endregion
 
@@ -198,15 +203,49 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         #region ICollectionModel
 
-        public async Task<SafeWrapper<CollectionItemViewModel>> CreateNewCollectionItemFromExtension(string extension)
+        public async Task<SafeWrapper<CanvasItem>> CreateNewCanvasFolder(string folderName = null)
         {
-            string fileName = DateTime.Now.ToString("dd.mm.yyyy HH_mm_ss");
-            fileName = $"{fileName}{extension}";
+            if (string.IsNullOrEmpty(folderName))
+            {
+                folderName = DateTime.Now.ToString(Constants.FileSystem.CANVAS_FILE_FILENAME_DATE_FORMAT);
+                folderName = $"{folderName}{Constants.FileSystem.INFINITE_CANVAS_EXTENSION}";
+            }
 
-            return await CreateNewCollectionItemFromFilename(fileName);
+            SafeWrapper<StorageFolder> folder = await FilesystemOperations.CreateFolder(collectionFolder, folderName);
+
+            CollectionItemViewModel collectionItem = null;
+            if (folder)
+            {
+                collectionItem = new CollectionItemViewModel(folder.Result);
+                AddCollectionItem(collectionItem);
+            }
+
+            return (collectionItem, folder.Details);
         }
 
-        public async Task<SafeWrapper<CollectionItemViewModel>> CreateNewCollectionItemFromFilename(string fileName)
+        public async Task<SafeWrapper<CanvasItem>> CreateNewCanvasFile(string fileName)
+        {
+            var result = await CreateNewCollectionItem(fileName);
+
+            return (result.Result, result.Details);
+        }
+
+        public async Task<SafeWrapper<CanvasItem>> CreateNewCanvasFileFromExtension(string extension)
+        {
+            var result = await CreateNewCollectionItemFromExtension(extension);
+
+            return (result.Result, result.Details);
+        }
+
+        public async Task<SafeWrapper<CollectionItemViewModel>> CreateNewCollectionItemFromExtension(string extension)
+        {
+            string fileName = DateTime.Now.ToString(Constants.FileSystem.CANVAS_FILE_FILENAME_DATE_FORMAT);
+            fileName = $"{fileName}{extension}";
+
+            return await CreateNewCollectionItem(fileName);
+        }
+
+        public async Task<SafeWrapper<CollectionItemViewModel>> CreateNewCollectionItem(string fileName)
         {
             if (collectionFolder == null)
             {
@@ -215,10 +254,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
             SafeWrapper<StorageFile> file = await FilesystemOperations.CreateFile(collectionFolder, fileName);
 
-            var item = new CollectionItemViewModel(file.Result);
-            AddCollectionItem(item);
+            CollectionItemViewModel collectionItem = null;
+            if (file)
+            {
+                collectionItem = new CollectionItemViewModel(file.Result);
+                AddCollectionItem(collectionItem);
+            }
 
-            return new SafeWrapper<CollectionItemViewModel>(item, file.Details);
+            return (collectionItem, file.Details);
         }
 
         public async Task<SafeWrapperResult> DeleteCollectionItem(CollectionItemViewModel itemToDelete, bool permanently = true)
@@ -231,6 +274,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             }
 
             return result;
+        }
+
+        public CollectionItemViewModel FindCollectionItem(CanvasItem canvasItem)
+        {
+            return CollectionItems.FirstOrDefault((item) => item.AssociatedItem.Path == canvasItem.AssociatedItem.Path);
         }
 
         public virtual void NavigateFirst(ICanvasPreviewModel pasteCanvasModel)

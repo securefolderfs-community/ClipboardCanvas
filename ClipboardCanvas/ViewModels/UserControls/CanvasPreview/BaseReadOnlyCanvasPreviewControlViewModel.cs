@@ -102,7 +102,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             }
         }
 
-        public virtual async Task<SafeWrapperResult> TryLoadExistingData(CanvasFile canvasFile, BasePastedContentTypeDataModel contentType, CancellationToken cancellationToken)
+        public virtual async Task<SafeWrapperResult> TryLoadExistingData(CanvasItem canvasFile, BaseContentTypeModel contentType, CancellationToken cancellationToken)
         {
             SafeWrapperResult result = await InitializeViewModelFromCollectionItem(canvasFile, contentType);
 
@@ -161,7 +161,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         #region Protected Helpers
 
-        protected virtual async Task<SafeWrapperResult> InitializeViewModelFromCollectionItem(CanvasFile canvasFile, BasePastedContentTypeDataModel contentType)
+        protected virtual async Task<SafeWrapperResult> InitializeViewModelFromCollectionItem(CanvasItem canvasFile, BaseContentTypeModel contentType)
         {
             // Clear leftover data
             DiscardData();
@@ -169,7 +169,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             // TODO: Add support for adding previews from extensions
 
             // Decide content type
-            contentType = await BasePastedContentTypeDataModel.GetContentType(canvasFile, contentType);
+            contentType = await BaseContentTypeModel.GetContentType(canvasFile, contentType);
 
             // Check if contentType is InvalidContentTypeDataModel
             if (contentType is InvalidContentTypeDataModel invalidContentType)
@@ -177,13 +177,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
                 return invalidContentType.error;
             }
 
-            return InitializeViewModelFromContentType(contentType) ? SafeWrapperResult.S_SUCCESS : new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Couldn't display content for this file");
+            return InitializeViewModelFromContentType(contentType) ? SafeWrapperResult.SUCCESS : new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Couldn't display content for this file");
         }
 
-        protected abstract bool InitializeViewModelFromContentType(BasePastedContentTypeDataModel contentType);
+        protected abstract bool InitializeViewModelFromContentType(BaseContentTypeModel contentType);
 
-        protected bool InitializeViewModelForType<TContentType, TViewModel>(BasePastedContentTypeDataModel contentType, Func<TViewModel> initializer)
-            where TContentType : BasePastedContentTypeDataModel
+        protected bool InitializeViewModelForType<TContentType, TViewModel>(BaseContentTypeModel contentType, Func<TViewModel> initializer)
+            where TContentType : BaseContentTypeModel
             where TViewModel : TBaseViewModel
         {
             if (contentType is TContentType)

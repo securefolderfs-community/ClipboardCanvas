@@ -181,7 +181,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
                 case (c: true, s: false, a: false, w: false, k: VirtualKey.Down):
                     {
-                        if (_currentPage == DisplayPageType.HomePage)
+                        if (_currentPage == DisplayPageType.Homepage)
                         {
                             break;
                         }
@@ -277,11 +277,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public void NotifyCurrentPageChanged(DisplayPageType pageType)
         {
+            // TODO: Instead of checking it there, hook up INavigationService event
             _currentPage = pageType;
 
             switch (_currentPage)
             {
-                case DisplayPageType.HomePage:
+                case DisplayPageType.Homepage:
                     {
                         ChangeButtonLayoutOnHome();
                         break;
