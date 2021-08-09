@@ -87,5 +87,26 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+
+        <!--  No items in Canvas text  -->
+        <StackPanel
+            x:Name="NoItemsText"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            x:Load="{x:Bind ViewModel.NoItemsTextLoad, Mode=OneWay}"
+            Spacing="4">
+
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="18"
+                Opacity="0.8"
+                Text="Infinite Canvas is empty." />
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Opacity="0.8"
+                Text="Drag and drop or paste to add content!" />
+        </StackPanel>
     </Grid>
 </UserControl>

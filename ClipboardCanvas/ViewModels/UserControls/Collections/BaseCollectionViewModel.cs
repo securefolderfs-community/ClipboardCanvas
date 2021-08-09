@@ -481,19 +481,19 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 IsCollectionInitializing = true;
                 OnCollectionItemsInitializationStartedEvent?.Invoke(this, new CollectionItemsInitializationStartedEventArgs(this));
 
-                IEnumerable<StorageFile> files = await Task.Run(async () => await collectionFolder.GetFilesAsync());
+                IEnumerable<IStorageItem> items = await Task.Run(async () => await collectionFolder.GetItemsAsync());
 
                 CollectionItems.Clear();
-                if (!files.IsEmpty())
+                if (!items.IsEmpty())
                 {
                     // Sort items from oldest (last canvas) to newest (first canvas)
-                    files = files.OrderBy((x) => x.DateCreated.DateTime);
+                    items = items.OrderBy((x) => x.DateCreated.DateTime);
 
                     // Save indexes for later
                     int savedIndex = currentIndex;
                     int savedItemsCount = CollectionItems.Count;
 
-                    foreach (var item in files)
+                    foreach (var item in items)
                     {
                         AddCollectionItem(new CollectionItemViewModel(item));
                     }

@@ -7,6 +7,6 @@ namespace ClipboardCanvas.Models
 {
     public interface IInteractableCanvasControlItemModel : IDragDataProviderModel, IDisposable
     {
-        Task<SafeWrapperResult> LoadContent();
+        Task<SafeWrapperResult> LoadContent(bool withLoadDelay = false);
     }
 }

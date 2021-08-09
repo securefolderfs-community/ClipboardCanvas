@@ -1,18 +1,16 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace ClipboardCanvas.ReferenceItems
 {
     [Serializable]
-    public class ReferenceFileData
+    public sealed class ReferenceFileData
     {
         [JsonRequired]
         public readonly string path;
 
+        [JsonConstructor]
         public ReferenceFileData(string path)
         {
             this.path = path;

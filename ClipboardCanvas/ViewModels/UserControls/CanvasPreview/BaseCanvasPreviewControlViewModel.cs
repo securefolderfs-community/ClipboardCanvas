@@ -119,7 +119,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             // Decide content type and initialize view model
 
             // Discard any left over data if we're already pasting to canvas that is filled
-            DiscardData();
+            if (contentType is not InfiniteCanvasContentType)
+            {
+                DiscardData();
+            }
 
             if (contentType is InvalidContentTypeDataModel invalidContentType)
             {

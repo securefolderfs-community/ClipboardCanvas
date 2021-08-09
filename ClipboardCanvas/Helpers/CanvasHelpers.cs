@@ -77,6 +77,9 @@ namespace ClipboardCanvas.Helpers
                 case MarkdownContentType:
                     return new MarkdownPasteModel(canvasFileReceiver, operationContext);
 
+                case FallbackContentType:
+                    return new FallbackPasteModel(canvasFileReceiver, operationContext);
+
                 default:
                     return null;
             }
@@ -86,7 +89,7 @@ namespace ClipboardCanvas.Helpers
         {
             StorageFolder folder = infiniteCanvasFolder.AssociatedItem as StorageFolder;
 
-            string configurationFileName = $"{Constants.FileSystem.INFINITE_CANVAS_CONFIGURATION_FILENAME}{Constants.FileSystem.INFINITE_CANVAS_CONFIGURATION_FILE_EXTENSION}";
+            string configurationFileName = Constants.FileSystem.INFINITE_CANVAS_CONFIGURATION_FILENAME;
 
             return await FilesystemOperations.CreateFile(folder, configurationFileName, CreationCollisionOption.OpenIfExists);
         }

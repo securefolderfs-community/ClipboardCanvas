@@ -137,11 +137,15 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="CanavsPasteModels\BasePasteModel.cs" />
+    <Compile Include="CanavsPasteModels\FallbackPasteModel.cs" />
     <Compile Include="CanavsPasteModels\MarkdownPasteModel.cs" />
     <Compile Include="CanavsPasteModels\MediaPasteModel.cs" />
     <Compile Include="CanvasFileReceivers\ICanvasFileReceiverModel.cs" />
     <Compile Include="CanvasFileReceivers\InfiniteCanvasFileReceiver.cs" />
     <Compile Include="Contexts\IOperationContext.cs" />
+    <Compile Include="EventArguments\InfiniteCanvasEventArgs.cs" />
+    <Compile Include="Helpers\JsonHelpers.cs" />
+    <Compile Include="Models\Implementation\InfiniteCanvasConfigurationModel.cs" />
     <Compile Include="Enums\DragDataType.cs" />
     <Compile Include="Enums\NavigationTransitionType.cs" />
     <Compile Include="EventArguments\DisplayFrameEventArgs.cs" />

@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
+using System.IO;
+using Newtonsoft.Json;
 
 using ClipboardCanvas.CanavsPasteModels;
 using ClipboardCanvas.DataModels;
@@ -14,7 +16,8 @@ using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.CanvasFileReceivers;
-using ClipboardCanvas.Enums;
+using ClipboardCanvas.Helpers.Filesystem;
+using System.Collections.Generic;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -30,7 +33,25 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         private IInteractableCanvasControlModel InteractableCanvasControlModel => ControlView?.InteractableCanvasModel;
 
-        public IInfiniteCanvasControlView ControlView { get; internal set; }
+        private IInfiniteCanvasControlView _ControlView;
+        public IInfiniteCanvasControlView ControlView
+        {
+            get => _ControlView;
+            set
+            {
+                if (_ControlView != null)
+                {
+                    _ControlView.InteractableCanvasModel.OnInfiniteCanvasSaveRequestedEvent -= InteractableCanvasModel_OnInfiniteCanvasSaveRequestedEvent;
+                }
+
+                _ControlView = value;
+
+                if (_ControlView != null)
+                {
+                    _ControlView.InteractableCanvasModel.OnInfiniteCanvasSaveRequestedEvent += InteractableCanvasModel_OnInfiniteCanvasSaveRequestedEvent;
+                }
+            }
+        }
 
         #region Constructor
 
@@ -50,25 +71,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             RaiseOnPasteInitiatedEvent(this, new PasteInitiatedEventArgs(false, null));
 
             // First, set Infinite Canvas folder if null
-            if (canvasItem == null)
+            SafeWrapperResult result = await InitializeInfiniteCanvasFolder();
+            if (!AssertNoError(result))
             {
-                SafeWrapper<CanvasItem> canvasFolderResult = await associatedCollection.CreateNewCanvasFolder(null);
-
-                if (!AssertNoError(canvasFolderResult))
-                {
-                    return canvasFolderResult;
-                }
-                canvasItem = canvasFolderResult;
-
-                // Initialize Infinite Canvas
-                SafeWrapperResult canvasInitializationResult = await CanvasHelpers.InitializeInfiniteCanvas(canvasItem);
-                if (!AssertNoError(canvasInitializationResult))
-                {
-                    return canvasInitializationResult;
-                }
-
-                // Initialize infinite canvas file receiver
-                _infiniteCanvasFileReceiver = new InfiniteCanvasFileReceiver(canvasItem);
+                return result;
             }
 
             // Get content type from data package
@@ -96,18 +102,99 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Wait for control to load
             await Task.Delay(50);
 
+            // Save data after pasting
+            SafeWrapperResult saveDataResult = await TrySaveData();
+            AssertNoError(saveDataResult); // Only for notification
+
             // Fetch data to view
-            SafeWrapperResult result = await TryFetchDataToView();
+            result = await TryFetchDataToView();
 
             RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, false, false, true));
 
             return result;
         }
 
-        public override Task<SafeWrapperResult> TrySaveData()
+        public override async Task<SafeWrapperResult> TryLoadExistingData(CanvasItem canvasItem, BaseContentTypeModel contentType, CancellationToken cancellationToken)
         {
-            // TODO: Serialize all items in canvas to JSON
-            return Task.FromResult(SafeWrapperResult.CANCEL);
+            this.cancellationToken = cancellationToken;
+            this.canvasItem = canvasItem;
+            this.contentType = contentType;
+
+            RaiseOnContentStartedLoadingEvent(this, new ContentStartedLoadingEventArgs(contentType));
+
+            // First, set Infinite Canvas folder if null
+            SafeWrapperResult result = await InitializeInfiniteCanvasFolder();
+            if (!AssertNoError(result))
+            {
+                return result;
+            }
+
+            // Get all items in Infinite Canvas folder
+            IEnumerable<IStorageItem> items = await Task.Run(async () => await ((await canvasItem.SourceItem) as StorageFolder).GetItemsAsync());
+            List<Task> loadContentTasks = new List<Task>();
+
+            List<InteractableCanvasControlItemViewModel> interactableCanvasList = new List<InteractableCanvasControlItemViewModel>();
+
+            foreach (var item in items)
+            {
+                if (item.Path.EndsWith(Constants.FileSystem.INFINITE_CANVAS_CONFIGURATION_FILE_EXTENSION))
+                {
+                    continue;
+                }
+
+                // Initialize parameters
+                BaseContentTypeModel itemContentType = await BaseContentTypeModel.GetContentType(item, null);
+                CanvasItem itemCanvasItem = new CanvasItem(item);
+
+                // Add to canvas
+                var interactableCanvasItem = await InteractableCanvasControlModel.AddItem(associatedCollection, itemContentType, itemCanvasItem, cancellationToken);
+                interactableCanvasList.Add(interactableCanvasItem);
+            }
+
+            // Get Infinite Canvas configuration model
+            string configurationFileName = Constants.FileSystem.INFINITE_CANVAS_CONFIGURATION_FILENAME;
+            string configurationPath = Path.Combine((await sourceFolder).Path, configurationFileName);
+            StorageFile configurationFile = await StorageHelpers.ToStorageItem<StorageFile>(configurationPath);
+
+            SafeWrapper<string> readFile = await FilesystemOperations.ReadFileText(configurationFile);
+            if (!AssertNoError(readFile))
+            {
+                return readFile;
+            }
+
+            // Set configuration model
+            var canvasConfigurationModel = JsonConvert.DeserializeObject<InfiniteCanvasConfigurationModel>(readFile);
+            InteractableCanvasControlModel.SetConfigurationModel(canvasConfigurationModel);
+
+            // Load item previews
+            foreach (var item in interactableCanvasList)
+            {
+                loadContentTasks.Add(item.LoadContent(true));
+            }
+            await Task.WhenAll(loadContentTasks);
+
+            RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, IsContentLoaded, isContentAsReference, true));
+
+            return SafeWrapperResult.SUCCESS;
+        }
+
+        public override async Task<SafeWrapperResult> TrySaveData()
+        {
+            InfiniteCanvasConfigurationModel canvasConfigurationModel = InteractableCanvasControlModel.GetConfigurationModel();
+
+            string configurationFileName = Constants.FileSystem.INFINITE_CANVAS_CONFIGURATION_FILENAME;
+            string configurationPath = Path.Combine((await sourceFolder).Path, configurationFileName);
+
+            SafeWrapper<StorageFile> configurationFile = await StorageHelpers.ToStorageItemWithError<StorageFile>(configurationPath);
+            if (!configurationFile)
+            {
+                return configurationFile;
+            }
+
+            string serializedConfig = JsonConvert.SerializeObject(canvasConfigurationModel, Formatting.Indented);
+            SafeWrapperResult writeConfigResult = await FilesystemOperations.WriteFileText(configurationFile.Result, serializedConfig);
+
+            return writeConfigResult;
         }
 
         protected override Task<SafeWrapperResult> SetData(DataPackageView dataPackage)
@@ -127,7 +214,60 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override Task<SafeWrapper<CollectionItemViewModel>> TrySetFileWithExtension()
         {
-            throw new NotImplementedException();
+            return Task.FromResult<SafeWrapper<CollectionItemViewModel>>((null, SafeWrapperResult.CANCEL));
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        private async void InteractableCanvasModel_OnInfiniteCanvasSaveRequestedEvent(object sender, EventArguments.InfiniteCanvasEventArgs.InfiniteCanvasSaveRequestedEventArgs e)
+        {
+            SafeWrapperResult saveDataResult = await TrySaveData();
+            AssertNoError(saveDataResult); // Only for notification
+        }
+
+        #endregion
+
+        #region Private Helpers
+
+        private async Task<SafeWrapperResult> InitializeInfiniteCanvasFolder()
+        {
+            if (canvasItem == null)
+            {
+                SafeWrapper<CanvasItem> canvasFolderResult = await associatedCollection.CreateNewCanvasFolder(null);
+
+                if (!canvasFolderResult)
+                {
+                    return canvasFolderResult;
+                }
+                canvasItem = canvasFolderResult;
+
+                // Initialize Infinite Canvas
+                SafeWrapperResult canvasInitializationResult = await CanvasHelpers.InitializeInfiniteCanvas(canvasItem);
+                if (!canvasInitializationResult)
+                {
+                    return canvasInitializationResult;
+                }
+
+            }
+
+            // Initialize infinite canvas file receiver
+            _infiniteCanvasFileReceiver = new InfiniteCanvasFileReceiver(canvasItem);
+
+            return SafeWrapperResult.SUCCESS;
+        }
+
+        #endregion
+
+        #region IDisposable
+
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            this.InteractableCanvasControlModel?.Dispose();
+            this.ControlView = null;
         }
 
         #endregion

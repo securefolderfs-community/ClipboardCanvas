@@ -3,34 +3,34 @@ using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.Helpers.SafetyHelpers
 {
-    public class SafeWrapper<T> : SafeWrapperResult
+    public class SafeWrapper<TResult> : SafeWrapperResult
     {
-        public T Result { get; private set; }
+        public TResult Result { get; private set; }
 
-        public SafeWrapper(T result, OperationErrorCode errorCode)
+        public SafeWrapper(TResult result, OperationErrorCode errorCode)
             : this (result, errorCode, null)
         {
         }
 
-        public SafeWrapper(T result, OperationErrorCode errorCode, string message)
+        public SafeWrapper(TResult result, OperationErrorCode errorCode, string message)
             : this(result, errorCode, null, message)
         {
         }
 
-        public SafeWrapper(T result, OperationErrorCode errorCode, Exception innerException, string message)
+        public SafeWrapper(TResult result, OperationErrorCode errorCode, Exception innerException, string message)
             : this(result, new SafeWrapperResultDetails(errorCode, innerException, message))
         {
             this.Result = result;
         }
 
-        public SafeWrapper(T result, SafeWrapperResultDetails details)
+        public SafeWrapper(TResult result, SafeWrapperResultDetails details)
             : base(details)
         {
             this.Result = result;
         }
 
-        public static implicit operator T(SafeWrapper<T> safeWrapper) => safeWrapper.Result;
+        public static implicit operator TResult(SafeWrapper<TResult> safeWrapper) => safeWrapper.Result;
 
-        public static implicit operator SafeWrapper<T>((T, SafeWrapperResult) safeWrapper) => new SafeWrapper<T>(safeWrapper.Item1, safeWrapper.Item2);
+        public static implicit operator SafeWrapper<TResult>((TResult, SafeWrapperResult) safeWrapper) => new SafeWrapper<TResult>(safeWrapper.Item1, safeWrapper.Item2);
     }
 }

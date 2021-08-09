@@ -35,6 +35,7 @@ namespace ClipboardCanvas.UserControls
         private void Canvas_Loaded(object sender, RoutedEventArgs e)
         {
             _canvasPanel = sender as Canvas;
+            this.ViewModel.CanvasLoaded();
         }
 
         private void Canvas_Drop(object sender, DragEventArgs e)
@@ -54,6 +55,7 @@ namespace ClipboardCanvas.UserControls
             Canvas.SetTop(container, dropPoint.Y - _savedClickPosition.Y);
 
             element.Opacity = 1.0d;
+            this.ViewModel.ItemRearranged();
         }
 
         private void Canvas_DragOver(object sender, DragEventArgs e)

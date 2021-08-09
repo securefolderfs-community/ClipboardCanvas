@@ -29,6 +29,8 @@
 
                 public const uint SIMPLE_CANVAS_THUMBNAIL_SIZE = 128u;
 
+                public const int INFINITE_CANVAS_SAVE_INTERVAL = 1500;
+
                 public const string INFINITE_CANVAS_DRAGGED_OBJECT_ID = "clipboard_canvas__dragged_control_object";
             }
 
@@ -53,9 +55,9 @@
 
             public const string INFINITE_CANVAS_CONFIGURATION_FILE_EXTENSION = ".ccviccfg";
 
-            public const string INFINITE_CANVAS_CONFIGURATION_FILENAME = "infinite_canvas_configuration";
+            public const string INFINITE_CANVAS_CONFIGURATION_FILENAME = "infinite_canvas_configuration.ccviccfg";
 
-            public const string CANVAS_FILE_FILENAME_DATE_FORMAT = "dd.mm.yyyy HH_mm_ss";
+            public const string CANVAS_FILE_FILENAME_DATE_FORMAT = "dd.MM.yyyy HH_mm_ss";
 
             public const int COPY_FILE_BUFFER_SIZE = 1024 * 1024; // 1mb
         }

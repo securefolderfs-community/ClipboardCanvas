@@ -12,8 +12,6 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.ContextMenu;
-using ClipboardCanvas.Enums;
-using ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -24,8 +22,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
         private IInteractableCanvasControlView _view;
 
         private BaseContentTypeModel _contentType;
-
-        private CanvasItem _canvasItem;
 
         private CancellationToken _cancellationToken;
 
@@ -38,6 +34,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
         public IReadOnlyCanvasPreviewModel ReadOnlyCanvasPreviewModel { get; set; }
 
         public ICollectionModel CollectionModel { get; set; }
+
+        public CanvasItem CanvasItem { get; private set; }
 
         private bool _IsPastedAsReference;
         public bool IsPastedAsReference
@@ -53,7 +51,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             set => SetProperty(ref _DisplayName, value);
         }
 
-        private Vector2 ItemPosition
+        public Vector2 ItemPosition
         {
             get => _view.GetItemPosition(this);
             set => _view.SetItemPosition(this, value);
@@ -86,7 +84,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             this._view = view;
             this.CollectionModel = collectionModel;
             this._contentType = contentType;
-            this._canvasItem = canvasItem;
+            this.CanvasItem = canvasItem;
             this._cancellationToken = cancellationToken;
         }
 
@@ -94,20 +92,26 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task InitializeItem()
         {
-            DisplayName = (await _canvasItem.SourceItem).Name;
+            DisplayName = (await CanvasItem.SourceItem).Name;
         }
 
-        public async Task<SafeWrapperResult> LoadContent()
+        public async Task<SafeWrapperResult> LoadContent(bool withLoadDelay = false)
         {
-            SafeWrapperResult result = await ReadOnlyCanvasPreviewModel.TryLoadExistingData(_canvasItem, _contentType, _cancellationToken);
-            IsPastedAsReference = result && _canvasItem.IsFileAsReference;
+            if (withLoadDelay)
+            {
+                // Wait for control to load
+                await Task.Delay(50);
+            }
+
+            SafeWrapperResult result = await ReadOnlyCanvasPreviewModel.TryLoadExistingData(CanvasItem, _contentType, _cancellationToken);
+            IsPastedAsReference = result && CanvasItem.IsFileAsReference;
 
             return result;
         }
 
         public async Task<IReadOnlyList<IStorageItem>> GetDragData()
         {
-            return new List<IStorageItem>() { await _canvasItem.SourceItem };
+            return new List<IStorageItem>() { await CanvasItem.SourceItem };
         }
 
         #region IDisposable

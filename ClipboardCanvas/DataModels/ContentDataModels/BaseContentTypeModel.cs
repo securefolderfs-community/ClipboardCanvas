@@ -40,9 +40,16 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
                 return contentType;
             }
             
-            if ((await canvasFile.SourceItem) is StorageFolder)
+            if ((await canvasFile.SourceItem) is StorageFolder folder)
             {
-                return new InvalidContentTypeDataModel(FoldersNotSupportedResult, false);
+                if (folder.Path.EndsWith(Constants.FileSystem.INFINITE_CANVAS_EXTENSION))
+                {
+                    return new InfiniteCanvasContentType();
+                }
+                else
+                {
+                    return new InvalidContentTypeDataModel(FoldersNotSupportedResult, false);
+                }    
             }
             else if ((await canvasFile.SourceItem) is StorageFile file)
             {
@@ -109,8 +116,25 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
             }
         }
 
-        public static async Task<BaseContentTypeModel> GetContentTypeFromExtension(StorageFile file, string ext)
+        public static async Task<BaseContentTypeModel> GetContentTypeFromExtension(IStorageItem item, string ext)
         {
+            if (item is StorageFolder folder)
+            {
+                if (folder.Path.EndsWith(Constants.FileSystem.INFINITE_CANVAS_EXTENSION))
+                {
+                    return new InfiniteCanvasContentType();
+                }
+                else
+                {
+                    return new InvalidContentTypeDataModel(FoldersNotSupportedResult, false);
+                }
+            }
+
+            if (item is not StorageFile file)
+            {
+                return null;
+            }
+
             // Image
             if (ImageCanvasViewModel.Extensions.Contains(ext))
             {

@@ -51,6 +51,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         /// <inheritdoc cref="sourceItem"/>
         protected Task<StorageFile> sourceFile => Task.Run(async () => (await sourceItem) as StorageFile);
 
+        /// <inheritdoc cref="sourceItem"/>
+        protected Task<StorageFolder> sourceFolder => Task.Run(async () => (await sourceItem) as StorageFolder);
+
         /// <summary>
         /// The item that's associated with the canvas. For guaranteed true file, use <see cref="sourceItem"/> instead.
         /// </summary>
@@ -304,16 +307,24 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #region Protected Helpers
 
         /// <summary>
-        /// Use this in critical functions to check if sub-functions returned SUCCESS
+        /// Used in critical functions to check if sub-functions returned SUCCESS.
+        /// <br/>
+        /// <br/>
+        /// This function also calls underlying events to report result of <paramref name="result"/>.
         /// </summary>
         /// <param name="result"></param>
         /// <returns></returns>
         protected bool AssertNoError(SafeWrapperResult result)
         {
-            if (result == null || !result)
+            if (result == null)
             {
-                RaiseOnErrorOccurredEvent(this, new ErrorOccurredEventArgs(result, result?.Message));
-                RaiseOnContentLoadFailedEvent(this, new ErrorOccurredEventArgs(result, result?.Message));
+                result = SafeWrapperResult.UNKNOWN_FAIL;
+            }
+
+            if (!result)
+            {
+                RaiseOnErrorOccurredEvent(this, new ErrorOccurredEventArgs(result, result.Message));
+                RaiseOnContentLoadFailedEvent(this, new ErrorOccurredEventArgs(result, result.Message));
                 return false;
             }
 
