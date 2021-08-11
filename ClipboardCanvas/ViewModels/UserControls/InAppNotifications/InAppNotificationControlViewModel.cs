@@ -2,11 +2,10 @@
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using System.Threading.Tasks;
+
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.EventArguments;
-using Windows.UI.Xaml;
-using System.Threading.Tasks;
-using System.Diagnostics;
 
 namespace ClipboardCanvas.ViewModels.UserControls.InAppNotifications
 {
@@ -14,7 +13,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.InAppNotifications
     {
         #region Private Members
 
-        private bool _showTimerCancelled;
+        private bool _showTimerCanceled;
 
         #endregion
 
@@ -188,7 +187,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.InAppNotifications
 
             if (milliseconds > 0)
             {
-                _showTimerCancelled = false;
+                _showTimerCanceled = false;
                 ShowNotification = true;
                 NotificationShowTimerProgressBarValue = 0.0d;
                 NotificationShowTimerProgressBarLoad = true;
@@ -196,7 +195,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.InAppNotifications
                 int passedMilliseconds = 0;
                 while (passedMilliseconds < milliseconds)
                 {
-                    if (_showTimerCancelled) // Check if cancelled
+                    if (_showTimerCanceled) // Check if canceled
                     {
                         break;
                     }
@@ -221,7 +220,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.InAppNotifications
 
         public void Dismiss()
         {
-            _showTimerCancelled = true;
+            _showTimerCanceled = true;
             ShowNotification = false;
         }
 

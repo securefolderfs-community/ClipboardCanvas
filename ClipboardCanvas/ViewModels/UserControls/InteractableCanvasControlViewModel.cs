@@ -66,6 +66,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
             OnInfiniteCanvasSaveRequestedEvent?.Invoke(this, new InfiniteCanvasSaveRequestedEventArgs());
         }
 
+        private void Item_OnInfiniteCanvasItemRemovalRequestedEvent(object sender, InfiniteCanvasItemRemovalRequestedEventArgs e)
+        {
+            RemoveItem(e.itemToRemove);
+        }
+
         #endregion
 
         #region Public Helpers
@@ -73,6 +78,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         public async Task<InteractableCanvasControlItemViewModel> AddItem(ICollectionModel collectionModel, BaseContentTypeModel contentType, CanvasItem canvasFile, CancellationToken cancellationToken)
         {
             var item = new InteractableCanvasControlItemViewModel(_view, collectionModel, contentType, canvasFile, cancellationToken);
+            item.OnInfiniteCanvasItemRemovalRequestedEvent += Item_OnInfiniteCanvasItemRemovalRequestedEvent;
             Items.Add(item);
             await item.InitializeItem();
             NoItemsTextLoad = false;
@@ -82,6 +88,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public void RemoveItem(InteractableCanvasControlItemViewModel item)
         {
+            item.OnInfiniteCanvasItemRemovalRequestedEvent -= Item_OnInfiniteCanvasItemRemovalRequestedEvent;
             Items.Remove(item);
 
             NoItemsTextLoad = Items.IsEmpty();
@@ -136,6 +143,16 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public void Dispose()
         {
+            for (int i = 0; i < Items.Count; i++)
+            {
+                var currentItem = Items[i];
+
+                currentItem.OnInfiniteCanvasItemRemovalRequestedEvent -= Item_OnInfiniteCanvasItemRemovalRequestedEvent;
+                currentItem.Dispose();
+            }
+
+            Items.Clear();
+
             this._saveTimer.Stop();
             this._saveTimer.Tick -= SaveTimer_Tick;
         }

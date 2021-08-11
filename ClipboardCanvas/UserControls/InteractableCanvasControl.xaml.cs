@@ -8,6 +8,9 @@ using ClipboardCanvas.ViewModels.UserControls;
 using ClipboardCanvas.ModelViews;
 using Windows.UI.Core;
 using ClipboardCanvas.Models;
+using System.Collections.Generic;
+using Windows.Storage;
+using ClipboardCanvas.Extensions;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -85,7 +88,12 @@ namespace ClipboardCanvas.UserControls
                 // Also set data associated from the dragged element
                 if (draggedElement.DataContext is IDragDataProviderModel dragDataProvider)
                 {
-                    args.Data.SetStorageItems(await dragDataProvider.GetDragData());
+                    IReadOnlyList<IStorageItem> dragData = await dragDataProvider.GetDragData();
+
+                    if (dragData.CheckNotNull())
+                    {
+                        args.Data.SetStorageItems(await dragDataProvider.GetDragData());
+                    }
                 }
             }
         }

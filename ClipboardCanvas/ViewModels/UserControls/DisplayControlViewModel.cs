@@ -586,15 +586,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        private async void OnPageNavigated()
-        {
-            WindowTitleBarControlModel.ShowTitleUnderline = false;
-
-            UpdateTitleBar();
-            UpdateCanvasPageNavigation();
-            await SetSuggestedActions();
-        }
-
         private async Task SetSuggestedActions(SafeWrapperResult fromError = null)
         {
             if (NavigationToolBarControlModel == null)
@@ -604,7 +595,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             if (fromError != null)
             {
-                if (_currentCollectionModel.CurrentCollectionItemViewModel != null && _currentCollectionModel.CurrentCollectionItemViewModel.Item is StorageFile file && ReferenceFile.IsReferenceFile(file))
+                if (_currentCollectionModel.CurrentCollectionItemViewModel != null && _currentCollectionModel.CurrentCollectionItemViewModel.AssociatedItem is StorageFile file && ReferenceFile.IsReferenceFile(file))
                 {
                     if (fromError == OperationErrorCode.InvalidOperation) // Reference File is corrupted
                     {

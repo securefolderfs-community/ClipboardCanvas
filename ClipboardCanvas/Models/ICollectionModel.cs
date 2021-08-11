@@ -70,12 +70,6 @@ namespace ClipboardCanvas.Models
         Task LoadCanvasFromCollection(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken, CollectionItemViewModel collectionItemViewModel = null);
 
         /// <summary>
-        /// Manually removes item from collection
-        /// </summary>
-        /// <param name="collectionItemViewModel"></param>
-        void RemoveCollectionItem(CollectionItemViewModel collectionItemViewModel);
-
-        /// <summary>
         /// Returns true, if it's possible to navigate canvas forward
         /// </summary>
         /// <returns></returns>

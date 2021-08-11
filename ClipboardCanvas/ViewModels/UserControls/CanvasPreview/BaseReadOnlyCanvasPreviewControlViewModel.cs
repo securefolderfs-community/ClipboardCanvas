@@ -124,12 +124,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
                 // The canvas is null, delete the reference file manually
                 SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(collectionModel, collectionItemViewModel, hideConfirmation);
 
-                if (result != OperationErrorCode.Cancelled && !result)
+                if (result != OperationErrorCode.Canceled && !result)
                 {
                     OnErrorOccurredEvent?.Invoke(this, new ErrorOccurredEventArgs(result, result?.Message));
                     return result;
                 }
-                else if (result != OperationErrorCode.Cancelled)
+                else if (result != OperationErrorCode.Canceled)
                 {
                     OnFileDeletedEvent?.Invoke(this, new FileDeletedEventArgs(associatedItem));
                 }

@@ -2,10 +2,15 @@
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
+using System.IO;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Windows.System;
 
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.UnsafeNative;
+using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
+using ClipboardCanvas.Services;
 
 namespace ClipboardCanvas.Helpers.Filesystem
 {
@@ -35,7 +40,7 @@ namespace ClipboardCanvas.Helpers.Filesystem
             // Check if exists
             if (!Exists(path))
             {
-                return new SafeWrapper<TOut>(default, OperationErrorCode.NotFound, new System.IO.FileNotFoundException(), "Couldn't resolve item associated with path.");
+                return new SafeWrapper<TOut>(default, OperationErrorCode.NotFound, new FileNotFoundException(), "Couldn't resolve item associated with path.");
             }
 
             if (typeof(IStorageFile).IsAssignableFrom(typeof(TOut)))
@@ -48,7 +53,7 @@ namespace ClipboardCanvas.Helpers.Filesystem
             }
             else if (typeof(IStorageItem).IsAssignableFrom(typeof(TOut)))
             {
-                if (System.IO.Path.HasExtension(path)) // Probably a file
+                if (Path.HasExtension(path)) // Probably a file
                 {
                     await GetFile();
                 }
@@ -101,6 +106,69 @@ namespace ClipboardCanvas.Helpers.Filesystem
             }
 
             return UnsafeNativeApis.GetFileAttributesExFromApp(path, UnsafeNativeDataModels.GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out _);
+        }
+
+        public static async Task<bool> OpenFile(IStorageItem item)
+        {
+            if (item == null)
+            {
+                return false;
+            }
+
+            StorageFile file = item as StorageFile;
+            string fileExtension = Path.GetExtension(item.Path);
+            if (file != null && fileExtension.Equals(".exe", StringComparison.OrdinalIgnoreCase))
+            {
+                IDialogService dialogService = Ioc.Default.GetService<IDialogService>();
+
+                IInAppNotification notification = dialogService.GetNotification();
+                notification.ViewModel.NotificationText = "UWP cannot open executable (.exe) files";
+                notification.ViewModel.ShownButtons = InAppNotificationButtonType.OkButton;
+
+                await notification.ShowAsync(4000);
+                return false;
+            }
+            else
+            {
+                if (file != null)
+                {
+                    await Launcher.LaunchFileAsync(file);
+                    return true;
+                }
+                else if (item is StorageFolder folder)
+                {
+                    await Launcher.LaunchFolderAsync(folder);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        public static async Task<bool> OpenContainingFolder(IStorageItem item)
+        {
+            if (item == null)
+            {
+                return false;
+            }
+
+            SafeWrapper<StorageFolder> parentFolder;
+
+            string parentFolderPath = Path.GetDirectoryName(item.Path);
+            parentFolder = await StorageHelpers.ToStorageItemWithError<StorageFolder>(parentFolderPath);
+
+            if (!parentFolder || parentFolder?.Result == null)
+            {
+                return false;
+            }
+
+            FolderLauncherOptions launcherOptions = new FolderLauncherOptions();
+            launcherOptions.ItemsToSelect.Add(item);
+
+            await Launcher.LaunchFolderAsync(parentFolder.Result, launcherOptions);
+            return true;
         }
     }
 }

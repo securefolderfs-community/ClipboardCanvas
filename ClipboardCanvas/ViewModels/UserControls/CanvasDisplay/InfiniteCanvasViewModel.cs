@@ -100,7 +100,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             _currentCanvasItem = await InteractableCanvasControlModel.AddItem(associatedCollection, contentType, pastedFile, cancellationToken);
 
             // Wait for control to load
-            await Task.Delay(50);
+            await Task.Delay(10);
 
             // Save data after pasting
             SafeWrapperResult saveDataResult = await TrySaveData();

@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
+
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
+using ClipboardCanvas.Extensions;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -20,12 +21,14 @@ namespace ClipboardCanvas.UserControls.CanvasDisplay
             this.InitializeComponent();
         }
 
-        // TODO: Move to ViewModel
         private async void Image_DragStarting(Windows.UI.Xaml.UIElement sender, Windows.UI.Xaml.DragStartingEventArgs args)
         {
-            IReadOnlyList<IStorageItem> dragData = await ViewModel.ProvideDragData();
+            IReadOnlyList<IStorageItem> dragData = await ViewModel.GetDragData();
 
-            args.Data.SetStorageItems(dragData);
+            if (dragData.CheckNotNull())
+            {
+                args.Data.SetStorageItems(dragData);
+            }
         }
     }
 }

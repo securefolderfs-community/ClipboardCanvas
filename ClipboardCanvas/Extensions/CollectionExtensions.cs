@@ -12,6 +12,8 @@ namespace ClipboardCanvas.Extensions
 
         public static void AddFront<T>(this IList<T> list, T item) => list.Insert(0, item);
 
+        public static bool CheckNotNull<T>(this IEnumerable<T> enumerable) => !(enumerable == null || enumerable.Any((item) => item.IsNull()));
+
         public static void DisposeClear<T>(this ICollection<T> collection)
         {
             if (collection == null)

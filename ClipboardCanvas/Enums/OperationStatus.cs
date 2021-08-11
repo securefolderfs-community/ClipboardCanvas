@@ -7,7 +7,7 @@
     {
         Success = 0,
         UnknownFailed = 1,
-        Cancelled = 2,
+        Canceled = 2,
         AccessUnauthorized = 4,
         NotFound = 8,
         AlreadyExists = 16,

@@ -29,7 +29,7 @@
 
                 public const uint SIMPLE_CANVAS_THUMBNAIL_SIZE = 128u;
 
-                public const int INFINITE_CANVAS_SAVE_INTERVAL = 1500;
+                public const int INFINITE_CANVAS_SAVE_INTERVAL = 1000;
 
                 public const string INFINITE_CANVAS_DRAGGED_OBJECT_ID = "clipboard_canvas__dragged_control_object";
             }

@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.Input;
+using System.Windows.Input;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 
 using ClipboardCanvas.DataModels;
@@ -12,6 +15,9 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.ContextMenu;
+using ClipboardCanvas.Helpers.Filesystem;
+using ClipboardCanvas.Helpers;
+using ClipboardCanvas.EventArguments.InfiniteCanvasEventArgs;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -41,7 +47,18 @@ namespace ClipboardCanvas.ViewModels.UserControls
         public bool IsPastedAsReference
         {
             get => _IsPastedAsReference;
-            set => SetProperty(ref _IsPastedAsReference, value);
+            set
+            {
+                if (SetProperty(ref _IsPastedAsReference, value))
+                {
+                    OnPropertyChanged(nameof(DeleteItemText));
+                }
+            }
+        }
+
+        public string DeleteItemText
+        {
+            get => IsPastedAsReference ? "Delete reference" : "Delete item";
         }
 
         private string _DisplayName;
@@ -77,6 +94,26 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #endregion
 
+        #region Events
+
+        public event EventHandler<InfiniteCanvasItemRemovalRequestedEventArgs> OnInfiniteCanvasItemRemovalRequestedEvent;
+
+        #endregion
+
+        #region Commands
+
+        public ICommand OpenFileCommand { get; private set; }
+
+        public ICommand SetDataToClipboardCommand { get; private set; }
+
+        public ICommand OpenContainingFolderCommand { get; private set; }
+
+        public ICommand OpenReferenceContainingFolderCommand { get; private set; }
+
+        public ICommand DeleteItemCommand { get; private set; }
+
+        #endregion
+
         #region Constructor
 
         public InteractableCanvasControlItemViewModel(IInteractableCanvasControlView view, ICollectionModel collectionModel, BaseContentTypeModel contentType, CanvasItem canvasItem, CancellationToken cancellationToken)
@@ -86,13 +123,70 @@ namespace ClipboardCanvas.ViewModels.UserControls
             this._contentType = contentType;
             this.CanvasItem = canvasItem;
             this._cancellationToken = cancellationToken;
+
+            // Create commands
+            OpenFileCommand = new AsyncRelayCommand(OpenFile);
+            SetDataToClipboardCommand = new AsyncRelayCommand(SetDataToClipboard);
+            OpenContainingFolderCommand = new AsyncRelayCommand(OpenContainingFolder);
+            OpenReferenceContainingFolderCommand = new AsyncRelayCommand(() => OpenContainingFolder(false));
+            DeleteItemCommand = new AsyncRelayCommand(DeleteItem);
         }
 
         #endregion
 
+        #region Command Implementation
+
+        private async Task OpenFile()
+        {
+            // TODO:
+            await StorageHelpers.OpenFile(await CanvasItem.SourceItem);
+        }
+
+        private async Task SetDataToClipboard()
+        {
+            DataPackage dataPackage = new DataPackage();
+            dataPackage.SetStorageItems(new List<IStorageItem>() { await CanvasItem.SourceItem });
+
+            Clipboard.SetContent(dataPackage);
+        }
+
+        private async Task OpenContainingFolder()
+        {
+            await OpenContainingFolder(true);
+        }
+
+        private async Task OpenContainingFolder(bool checkForReference)
+        {
+            if (checkForReference)
+            {
+                await StorageHelpers.OpenContainingFolder(await CanvasItem.SourceItem);
+            }
+            else
+            {
+                await StorageHelpers.OpenContainingFolder(CanvasItem.AssociatedItem);
+            }
+        }
+
+        private async Task DeleteItem()
+        {
+            SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(CollectionModel, CanvasItem, false);
+
+            if (result)
+            {
+                OnInfiniteCanvasItemRemovalRequestedEvent?.Invoke(this, new InfiniteCanvasItemRemovalRequestedEventArgs(this));
+            }
+        }
+
+        #endregion
+
+        private async Task InitializeItemName()
+        {
+            DisplayName = (await CanvasItem.SourceItem)?.Name ?? "Invalid file."; // TODO: If SourceItem is null, CC will crash at multiple stages
+        }
+
         public async Task InitializeItem()
         {
-            DisplayName = (await CanvasItem.SourceItem).Name;
+            await InitializeItemName();
         }
 
         public async Task<SafeWrapperResult> LoadContent(bool withLoadDelay = false)
@@ -100,7 +194,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             if (withLoadDelay)
             {
                 // Wait for control to load
-                await Task.Delay(50);
+                await Task.Delay(10);
             }
 
             SafeWrapperResult result = await ReadOnlyCanvasPreviewModel.TryLoadExistingData(CanvasItem, _contentType, _cancellationToken);

@@ -7,7 +7,7 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
     {
         public static readonly SafeWrapperResult SUCCESS = new SafeWrapperResult(OperationErrorCode.Success, "Operation completed successfully.");
 
-        public static readonly SafeWrapperResult CANCEL = new SafeWrapperResult(OperationErrorCode.Cancelled, "The operation was canceled.");
+        public static readonly SafeWrapperResult CANCEL = new SafeWrapperResult(OperationErrorCode.Canceled, "The operation was canceled.");
 
         public static readonly SafeWrapperResult UNKNOWN_FAIL = new SafeWrapperResult(OperationErrorCode.UnknownFailed, new Exception(), "An unknown error occurred.");
 

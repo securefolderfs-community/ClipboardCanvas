@@ -19,10 +19,11 @@ using ClipboardCanvas.Enums;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.CanavsPasteModels;
+using ClipboardCanvas.Models;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
-    public sealed class ImageCanvasViewModel : BaseCanvasViewModel
+    public sealed class ImageCanvasViewModel : BaseCanvasViewModel, IDragDataProviderModel
     {
         #region Private Members
 
@@ -267,7 +268,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Public Helpers
 
-        public async Task<IReadOnlyList<IStorageItem>> ProvideDragData()
+        public async Task<IReadOnlyList<IStorageItem>> GetDragData()
         {
             return new List<IStorageItem>() { await sourceItem };
         }

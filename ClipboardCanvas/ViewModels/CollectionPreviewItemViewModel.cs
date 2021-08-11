@@ -93,7 +93,7 @@ namespace ClipboardCanvas.ViewModels
 
         public async Task RequestCanvasLoad()
         {
-            await Task.Delay(100);
+            await Task.Delay(10);
 
             if (ReadOnlyCanvasPreviewModel == null)
             {
@@ -107,7 +107,7 @@ namespace ClipboardCanvas.ViewModels
 
         public async Task RequestCanvasUnload()
         {
-            await Task.Delay(100);
+            await Task.Delay(10);
 
             if (ReadOnlyCanvasPreviewModel == null)
             {
@@ -128,7 +128,7 @@ namespace ClipboardCanvas.ViewModels
 
             IStorageItem sourceItem = await collectionItemViewModel.SourceItem;
 
-            viewModel.DisplayName = Path.GetFileName(sourceItem != null ? sourceItem.Path : collectionItemViewModel.Item?.Path);
+            viewModel.DisplayName = Path.GetFileName(sourceItem != null ? sourceItem.Path : collectionItemViewModel.AssociatedItem?.Path);
 
             return viewModel;
         }

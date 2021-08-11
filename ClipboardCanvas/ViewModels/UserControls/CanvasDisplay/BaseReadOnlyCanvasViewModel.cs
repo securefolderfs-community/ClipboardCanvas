@@ -212,13 +212,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(associatedCollection, associatedItemViewModel, hideConfirmation);
 
-            if (result != OperationErrorCode.Cancelled && !AssertNoError(result))
+            if (result != OperationErrorCode.Canceled && !AssertNoError(result))
             {
                 return result;
             }
-            else if (result != OperationErrorCode.Cancelled)
+            else if (result != OperationErrorCode.Canceled)
             {
-                associatedCollection.RemoveCollectionItem(associatedItemViewModel);
                 RaiseOnFileDeletedEvent(this, new FileDeletedEventArgs(associatedItem));
             }
 

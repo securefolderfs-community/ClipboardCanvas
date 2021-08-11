@@ -5,6 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tuc="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:tui="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:uc="using:ClipboardCanvas.UserControls.SimpleCanvasDisplay"
     xmlns:vm="using:ClipboardCanvas.ViewModels.UserControls"
     d:DesignHeight="300"
@@ -27,6 +29,11 @@
                         Loaded="Canvas_Loaded" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemContainerTransitions>
+                <TransitionCollection>
+                    <AddDeleteThemeTransition />
+                </TransitionCollection>
+            </ItemsControl.ItemContainerTransitions>
             <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="vm:InteractableCanvasControlItemViewModel">
                     <Grid
@@ -34,8 +41,9 @@
                         Padding="2"
                         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                         BorderBrush="{ThemeResource SubtleBackgroundBrush}"
-                        BorderThickness="1"
+                        BorderThickness="2"
                         CanDrag="True"
+                        CornerRadius="8"
                         DragStarting="RootContentGrid_DragStarting"
                         RowSpacing="2">
 
@@ -48,20 +56,33 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Top"
                             StretchDirection="Both">
-                            <uc:SimpleCanvasPreviewControl CollectionModel="{x:Bind CollectionModel, Mode=OneWay}" SimpleCanvasPreviewModel="{x:Bind ReadOnlyCanvasPreviewModel, Mode=TwoWay}" />
+                            <uc:SimpleCanvasPreviewControl
+                                x:Name="ItemPreview"
+                                tui:FrameworkElementExtensions.EnableActualSizeBinding="True"
+                                CollectionModel="{x:Bind CollectionModel, Mode=OneWay}"
+                                SimpleCanvasPreviewModel="{x:Bind ReadOnlyCanvasPreviewModel, Mode=TwoWay}" />
                         </Viewbox>
 
                         <!--  Info bar  -->
-                        <StackPanel
+                        <Grid
+                            x:Name="InfoBarPanel"
                             Grid.Row="1"
-                            Margin="2"
-                            Orientation="Horizontal"
-                            Spacing="8">
+                            Width="{Binding ElementName=ItemPreview, Path=(tui:FrameworkElementExtensions.ActualWidth)}"
+                            MinWidth="60"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            ColumnSpacing="8">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
 
                             <!--  Pasted as Reference button  -->
                             <Button
                                 x:Name="PastedAsReferenceButton"
                                 Grid.Row="1"
+                                Grid.Column="0"
                                 Width="30"
                                 Height="30"
                                 Padding="4"
@@ -76,13 +97,49 @@
 
                             <!--  Filename  -->
                             <TextBlock
+                                Grid.Column="1"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 Opacity="0.8"
                                 Text="{x:Bind DisplayName, Mode=OneWay}"
                                 TextTrimming="CharacterEllipsis"
                                 ToolTipService.ToolTip="{x:Bind DisplayName, Mode=OneWay}" />
-                        </StackPanel>
+                        </Grid>
+
+                        <Grid.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Command="{x:Bind OpenFileCommand}" Text="Open file">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xe8e5;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutSeparator />
+                                <MenuFlyoutItem Command="{x:Bind SetDataToClipboardCommand}" Text="Copy file">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xe8c8;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Command="{x:Bind OpenContainingFolderCommand}" Text="Open containing folder">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xe838;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem
+                                    x:Name="OpenReferenceContainingFolderOption"
+                                    x:Load="{x:Bind IsPastedAsReference, Mode=OneWay}"
+                                    Command="{x:Bind OpenReferenceContainingFolderCommand}"
+                                    Text="Open reference containing folder">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xe838;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Command="{x:Bind DeleteItemCommand}" Text="{x:Bind DeleteItemText, Mode=OneWay}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xe74d;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </Grid.ContextFlyout>
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

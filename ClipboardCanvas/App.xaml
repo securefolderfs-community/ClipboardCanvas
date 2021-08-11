@@ -15,11 +15,14 @@
                 <ResourceDictionary Source="ResourceDictionaries/ColorsDictionary" />
                 <ResourceDictionary Source="ResourceDictionaries/CanvasDictionary" />
 
-                <!--  Window size thresholds  -->
                 <ResourceDictionary>
+                    <!--  Window size thresholds  -->
                     <x:Double x:Key="SmallWindowThreshold">0</x:Double>
                     <x:Double x:Key="MediumWindowThreshold">641</x:Double>
                     <x:Double x:Key="LargeWindowThreshold">1008</x:Double>
+
+                    <!--  Corner radius  -->
+                    <CornerRadius x:Key="ControlCornerRadius">4</CornerRadius>
                 </ResourceDictionary>
 
             </ResourceDictionary.MergedDictionaries>

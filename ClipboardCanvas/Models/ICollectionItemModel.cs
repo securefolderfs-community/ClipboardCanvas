@@ -9,7 +9,7 @@ namespace ClipboardCanvas.Models
     /// </summary>
     public interface ICollectionItemModel
     {
-        IStorageItem Item { get; }
+        IStorageItem AssociatedItem { get; }
 
         Task<IStorageItem> SourceItem { get; }
 

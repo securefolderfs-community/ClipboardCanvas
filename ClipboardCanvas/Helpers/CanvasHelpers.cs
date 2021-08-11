@@ -20,31 +20,38 @@ namespace ClipboardCanvas.Helpers
 {
     public static class CanvasHelpers
     {
-        public static async Task<SafeWrapperResult> DeleteCanvasFile(ICollectionModel collectionModel, CollectionItemViewModel item, bool hideConfirmation = false)
+        public static async Task<SafeWrapperResult> DeleteCanvasFile(ICollectionModel collectionModel, CanvasItem canvasItem, bool hideConfirmation = false)
         {
-            bool deletePermanently = false;
+            bool deletePermanently;
 
             IUserSettingsService userSettings = Ioc.Default.GetService<IUserSettingsService>();
             IDialogService dialogService = Ioc.Default.GetService<IDialogService>();
 
             if (userSettings.ShowDeleteConfirmationDialog && !hideConfirmation)
             {
-                DeleteConfirmationDialogViewModel deleteConfirmationDialogViewModel = new DeleteConfirmationDialogViewModel(Path.GetFileName(item.AssociatedItem.Path));
+                DeleteConfirmationDialogViewModel deleteConfirmationDialogViewModel = new DeleteConfirmationDialogViewModel(Path.GetFileName(canvasItem.AssociatedItem.Path));
                 DialogResult dialogOption = await dialogService.ShowDialog(deleteConfirmationDialogViewModel);
 
                 if (dialogOption == DialogResult.Primary)
                 {
                     deletePermanently = deleteConfirmationDialogViewModel.PermanentlyDelete;
-                }
-                else
-                {
-                    return SafeWrapperResult.CANCEL;
+
+                    CollectionItemViewModel collectionItem = collectionModel.FindCollectionItem(canvasItem);
+
+                    if (collectionItem == null)
+                    {
+                        // Just delete the canvasItem
+                        return await FilesystemOperations.DeleteItem(canvasItem.AssociatedItem, deletePermanently);
+                    }
+                    else
+                    {
+                        // Delete from collection
+                        return await collectionModel.DeleteCollectionItem(collectionItem, deletePermanently);
+                    }
                 }
             }
 
-            SafeWrapperResult result = await collectionModel.DeleteCollectionItem(item, deletePermanently);
-
-            return result;
+            return SafeWrapperResult.CANCEL;
         }
 
         public static CanvasType GetDefaultCanvasType()
