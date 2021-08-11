@@ -29,11 +29,11 @@
                         Loaded="Canvas_Loaded" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemContainerTransitions>
+            <!--<ItemsControl.ItemContainerTransitions>
                 <TransitionCollection>
                     <AddDeleteThemeTransition />
                 </TransitionCollection>
-            </ItemsControl.ItemContainerTransitions>
+            </ItemsControl.ItemContainerTransitions>-->
             <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="vm:InteractableCanvasControlItemViewModel">
                     <Grid

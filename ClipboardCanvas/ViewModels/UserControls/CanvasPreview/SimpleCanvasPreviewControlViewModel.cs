@@ -34,6 +34,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         protected override bool InitializeViewModelFromContentType(BaseContentTypeModel contentType)
         {
+            // Try for infinite canvas
+            if (InitializeViewModelForType<InfiniteCanvasContentType, ThumbnailSimpleCanvasViewModel>(contentType, () => new ThumbnailSimpleCanvasViewModel(view)))
+            {
+                return true;
+            }
+
             // Try for image
             if (InitializeViewModelForType<ImageContentType, ThumbnailSimpleCanvasViewModel>(contentType, () => new ThumbnailSimpleCanvasViewModel(view)))
             {

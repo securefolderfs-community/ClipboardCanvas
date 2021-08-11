@@ -1,6 +1,7 @@
 ﻿using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml;
 
 using ClipboardCanvas.ViewModels.Pages;
 using ClipboardCanvas.ModelViews;
@@ -43,7 +44,7 @@ namespace ClipboardCanvas.Pages
             this.ViewModel = new CanvasPageViewModel(this);
         }
 
-        private void PastedAsReference_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void PastedAsReference_Click(object sender, RoutedEventArgs e)
         {
             Flyout.ShowAttachedFlyout(PastedAsReference);
         }
@@ -53,7 +54,7 @@ namespace ClipboardCanvas.Pages
             ViewModel.CanvasContextMenuOpeningCommand.Execute(null);
         }
 
-        public void OnContentLoaded()
+        public void OnContentFinishedLoading()
         {
             // Check if connected animation is available
             ConnectedAnimation connectedAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation(

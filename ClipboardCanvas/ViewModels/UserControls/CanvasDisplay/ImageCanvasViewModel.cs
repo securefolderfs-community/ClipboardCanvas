@@ -105,7 +105,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             BitmapEncoder encoder = null;
             result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
             {
-            using (IRandomAccessStream fileStream = await (await sourceFile).OpenAsync(FileAccessMode.ReadWrite))
+                using (IRandomAccessStream fileStream = await (await sourceFile).OpenAsync(FileAccessMode.ReadWrite))
                 {
                     encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
 

@@ -1,16 +1,22 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using System;
+using Windows.UI.Xaml.Controls;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.Foundation;
+using System.Collections.Generic;
+using Windows.Storage;
+using System.Threading.Tasks;
+using Windows.Storage.Streams;
+using Windows.UI.Xaml.Media.Imaging;
 using System.Numerics;
 
 using ClipboardCanvas.ViewModels.UserControls;
 using ClipboardCanvas.ModelViews;
-using Windows.UI.Core;
 using ClipboardCanvas.Models;
-using System.Collections.Generic;
-using Windows.Storage;
 using ClipboardCanvas.Extensions;
+using Windows.Graphics.Display;
+using Windows.Graphics.Imaging;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -128,6 +134,31 @@ namespace ClipboardCanvas.UserControls
 
             Canvas.SetLeft(container, (double)position.X);
             Canvas.SetTop(container, (double)position.Y);
+        }
+
+        public async Task<IRandomAccessStream> GetCanvasImageStream()
+        {
+            RenderTargetBitmap rtb = new RenderTargetBitmap();
+            await rtb.RenderAsync(ItemsHolder);
+
+            IBuffer pixelsBuffer = await rtb.GetPixelsAsync();
+
+            DisplayInformation displayInfo = DisplayInformation.GetForCurrentView();
+
+            IRandomAccessStream stream = new InMemoryRandomAccessStream();
+            BitmapEncoder bitmapEncoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
+            bitmapEncoder.SetPixelData(BitmapPixelFormat.Bgra8, // RGB with alpha
+                                 BitmapAlphaMode.Premultiplied,
+                                 (uint)rtb.PixelWidth,
+                                 (uint)rtb.PixelHeight,
+                                 displayInfo.RawDpiX,
+                                 displayInfo.RawDpiY,
+                                 pixelsBuffer.ToArray());
+
+            await bitmapEncoder.FlushAsync();
+            stream.Seek(0);
+
+            return stream;
         }
     }
 }

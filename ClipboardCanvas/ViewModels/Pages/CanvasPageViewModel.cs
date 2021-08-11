@@ -466,7 +466,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             NewCanvasScreenLoad = false;
             TipTextLoad = false;
             ErrorTextLoad = false;
-            _view?.OnContentLoaded();
+            _view?.OnContentFinishedLoading();
         }
 
         private void PasteCanvasModel_OnContentLoadFailedEvent(object sender, ErrorOccurredEventArgs e)
@@ -474,7 +474,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             _contentFinishedLoading = true;
             CanvasRingLoad = false;
 
-            _view?.OnContentLoaded();
+            _view?.OnContentFinishedLoading();
         }
 
         private async void PasteCanvasModel_OnPasteInitiatedEvent(object sender, PasteInitiatedEventArgs e)

@@ -14,6 +14,7 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
+using ClipboardCanvas.Helpers.Filesystem;
 
 namespace ClipboardCanvas.DataModels.PastedContentDataModels
 {
@@ -42,7 +43,7 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
             
             if ((await canvasFile.SourceItem) is StorageFolder folder)
             {
-                if (folder.Path.EndsWith(Constants.FileSystem.INFINITE_CANVAS_EXTENSION))
+                if (FilesystemHelpers.IsPathEqualExtension(folder.Path, Constants.FileSystem.INFINITE_CANVAS_EXTENSION))
                 {
                     return new InfiniteCanvasContentType();
                 }
@@ -120,7 +121,7 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
         {
             if (item is StorageFolder folder)
             {
-                if (folder.Path.EndsWith(Constants.FileSystem.INFINITE_CANVAS_EXTENSION))
+                if (FilesystemHelpers.IsPathEqualExtension(folder.Path, Constants.FileSystem.INFINITE_CANVAS_EXTENSION))
                 {
                     return new InfiniteCanvasContentType();
                 }

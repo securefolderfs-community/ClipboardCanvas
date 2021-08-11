@@ -91,14 +91,5 @@ namespace ClipboardCanvas.Helpers
                     return null;
             }
         }
-
-        public static async Task<SafeWrapperResult> InitializeInfiniteCanvas(CanvasItem infiniteCanvasFolder)
-        {
-            StorageFolder folder = infiniteCanvasFolder.AssociatedItem as StorageFolder;
-
-            string configurationFileName = Constants.FileSystem.INFINITE_CANVAS_CONFIGURATION_FILENAME;
-
-            return await FilesystemOperations.CreateFile(folder, configurationFileName, CreationCollisionOption.OpenIfExists);
-        }
     }
 }

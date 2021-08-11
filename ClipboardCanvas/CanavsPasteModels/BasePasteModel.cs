@@ -27,15 +27,15 @@ namespace ClipboardCanvas.CanavsPasteModels
 
         protected CancellationToken cancellationToken;
 
-        protected CanvasItem canvasFile;
+        protected CanvasItem canvasItem;
 
         protected bool isContentAsReference;
 
-        protected IStorageItem associatedItem => canvasFile.AssociatedItem;
+        protected IStorageItem associatedItem => canvasItem.AssociatedItem;
 
         protected StorageFile associatedFile => associatedItem as StorageFile;
 
-        protected Task<IStorageItem> sourceItem => canvasFile.SourceItem;
+        protected Task<IStorageItem> sourceItem => canvasItem.SourceItem;
 
         protected Task<StorageFile> sourceFile => Task.Run(async () => (await sourceItem) as StorageFile);
 
@@ -72,7 +72,7 @@ namespace ClipboardCanvas.CanavsPasteModels
                 return (null, result);
             }
 
-            return (canvasFile, result);
+            return (canvasItem, result);
         }
 
         protected async Task<SafeWrapperResult> SetDataFromDataPackageInternal(DataPackageView dataPackage)
@@ -125,7 +125,7 @@ namespace ClipboardCanvas.CanavsPasteModels
                 }
             }
 
-            this.canvasFile = canvasFile;
+            this.canvasItem = canvasFile;
             return canvasFile;
         }
 

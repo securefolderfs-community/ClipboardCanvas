@@ -108,7 +108,7 @@ namespace ClipboardCanvas.ReferenceItems
 
         public static bool IsReferenceFile(StorageFile file)
         {
-            return file?.Path.EndsWith(Constants.FileSystem.REFERENCE_FILE_EXTENSION) ?? false;
+            return FilesystemHelpers.IsPathEqualExtension(file?.Path, Constants.FileSystem.REFERENCE_FILE_EXTENSION);
         }
     }
 }

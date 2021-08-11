@@ -181,7 +181,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async Task InitializeItemName()
         {
-            DisplayName = (await CanvasItem.SourceItem)?.Name ?? "Invalid file."; // TODO: If SourceItem is null, CC will crash at multiple stages
+            DisplayName = (await CanvasItem.SourceItem)?.Name ?? "Invalid file.";
         }
 
         public async Task InitializeItem()

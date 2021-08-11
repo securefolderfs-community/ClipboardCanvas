@@ -16,6 +16,7 @@ namespace ClipboardCanvas.Helpers
 {
     public static class ApplicationHelpers
     {
+        [Obsolete]
         public static async Task<(BitmapImage icon, string appName)> GetIconFromFileHandlingApp(StorageFile file, string fileExtension)
         {
             IReadOnlyList<AppInfo> apps = await Launcher.FindFileHandlersAsync(fileExtension);
@@ -29,7 +30,7 @@ namespace ClipboardCanvas.Helpers
 
             RandomAccessStreamReference stream = app.DisplayInfo.GetLogo(new Size(256, 256));
 
-            BitmapImage bitmap = await ImagingHelpers.ToBitmapAsync((await stream.OpenReadAsync()).AsStreamForRead());
+            BitmapImage bitmap = await ImagingHelpers.ToBitmapAsync(await stream.OpenReadAsync());
 
             return (bitmap, app.DisplayInfo.DisplayName);
         }

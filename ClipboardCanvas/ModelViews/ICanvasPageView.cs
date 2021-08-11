@@ -8,6 +8,6 @@ namespace ClipboardCanvas.ModelViews
 
         ICanvasPreviewModel CanvasPreviewModel { get; }
 
-        void OnContentLoaded();
+        void OnContentFinishedLoading();
     }
 }

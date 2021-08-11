@@ -1,22 +1,43 @@
-﻿using Microsoft.Toolkit.Uwp;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Core;
-using Windows.Foundation;
 using Windows.Graphics.Imaging;
+using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
-using Windows.System;
 using Windows.UI.Xaml.Media.Imaging;
+
+using ClipboardCanvas.Helpers.Filesystem;
 
 namespace ClipboardCanvas.Helpers
 {
     public static class ImagingHelpers
     {
+        public static async Task<IRandomAccessStream> GetTransparentThumbnail(this StorageFile file, ThumbnailMode mode, uint requestedSize, ThumbnailOptions options = ThumbnailOptions.None)
+        {
+            if (FilesystemHelpers.IsPathEqualExtension(file.Path, ".png"))
+            {
+                // Try to create a scaled-down version of the PNG with transparency
+                using (IRandomAccessStream fileStream = await file.OpenAsync(FileAccessMode.Read))
+                {
+                    IRandomAccessStream thumbnail = new InMemoryRandomAccessStream();
+                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(BitmapDecoder.PngDecoderId, fileStream);
+                    BitmapEncoder encoder = await BitmapEncoder.CreateForTranscodingAsync(thumbnail, decoder);
+
+                    encoder.BitmapTransform.ScaledHeight = requestedSize;
+                    encoder.BitmapTransform.ScaledWidth = (uint)(requestedSize * 1.7777d);
+                    encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Fant;
+
+                    await encoder.FlushAsync();
+                    await thumbnail.FlushAsync();
+                    return thumbnail;
+                }
+            }
+
+            return await file.GetThumbnailAsync(mode, requestedSize, options);
+        }
+
         public static async Task<BitmapImage> ToBitmapAsync(this byte[] data)
         {
             if (data == null)
@@ -33,16 +54,16 @@ namespace ClipboardCanvas.Helpers
             }
         }
 
-        public static async Task<BitmapImage> ToBitmapAsync(Stream stream)
+        public static async Task<BitmapImage> ToBitmapAsync(IRandomAccessStream stream)
         {
             if (stream == null)
             {
                 return null;
             }
 
-            stream.Position = 0;
+            stream.Seek(0);
             BitmapImage image = new BitmapImage();
-            await image.SetSourceAsync(stream.AsRandomAccessStream());
+            await image.SetSourceAsync(stream);
 
             return image;
         }

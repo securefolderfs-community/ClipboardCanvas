@@ -143,7 +143,9 @@
     <Compile Include="CanvasFileReceivers\ICanvasFileReceiverModel.cs" />
     <Compile Include="CanvasFileReceivers\InfiniteCanvasFileReceiver.cs" />
     <Compile Include="Contexts\IOperationContext.cs" />
+    <Compile Include="DataModels\InfiniteCanvasItem.cs" />
     <Compile Include="EventArguments\InfiniteCanvasEventArgs.cs" />
+    <Compile Include="Helpers\Filesystem\FilesystemHelpers.cs" />
     <Compile Include="Helpers\JsonHelpers.cs" />
     <Compile Include="Models\Implementation\InfiniteCanvasConfigurationModel.cs" />
     <Compile Include="Enums\DragDataType.cs" />

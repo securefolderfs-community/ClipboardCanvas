@@ -144,12 +144,6 @@
                                     StretchDirection="Both">
                                     <uc2:SimpleCanvasPreviewControl CollectionModel="{x:Bind CollectionModel, Mode=OneWay}" SimpleCanvasPreviewModel="{x:Bind ReadOnlyCanvasPreviewModel, Mode=TwoWay}" />
                                 </Viewbox>
-
-                                <i:Interaction.Behaviors>
-                                    <icore:EventTriggerBehavior EventName="Loaded">
-                                        <icore:InvokeCommandAction Command="{x:Bind SimpleCanvasLoadedCommand}" />
-                                    </icore:EventTriggerBehavior>
-                                </i:Interaction.Behaviors>
                             </Grid>
 
                             <!--  Shadow and Filename  -->

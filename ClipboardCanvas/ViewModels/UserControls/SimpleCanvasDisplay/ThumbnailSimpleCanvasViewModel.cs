@@ -3,12 +3,16 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;
+using System.IO;
+using Windows.Storage.Streams;
 
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
+using ClipboardCanvas.Helpers.Filesystem;
+using ClipboardCanvas.Helpers;
 
 namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
 {
@@ -16,7 +20,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
     {
         #region Private Members
 
-        private StorageItemThumbnail _thumbnail;
+        private IRandomAccessStream _thumbnail;
 
         #endregion
 
@@ -44,11 +48,28 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
 
         protected override async Task<SafeWrapperResult> SetDataFromExistingFile(IStorageItem item)
         {
-            if (item is StorageFile file)
+            // Get thumbnail for Infinite Canvas
+            StorageFolder folder = item as StorageFolder;
+            if (folder != null && FilesystemHelpers.IsPathEqualExtension(item.Path, Constants.FileSystem.INFINITE_CANVAS_EXTENSION))
+            {
+                string canvasPreviewImageFileName = Constants.FileSystem.INFINITE_CANVAS_PREVIEW_IMAGE_FILENAME;
+                string canvasPreviewImageFilePath = Path.Combine(folder.Path, canvasPreviewImageFileName);
+
+                SafeWrapper<StorageFile> canvasPreviewImageFileResult = await StorageHelpers.ToStorageItemWithError<StorageFile>(canvasPreviewImageFilePath);
+                if (!canvasPreviewImageFileResult)
+                {
+                    return canvasPreviewImageFileResult;
+                }
+
+                _thumbnail = await canvasPreviewImageFileResult.Result.GetTransparentThumbnail(ThumbnailMode.SingleItem, Constants.UI.CanvasContent.SIMPLE_CANVAS_THUMBNAIL_SIZE);
+            }
+            // Get thumbnail for file
+            else if (item is StorageFile file)
             {
                 _thumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, Constants.UI.CanvasContent.SIMPLE_CANVAS_THUMBNAIL_SIZE);
             }
-            else if (item is StorageFolder folder)
+            // Get thumbnail for folder
+            else if (folder != null)
             {
                 _thumbnail = await folder.GetThumbnailAsync(ThumbnailMode.SingleItem, Constants.UI.CanvasContent.SIMPLE_CANVAS_THUMBNAIL_SIZE);
             }
@@ -63,16 +84,30 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             return SafeWrapperResult.SUCCESS;
         }
 
-        protected override async Task<SafeWrapperResult> TryFetchDataToView()
+        protected override Task<SafeWrapperResult> TryFetchDataToView()
         {
             OnPropertyChanged(nameof(FileIcon));
 
-            return await Task.FromResult(SafeWrapperResult.SUCCESS);
+            return Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
         protected override void RefreshContextMenuItems()
         {
             return;
+        }
+
+        #endregion
+
+        #region IDisposable
+
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            _thumbnail?.Dispose();
+
+            _thumbnail = null;
+            _FileIcon = null;
         }
 
         #endregion

@@ -268,59 +268,34 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             // Open file
             IStorageFile file = null;
-            if (isContentAsReference)
+            if (isContentAsReference && await sourceFile != null)
             {
-                ReferenceFile referenceFile = await ReferenceFile.GetFile(associatedFile);
-                if (referenceFile?.ReferencedItem is StorageFile referencedFile)
-                {
-                    file = referencedFile;
-                }
+                file = await sourceFile;
             }
             else
             {
-                if (associatedItem is StorageFile associatedFile)
+                if (associatedFile != null)
                 {
                     file = associatedFile;
                 }
             }
 
-            if (file != null)
-            {
-                //// Ignore getting icon
-                //if (false)
-                //{
-                //    var (icon, appName) = await ApplicationHelpers.GetIconFromFileHandlingApp(file as StorageFile, Path.GetExtension(file.Path));
-                //    if (icon != null && appName != null)
-                //    {
-                //        var action_openFile = new SuggestedActionsControlItemViewModel(
-                //            new AsyncRelayCommand(async () =>
-                //            {
-                //                await associatedCollection.CurrentCollectionItemViewModel.OpenFile();
-                //            }), $"Open with {appName}", icon);
-
-                //        actions.Add(action_openFile);
-                //    }
-                //}
-                //else
-                {
-                    var action_openFile = new SuggestedActionsControlItemViewModel(
-                        new AsyncRelayCommand(async () =>
-                        {
-                            await associatedCollection.CurrentCollectionItemViewModel.OpenFile();
-                        }), "Open file", "\uE8E5");
-
-                    actions.Add(action_openFile);
-                }
-            }
+            // Open file
+            var action_openFile = new SuggestedActionsControlItemViewModel(
+                                    new AsyncRelayCommand(async () =>
+                                    {
+                                        await associatedCollection.CurrentCollectionItemViewModel.OpenFile();
+                                    }), "Open file", "\uE8E5");
 
             // Open directory
-            var action_openInFileExplorer = new SuggestedActionsControlItemViewModel(
+            var action_openContainingFolder = new SuggestedActionsControlItemViewModel(
                 new AsyncRelayCommand(async () =>
                 {
                     await associatedCollection.CurrentCollectionItemViewModel.OpenContainingFolder();
                 }), "Open containing folder", "\uE838");
 
-            actions.Add(action_openInFileExplorer);
+            actions.Add(action_openFile);
+            actions.Add(action_openContainingFolder);
 
             return actions;
         }

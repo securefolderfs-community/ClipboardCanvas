@@ -3,8 +3,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using Windows.UI.ViewManagement;
 using Windows.Storage;
-using Windows.UI.Xaml.Media.Animation;
-using System.Diagnostics;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 using ClipboardCanvas.Enums;
@@ -13,14 +12,12 @@ using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.EventArguments.Collections;
-using ClipboardCanvas.DataModels.Navigation;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
 using ClipboardCanvas.EventArguments.CollectionPreview;
 using ClipboardCanvas.Services;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using ClipboardCanvas.DisplayFrameEventArgs;
 
 namespace ClipboardCanvas.ViewModels.UserControls
@@ -91,7 +88,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             // Dispose canvas
             PasteCanvasPageModel?.Dispose();
-            CollectionPreviewPageModel?.Dispose();
         }
 
         private async void NavigationService_OnNavigationFinishedEvent(object sender, NavigationFinishedEventArgs e)

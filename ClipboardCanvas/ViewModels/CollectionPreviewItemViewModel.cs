@@ -56,48 +56,27 @@ namespace ClipboardCanvas.ViewModels
 
         #endregion
 
-        #region Commands
-
-        public ICommand SimpleCanvasLoadedCommand { get; set; }
-
-        #endregion
-
         #region Constructor
 
         public CollectionPreviewItemViewModel()
         {
-            // Create commands
-            SimpleCanvasLoadedCommand = new RelayCommand<RoutedEventArgs>(SimpleCanvasLoaded);
         }
 
         #endregion
 
         #region Command Implementation
 
-        private async void SimpleCanvasLoaded(RoutedEventArgs e)
-        {
-            if (_loadRequested)
-            {
-                await ReadOnlyCanvasPreviewModel.TryLoadExistingData(CollectionItemViewModel, CollectionPreviewPageViewModel.LoadCancellationToken.Token);
-                IsCanvasPreviewVisible = true;
-                Debug.WriteLine("LOADED VIA LOAD");
-            }
-            _loadRequested = false;
-        }
-
         #endregion
 
         #region Public Helpers
 
-        private bool _loadRequested;
-
         public async Task RequestCanvasLoad()
         {
+            // Wait for control to load
             await Task.Delay(10);
 
             if (ReadOnlyCanvasPreviewModel == null)
             {
-                _loadRequested = true;
                 return;
             }
 
@@ -107,12 +86,15 @@ namespace ClipboardCanvas.ViewModels
 
         public async Task RequestCanvasUnload()
         {
-            await Task.Delay(10);
-
             if (ReadOnlyCanvasPreviewModel == null)
             {
-                Debugger.Break();
-                return;
+                // Wait for control to load if we unload too quickly
+                await Task.Delay(10);
+
+                if (ReadOnlyCanvasPreviewModel == null)
+                {
+                    return;
+                }
             }
 
             ReadOnlyCanvasPreviewModel.DiscardData();

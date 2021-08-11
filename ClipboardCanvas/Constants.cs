@@ -8,7 +8,7 @@
 
             public const string USER_SETTINGS_FILENAME = "user_settings.json";
 
-            public const string COLLECTION_SETTINGS_FILENAME = "collection_settings.json";
+            public const string COLLECTION_SETTINGS_FILENAME = "collections_settings.json";
 
             public const string CANVAS_SETTINGS_FILENAME = "canvas_settings.json";
 
@@ -27,7 +27,7 @@
 
                 public const int FILE_PASTING_TIP_DELAY = 150;
 
-                public const uint SIMPLE_CANVAS_THUMBNAIL_SIZE = 128u;
+                public const uint SIMPLE_CANVAS_THUMBNAIL_SIZE = 256u;
 
                 public const int INFINITE_CANVAS_SAVE_INTERVAL = 1000;
 
@@ -41,7 +41,7 @@
 
             public static class Animations
             {
-                public const string CONNECTED_ANIMATION_COLLECTION_PREVIEW_ITEM_OPEN_REQUESTED_TOKEN = "CollectionPreviewItemOpenConnectedAnimation";
+                public const string CONNECTED_ANIMATION_COLLECTION_PREVIEW_ITEM_OPEN_REQUESTED_TOKEN = "collection_preview_item_opening_connected_animation";
             }
         }
 
@@ -56,6 +56,8 @@
             public const string INFINITE_CANVAS_CONFIGURATION_FILE_EXTENSION = ".ccviccfg";
 
             public const string INFINITE_CANVAS_CONFIGURATION_FILENAME = "infinite_canvas_configuration.ccviccfg";
+
+            public const string INFINITE_CANVAS_PREVIEW_IMAGE_FILENAME = "infinite_canvas_preview.png";
 
             public const string CANVAS_FILE_FILENAME_DATE_FORMAT = "dd.MM.yyyy HH_mm_ss";
 

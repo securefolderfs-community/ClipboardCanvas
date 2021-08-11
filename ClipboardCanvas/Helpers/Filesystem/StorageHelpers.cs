@@ -32,7 +32,7 @@ namespace ClipboardCanvas.Helpers.Filesystem
             }
 
             // Check if path is to .lnk or .url file
-            if (path.ToLower().EndsWith(".lnk") || path.ToLower().EndsWith(".url"))
+            if (FilesystemHelpers.IsPathEqualExtension(path, ".lnk") || FilesystemHelpers.IsPathEqualExtension(path, ".url"))
             {
                 return new SafeWrapper<TOut>(default, OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Function ToStorageItem<TOut>() does not support converting from .lnk nor .url files.");
             }

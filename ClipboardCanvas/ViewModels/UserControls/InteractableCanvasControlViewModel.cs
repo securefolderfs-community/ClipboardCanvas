@@ -11,6 +11,9 @@ using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.EventArguments.InfiniteCanvasEventArgs;
 using ClipboardCanvas.Extensions;
+using Windows.Storage.Streams;
+using Windows.Storage;
+using ClipboardCanvas.Helpers.SafetyHelpers;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -60,15 +63,27 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Event Handlers
 
-        private void SaveTimer_Tick(object sender, object e)
+        private async void SaveTimer_Tick(object sender, object e)
         {
             _saveTimer.Stop();
-            OnInfiniteCanvasSaveRequestedEvent?.Invoke(this, new InfiniteCanvasSaveRequestedEventArgs());
+
+            await SaveCanvas();
         }
 
         private void Item_OnInfiniteCanvasItemRemovalRequestedEvent(object sender, InfiniteCanvasItemRemovalRequestedEventArgs e)
         {
             RemoveItem(e.itemToRemove);
+        }
+
+        #endregion
+
+        #region Private Helpers
+
+        private async Task SaveCanvas()
+        {
+            IRandomAccessStream canvasImageStream = await _view.GetCanvasImageStream();
+
+            OnInfiniteCanvasSaveRequestedEvent?.Invoke(this, new InfiniteCanvasSaveRequestedEventArgs(canvasImageStream));
         }
 
         #endregion
