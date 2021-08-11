@@ -441,7 +441,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                     }
                     else
                     {
-                        int providedCollectionItemModelIndex = CollectionItems.IndexOf(collectionItemViewModel as CollectionItemViewModel);
+                        int providedCollectionItemModelIndex = CollectionItems.IndexOf(collectionItemViewModel);
                         if (providedCollectionItemModelIndex != -1)
                         {
                             currentIndex = providedCollectionItemModelIndex;

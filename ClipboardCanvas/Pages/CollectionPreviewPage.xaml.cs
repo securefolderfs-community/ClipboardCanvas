@@ -8,11 +8,6 @@ using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.DataModels.Navigation;
 using ClipboardCanvas.ViewModels;
-using ClipboardCanvas.UserControls.SimpleCanvasDisplay;
-using System.Linq;
-using ClipboardCanvas.Extensions;
-using System;
-using System.Diagnostics;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -37,7 +32,7 @@ namespace ClipboardCanvas.Pages
         {
             base.OnNavigatedTo(e);
 
-            DisplayFrameParameterDataModel navigationParameter = e.Parameter as DisplayFrameParameterDataModel;
+            BaseDisplayFrameParameterDataModel navigationParameter = e.Parameter as BaseDisplayFrameParameterDataModel;
             AssociatedCollectionModel = navigationParameter.collectionModel;
         }
 

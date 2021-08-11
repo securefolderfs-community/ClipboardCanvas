@@ -37,7 +37,7 @@ namespace ClipboardCanvas.Services.Implementation
 
             collection.SetIndexOnNewCanvas();
             
-            DisplayFrameParameterDataModel navigationParameter = new DisplayFrameParameterDataModel(collection, (CanvasType)canvasType);
+            BaseDisplayFrameParameterDataModel navigationParameter = new CanvasPageNavigationParameterModel(collection, (CanvasType)canvasType);
             LastPage = CurrentPage;
             CurrentPage = DisplayPageType.CanvasPage;
             DisplayFrame.Navigate(typeof(CanvasPage), navigationParameter, transitionType.ToNavigationTransition());
@@ -59,7 +59,7 @@ namespace ClipboardCanvas.Services.Implementation
 
             OnNavigationStartedEvent?.Invoke(this, new NavigationStartedEventArgs(collection, canvasType, DisplayPageType.CanvasPage));
 
-            DisplayFrameParameterDataModel navigationParameter = new DisplayFrameParameterDataModel(collection, canvasType);
+            BaseDisplayFrameParameterDataModel navigationParameter = new CanvasPageNavigationParameterModel(collection, canvasType);
             LastPage = CurrentPage;
             CurrentPage = DisplayPageType.CanvasPage;
             DisplayFrame.Navigate(typeof(CanvasPage), navigationParameter, transitionType.ToNavigationTransition());
@@ -75,7 +75,7 @@ namespace ClipboardCanvas.Services.Implementation
 
             OnNavigationStartedEvent?.Invoke(this, new NavigationStartedEventArgs(null, canvasType, DisplayPageType.Homepage));
 
-            DisplayFrameParameterDataModel navigationParameter = new DisplayFrameParameterDataModel(null, canvasType);
+            BaseDisplayFrameParameterDataModel navigationParameter = new HomepageNavigationParameterModel(null, canvasType);
             LastPage = CurrentPage;
             CurrentPage = DisplayPageType.Homepage;
             DisplayFrame.Navigate(typeof(HomePage), navigationParameter, transitionType.ToNavigationTransition());
@@ -100,7 +100,7 @@ namespace ClipboardCanvas.Services.Implementation
                 return false;
             }
 
-            DisplayFrameParameterDataModel navigationParameter = new DisplayFrameParameterDataModel(collection, (CanvasType)canvasType);
+            BaseDisplayFrameParameterDataModel navigationParameter = new CollectionPreviewPageNavigationParameterModel(collection, (CanvasType)canvasType);
             LastPage = CurrentPage;
             CurrentPage = DisplayPageType.CollectionPreviewPage;
             DisplayFrame.Navigate(typeof(CollectionPreviewPage), navigationParameter, transitionType.ToNavigationTransition());

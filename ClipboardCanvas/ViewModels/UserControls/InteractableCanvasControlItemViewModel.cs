@@ -116,7 +116,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Constructor
 
-        public InteractableCanvasControlItemViewModel(IInteractableCanvasControlView view, ICollectionModel collectionModel, BaseContentTypeModel contentType, CanvasItem canvasItem, CancellationToken cancellationToken)
+        internal InteractableCanvasControlItemViewModel(IInteractableCanvasControlView view, ICollectionModel collectionModel, BaseContentTypeModel contentType, CanvasItem canvasItem, CancellationToken cancellationToken)
         {
             this._view = view;
             this.CollectionModel = collectionModel;

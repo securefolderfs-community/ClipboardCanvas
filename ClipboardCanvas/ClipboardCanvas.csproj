@@ -144,6 +144,9 @@
     <Compile Include="CanvasFileReceivers\InfiniteCanvasFileReceiver.cs" />
     <Compile Include="Contexts\IOperationContext.cs" />
     <Compile Include="DataModels\InfiniteCanvasItem.cs" />
+    <Compile Include="DataModels\Navigation\CanvasPageNavigationParameterModel.cs" />
+    <Compile Include="DataModels\Navigation\CollectionPreviewPageNavigationParameterModel.cs" />
+    <Compile Include="DataModels\Navigation\HomepageNavigationParameterModel.cs" />
     <Compile Include="EventArguments\InfiniteCanvasEventArgs.cs" />
     <Compile Include="Helpers\Filesystem\FilesystemHelpers.cs" />
     <Compile Include="Helpers\JsonHelpers.cs" />
@@ -178,7 +181,7 @@
     <Compile Include="Contexts\OperationContext.cs" />
     <Compile Include="DataModels\CanvasItem.cs" />
     <Compile Include="DataModels\Navigation\DisplayFrameNavigationDataModel.cs" />
-    <Compile Include="DataModels\Navigation\DisplayFrameParameterDataModel.cs" />
+    <Compile Include="DataModels\Navigation\BaseDisplayFrameParameterDataModel.cs" />
     <Compile Include="DataModels\ContentDataModels\BaseContentTypeModel.cs" />
     <Compile Include="DataModels\ContentDataModels\FallbackContentType.cs" />
     <Compile Include="DataModels\ContentDataModels\InfiniteCanvasContentType.cs" />

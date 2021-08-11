@@ -12,8 +12,6 @@ using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.EventArguments.InfiniteCanvasEventArgs;
 using ClipboardCanvas.Extensions;
 using Windows.Storage.Streams;
-using Windows.Storage;
-using ClipboardCanvas.Helpers.SafetyHelpers;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {

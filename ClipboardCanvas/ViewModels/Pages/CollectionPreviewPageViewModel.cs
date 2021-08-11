@@ -463,8 +463,10 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         #region IDisposable
 
-        public void Dispose()
+        public async void Dispose()
         {
+            await Task.Delay(1000); // Delay so item preview doesn't disappear instantly for connected animation
+
             Items?.DisposeClear();
             _canvasPreviewItemDoubleClickWrapper?.Dispose();
             UnhookEvents();
