@@ -7,7 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="300"
     d:DesignWidth="400"
-    Loaded="UserControl_Loaded"
     mc:Ignorable="d">
 
     <Grid>
@@ -17,6 +16,7 @@
             AreTransportControlsEnabled="True"
             AutoPlay="True"
             Foreground="Transparent"
+            Loaded="UserControl_Loaded"
             Source="{x:Bind ViewModel.ContentMedia, Mode=OneWay}">
             <MediaPlayerElement.TransportControls>
                 <MediaTransportControls
