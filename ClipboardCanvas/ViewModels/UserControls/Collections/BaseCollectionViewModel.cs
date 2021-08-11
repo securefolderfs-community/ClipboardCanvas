@@ -456,12 +456,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                         }
                     }
                 }
-                else if (result.ErrorCode == OperationErrorCode.InProgress)
+                else if (result == OperationErrorCode.InProgress)
                 {
                     // Content is still being pasted...
                     // TODO: Hook event to collectionItemViewModel.OperationContext.OnOperationFinishedEvent
                 }
-                else if (result.ErrorCode == OperationErrorCode.InvalidOperation)
+                else if (result == OperationErrorCode.InvalidOperation)
                 {
                     // View Model wasn't found
                     // Cannot display content for this file. - i.e. canvas display doesn't exists for this file

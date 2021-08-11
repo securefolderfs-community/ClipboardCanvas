@@ -159,8 +159,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 BaseContentTypeModel itemContentType = await BaseContentTypeModel.GetContentType(item, null);
                 CanvasItem itemCanvasItem = new CanvasItem(item);
 
+                if (IsDisposed || InteractableCanvasControlModel == null)
+                {
+                    return null;
+                }
+
                 // Add to canvas
-                var interactableCanvasItem = await InteractableCanvasControlModel.AddItem(associatedCollection, itemContentType, itemCanvasItem, cancellationToken);
+                var interactableCanvasItem = await InteractableCanvasControlModel?.AddItem(associatedCollection, itemContentType, itemCanvasItem, cancellationToken);
                 interactableCanvasList.Add(interactableCanvasItem);
             }
 
