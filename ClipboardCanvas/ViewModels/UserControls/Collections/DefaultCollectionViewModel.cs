@@ -1,5 +1,6 @@
 ﻿using Windows.Storage;
 using ClipboardCanvas.Helpers.SafetyHelpers;
+using ClipboardCanvas.Models;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {
@@ -20,6 +21,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         {
             SetCollectionError(SafeWrapperResult.SUCCESS);
             return true;
+        }
+
+        public override CollectionConfigurationModel ConstructCollectionConfigurationModel()
+        {
+            return new CollectionConfigurationModel(Constants.Collections.DEFAULT_COLLECTION_TOKEN, UsesCustomIcon, iconFile?.Name);
         }
 
         #endregion

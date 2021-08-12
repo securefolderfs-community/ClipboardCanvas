@@ -24,6 +24,10 @@ using ClipboardCanvas.Exceptions;
 using ClipboardCanvas.Contexts;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.DataModels;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.Storage.Streams;
+using ClipboardCanvas.Helpers;
+using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {
@@ -40,6 +44,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         protected CanvasNavigationDirection canvasNavigationDirection;
 
         protected int currentIndex;
+
+        protected StorageFile iconFile;
 
         protected IDialogService DialogService { get; } = Ioc.Default.GetService<IDialogService>();
 
@@ -112,6 +118,20 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             protected set => SetProperty(ref errorIconVisibility, value);
         }
 
+        protected bool usesCustomIcon;
+        public bool UsesCustomIcon
+        {
+            get => usesCustomIcon;
+            set => SetProperty(ref usesCustomIcon, value);
+        }
+
+        protected BitmapImage customIcon;
+        public BitmapImage CustomIcon
+        {
+            get => customIcon;
+            set => SetProperty(ref customIcon, value);
+        }
+
         #endregion
 
         #region Events
@@ -135,6 +155,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         #region Commands
 
         public ICommand OpenCollectionLocationCommand { get; protected set; }
+
+        public ICommand ChangeCollectionIconCommand { get; protected set; }
+
+        public ICommand RemoveCollectionIconCommand { get; protected set; }
 
         public ICommand ReloadCollectionCommand { get; protected set; }
 
@@ -176,6 +200,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
             // Create commands
             OpenCollectionLocationCommand = new AsyncRelayCommand(OpenCollectionLocation);
+            ChangeCollectionIconCommand = new AsyncRelayCommand(ChangeCollectionIcon);
+            RemoveCollectionIconCommand = new AsyncRelayCommand(RemoveCollectionIcon);
             ReloadCollectionCommand = new AsyncRelayCommand(ReloadCollection);
         }
 
@@ -193,7 +219,83 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             await Launcher.LaunchFolderAsync(collectionFolder);
         }
 
-        protected async Task ReloadCollection()
+        private async Task ChangeCollectionIcon()
+        {
+            string errorMessage = "Couldn't set custom Collection icon.";
+
+            StorageFile pickedIcon = await DialogService.PickSingleFile(new List<string>() { ".png", ".jpg", ".jpeg"/*, ".gif", ".svg"*/ });
+            if (pickedIcon != null)
+            {
+                // If already has an icon...
+                if (UsesCustomIcon && this.iconFile != null)
+                {
+                    SafeWrapperResult result = await FilesystemOperations.DeleteItem(this.iconFile);
+
+                    if (!result)
+                    {
+                        await PushErrorNotification("Current icon could not be deleted.", result);
+                    }
+                }
+
+                SafeWrapper<StorageFolder> iconsFolder = await StorageHelpers.GetCollectionIconsFolder();
+                if (!iconsFolder)
+                {
+                    await PushErrorNotification(errorMessage, iconsFolder);
+                    return;
+                }
+
+                SafeWrapper<StorageFile> iconFile = await FilesystemOperations.CreateFile(iconsFolder, pickedIcon.Name);
+                if (!iconFile)
+                {
+                    await PushErrorNotification(errorMessage, iconFile);
+                    return;
+                }
+                this.iconFile = iconFile.Result;
+
+                SafeWrapperResult copyResult = await FilesystemOperations.CopyFileAsync(pickedIcon, this.iconFile, null); // TODO: In the future, add StatusCenter - StatusCenter.CreateNewOperation().OperationContext;
+                if (!copyResult)
+                {
+                    await PushErrorNotification(errorMessage, copyResult);
+                    return;
+                }
+
+                SafeWrapperResult setIconResult = await InitializeIconIfSet(this.iconFile);
+                if (!setIconResult)
+                {
+                    await PushErrorNotification(errorMessage, setIconResult);
+                    return;
+                }
+
+                // Serialize again because icon was updated
+                CollectionsHelpers.UpdateSavedCollectionsSetting();
+            }
+        }
+
+        private async Task RemoveCollectionIcon()
+        {
+            if (UsesCustomIcon && iconFile != null)
+            {
+                SafeWrapperResult result = await FilesystemOperations.DeleteItem(iconFile);
+
+                if (!result)
+                {
+                    if (result != OperationErrorCode.NotFound) // Only if it wasn't NotFound -- if it was, continue as usual
+                    { 
+                        await PushErrorNotification("Couldn't remove icon.", result);
+                        return;
+                    }
+                }
+
+                iconFile = null;
+                CustomIcon = null;
+                UsesCustomIcon = false;
+
+                // Serialize again because icon was updated
+                CollectionsHelpers.UpdateSavedCollectionsSetting();
+            }
+        }
+
+        private async Task ReloadCollection()
         {
             await InitializeCollectionFolder();
             await InitializeCollectionItems();
@@ -208,7 +310,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             if (string.IsNullOrEmpty(folderName))
             {
                 folderName = DateTime.Now.ToString(Constants.FileSystem.CANVAS_FILE_FILENAME_DATE_FORMAT);
-                folderName = $"{folderName}{Constants.FileSystem.INFINITE_CANVAS_EXTENSION}";
             }
 
             SafeWrapper<StorageFolder> folder = await FilesystemOperations.CreateFolder(collectionFolder, folderName);
@@ -347,13 +448,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             currentIndex = CollectionItems.Count;
         }
 
-        public virtual void UpdateIndex(ICollectionItemModel collectionItemModel)
+        public virtual void UpdateIndex(CollectionItemViewModel collectionItemViewModel)
         {
             int newIndex = -1;
 
-            if (collectionItemModel != null)
+            if (collectionItemViewModel != null)
             {
-                newIndex = CollectionItems.IndexOf(collectionItemModel as CollectionItemViewModel);
+                newIndex = CollectionItems.IndexOf(collectionItemViewModel);
             }
 
             if (newIndex == -1)
@@ -374,6 +475,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         }
 
         public abstract bool CheckCollectionAvailability();
+
+        public virtual CollectionConfigurationModel ConstructCollectionConfigurationModel()
+        {
+            return new CollectionConfigurationModel(CollectionPath, UsesCustomIcon, iconFile?.Name);
+        }
 
         public virtual async Task LoadCanvasFromCollection(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken, CollectionItemViewModel collectionItemViewModel = null)
         {
@@ -541,6 +647,41 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             }
         }
 
+        public async Task<SafeWrapperResult> InitializeIconIfSet(CollectionConfigurationModel collectionConfiguration)
+        {
+            if (collectionConfiguration == null || !collectionConfiguration.usesCustomIcon)
+            {
+                return SafeWrapperResult.SUCCESS;
+            }
+
+            SafeWrapper<StorageFile> iconFile = await StorageHelpers.GetCollectionIconsFolder()
+                .OnSuccessAsync<StorageFolder, StorageFile>(async (folder) =>
+                {
+                    return await StorageHelpers.ToStorageItemWithError<StorageFile>(Path.Combine(folder.Result.Path, collectionConfiguration.iconFileName));
+                });
+
+            if (!iconFile)
+            {
+                return iconFile;
+            }
+
+            return await InitializeIconIfSet(iconFile);
+        }
+
+        public async Task<SafeWrapperResult> InitializeIconIfSet(StorageFile iconFile)
+        {
+            UsesCustomIcon = true;
+            this.iconFile = iconFile;
+
+            return await SafeWrapperRoutines.SafeWrapAsync(async () =>
+            {
+                using (IRandomAccessStream fileStream = await iconFile.OpenReadAsync())
+                {
+                    CustomIcon = await ImagingHelpers.ToBitmapAsync(fileStream);
+                }
+            });
+        }
+
         #endregion
 
         #region Protected Helpers
@@ -560,6 +701,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             }
 
             OnCollectionErrorRaisedEvent?.Invoke(this, new CollectionErrorRaisedEventArgs(safeWrapperResult));
+        }
+
+        protected virtual async Task PushErrorNotification(string errorMessage, SafeWrapperResult result)
+        {
+            IInAppNotification notification = DialogService.GetNotification();
+            notification.ViewModel.NotificationText = $"{errorMessage} Error: {result.ErrorCode}";
+            notification.ViewModel.ShownButtons = InAppNotificationButtonType.OkButton;
+
+            await notification.ShowAsync(4000);
         }
 
         #endregion

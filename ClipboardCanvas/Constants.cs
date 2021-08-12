@@ -47,6 +47,8 @@
 
         public static class FileSystem
         {
+            public const string COLLECTION_ICONS_FOLDERNAME = "collections_icons";
+
             public const string REFERENCE_FILE_EXTENSION = ".ccvr";
 
             public const string WEBSITE_LINK_FILE_EXTENSION = ".ccvwl";

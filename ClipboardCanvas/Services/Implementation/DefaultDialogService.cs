@@ -3,10 +3,12 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using System.Collections.Generic;
 
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.ViewModels.Dialogs;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
+using ClipboardCanvas.Extensions;
 
 namespace ClipboardCanvas.Services.Implementation
 {
@@ -63,9 +65,26 @@ namespace ClipboardCanvas.Services.Implementation
             FolderPicker folderPicker = new FolderPicker();
             folderPicker.FileTypeFilter.Add("*");
 
-            StorageFolder folder = await folderPicker.PickSingleFolderAsync();
+            return await folderPicker.PickSingleFolderAsync();
+        }
 
-            return folder;
+        public async Task<StorageFile> PickSingleFile(IEnumerable<string> filter)
+        {
+            FileOpenPicker filePicker = new FileOpenPicker();
+            
+            if (filter.IsEmpty())
+            {
+                filePicker.FileTypeFilter.Add("*");
+            }
+            else
+            {
+                foreach (var item in filter)
+                {
+                    filePicker.FileTypeFilter.Add(item);
+                }
+            }
+
+            return await filePicker.PickSingleFileAsync();
         }
 
         #endregion

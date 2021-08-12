@@ -191,6 +191,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             await Task.WhenAll(loadContentTasks);
 
+            // Always regenerate canvas preview to update it
+            await InteractableCanvasControlModel.RegenerateCanvasPreview();
+
             RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, IsContentLoaded, isContentAsReference, true));
 
             return SafeWrapperResult.SUCCESS;
@@ -198,7 +201,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public override async Task<SafeWrapperResult> TrySaveData()
         {
-            InfiniteCanvasConfigurationModel canvasConfigurationModel = InteractableCanvasControlModel.GetConfigurationModel();
+            InfiniteCanvasConfigurationModel canvasConfigurationModel = InteractableCanvasControlModel.ConstructConfigurationModel();
 
             string configurationFileName = Constants.FileSystem.INFINITE_CANVAS_CONFIGURATION_FILENAME;
             string configurationPath = Path.Combine((await sourceFolder).Path, configurationFileName);
@@ -293,7 +296,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             else
             {
-                SafeWrapper<CanvasItem> canvasFolderResult = await associatedCollection.CreateNewCanvasFolder(null);
+                string folderName = DateTime.Now.ToString(Constants.FileSystem.CANVAS_FILE_FILENAME_DATE_FORMAT);
+                folderName = $"{folderName}{Constants.FileSystem.INFINITE_CANVAS_EXTENSION}";
+
+                SafeWrapper<CanvasItem> canvasFolderResult = await associatedCollection.CreateNewCanvasFolder(folderName);
 
                 if (!canvasFolderResult)
                 {

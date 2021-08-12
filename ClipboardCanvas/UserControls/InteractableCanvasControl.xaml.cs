@@ -142,6 +142,7 @@ namespace ClipboardCanvas.UserControls
             await rtb.RenderAsync(ItemsHolder);
 
             IBuffer pixelsBuffer = await rtb.GetPixelsAsync();
+            byte[] pixelArray = pixelsBuffer.ToArray();
 
             DisplayInformation displayInfo = DisplayInformation.GetForCurrentView();
 
@@ -153,10 +154,12 @@ namespace ClipboardCanvas.UserControls
                                  (uint)rtb.PixelHeight,
                                  displayInfo.RawDpiX,
                                  displayInfo.RawDpiY,
-                                 pixelsBuffer.ToArray());
+                                 pixelArray);
 
             await bitmapEncoder.FlushAsync();
             stream.Seek(0);
+
+            Array.Clear(pixelArray, 0, pixelArray.Length);
 
             return stream;
         }

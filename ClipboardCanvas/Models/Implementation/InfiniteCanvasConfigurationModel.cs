@@ -8,7 +8,6 @@ namespace ClipboardCanvas.Models
     [Serializable]
     public sealed class InfiniteCanvasConfigurationModel
     {
-        [JsonRequired]
         public readonly List<InfiniteCanvasConfigurationItemModel> elements;
 
         [JsonConstructor]
@@ -21,10 +20,8 @@ namespace ClipboardCanvas.Models
     [Serializable]
     public sealed class InfiniteCanvasConfigurationItemModel
     {
-        [JsonRequired]
         public readonly string associatedItemPath;
 
-        [JsonRequired]
         public readonly Vector2 locationVector;
 
         [JsonConstructor]

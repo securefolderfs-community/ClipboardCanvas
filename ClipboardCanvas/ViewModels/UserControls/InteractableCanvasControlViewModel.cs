@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System;
+using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 
 using ClipboardCanvas.DataModels;
@@ -11,7 +12,6 @@ using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.EventArguments.InfiniteCanvasEventArgs;
 using ClipboardCanvas.Extensions;
-using Windows.Storage.Streams;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -107,7 +107,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             NoItemsTextLoad = Items.IsEmpty();
         }
 
-        public InfiniteCanvasConfigurationModel GetConfigurationModel()
+        public InfiniteCanvasConfigurationModel ConstructConfigurationModel()
         {
             var canvasConfigurationModel = new InfiniteCanvasConfigurationModel();
 
@@ -132,6 +132,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 }
             }
         }
+
+        public async Task RegenerateCanvasPreview()
+        {
+            await SaveCanvas();
+        }
+
         public void CanvasLoaded()
         {
             NoItemsTextLoad = Items.IsEmpty();

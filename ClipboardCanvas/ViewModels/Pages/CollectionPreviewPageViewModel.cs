@@ -386,7 +386,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             _view?.PrepareConnectedAnimation(indexOfSelectedItem);
 
             // Navigate to canvas and suppress transition since we use ConnectedAnimation
-            NavigationService.OpenCanvasPage(_associatedCollectionModel, SelectedItem.CollectionItemViewModel);
+            NavigationService.OpenCanvasPage(_associatedCollectionModel, SelectedItem.CollectionItemViewModel, NavigationTransitionType.Suppress);
         }
 
         private void ShowSearch()

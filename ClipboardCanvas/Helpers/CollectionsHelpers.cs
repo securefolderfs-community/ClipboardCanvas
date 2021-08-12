@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ClipboardCanvas.Services;
-using ClipboardCanvas.ViewModels.UserControls;
-using ClipboardCanvas.ViewModels.UserControls.Collections;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+
+using ClipboardCanvas.Services;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
+using ClipboardCanvas.Models;
 
 namespace ClipboardCanvas.Helpers
 {
@@ -26,9 +27,9 @@ namespace ClipboardCanvas.Helpers
         public static void UpdateSavedCollectionsSetting()
         {
             ICollectionsSettingsService collectionsSettings = Ioc.Default.GetService<ICollectionsSettingsService>();
-            IEnumerable<string> paths = CollectionsControlViewModel.Collections.Select((item) => item is DefaultCollectionViewModel ? Constants.Collections.DEFAULT_COLLECTION_TOKEN : item.CollectionPath);
 
-            collectionsSettings.SavedCollectionLocations = paths.ToList();
+            List<CollectionConfigurationModel> configurations = CollectionsControlViewModel.Collections.Select((item) => item.ConstructCollectionConfigurationModel()).ToList();
+            collectionsSettings.SavedCollections = configurations;
         }
     }
 }

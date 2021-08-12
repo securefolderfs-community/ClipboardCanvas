@@ -17,7 +17,9 @@ namespace ClipboardCanvas.Models
 
         void RemoveItem(InteractableCanvasControlItemViewModel item);
 
-        InfiniteCanvasConfigurationModel GetConfigurationModel();
+        InfiniteCanvasConfigurationModel ConstructConfigurationModel();
+
+        Task RegenerateCanvasPreview();
 
         void SetConfigurationModel(InfiniteCanvasConfigurationModel canvasConfigurationModel);
     }

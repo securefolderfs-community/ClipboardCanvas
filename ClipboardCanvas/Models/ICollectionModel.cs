@@ -87,14 +87,16 @@ namespace ClipboardCanvas.Models
         void SetIndexOnNewCanvas();
 
         /// <summary>
-        /// Sets current index to index of <paramref name="collectionItemModel"/>
+        /// Sets current index to index of <paramref name="collectionItemViewModel"/>
         /// </summary>
-        /// <param name="collectionItemModel"></param>
-        void UpdateIndex(ICollectionItemModel collectionItemModel);
+        /// <param name="collectionItemViewModel"></param>
+        void UpdateIndex(CollectionItemViewModel collectionItemViewModel);
 
         bool IsOnOpenedCanvas(CollectionItemViewModel collectionItemViewModel);
 
         bool CheckCollectionAvailability();
+
+        CollectionConfigurationModel ConstructCollectionConfigurationModel();
 
         Task<bool> InitializeCollectionItems();
 

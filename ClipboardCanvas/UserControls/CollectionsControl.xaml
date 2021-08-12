@@ -16,6 +16,7 @@
 
     <UserControl.Resources>
         <vc:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <vc:BooleanInvertConverter x:Key="BooleanInvertConverter" />
         <vc:SelectedItemToBorderThicknessConverter x:Key="SelectedItemToBorderThicknessConverter" />
         <vc:SafeWrapperResultToErrorConverter x:Key="SafeWrapperResultToErrorConverter" />
         <vc:ControlToFocusActionConverter x:Key="ControlToFocusActionConverter" />
@@ -116,11 +117,26 @@
                                     </StackPanel>
                                 </ToolTip>
                             </ToolTipService.ToolTip>
+
+                            <!--  Glyph icon  -->
                             <FontIcon
+                                x:Name="GlyphIcon"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
+                                x:Load="{x:Bind UsesCustomIcon, Mode=OneWay, Converter={StaticResource BooleanInvertConverter}}"
                                 FontSize="48"
                                 Glyph="&#xF12B;" />
+
+                            <!--  Image icon  -->
+                            <Grid
+                                x:Name="CustomIconImage"
+                                Margin="16,4,16,4"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                x:Load="{x:Bind UsesCustomIcon, Mode=OneWay}"
+                                CornerRadius="{StaticResource ControlCornerRadius}">
+                                <Image Source="{x:Bind CustomIcon, Mode=OneWay}" Stretch="Uniform" />
+                            </Grid>
 
                             <!--  Collection Error Warning  -->
                             <FontIcon
@@ -189,13 +205,27 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center"
                             IsIndeterminate="True"
-                            Visibility="{x:Bind IsCollectionInitializing, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            Visibility="{x:Bind IsCollectionInitializing, Mode=OneWay}" />
 
                         <Grid.ContextFlyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem Command="{x:Bind OpenCollectionLocationCommand}" Text="Open Collection location">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE838;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Command="{x:Bind ChangeCollectionIconCommand}" Text="Change icon">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE70F;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem
+                                    x:Name="RemoveCollectionIconOption"
+                                    x:Load="{x:Bind UsesCustomIcon, Mode=OneWay}"
+                                    Command="{x:Bind RemoveCollectionIconCommand}"
+                                    Text="Remove icon">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE738;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutSeparator />
@@ -211,7 +241,7 @@
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem Command="{x:Bind RemoveCollectionCommand}" Text="Remove Collection">
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="&#xE738;" />
+                                        <FontIcon Glyph="&#xECC9;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                             </MenuFlyout>

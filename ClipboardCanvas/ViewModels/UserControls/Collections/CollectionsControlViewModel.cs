@@ -20,6 +20,7 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Interfaces.Collections;
 using ClipboardCanvas.Services;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using ClipboardCanvas.Models;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {
@@ -188,7 +189,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                     if (folder != null)
                     {
                         StandardCollectionViewModel standardCollectionViewModel = new StandardCollectionViewModel(folder);
-                        await AddCollection(standardCollectionViewModel, true);
+                        await AddCollection(standardCollectionViewModel, null, true);
                     }
                 }
 
@@ -286,7 +287,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         {
             ICollectionsSettingsService collectionsSettings = Ioc.Default.GetService<ICollectionsSettingsService>();
 
-            IEnumerable<string> savedCollectionPaths = collectionsSettings.SavedCollectionLocations;
+            IEnumerable<CollectionConfigurationModel> collectionConfigurations = collectionsSettings.SavedCollections;
 
             // Add default collection
             StorageFolder defaultCollectionFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Default Collection", CreationCollisionOption.OpenIfExists);
@@ -297,32 +298,38 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 throw new UnauthorizedAccessException("The default folder collection couldn't be retrieved!");
             }
 
-            if (savedCollectionPaths == null)
+            if (collectionConfigurations == null)
             {
-                savedCollectionPaths = new List<string>();
+                collectionConfigurations = new List<CollectionConfigurationModel>();
+                collectionsSettings.SavedCollections = collectionConfigurations;
             }
 
-            DefaultCollectionViewModel defaultCollectionViewModel = new DefaultCollectionViewModel(defaultCollectionFolder);
             bool defaultCollectionAdded = false;
 
-            foreach (var item in savedCollectionPaths)
+            List<Task> collectionAddTasks = new List<Task>();
+            foreach (var item in collectionConfigurations)
             {
-                if (!defaultCollectionAdded && item == Constants.Collections.DEFAULT_COLLECTION_TOKEN)
+                BaseCollectionViewModel baseCollection;
+
+                if (!defaultCollectionAdded && item.collectionPath == Constants.Collections.DEFAULT_COLLECTION_TOKEN)
                 {
                     defaultCollectionAdded = true;
-                    await AddCollection(defaultCollectionViewModel, true);
+                    baseCollection = new DefaultCollectionViewModel(defaultCollectionFolder);
                 }
                 else
                 {
-                    StandardCollectionViewModel standardCollectionViewModel = new StandardCollectionViewModel(item);
-                    await AddCollection(standardCollectionViewModel, true);
+                    baseCollection = new StandardCollectionViewModel(item.collectionPath);
                 }
+
+                collectionAddTasks.Add(AddCollection(baseCollection, item, true));
             }
+
+            await Task.WhenAll(collectionAddTasks);
 
             if (!defaultCollectionAdded)
             {
-                // Add default collection if it hasn't been added
-                await AddCollection(defaultCollectionViewModel, true);
+                // Add default collection if it hasn't been added (it wasn't found in collections_settings)
+                await AddCollection(new DefaultCollectionViewModel(defaultCollectionFolder), null, true);
             }
 
             // We need to update saved collections because we suppressed that in AddCollection()
@@ -368,7 +375,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             }
         }
 
-        public static async Task<bool> AddCollection(BaseCollectionViewModel baseCollectionViewModel, bool suppressSettingsUpdate = false)
+        public static async Task<bool> AddCollection(BaseCollectionViewModel baseCollectionViewModel, CollectionConfigurationModel configurationModel, bool suppressSettingsUpdate = false)
         {
             // If collections already contain a collection with the same path
             if (Collections.Any((item) => item.CollectionPath == baseCollectionViewModel.CollectionPath))
@@ -396,6 +403,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             }
 
             await baseCollectionViewModel.InitializeCollectionFolder();
+            await baseCollectionViewModel.InitializeIconIfSet(configurationModel);
+
 
             s_itemAddedInternally = true;
             Collections.Add(baseCollectionViewModel);
@@ -464,7 +473,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
             StandardCollectionViewModel standardCollectionViewModel = new StandardCollectionViewModel(folder);
 
-            return await AddCollection(standardCollectionViewModel);
+            return await AddCollection(standardCollectionViewModel, null);
         }
 
         #endregion

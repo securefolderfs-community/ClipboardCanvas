@@ -143,6 +143,7 @@
     <Compile Include="CanvasFileReceivers\ICanvasFileReceiverModel.cs" />
     <Compile Include="CanvasFileReceivers\InfiniteCanvasFileReceiver.cs" />
     <Compile Include="Contexts\IOperationContext.cs" />
+    <Compile Include="DataModels\BaseAdditionalData.cs" />
     <Compile Include="DataModels\InfiniteCanvasItem.cs" />
     <Compile Include="DataModels\Navigation\CanvasPageNavigationParameterModel.cs" />
     <Compile Include="DataModels\Navigation\CollectionPreviewPageNavigationParameterModel.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="EventArguments\InfiniteCanvasEventArgs.cs" />
     <Compile Include="Helpers\Filesystem\FilesystemHelpers.cs" />
     <Compile Include="Helpers\JsonHelpers.cs" />
+    <Compile Include="Models\CollectionConfigurationModel.cs" />
     <Compile Include="Models\Implementation\InfiniteCanvasConfigurationModel.cs" />
     <Compile Include="Enums\DragDataType.cs" />
     <Compile Include="Enums\NavigationTransitionType.cs" />
@@ -294,7 +296,6 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\ISuggestedActionsControlModel.cs" />
-    <Compile Include="Models\ICollectionItemModel.cs" />
     <Compile Include="Models\ICanvasPreviewModel.cs" />
     <Compile Include="Models\INavigationControlModel.cs" />
     <Compile Include="Models\INavigationToolBarControlModel.cs" />

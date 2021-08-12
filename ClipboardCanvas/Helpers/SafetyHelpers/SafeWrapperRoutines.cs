@@ -1,14 +1,17 @@
-﻿using ClipboardCanvas.Enums;
-using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+
+using ClipboardCanvas.Enums;
+using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 
 namespace ClipboardCanvas.Helpers.SafetyHelpers
 {
     public static class SafeWrapperRoutines
     {
         private static readonly SafeWrapperResult NullFunctionDelegateResult = new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentException(), "Passed-in function delegate is null");
+
+        #region SafeWrap
 
         public static SafeWrapper<T> SafeWrap<T>(Func<T> func, ISafeWrapperExceptionReporter reporter = null)
         {
@@ -43,35 +46,9 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
             }
         }
 
-        public static SafeWrapper<T2> OnSuccess<T1, T2>(this SafeWrapper<T1> wrapped, Func<SafeWrapper<T1>, T2> func)
-        {
-            if (!AssertNotNull(wrapped, func)) return new SafeWrapper<T2>(default(T2), NullFunctionDelegateResult);
+        #endregion
 
-            SafeWrapperResult result = wrapped;
-
-            if (result)
-            {
-                return SafeWrap(() => func(wrapped));
-            }
-
-            return new SafeWrapper<T2>(default(T2), result);
-        }
-
-        public static SafeWrapper<T2> OnFailure<T1, T2>(this SafeWrapper<T1> wrapped, Func<SafeWrapper<T1>, T2> func)
-        {
-            if (!AssertNotNull(wrapped, func)) return new SafeWrapper<T2>(default(T2), NullFunctionDelegateResult);
-
-            SafeWrapperResult result = wrapped;
-
-            if (!result)
-            {
-                return SafeWrap(() => func(wrapped));
-            }
-
-            return new SafeWrapper<T2>(default(T2), result);
-        }
-
-        #region Async Functions
+        #region SafeWrapAsync
 
         public static async Task<SafeWrapper<T>> SafeWrapAsync<T>(Func<Task<T>> func, ISafeWrapperExceptionReporter reporter = null)
         {
@@ -106,9 +83,59 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
             }
         }
 
+        #endregion
+
+        #region OnSuccess
+
+        public static SafeWrapper<T2> OnSuccess<T1, T2>(this SafeWrapper<T1> wrapped, Func<SafeWrapper<T1>, T2> func)
+        {
+            if (!AssertNotNull(wrapped, func)) return new SafeWrapper<T2>(default(T2), NullFunctionDelegateResult);
+
+            SafeWrapperResult result = wrapped;
+
+            if (result)
+            {
+                return SafeWrap(() => func(wrapped));
+            }
+
+            return new SafeWrapper<T2>(default(T2), result);
+        }
+
+        public static SafeWrapperResult OnSuccessResult<T>(this SafeWrapper<T> wrapped, Func<SafeWrapper<T>, SafeWrapperResult> func)
+        {
+            if (!AssertNotNull(wrapped, func)) return new SafeWrapper<T>(default(T), NullFunctionDelegateResult);
+
+            SafeWrapperResult result = wrapped;
+
+            if (result)
+            {
+                return SafeWrap(() => func(wrapped));
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #region OnSuccessAsync
+
         public static async Task<SafeWrapper<T2>> OnSuccessAsync<T1, T2>(this Task<SafeWrapper<T1>> wrapped, Func<SafeWrapper<T1>, Task<T2>> func)
         {
             if (!AssertNotNull(wrapped, func)) return new SafeWrapper<T2>(default(T2), NullFunctionDelegateResult);
+
+            SafeWrapper<T1> result = await wrapped;
+
+            if (result)
+            {
+                return await SafeWrapAsync(() => func(result));
+            }
+
+            return new SafeWrapper<T2>(default(T2), result);
+        }
+
+        public static async Task<SafeWrapperResult> OnSuccessResultAsync<T>(this Task<SafeWrapper<T>> wrapped, Func<SafeWrapper<T>, Task<SafeWrapperResult>> func)
+        {
+            if (!AssertNotNull(wrapped, func)) return new SafeWrapper<T>(default(T), NullFunctionDelegateResult);
 
             SafeWrapperResult result = await wrapped;
 
@@ -117,12 +144,62 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
                 return await SafeWrapAsync(() => func(wrapped.Result));
             }
 
+            return result;
+        }
+
+        #endregion
+
+        #region OnFailure
+
+        public static SafeWrapper<T2> OnFailure<T1, T2>(this SafeWrapper<T1> wrapped, Func<SafeWrapper<T1>, T2> func)
+        {
+            if (!AssertNotNull(wrapped, func)) return new SafeWrapper<T2>(default(T2), NullFunctionDelegateResult);
+
+            SafeWrapperResult result = wrapped;
+
+            if (!result)
+            {
+                return SafeWrap(() => func(wrapped));
+            }
+
             return new SafeWrapper<T2>(default(T2), result);
         }
+
+        public static SafeWrapperResult OnFailureResult<T>(this SafeWrapper<T> wrapped, Func<SafeWrapper<T>, SafeWrapperResult> func)
+        {
+            if (!AssertNotNull(wrapped, func)) return new SafeWrapper<T>(default(T), NullFunctionDelegateResult);
+
+            SafeWrapperResult result = wrapped;
+
+            if (!result)
+            {
+                return SafeWrap(() => func(wrapped));
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #region OnFailureAsync
 
         public static async Task<SafeWrapper<T2>> OnFailureAsync<T1, T2>(this Task<SafeWrapper<T1>> wrapped, Func<SafeWrapper<T1>, Task<T2>> func)
         {
             if (!AssertNotNull(wrapped, func)) return new SafeWrapper<T2>(default(T2), NullFunctionDelegateResult);
+
+            SafeWrapper<T1> result = await wrapped;
+
+            if (!result)
+            {
+                return await SafeWrapAsync(() => func(result));
+            }
+
+            return new SafeWrapper<T2>(default(T2), result);
+        }
+
+        public static async Task<SafeWrapperResult> OnFailureResultAsync<T>(this Task<SafeWrapper<T>> wrapped, Func<SafeWrapper<T>, Task<SafeWrapperResult>> func)
+        {
+            if (!AssertNotNull(wrapped, func)) return new SafeWrapper<T>(default(T), NullFunctionDelegateResult);
 
             SafeWrapperResult result = await wrapped;
 
@@ -131,7 +208,7 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
                 return await SafeWrapAsync(() => func(wrapped.Result));
             }
 
-            return new SafeWrapper<T2>(default(T2), result);
+            return result;
         }
 
         #endregion

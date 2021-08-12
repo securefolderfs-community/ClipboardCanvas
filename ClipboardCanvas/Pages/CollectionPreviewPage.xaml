@@ -135,7 +135,6 @@
                                 Grid.RowSpan="2"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
-                                Background="{ThemeResource SubtleBackgroundBrush}"
                                 CornerRadius="8">
 
                                 <Viewbox

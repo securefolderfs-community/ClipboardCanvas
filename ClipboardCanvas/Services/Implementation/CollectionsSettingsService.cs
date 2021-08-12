@@ -1,7 +1,9 @@
 ﻿using System.IO;
 using Windows.Storage;
 using System.Collections.Generic;
+
 using ClipboardCanvas.Serialization;
+using ClipboardCanvas.Models;
 
 namespace ClipboardCanvas.Services
 {
@@ -19,10 +21,10 @@ namespace ClipboardCanvas.Services
 
         #region ICollectionLocationsSettings
 
-        public IEnumerable<string> SavedCollectionLocations
+        public IEnumerable<CollectionConfigurationModel> SavedCollections
         {
-            get => Get<IEnumerable<string>>(null);
-            set => Set<IEnumerable<string>>(value);
+            get => Get<IEnumerable<CollectionConfigurationModel>>(null);
+            set => Set<IEnumerable<CollectionConfigurationModel>>(value);
         }
 
         public string LastSelectedCollection

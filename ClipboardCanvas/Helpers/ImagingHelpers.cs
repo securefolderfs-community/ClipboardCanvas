@@ -22,8 +22,11 @@ namespace ClipboardCanvas.Helpers
                 using (IRandomAccessStream fileStream = await file.OpenAsync(FileAccessMode.Read))
                 {
                     IRandomAccessStream thumbnail = new InMemoryRandomAccessStream();
-                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(BitmapDecoder.PngDecoderId, fileStream);
-                    BitmapEncoder encoder = await BitmapEncoder.CreateForTranscodingAsync(thumbnail, decoder);
+                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(fileStream);
+                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, thumbnail);
+
+                    SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                    encoder.SetSoftwareBitmap(softwareBitmap);
 
                     encoder.BitmapTransform.ScaledHeight = requestedSize;
                     encoder.BitmapTransform.ScaledWidth = (uint)(requestedSize * 1.7777d);
@@ -31,6 +34,10 @@ namespace ClipboardCanvas.Helpers
 
                     await encoder.FlushAsync();
                     await thumbnail.FlushAsync();
+
+                    softwareBitmap.Dispose();
+                    thumbnail.Seek(0);
+
                     return thumbnail;
                 }
             }

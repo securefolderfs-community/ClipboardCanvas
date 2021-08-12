@@ -1,7 +1,6 @@
 ﻿using Windows.Storage;
 using System.Threading.Tasks;
 
-using ClipboardCanvas.Models;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.DataModels;
@@ -9,11 +8,13 @@ using ClipboardCanvas.Contexts;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
-    public class CollectionItemViewModel : CanvasItem, ICollectionItemModel
+    public class CollectionItemViewModel : CanvasItem
     {
         public BaseContentTypeModel ContentType { get; set; }
 
         public OperationContext OperationContext { get; set; }
+
+        public BaseAdditionalData AdditionalData { get; set; }
 
         public CollectionItemViewModel(IStorageItem item)
             : this(item, null)

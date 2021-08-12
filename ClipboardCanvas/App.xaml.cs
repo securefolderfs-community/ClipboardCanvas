@@ -92,7 +92,7 @@ namespace ClipboardCanvas
             Debug.WriteLine("--------- UNHANDLED EXCEPTION ---------");
             if (e != null)
             {
-                Debug.WriteLine($"\n>>>> HRESULT: {e.HResult}\n");
+                Debug.WriteLine($"\n>>>> HRESULT: {e.HResult} (0x{e.HResult.ToString("X")})\n");
                 if (!string.IsNullOrEmpty(e.Message))
                 {
                     Debug.WriteLine("\n--- MESSAGE ---");

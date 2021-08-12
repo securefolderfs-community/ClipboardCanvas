@@ -61,7 +61,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
                     return canvasPreviewImageFileResult;
                 }
 
-                _thumbnail = await canvasPreviewImageFileResult.Result.GetTransparentThumbnail(ThumbnailMode.SingleItem, Constants.UI.CanvasContent.SIMPLE_CANVAS_THUMBNAIL_SIZE);
+                SafeWrapper<IRandomAccessStream> transparentThumbnailResult = await SafeWrapperRoutines.SafeWrapAsync(() =>
+                    canvasPreviewImageFileResult.Result.GetTransparentThumbnail(ThumbnailMode.SingleItem, Constants.UI.CanvasContent.SIMPLE_CANVAS_THUMBNAIL_SIZE));
+
+                if (!transparentThumbnailResult)
+                {
+                    transparentThumbnailResult.Result?.Dispose();
+                    return transparentThumbnailResult;
+                }
+
+                _thumbnail = transparentThumbnailResult.Result;
             }
             // Get thumbnail for file
             else if (item is StorageFile file)
@@ -79,9 +88,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             }
 
             _FileIcon = new BitmapImage();
-            await _FileIcon.SetSourceAsync(_thumbnail);
+            SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(() =>
+                _FileIcon.SetSourceAsync(_thumbnail).AsTask());
 
-            return SafeWrapperResult.SUCCESS;
+            return result;
         }
 
         protected override Task<SafeWrapperResult> TryFetchDataToView()

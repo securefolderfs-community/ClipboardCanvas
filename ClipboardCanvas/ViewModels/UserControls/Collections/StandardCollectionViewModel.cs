@@ -1,20 +1,16 @@
-﻿using Microsoft.Toolkit.Mvvm.Input;
-using System;
+﻿using System;
+using Microsoft.Toolkit.Mvvm.Input;
 using System.Threading.Tasks;
-using System.Windows.Input;
+using Windows.UI.Xaml.Input;
+using Windows.System;
+using Windows.UI.Xaml;
 using Windows.Storage;
 
-using ClipboardCanvas.Enums;
 using ClipboardCanvas.EventArguments.Collections;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Interfaces.Collections;
-using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
-using Windows.UI.Xaml.Input;
-using Windows.System;
-using System.Diagnostics;
-using Windows.UI.Xaml;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {
@@ -144,11 +140,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 else
                 {
                     // Post a notification informing that rename had failed
-                    IInAppNotification notification = DialogService.GetNotification();
-                    notification.ViewModel.NotificationText = $"Couldn't rename the collection. Error: {result.ErrorCode}";
-                    notification.ViewModel.ShownButtons = InAppNotificationButtonType.OkButton;
-
-                    notification.ShowAsync(4000);
+                    PushErrorNotification("Couldn't rename the collection", result);
                 }
             }
 

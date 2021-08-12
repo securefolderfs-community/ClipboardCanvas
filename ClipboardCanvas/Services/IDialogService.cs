@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Windows.Storage;
+using System.Collections.Generic;
 
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.ViewModels.Dialogs;
@@ -19,5 +20,7 @@ namespace ClipboardCanvas.Services
 
         // TODO: Add FolderPickerSettings
         Task<StorageFolder> PickSingleFolder();
+
+        Task<StorageFile> PickSingleFile(IEnumerable<string> filter);
     }
 }

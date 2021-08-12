@@ -108,6 +108,16 @@ namespace ClipboardCanvas.Helpers.Filesystem
             return UnsafeNativeApis.GetFileAttributesExFromApp(path, UnsafeNativeDataModels.GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out _);
         }
 
+        public static async Task<SafeWrapper<StorageFile>> GetAppSettingsFolder()
+        {
+            return await FilesystemOperations.CreateFile(ApplicationData.Current.LocalFolder, Constants.LocalSettings.SETTINGS_FOLDERNAME, CreationCollisionOption.OpenIfExists);
+        }
+
+        public static async Task<SafeWrapper<StorageFolder>> GetCollectionIconsFolder()
+        {
+            return await FilesystemOperations.CreateFolder(ApplicationData.Current.LocalFolder, Constants.FileSystem.COLLECTION_ICONS_FOLDERNAME, CreationCollisionOption.OpenIfExists);
+        }
+
         public static async Task<bool> OpenFile(IStorageItem item)
         {
             if (item == null)
