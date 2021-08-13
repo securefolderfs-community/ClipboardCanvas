@@ -11,6 +11,8 @@ namespace ClipboardCanvas.ModelViews
 
         void PrepareConnectedAnimation(int itemIndex);
 
-        void ScrollIntoItemView(CollectionPreviewItemViewModel sourceViewModel);
+        void ScrollItemToView(CollectionPreviewItemViewModel itemToScrollTo);
+
+        void ScrollToItemOnInitialization(CollectionPreviewItemViewModel itemToScrollTo);
     }
 }

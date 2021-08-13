@@ -3,10 +3,10 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
-using ClipboardCanvas.ViewModels.UserControls;
 using ClipboardCanvas.Contexts;
 using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.DataModels;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.Models
 {
@@ -96,7 +96,7 @@ namespace ClipboardCanvas.Models
 
         bool CheckCollectionAvailability();
 
-        CollectionConfigurationModel ConstructCollectionConfigurationModel();
+        CollectionConfigurationModel ConstructConfigurationModel();
 
         Task<bool> InitializeCollectionItems();
 

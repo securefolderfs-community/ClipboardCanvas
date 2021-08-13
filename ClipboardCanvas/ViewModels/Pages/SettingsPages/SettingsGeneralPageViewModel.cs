@@ -36,5 +36,19 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
                 }
             }
         }
+
+        public bool ShowTimelineOnHomepage
+        {
+            get => UserSettings.ShowTimelineOnHomepage;
+            set
+            {
+                if (value != UserSettings.ShowTimelineOnHomepage)
+                {
+                    UserSettings.ShowTimelineOnHomepage = value;
+
+                    OnPropertyChanged(nameof(ShowTimelineOnHomepage));
+                }
+            }
+        }
     }
 }

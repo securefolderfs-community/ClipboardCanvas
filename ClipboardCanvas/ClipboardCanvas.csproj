@@ -149,19 +149,24 @@
     <Compile Include="DataModels\Navigation\CollectionPreviewPageNavigationParameterModel.cs" />
     <Compile Include="DataModels\Navigation\HomepageNavigationParameterModel.cs" />
     <Compile Include="EventArguments\InfiniteCanvasEventArgs.cs" />
+    <Compile Include="EventArguments\TimelineWidgetEventArgs.cs" />
     <Compile Include="Helpers\Filesystem\FilesystemHelpers.cs" />
     <Compile Include="Helpers\JsonHelpers.cs" />
-    <Compile Include="Models\CollectionConfigurationModel.cs" />
-    <Compile Include="Models\Implementation\InfiniteCanvasConfigurationModel.cs" />
+    <Compile Include="Helpers\SettingsSerializationHelpers.cs" />
+    <Compile Include="Models\Configuration\CollectionConfigurationModel.cs" />
+    <Compile Include="Models\Configuration\InfiniteCanvasConfigurationModel.cs" />
     <Compile Include="Enums\DragDataType.cs" />
     <Compile Include="Enums\NavigationTransitionType.cs" />
     <Compile Include="EventArguments\DisplayFrameEventArgs.cs" />
     <Compile Include="Helpers\AnimationHelpers.cs" />
+    <Compile Include="Models\Configuration\TimelineConfigurationModel.cs" />
     <Compile Include="Models\IDragDataProviderModel.cs" />
     <Compile Include="Models\IInteractableCanvasControlModel.cs" />
     <Compile Include="Models\IInteractableCanvasControlItemModel.cs" />
     <Compile Include="ModelViews\IInfiniteCanvasControlView.cs" />
     <Compile Include="Services\Implementation\NavigationService.cs" />
+    <Compile Include="Services\Implementation\TimelineService.cs" />
+    <Compile Include="Services\Implementation\TimelineSettingsService.cs" />
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\Implementation\ApplicationSettingsService.cs" />
     <Compile Include="Serialization\BaseJsonSettingsModel.cs" />
@@ -170,6 +175,8 @@
     <Compile Include="Services\IApplicationSettingsService.cs" />
     <Compile Include="Services\ICanvasSettingsService.cs" />
     <Compile Include="Services\ICollectionsSettingsService.cs" />
+    <Compile Include="Services\ITimelineService.cs" />
+    <Compile Include="Services\ITimelineSettingsService.cs" />
     <Compile Include="Services\IUserSettingsService.cs" />
     <Compile Include="Services\Implementation\UserSettingsService.cs" />
     <Compile Include="AttachedProperties\BaseAttachedProperty.cs" />
@@ -222,7 +229,6 @@
     <Compile Include="Extensions\SafetyExtensions.cs" />
     <Compile Include="Extensions\TaskExtensions.cs" />
     <Compile Include="Helpers\CanvasHelpers.cs" />
-    <Compile Include="Helpers\CollectionsHelpers.cs" />
     <Compile Include="Helpers\DialogHelpers.cs" />
     <Compile Include="Helpers\DoubleClickWrapper.cs" />
     <Compile Include="Helpers\Filesystem\FilesystemOperations.cs" />
@@ -243,14 +249,12 @@
     <Compile Include="Interfaces\Search\ISearchItems.cs" />
     <Compile Include="Models\ICollectionModel.cs" />
     <Compile Include="Models\ICollectionPreviewPageModel.cs" />
-    <Compile Include="Models\Implementation\ControlPropertyAccessorModel.cs" />
     <Compile Include="Models\IPasteCanvasPageModel.cs" />
     <Compile Include="Models\IReadOnlyCanvasPreviewModel.cs" />
     <Compile Include="Models\ISearchControlModel.cs" />
     <Compile Include="ModelViews\IBaseCanvasPreviewControlView.cs" />
     <Compile Include="ModelViews\ICanvasPageView.cs" />
     <Compile Include="ModelViews\ICollectionPreviewPageView.cs" />
-    <Compile Include="Models\IControlPropertyAccessorModel.cs" />
     <Compile Include="ModelViews\IDisplayControlView.cs" />
     <Compile Include="ModelViews\IInteractableCanvasControlView.cs" />
     <Compile Include="ModelViews\IMediaCanvasControlView.cs" />
@@ -349,8 +353,8 @@
     <Compile Include="UserControls\CanvasDisplay\MediaCanvasControl.xaml.cs">
       <DependentUpon>MediaCanvasControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\CollectionsControl.xaml.cs">
-      <DependentUpon>CollectionsControl.xaml</DependentUpon>
+    <Compile Include="UserControls\Widgets\CollectionsWidget.xaml.cs">
+      <DependentUpon>CollectionsWidget.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\DisplayControl.xaml.cs">
       <DependentUpon>DisplayControl.xaml</DependentUpon>
@@ -367,6 +371,9 @@
     <Compile Include="UserControls\SettingsPanelControl.xaml.cs">
       <DependentUpon>SettingsPanelControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\Widgets\TimelineWidget.xaml.cs">
+      <DependentUpon>TimelineWidget.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\WindowTitleBarControl.xaml.cs">
       <DependentUpon>WindowTitleBarControl.xaml</DependentUpon>
     </Compile>
@@ -375,6 +382,7 @@
     <Compile Include="ValueConverters\BooleanToVisibilityConverter.cs" />
     <Compile Include="ValueConverters\BooleanSearchedItemToShadowOpacityConverter.cs" />
     <Compile Include="ValueConverters\ControlToFocusActionConverter.cs" />
+    <Compile Include="ValueConverters\DateTimeToStringConverter.cs" />
     <Compile Include="ValueConverters\ImplicitDataTemplateConverter.cs" />
     <Compile Include="ValueConverters\InterfaceToNavigationControlViewModelConverter.cs" />
     <Compile Include="ValueConverters\InterfaceToSuggestedActionsControlViewModelConverter.cs" />
@@ -406,7 +414,7 @@
     <Compile Include="ViewModels\UserControls\CanvasPreview\BaseCanvasPreviewControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasPreview\BaseReadOnlyCanvasPreviewControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\Collections\BaseCollectionViewModel.cs" />
-    <Compile Include="ViewModels\UserControls\Collections\CollectionsControlViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\Collections\CollectionsWidgetViewModel.cs" />
     <Compile Include="ViewModels\UserControls\Collections\DefaultCollectionViewModel.cs" />
     <Compile Include="ViewModels\UserControls\Collections\StandardCollectionViewModel.cs" />
     <Compile Include="ViewModels\UserControls\InAppNotifications\IInAppNotification.cs" />
@@ -428,6 +436,9 @@
     <Compile Include="ViewModels\UserControls\NavigationControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\NavigationToolBarControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SettingsPanelControlViewModel.cs" />
+    <Compile Include="ViewModels\Widgets\Timeline\TimelineSectionItemViewModel.cs" />
+    <Compile Include="ViewModels\Widgets\Timeline\TimelineSectionViewModel.cs" />
+    <Compile Include="ViewModels\Widgets\Timeline\TimelineWidgetViewModel.cs" />
     <Compile Include="ViewModels\UserControls\WindowTitleBarControlViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -599,7 +610,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\CollectionsControl.xaml">
+    <Page Include="UserControls\Widgets\CollectionsWidget.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -620,6 +631,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\SettingsPanelControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\Widgets\TimelineWidget.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

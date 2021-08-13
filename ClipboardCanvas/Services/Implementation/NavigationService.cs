@@ -7,7 +7,7 @@ using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.Pages;
 using ClipboardCanvas.DisplayFrameEventArgs;
-using ClipboardCanvas.ViewModels.UserControls;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.Services.Implementation
 {
@@ -46,7 +46,7 @@ namespace ClipboardCanvas.Services.Implementation
             return true;
         }
 
-        public bool OpenCanvasPage(ICollectionModel collection, CollectionItemViewModel collectionItem = null, NavigationTransitionType transitionType = NavigationTransitionType.DrillInTransition)
+        public bool OpenCanvasPage(ICollectionModel collection, CollectionItemViewModel collectionItem = null, CanvasPageNavigationParameterModel navigationParameter = null, NavigationTransitionType transitionType = NavigationTransitionType.DrillInTransition)
         {
             CanvasType canvasType = CanvasHelpers.GetDefaultCanvasType();
 
@@ -58,7 +58,10 @@ namespace ClipboardCanvas.Services.Implementation
 
             OnNavigationStartedEvent?.Invoke(this, new NavigationStartedEventArgs(collection, canvasType, DisplayPageType.CanvasPage));
 
-            BaseDisplayFrameParameterDataModel navigationParameter = new CanvasPageNavigationParameterModel(collection, canvasType);
+            if (navigationParameter == null)
+            {
+                navigationParameter = new CanvasPageNavigationParameterModel(collection, canvasType);
+            }
             LastPage = CurrentPage;
             CurrentPage = DisplayPageType.CanvasPage;
             DisplayFrame.Navigate(typeof(CanvasPage), navigationParameter, transitionType.ToNavigationTransition());
@@ -68,13 +71,16 @@ namespace ClipboardCanvas.Services.Implementation
             return true;
         }
 
-        public bool OpenHomepage(NavigationTransitionType transitionType = NavigationTransitionType.DrillInTransition)
+        public bool OpenHomepage(HomepageNavigationParameterModel navigationParameter = null, NavigationTransitionType transitionType = NavigationTransitionType.DrillInTransition)
         {
             CanvasType canvasType = CanvasHelpers.GetDefaultCanvasType();
 
             OnNavigationStartedEvent?.Invoke(this, new NavigationStartedEventArgs(null, canvasType, DisplayPageType.Homepage));
 
-            BaseDisplayFrameParameterDataModel navigationParameter = new HomepageNavigationParameterModel(null, canvasType);
+            if (navigationParameter == null)
+            {
+                navigationParameter = new HomepageNavigationParameterModel(null, canvasType);
+            }
             LastPage = CurrentPage;
             CurrentPage = DisplayPageType.Homepage;
             DisplayFrame.Navigate(typeof(HomePage), navigationParameter, transitionType.ToNavigationTransition());
@@ -84,7 +90,7 @@ namespace ClipboardCanvas.Services.Implementation
             return true;
         }
 
-        public bool OpenCollectionPreviewPage(ICollectionModel collection, NavigationTransitionType transitionType = NavigationTransitionType.EntranceTransition, CanvasType? canvasType = null)
+        public bool OpenCollectionPreviewPage(ICollectionModel collection, CollectionPreviewPageNavigationParameterModel navigationParameter = null, NavigationTransitionType transitionType = NavigationTransitionType.EntranceTransition, CanvasType? canvasType = null)
         {
             if (canvasType == null)
             {
@@ -99,7 +105,10 @@ namespace ClipboardCanvas.Services.Implementation
                 return false;
             }
 
-            BaseDisplayFrameParameterDataModel navigationParameter = new CollectionPreviewPageNavigationParameterModel(collection, (CanvasType)canvasType);
+            if (navigationParameter == null)
+            {
+                navigationParameter = new CollectionPreviewPageNavigationParameterModel(collection, (CanvasType)canvasType);
+            }
             LastPage = CurrentPage;
             CurrentPage = DisplayPageType.CollectionPreviewPage;
             DisplayFrame.Navigate(typeof(CollectionPreviewPage), navigationParameter, transitionType.ToNavigationTransition());

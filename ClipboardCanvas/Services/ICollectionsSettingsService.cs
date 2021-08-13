@@ -5,7 +5,7 @@ namespace ClipboardCanvas.Services
 {
     public interface ICollectionsSettingsService
     {
-        IEnumerable<CollectionConfigurationModel> SavedCollections { get; set; }
+        List<CollectionConfigurationModel> SavedCollections { get; set; }
 
         string LastSelectedCollection { get; set; }
     }

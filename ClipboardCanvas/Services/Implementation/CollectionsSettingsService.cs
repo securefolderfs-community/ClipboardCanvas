@@ -21,10 +21,10 @@ namespace ClipboardCanvas.Services
 
         #region ICollectionLocationsSettings
 
-        public IEnumerable<CollectionConfigurationModel> SavedCollections
+        public List<CollectionConfigurationModel> SavedCollections
         {
-            get => Get<IEnumerable<CollectionConfigurationModel>>(null);
-            set => Set<IEnumerable<CollectionConfigurationModel>>(value);
+            get => Get<List<CollectionConfigurationModel>>(null);
+            set => Set<List<CollectionConfigurationModel>>(value);
         }
 
         public string LastSelectedCollection

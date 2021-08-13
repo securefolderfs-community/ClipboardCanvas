@@ -5,9 +5,12 @@ namespace ClipboardCanvas.DataModels.Navigation
 {
     public class CollectionPreviewPageNavigationParameterModel : BaseDisplayFrameParameterDataModel
     {
-        public CollectionPreviewPageNavigationParameterModel(ICollectionModel collectionModel, CanvasType canvasType)
+        public readonly CanvasItem itemToSelect;
+
+        public CollectionPreviewPageNavigationParameterModel(ICollectionModel collectionModel, CanvasType canvasType, CanvasItem itemToSelect = null)
             : base(collectionModel, canvasType)
         {
+            this.itemToSelect = itemToSelect;
         }
     }
 }

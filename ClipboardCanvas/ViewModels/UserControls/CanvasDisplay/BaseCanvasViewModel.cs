@@ -21,6 +21,7 @@ using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.CanavsPasteModels;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -122,6 +123,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 DiscardData();
                 return SafeWrapperResult.CANCEL;
             }
+
+            OnPasteSucceeded();
 
             if (UserSettings.OpenNewCanvasOnPaste)
             {
@@ -303,6 +306,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #endregion
 
         #region Protected Helpers
+
+        protected virtual void OnPasteSucceeded()
+        {
+            // Add new item on Timeline
+            var todaySection = TimelineService.GetOrCreateTodaySection();
+            TimelineService.AddItemForSection(todaySection, associatedCollection, associatedItemViewModel);
+        }
 
         protected virtual Task OnReferencePasted()
         {

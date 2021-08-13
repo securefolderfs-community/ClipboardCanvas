@@ -132,8 +132,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                     OnPropertyChanged(nameof(IsEditingName));
 
                     // Also update settings
-                    CollectionsHelpers.UpdateSavedCollectionsSetting();
-                    CollectionsHelpers.UpdateLastSelectedCollectionSetting(this);
+                    SettingsSerializationHelpers.UpdateSavedCollectionsSetting();
+                    SettingsSerializationHelpers.UpdateLastSelectedCollectionSetting(this);
 
                     return true;
                 }

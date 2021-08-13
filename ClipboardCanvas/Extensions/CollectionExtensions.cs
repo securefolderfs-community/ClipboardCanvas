@@ -37,12 +37,21 @@ namespace ClipboardCanvas.Extensions
                 return;
             }
 
-            foreach (var item in collection)
+            collection.DisposeAll();
+            collection.Clear();
+        }
+
+        public static void DisposeAll<T>(this IEnumerable<T> enumerable)
+        {
+            if (enumerable == null)
+            {
+                return;
+            }
+
+            foreach (var item in enumerable)
             {
                 (item as IDisposable)?.Dispose();
             }
-
-            collection.Clear();
         }
     }
 }

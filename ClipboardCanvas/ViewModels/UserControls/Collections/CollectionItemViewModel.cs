@@ -6,7 +6,7 @@ using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Contexts;
 
-namespace ClipboardCanvas.ViewModels.UserControls
+namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {
     public class CollectionItemViewModel : CanvasItem
     {

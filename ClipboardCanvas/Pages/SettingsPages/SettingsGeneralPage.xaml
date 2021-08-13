@@ -19,6 +19,8 @@
                 <ToggleSwitch Header="Use Infinite Canvas as default" IsOn="{x:Bind ViewModel.UseInfiniteCanvasAsDefault, Mode=TwoWay}" />
 
                 <ToggleSwitch Header="Show confirmation dialog when deleting items" IsOn="{x:Bind ViewModel.ShowDeleteConfirmationDialog, Mode=TwoWay}" />
+
+                <ToggleSwitch Header="Show Timeline widget on Homepage" IsOn="{x:Bind ViewModel.ShowTimelineOnHomepage, Mode=TwoWay}" />
             </StackPanel>
 
         </StackPanel>

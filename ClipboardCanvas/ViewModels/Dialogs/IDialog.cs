@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+
 using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.ViewModels.Dialogs

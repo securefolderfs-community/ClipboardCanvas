@@ -10,6 +10,8 @@
 
             public const string COLLECTION_SETTINGS_FILENAME = "collections_settings.json";
 
+            public const string TIMELINE_SETTINGS_FILENAME = "timeline_settings.json";
+
             public const string CANVAS_SETTINGS_FILENAME = "canvas_settings.json";
 
             public const string APPLICATION_SETTINGS_FILENAME = "application_settings.json";
@@ -17,6 +19,8 @@
 
         public static class UI
         {
+            public const int CONTROL_LOAD_DELAY = 10;
+
             public static class CanvasContent
             {
                 public const long FALLBACK_TEXTLOAD_MAX_FILESIZE = 1048576L;
@@ -42,6 +46,13 @@
             public static class Animations
             {
                 public const string CONNECTED_ANIMATION_COLLECTION_PREVIEW_ITEM_OPEN_REQUESTED_TOKEN = "collection_preview_item_opening_connected_animation";
+            }
+
+            public static class Timeline
+            {
+                public const int MAX_ITEMS_PER_SECTION = 10;
+
+                public const int MAX_SECTIONS = 10;
             }
         }
 

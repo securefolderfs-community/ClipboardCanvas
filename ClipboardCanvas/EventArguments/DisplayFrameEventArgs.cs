@@ -1,7 +1,8 @@
 ﻿using System;
+
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Models;
-using ClipboardCanvas.ViewModels.UserControls;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.DisplayFrameEventArgs
 {

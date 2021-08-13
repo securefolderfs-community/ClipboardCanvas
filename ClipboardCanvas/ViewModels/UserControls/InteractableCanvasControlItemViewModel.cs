@@ -194,11 +194,19 @@ namespace ClipboardCanvas.ViewModels.UserControls
             if (withLoadDelay)
             {
                 // Wait for control to load
-                await Task.Delay(10);
+                await Task.Delay(Constants.UI.CONTROL_LOAD_DELAY);
             }
 
-            SafeWrapperResult result = await ReadOnlyCanvasPreviewModel.TryLoadExistingData(CanvasItem, _contentType, _cancellationToken);
-            IsPastedAsReference = result && CanvasItem.IsFileAsReference;
+            SafeWrapperResult result;
+            if (ReadOnlyCanvasPreviewModel != null)
+            {
+                result = await ReadOnlyCanvasPreviewModel.TryLoadExistingData(CanvasItem, _contentType, _cancellationToken);
+                IsPastedAsReference = result && CanvasItem.IsFileAsReference;
+            }
+            else
+            {
+                return SafeWrapperResult.CANCEL;
+            }
 
             return result;
         }

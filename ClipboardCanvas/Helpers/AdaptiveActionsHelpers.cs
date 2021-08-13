@@ -56,7 +56,7 @@ namespace ClipboardCanvas.Helpers
             var action_addCollection = new SuggestedActionsControlItemViewModel(
                 new AsyncRelayCommand(async () =>
                 {
-                    await CollectionsControlViewModel.AddCollectionViaUi();
+                    await CollectionsWidgetViewModel.AddCollectionViaUi();
                 }), "Add Collection", "\uE710");
 
             actions.Add(action_addCollection);

@@ -24,6 +24,7 @@ using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Services;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -36,6 +37,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         protected ICanvasSettingsService CanvasSettings { get; } = Ioc.Default.GetService<ICanvasSettingsService>();
 
         protected INavigationService NavigationService { get; } = Ioc.Default.GetService<INavigationService>();
+
+        protected ITimelineService TimelineService { get; } = Ioc.Default.GetService<ITimelineService>();
 
         protected readonly IBaseCanvasPreviewControlView view;
 

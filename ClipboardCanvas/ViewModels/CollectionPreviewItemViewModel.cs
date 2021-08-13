@@ -1,18 +1,13 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Windows.Storage;
-using Windows.UI.Xaml;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 using ClipboardCanvas.Interfaces.Search;
 using ClipboardCanvas.Models;
-using ClipboardCanvas.Models.Implementation;
 using ClipboardCanvas.ViewModels.Pages;
-using System.Diagnostics;
-using ClipboardCanvas.ViewModels.UserControls;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.ViewModels
 {
@@ -73,7 +68,7 @@ namespace ClipboardCanvas.ViewModels
         public async Task RequestCanvasLoad()
         {
             // Wait for control to load
-            await Task.Delay(10);
+            await Task.Delay(Constants.UI.CONTROL_LOAD_DELAY);
 
             if (ReadOnlyCanvasPreviewModel == null)
             {
@@ -89,7 +84,7 @@ namespace ClipboardCanvas.ViewModels
             if (ReadOnlyCanvasPreviewModel == null)
             {
                 // Wait for control to load if we unload too quickly
-                await Task.Delay(10);
+                await Task.Delay(Constants.UI.CONTROL_LOAD_DELAY);
 
                 if (ReadOnlyCanvasPreviewModel == null)
                 {

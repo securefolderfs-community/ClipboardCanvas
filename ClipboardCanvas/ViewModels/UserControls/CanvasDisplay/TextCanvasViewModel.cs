@@ -14,6 +14,7 @@ using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.CanavsPasteModels;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {

@@ -15,6 +15,7 @@ using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 using ClipboardCanvas.DataModels;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 {
@@ -104,6 +105,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         public virtual async Task<SafeWrapperResult> TryLoadExistingData(CanvasItem canvasFile, BaseContentTypeModel contentType, CancellationToken cancellationToken)
         {
+            contentType = await BaseContentTypeModel.GetContentType(canvasFile, contentType);
+
             SafeWrapperResult result = await InitializeViewModelFromCollectionItem(canvasFile, contentType);
 
             if (result && CanvasViewModel != null)

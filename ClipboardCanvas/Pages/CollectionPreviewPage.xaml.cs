@@ -2,12 +2,14 @@
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml;
+using System.Linq;
 
 using ClipboardCanvas.ViewModels.Pages;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.DataModels.Navigation;
 using ClipboardCanvas.ViewModels;
+using ClipboardCanvas.DataModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -18,6 +20,8 @@ namespace ClipboardCanvas.Pages
     /// </summary>
     public sealed partial class CollectionPreviewPage : Page, ICollectionPreviewPageView
     {
+        private CanvasItem _canvasItemToScrollTo;
+
         public CollectionPreviewPageViewModel ViewModel
         {
             get => (CollectionPreviewPageViewModel)DataContext;
@@ -32,8 +36,9 @@ namespace ClipboardCanvas.Pages
         {
             base.OnNavigatedTo(e);
 
-            BaseDisplayFrameParameterDataModel navigationParameter = e.Parameter as BaseDisplayFrameParameterDataModel;
+            CollectionPreviewPageNavigationParameterModel navigationParameter = e.Parameter as CollectionPreviewPageNavigationParameterModel;
             AssociatedCollectionModel = navigationParameter.collectionModel;
+            _canvasItemToScrollTo = navigationParameter.itemToSelect;
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -67,9 +72,27 @@ namespace ClipboardCanvas.Pages
             connectedAnimation.Configuration = new DirectConnectedAnimationConfiguration();
         }
 
-        public void ScrollIntoItemView(CollectionPreviewItemViewModel sourceViewModel)
+        public void ScrollItemToView(CollectionPreviewItemViewModel itemToScrollTo)
         {
-            ItemsGrid.ScrollIntoView(sourceViewModel);
+            ItemsGrid.ScrollIntoView(itemToScrollTo);
+        }
+
+        public void ScrollToItemOnInitialization(CollectionPreviewItemViewModel itemToScrollTo)
+        {
+            if (itemToScrollTo != null && _canvasItemToScrollTo == null)
+            {
+                ScrollItemToView(itemToScrollTo);
+            }
+            else if (_canvasItemToScrollTo != null)
+            {
+                itemToScrollTo = this.ViewModel.Items.FirstOrDefault((item) => item.CollectionItemViewModel.AssociatedItem.Path == _canvasItemToScrollTo.AssociatedItem.Path);
+
+                if (itemToScrollTo != null)
+                {
+                    this.ViewModel.SelectedItem = itemToScrollTo;
+                    ScrollItemToView(itemToScrollTo);
+                }
+            }    
         }
     }
 }

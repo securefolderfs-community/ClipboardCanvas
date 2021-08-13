@@ -23,7 +23,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             return true;
         }
 
-        public override CollectionConfigurationModel ConstructCollectionConfigurationModel()
+        public override CollectionConfigurationModel ConstructConfigurationModel()
         {
             return new CollectionConfigurationModel(Constants.Collections.DEFAULT_COLLECTION_TOKEN, UsesCustomIcon, iconFile?.Name);
         }

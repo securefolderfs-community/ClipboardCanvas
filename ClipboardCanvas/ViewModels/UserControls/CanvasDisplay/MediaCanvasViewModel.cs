@@ -4,14 +4,14 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Media.Core;
 using Windows.Storage;
+using System.Threading;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
-using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
-using System.Threading;
 using ClipboardCanvas.CanavsPasteModels;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {

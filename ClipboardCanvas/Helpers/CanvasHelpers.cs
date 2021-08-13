@@ -2,12 +2,10 @@
 using System.Threading.Tasks;
 using ClipboardCanvas.Enums;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Windows.Storage;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.Dialogs;
 using ClipboardCanvas.Models;
-using ClipboardCanvas.ViewModels.UserControls;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.CanavsPasteModels;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
@@ -15,6 +13,7 @@ using ClipboardCanvas.Contexts;
 using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Helpers.Filesystem;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.Helpers
 {
@@ -37,6 +36,15 @@ namespace ClipboardCanvas.Helpers
                     deletePermanently = deleteConfirmationDialogViewModel.PermanentlyDelete;
 
                     CollectionItemViewModel collectionItem = collectionModel.FindCollectionItem(canvasItem);
+
+                    // Also remove it from Timeline
+                    ITimelineService timelineService = Ioc.Default.GetService<ITimelineService>();
+                    var todaySection = timelineService.GetOrCreateTodaySection();
+                    var timelineSectionItem = timelineService.FindTimelineSectionItem(todaySection, collectionItem);
+                    if (timelineSectionItem != null)
+                    {
+                        timelineService.RemoveItemFromSection(todaySection, timelineSectionItem);
+                    }
 
                     if (collectionItem == null)
                     {

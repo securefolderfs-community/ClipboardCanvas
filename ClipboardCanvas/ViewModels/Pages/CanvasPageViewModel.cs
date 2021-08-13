@@ -36,9 +36,9 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private readonly ICanvasPageView _view;
 
-        private const string DEFAULT_TITLE_TEXT = "Press Ctrl + V to paste in content!";
+        private const string DEFAULT_TITLE_TEXT = "Press Ctrl + V to paste in content";
 
-        private const string DRAG_TITLE_TEXT = "Release to paste in content!";
+        private const string DRAG_TITLE_TEXT = "Release to paste in content";
 
         private bool _contentFinishedLoading;
 

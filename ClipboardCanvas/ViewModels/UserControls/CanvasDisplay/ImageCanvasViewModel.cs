@@ -20,6 +20,7 @@ using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.CanavsPasteModels;
 using ClipboardCanvas.Models;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {

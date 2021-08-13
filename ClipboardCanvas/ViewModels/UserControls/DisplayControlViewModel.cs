@@ -19,6 +19,7 @@ using ClipboardCanvas.ViewModels.UserControls.Collections;
 using ClipboardCanvas.EventArguments.CollectionPreview;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.DisplayFrameEventArgs;
+using ClipboardCanvas.ViewModels.Widgets.Timeline;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -68,8 +69,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             this._view = view;
             this._canvasLoadCancellationTokenSource = new CancellationTokenSource();
-
-            HookCollectionsEvents();
         }
 
         #endregion
@@ -81,6 +80,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
         private void NavigationService_OnNavigationStartedEvent(object sender, NavigationStartedEventArgs e)
         {
             // Page switch requested so we need to unhook events
+            if (e.collection != null)
+            {
+                _currentCollectionModel = e.collection;
+            }
 
             // Unhook all views events
             UnhookCanvasControlEvents();
@@ -111,9 +114,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
             UpdateTitleBar();
 
             // We might navigate from home to a canvas that's already filled, so initialize the content
-            if (_currentCollectionModel.IsCollectionInitialized
-                && !_currentCollectionModel.IsCollectionInitializing
-                && !_currentCollectionModel.IsOnNewCanvas
+            if ((e.collection?.IsCollectionInitialized ?? false)
+                && (!e.collection?.IsCollectionInitializing ?? false)
+                && (!e.collection?.IsOnNewCanvas ?? false)
                 && e.collectionItemToLoad != null)
             {
                 _canvasLoadCancellationTokenSource.Cancel();
@@ -124,10 +127,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
 
             // Update navigation buttons
-            await UpdateNavigationOnPageNavigation();
+            await UpdateNavigationOnPageNavigation(e.collection);
 
             // Update Suggested Actions
-            await SetSuggestedActions();
+            await SetSuggestedActions(e.collection);
         }
 
         #endregion
@@ -247,7 +250,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             UpdateCanvasPageNavigation();
 
-            await SetSuggestedActions(e.error);
+            await SetSuggestedActions(_currentCollectionModel, e.error);
         }
 
         private void CollectionsControlViewModel_OnCollectionErrorRaisedEvent(object sender, CollectionErrorRaisedEventArgs e)
@@ -372,7 +375,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async void PasteCanvasModel_OnContentLoadedEvent(object sender, ContentLoadedEventArgs e)
         {
-            if (CurrentPage == DisplayPageType.CanvasPage
+            if (!e.isInfiniteCanvas
+                && CurrentPage == DisplayPageType.CanvasPage
                 && (e.contentDataModel is TextContentType
                 || e.contentDataModel is MarkdownContentType))
             {
@@ -385,7 +389,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             UpdateCanvasPageNavigation();
 
-            await SetSuggestedActions();
+            await SetSuggestedActions(_currentCollectionModel);
             NavigationToolBarControlModel.SuggestedActionsControlModel.ShowNoActionsLabelSuppressed = false;
         }
 
@@ -421,6 +425,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             await InitialApplicationChecksHelpers.HandleFileSystemPermissionDialog(WindowTitleBarControlModel);
             await InitialApplicationChecksHelpers.CheckVersionAndShowDialog();
 
+            HookCollectionsEvents();
             HookNavigationServiceEvents();
             HookTitleBarEvents();
             HookToolbarEvents();
@@ -428,7 +433,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
             NavigationToolBarControlModel.NavigationControlModel.NavigateBackEnabled = false;
             NavigationToolBarControlModel.NavigationControlModel.NavigateForwardEnabled = false;
 
-            await CollectionsControlViewModel.ReloadAllCollections();
+            await CollectionsWidgetViewModel.ReloadAllCollections();
+            await TimelineWidgetViewModel.ReloadAllSections(); 
 
             NavigationService.OpenCanvasPage(_currentCollectionModel);
             NavigationToolBarControlModel.NotifyCurrentPageChanged(CurrentPage);
@@ -464,14 +470,14 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
         }
 
-        private async Task UpdateNavigationOnPageNavigation()
+        private async Task UpdateNavigationOnPageNavigation(ICollectionModel collectionModel)
         {
             // Handle event where user opens canvas - and show loading rings if needed
-            if (_currentCollectionModel.IsCollectionInitializing)
+            if (collectionModel?.IsCollectionInitializing ?? false)
             {
                 // Show navigation loading
                 NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = true;
-                if (!_currentCollectionModel.IsOnNewCanvas)
+                if (!collectionModel?.IsOnNewCanvas ?? false)
                 {
                     // Also show loading for forward button if not on new canvas
                     NavigationToolBarControlModel.NavigationControlModel.NavigateForwardLoading = true;
@@ -487,18 +493,18 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 UpdateCanvasPageNavigation();
             }
             // Handle event when the collection is not initialized
-            else if (!_currentCollectionModel.IsCollectionInitialized)
+            else if (!collectionModel?.IsCollectionInitialized ?? false)
             {
                 // Performance optimization: instead of initializing all collections at once,
                 // initialize the one that's being opened
-                await _currentCollectionModel.InitializeCollectionItems();
+                await collectionModel.InitializeCollectionItems();
                 CheckCollectionPreviewPageNavigation();
                 UpdateCanvasPageNavigation();
             }
             // Handle event where the loading rings were shown and the collection is no longer initializing - hide them
             else
             {
-                if (!_currentCollectionModel.IsCollectionInitializing)
+                if (!collectionModel?.IsCollectionInitializing ?? false)
                 {
                     // Re-enable navigation after items have loaded
                     NavigationToolBarControlModel.NavigationControlModel.NavigateBackLoading = false;
@@ -582,7 +588,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        private async Task SetSuggestedActions(SafeWrapperResult fromError = null)
+        private async Task SetSuggestedActions(ICollectionModel collectionModel, SafeWrapperResult fromError = null)
         {
             if (NavigationToolBarControlModel == null)
             {
@@ -591,7 +597,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             if (fromError != null)
             {
-                if (_currentCollectionModel.CurrentCollectionItemViewModel != null && _currentCollectionModel.CurrentCollectionItemViewModel.AssociatedItem is StorageFile file && ReferenceFile.IsReferenceFile(file))
+                if (collectionModel?.CurrentCollectionItemViewModel != null && collectionModel?.CurrentCollectionItemViewModel.AssociatedItem is StorageFile file && ReferenceFile.IsReferenceFile(file))
                 {
                     if (fromError == OperationErrorCode.InvalidOperation) // Reference File is corrupted
                     {
@@ -622,13 +628,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
                         case DisplayPageType.CanvasPage:
                             {
                                 // Add suggested actions
-                                if (PasteCanvasPageModel != null && (!_currentCollectionModel.IsOnNewCanvas || PasteCanvasPageModel.PasteCanvasModel.IsContentLoaded))
+                                if (PasteCanvasPageModel != null && (!collectionModel?.IsOnNewCanvas ?? false || PasteCanvasPageModel.PasteCanvasModel.IsContentLoaded))
                                 {
                                     var actions = await PasteCanvasPageModel.PasteCanvasModel.GetSuggestedActions();
                                     NavigationToolBarControlModel.SuggestedActionsControlModel.SetActions(actions);
 
                                     // Check again, the state might have changed
-                                    if (_currentCollectionModel.IsOnNewCanvas)
+                                    if (collectionModel?.IsOnNewCanvas ?? false)
                                     {
                                         // The state changed
                                         checkAgain = true;
@@ -765,32 +771,32 @@ namespace ClipboardCanvas.ViewModels.UserControls
         private void HookCollectionsEvents()
         {
             UnhookCollectionsEvents();
-            CollectionsControlViewModel.OnCollectionOpenRequestedEvent += CollectionsControlViewModel_OnCollectionOpenRequestedEvent;
-            CollectionsControlViewModel.OnCollectionSelectionChangedEvent += CollectionsControlViewModel_OnCollectionSelectionChangedEvent;
-            CollectionsControlViewModel.OnCollectionRemovedEvent += CollectionsControlViewModel_OnCollectionRemovedEvent;
-            CollectionsControlViewModel.OnCollectionAddedEvent += CollectionsControlViewModel_OnCollectionAddedEvent;
-            CollectionsControlViewModel.OnCollectionItemsInitializationStartedEvent += CollectionsControlViewModel_OnCollectionItemsInitializationStartedEvent;
-            CollectionsControlViewModel.OnCollectionItemsInitializationFinishedEvent += CollectionsControlViewModel_OnCollectionItemsInitializationFinishedEvent;
-            CollectionsControlViewModel.OnOpenNewCanvasRequestedEvent += CollectionsControlViewModel_OnOpenNewCanvasRequestedEvent;
-            CollectionsControlViewModel.OnGoToHomepageRequestedEvent += CollectionsControlViewModel_OnGoToHomepageRequestedEvent;
-            CollectionsControlViewModel.OnCollectionErrorRaisedEvent += CollectionsControlViewModel_OnCollectionErrorRaisedEvent;
-            CollectionsControlViewModel.OnCanvasLoadFailedEvent += CollectionsControlViewModel_OnCanvasLoadFailedEvent;
-            CollectionsControlViewModel.OnTipTextUpdateRequestedEvent += CollectionsControlViewModel_OnTipTextUpdateRequestedEvent;
+            CollectionsWidgetViewModel.OnCollectionOpenRequestedEvent += CollectionsControlViewModel_OnCollectionOpenRequestedEvent;
+            CollectionsWidgetViewModel.OnCollectionSelectionChangedEvent += CollectionsControlViewModel_OnCollectionSelectionChangedEvent;
+            CollectionsWidgetViewModel.OnCollectionRemovedEvent += CollectionsControlViewModel_OnCollectionRemovedEvent;
+            CollectionsWidgetViewModel.OnCollectionAddedEvent += CollectionsControlViewModel_OnCollectionAddedEvent;
+            CollectionsWidgetViewModel.OnCollectionItemsInitializationStartedEvent += CollectionsControlViewModel_OnCollectionItemsInitializationStartedEvent;
+            CollectionsWidgetViewModel.OnCollectionItemsInitializationFinishedEvent += CollectionsControlViewModel_OnCollectionItemsInitializationFinishedEvent;
+            CollectionsWidgetViewModel.OnOpenNewCanvasRequestedEvent += CollectionsControlViewModel_OnOpenNewCanvasRequestedEvent;
+            CollectionsWidgetViewModel.OnGoToHomepageRequestedEvent += CollectionsControlViewModel_OnGoToHomepageRequestedEvent;
+            CollectionsWidgetViewModel.OnCollectionErrorRaisedEvent += CollectionsControlViewModel_OnCollectionErrorRaisedEvent;
+            CollectionsWidgetViewModel.OnCanvasLoadFailedEvent += CollectionsControlViewModel_OnCanvasLoadFailedEvent;
+            CollectionsWidgetViewModel.OnTipTextUpdateRequestedEvent += CollectionsControlViewModel_OnTipTextUpdateRequestedEvent;
         }
 
         private void UnhookCollectionsEvents()
         {
-            CollectionsControlViewModel.OnCollectionOpenRequestedEvent -= CollectionsControlViewModel_OnCollectionOpenRequestedEvent;
-            CollectionsControlViewModel.OnCollectionSelectionChangedEvent -= CollectionsControlViewModel_OnCollectionSelectionChangedEvent;
-            CollectionsControlViewModel.OnCollectionRemovedEvent -= CollectionsControlViewModel_OnCollectionRemovedEvent;
-            CollectionsControlViewModel.OnCollectionAddedEvent -= CollectionsControlViewModel_OnCollectionAddedEvent;
-            CollectionsControlViewModel.OnCollectionItemsInitializationStartedEvent -= CollectionsControlViewModel_OnCollectionItemsInitializationStartedEvent;
-            CollectionsControlViewModel.OnCollectionItemsInitializationFinishedEvent -= CollectionsControlViewModel_OnCollectionItemsInitializationFinishedEvent;
-            CollectionsControlViewModel.OnOpenNewCanvasRequestedEvent -= CollectionsControlViewModel_OnOpenNewCanvasRequestedEvent;
-            CollectionsControlViewModel.OnGoToHomepageRequestedEvent -= CollectionsControlViewModel_OnGoToHomepageRequestedEvent;
-            CollectionsControlViewModel.OnCollectionErrorRaisedEvent -= CollectionsControlViewModel_OnCollectionErrorRaisedEvent;
-            CollectionsControlViewModel.OnCanvasLoadFailedEvent -= CollectionsControlViewModel_OnCanvasLoadFailedEvent;
-            CollectionsControlViewModel.OnTipTextUpdateRequestedEvent -= CollectionsControlViewModel_OnTipTextUpdateRequestedEvent;
+            CollectionsWidgetViewModel.OnCollectionOpenRequestedEvent -= CollectionsControlViewModel_OnCollectionOpenRequestedEvent;
+            CollectionsWidgetViewModel.OnCollectionSelectionChangedEvent -= CollectionsControlViewModel_OnCollectionSelectionChangedEvent;
+            CollectionsWidgetViewModel.OnCollectionRemovedEvent -= CollectionsControlViewModel_OnCollectionRemovedEvent;
+            CollectionsWidgetViewModel.OnCollectionAddedEvent -= CollectionsControlViewModel_OnCollectionAddedEvent;
+            CollectionsWidgetViewModel.OnCollectionItemsInitializationStartedEvent -= CollectionsControlViewModel_OnCollectionItemsInitializationStartedEvent;
+            CollectionsWidgetViewModel.OnCollectionItemsInitializationFinishedEvent -= CollectionsControlViewModel_OnCollectionItemsInitializationFinishedEvent;
+            CollectionsWidgetViewModel.OnOpenNewCanvasRequestedEvent -= CollectionsControlViewModel_OnOpenNewCanvasRequestedEvent;
+            CollectionsWidgetViewModel.OnGoToHomepageRequestedEvent -= CollectionsControlViewModel_OnGoToHomepageRequestedEvent;
+            CollectionsWidgetViewModel.OnCollectionErrorRaisedEvent -= CollectionsControlViewModel_OnCollectionErrorRaisedEvent;
+            CollectionsWidgetViewModel.OnCanvasLoadFailedEvent -= CollectionsControlViewModel_OnCanvasLoadFailedEvent;
+            CollectionsWidgetViewModel.OnTipTextUpdateRequestedEvent -= CollectionsControlViewModel_OnTipTextUpdateRequestedEvent;
         }
 
         private void HookCanvasControlEvents()

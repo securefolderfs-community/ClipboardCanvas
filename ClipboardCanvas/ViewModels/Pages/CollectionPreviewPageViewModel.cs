@@ -318,7 +318,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             SelectedItem = Items[index];
             _suppressIndexReset = false;
 
-            _view?.ScrollIntoItemView(SelectedItem);
+            _view?.ScrollItemToView(SelectedItem);
         }
 
         #endregion
@@ -343,7 +343,7 @@ namespace ClipboardCanvas.ViewModels.Pages
                 NoItemsInfoTextLoad = false;
 
                 // Hook event when the collection initialization finishes to update the UI
-                CollectionsControlViewModel.OnCollectionItemsInitializationFinishedEvent += CollectionsControlViewModel_OnCollectionItemsInitializationFinishedEvent;
+                CollectionsWidgetViewModel.OnCollectionItemsInitializationFinishedEvent += CollectionsControlViewModel_OnCollectionItemsInitializationFinishedEvent;
                 _collectionInitializationFinishedEventHooked = true;
             }
             else
@@ -376,7 +376,12 @@ namespace ClipboardCanvas.ViewModels.Pages
             {
                 SelectedItem = Items.FirstOrDefault((item) => item.CollectionItemViewModel == _associatedCollectionModel.CurrentCollectionItemViewModel);
 
-                _view?.ScrollIntoItemView(SelectedItem);
+                _view?.ScrollToItemOnInitialization(SelectedItem);
+            }
+            else
+            {
+                // If _canvasItemToScrollTo was set -- it will scroll to it, otherwise it'll do nothing
+                _view?.ScrollToItemOnInitialization(null);
             }
         }
 
@@ -386,7 +391,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             _view?.PrepareConnectedAnimation(indexOfSelectedItem);
 
             // Navigate to canvas and suppress transition since we use ConnectedAnimation
-            NavigationService.OpenCanvasPage(_associatedCollectionModel, SelectedItem.CollectionItemViewModel, NavigationTransitionType.Suppress);
+            NavigationService.OpenCanvasPage(_associatedCollectionModel, SelectedItem.CollectionItemViewModel, null, NavigationTransitionType.Suppress);
         }
 
         private void ShowSearch()
@@ -455,7 +460,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
             if (_collectionInitializationFinishedEventHooked)
             {
-                CollectionsControlViewModel.OnCollectionItemsInitializationFinishedEvent -= CollectionsControlViewModel_OnCollectionItemsInitializationFinishedEvent;
+                CollectionsWidgetViewModel.OnCollectionItemsInitializationFinishedEvent -= CollectionsControlViewModel_OnCollectionItemsInitializationFinishedEvent;
             }
         }
 

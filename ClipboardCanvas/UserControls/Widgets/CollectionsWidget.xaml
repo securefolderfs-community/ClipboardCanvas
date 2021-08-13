@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="ClipboardCanvas.UserControls.CollectionsControl"
+    x:Class="ClipboardCanvas.UserControls.Widgets.CollectionsWidget"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ap="using:ClipboardCanvas.AttachedProperties"
@@ -49,7 +49,7 @@
             AllowDrop="True"
             CanReorderItems="True"
             IsItemClickEnabled="True"
-            ItemsSource="{x:Bind vm:CollectionsControlViewModel.Collections}"
+            ItemsSource="{x:Bind vm:CollectionsWidgetViewModel.Collections}"
             ReorderMode="Enabled"
             SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
             SelectionMode="Single">
@@ -120,21 +120,19 @@
 
                             <!--  Glyph icon  -->
                             <FontIcon
-                                x:Name="GlyphIcon"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                x:Load="{x:Bind UsesCustomIcon, Mode=OneWay, Converter={StaticResource BooleanInvertConverter}}"
                                 FontSize="48"
-                                Glyph="&#xF12B;" />
+                                Glyph="&#xF12B;"
+                                Visibility="{x:Bind UsesCustomIcon, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter='invert'}" />
 
                             <!--  Image icon  -->
                             <Grid
-                                x:Name="CustomIconImage"
-                                Margin="16,4,16,4"
-                                VerticalAlignment="Center"
+                                Margin="12"
                                 HorizontalAlignment="Center"
-                                x:Load="{x:Bind UsesCustomIcon, Mode=OneWay}"
-                                CornerRadius="{StaticResource ControlCornerRadius}">
+                                VerticalAlignment="Center"
+                                CornerRadius="{StaticResource ControlCornerRadius}"
+                                Visibility="{x:Bind UsesCustomIcon, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <Image Source="{x:Bind CustomIcon, Mode=OneWay}" Stretch="Uniform" />
                             </Grid>
 

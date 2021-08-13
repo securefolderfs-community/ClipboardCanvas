@@ -9,6 +9,9 @@ using System.Windows.Input;
 using System.Collections.ObjectModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Windows.System;
+using ClipboardCanvas.DataModels;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.Storage.Streams;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
@@ -23,9 +26,6 @@ using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.Exceptions;
 using ClipboardCanvas.Contexts;
 using ClipboardCanvas.Services;
-using ClipboardCanvas.DataModels;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.Storage.Streams;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
 
@@ -267,11 +267,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 }
 
                 // Serialize again because icon was updated
-                CollectionsHelpers.UpdateSavedCollectionsSetting();
+                SettingsSerializationHelpers.UpdateSavedCollectionsSetting();
             }
         }
 
-        private async Task RemoveCollectionIcon()
+        public async Task RemoveCollectionIcon()
         {
             if (UsesCustomIcon && iconFile != null)
             {
@@ -291,7 +291,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 UsesCustomIcon = false;
 
                 // Serialize again because icon was updated
-                CollectionsHelpers.UpdateSavedCollectionsSetting();
+                SettingsSerializationHelpers.UpdateSavedCollectionsSetting();
             }
         }
 
@@ -476,7 +476,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public abstract bool CheckCollectionAvailability();
 
-        public virtual CollectionConfigurationModel ConstructCollectionConfigurationModel()
+        public virtual CollectionConfigurationModel ConstructConfigurationModel()
         {
             return new CollectionConfigurationModel(CollectionPath, UsesCustomIcon, iconFile?.Name);
         }
@@ -654,11 +654,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 return SafeWrapperResult.SUCCESS;
             }
 
-            SafeWrapper<StorageFile> iconFile = await StorageHelpers.GetCollectionIconsFolder()
-                .OnSuccessAsync<StorageFolder, StorageFile>(async (folder) =>
-                {
-                    return await StorageHelpers.ToStorageItemWithError<StorageFile>(Path.Combine(folder.Result.Path, collectionConfiguration.iconFileName));
-                });
+            SafeWrapper<StorageFolder> iconsFolder = await StorageHelpers.GetCollectionIconsFolder();
+            if (!iconsFolder)
+            {
+                return iconsFolder;
+            }
+
+            SafeWrapper<StorageFile> iconFile = await StorageHelpers.ToStorageItemWithError<StorageFile>(Path.Combine(iconsFolder.Result.Path, collectionConfiguration.iconFileName));
 
             if (!iconFile)
             {
@@ -672,6 +674,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         {
             UsesCustomIcon = true;
             this.iconFile = iconFile;
+            await Task.Delay(Constants.UI.CONTROL_LOAD_DELAY);
 
             return await SafeWrapperRoutines.SafeWrapAsync(async () =>
             {

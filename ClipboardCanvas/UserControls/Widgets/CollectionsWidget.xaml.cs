@@ -3,21 +3,21 @@ using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace ClipboardCanvas.UserControls
+namespace ClipboardCanvas.UserControls.Widgets
 {
-    public sealed partial class CollectionsControl : UserControl
+    public sealed partial class CollectionsWidget : UserControl
     {
-        public CollectionsControlViewModel ViewModel
+        public CollectionsWidgetViewModel ViewModel
         {
-            get => (CollectionsControlViewModel)DataContext;
+            get => (CollectionsWidgetViewModel)DataContext;
             set => DataContext = value;
         }
 
-        public CollectionsControl()
+        public CollectionsWidget()
         {
             this.InitializeComponent();
 
-            this.ViewModel = new CollectionsControlViewModel();
+            this.ViewModel = new CollectionsWidgetViewModel();
         }
     }
 }

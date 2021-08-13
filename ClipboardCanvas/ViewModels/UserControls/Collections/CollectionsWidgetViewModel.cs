@@ -11,6 +11,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.EventArguments.Collections;
@@ -19,12 +20,11 @@ using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Interfaces.Collections;
 using ClipboardCanvas.Services;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using ClipboardCanvas.Models;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {
-    public class CollectionsControlViewModel : ObservableObject, IDisposable
+    public class CollectionsWidgetViewModel : ObservableObject, IDisposable
     {
         #region Private Members
 
@@ -59,7 +59,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                         }
                         _CurrentCollection.IsSelected = true;
 
-                        CollectionsHelpers.UpdateLastSelectedCollectionSetting(_CurrentCollection);
+                        SettingsSerializationHelpers.UpdateLastSelectedCollectionSetting(_CurrentCollection);
 
                         OnCollectionSelectionChangedEvent?.Invoke(null, new CollectionSelectionChangedEventArgs(value));
                     }
@@ -115,7 +115,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         #region Constructor
 
-        public CollectionsControlViewModel()
+        public CollectionsWidgetViewModel()
         {
             HookEvents();
 
@@ -194,7 +194,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 }
 
                 // We need to update saved collections because we suppressed that in AddCollection()
-                CollectionsHelpers.UpdateSavedCollectionsSetting();
+                SettingsSerializationHelpers.UpdateSavedCollectionsSetting();
             }
             finally
             {
@@ -211,20 +211,20 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         #endregion
 
         #region Event Handlers
-        
+
         private static void Collections_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (!s_itemAddedInternally && s_internalCollectionsCount < Collections.Count)
             {
-                CollectionsHelpers.UpdateSavedCollectionsSetting();
+                SettingsSerializationHelpers.UpdateSavedCollectionsSetting();
             }
 
             s_internalCollectionsCount = Collections.Count;
         }
 
-        private static void CollectionRemovable_OnRemoveCollectionRequestedEvent(object sender, RemoveCollectionRequestedEventArgs e)
+        private static async void CollectionRemovable_OnRemoveCollectionRequestedEvent(object sender, RemoveCollectionRequestedEventArgs e)
         {
-            RemoveCollection(e.baseCollectionViewModel);
+            await RemoveCollection(e.baseCollectionViewModel);
         }
 
         private static void CollectionNameEditable_OnCheckRenameCollectionRequestedEvent(object sender, CheckRenameCollectionRequestedEventArgs e)
@@ -287,7 +287,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         {
             ICollectionsSettingsService collectionsSettings = Ioc.Default.GetService<ICollectionsSettingsService>();
 
-            IEnumerable<CollectionConfigurationModel> collectionConfigurations = collectionsSettings.SavedCollections;
+            List<CollectionConfigurationModel> collectionConfigurations = collectionsSettings.SavedCollections;
 
             // Add default collection
             StorageFolder defaultCollectionFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Default Collection", CreationCollisionOption.OpenIfExists);
@@ -306,7 +306,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
             bool defaultCollectionAdded = false;
 
-            List<Task> collectionAddTasks = new List<Task>();
             foreach (var item in collectionConfigurations)
             {
                 BaseCollectionViewModel baseCollection;
@@ -321,10 +320,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                     baseCollection = new StandardCollectionViewModel(item.collectionPath);
                 }
 
-                collectionAddTasks.Add(AddCollection(baseCollection, item, true));
+                await AddCollection(baseCollection, item, true);
             }
-
-            await Task.WhenAll(collectionAddTasks);
 
             if (!defaultCollectionAdded)
             {
@@ -333,7 +330,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             }
 
             // We need to update saved collections because we suppressed that in AddCollection()
-            CollectionsHelpers.UpdateSavedCollectionsSetting();
+            SettingsSerializationHelpers.UpdateSavedCollectionsSetting();
 
             FallbackSetSelectedCollection();
 
@@ -375,6 +372,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             }
         }
 
+        public static BaseCollectionViewModel FindCollection(CollectionConfigurationModel collectionConfigurationModel)
+        {
+            return Collections.FirstOrDefault((item) => item.ConstructConfigurationModel().collectionPath == collectionConfigurationModel.collectionPath);
+        }
+
         public static async Task<bool> AddCollection(BaseCollectionViewModel baseCollectionViewModel, CollectionConfigurationModel configurationModel, bool suppressSettingsUpdate = false)
         {
             // If collections already contain a collection with the same path
@@ -414,13 +416,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
             if (!suppressSettingsUpdate)
             {
-                CollectionsHelpers.UpdateSavedCollectionsSetting();
+                SettingsSerializationHelpers.UpdateSavedCollectionsSetting();
             }
 
             return true;
         }
 
-        public static void RemoveCollection(BaseCollectionViewModel baseCollectionViewModel)
+        public static async Task RemoveCollection(BaseCollectionViewModel baseCollectionViewModel)
         {
             if (baseCollectionViewModel is DefaultCollectionViewModel)
             {
@@ -446,12 +448,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 collectionRemovable.OnRemoveCollectionRequestedEvent -= CollectionRemovable_OnRemoveCollectionRequestedEvent;
             }
 
-            baseCollectionViewModel.Dispose();
             Collections.Remove(baseCollectionViewModel);
 
-            CollectionsHelpers.UpdateSavedCollectionsSetting();
+            // Also remove the icon if there was any
+            await baseCollectionViewModel.RemoveCollectionIcon();
+
+            baseCollectionViewModel.Dispose();
+
+            SettingsSerializationHelpers.UpdateSavedCollectionsSetting();
             FallbackSetSelectedCollection();
-            CollectionsHelpers.UpdateLastSelectedCollectionSetting(CurrentCollection);
+            SettingsSerializationHelpers.UpdateLastSelectedCollectionSetting(CurrentCollection);
 
             OnCollectionRemovedEvent?.Invoke(null, new CollectionRemovedEventArgs(baseCollectionViewModel));
         }

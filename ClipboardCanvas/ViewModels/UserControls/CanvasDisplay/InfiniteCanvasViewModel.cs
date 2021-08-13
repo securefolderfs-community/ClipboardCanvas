@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Microsoft.Toolkit.Mvvm.Input;
 using System.Linq;
 using System.Collections.Generic;
+using Windows.Storage.Streams;
 
 using ClipboardCanvas.CanavsPasteModels;
 using ClipboardCanvas.DataModels;
@@ -22,7 +23,7 @@ using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.EventArguments.InfiniteCanvasEventArgs;
-using Windows.Storage.Streams;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -107,7 +108,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             _currentCanvasItem = await InteractableCanvasControlModel.AddItem(associatedCollection, contentType, pastedFile, cancellationToken);
 
             // Wait for control to load
-            await Task.Delay(10);
+            await Task.Delay(Constants.UI.CONTROL_LOAD_DELAY);
 
             // Save data after pasting
             SafeWrapperResult saveDataResult = await TrySaveData();

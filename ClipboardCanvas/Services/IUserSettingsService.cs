@@ -8,11 +8,9 @@ namespace ClipboardCanvas.Services
         event EventHandler<SettingChangedEventArgs> OnSettingChangedEvent;
 
         /// <summary>
-        /// Determines whether detailed logging is enabled or disabled
-        /// <br/><br/>
-        /// Detailed logging helps further investigate an issue by logging exceptions caught by <see cref="ClipboardCanvas.Helpers.SafetyHelpers.SafeWrapperRoutines"/>
+        /// Determines whether to show Timeline widget on homepage
         /// </summary>
-        bool EnableDetailedLogging { get; set; }
+        bool ShowTimelineOnHomepage { get; set; }
         
         /// <summary>
         /// Determines whether to open new canvas on paste

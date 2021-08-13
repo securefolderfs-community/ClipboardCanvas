@@ -8,7 +8,7 @@ using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.ContextMenu;
-using ClipboardCanvas.ViewModels.UserControls;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.Models
 {

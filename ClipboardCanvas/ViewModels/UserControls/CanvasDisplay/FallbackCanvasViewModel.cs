@@ -9,10 +9,10 @@ using Windows.Storage;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
-using ClipboardCanvas.Enums;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.CanavsPasteModels;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {

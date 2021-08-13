@@ -1,9 +1,7 @@
-﻿using ClipboardCanvas.DataModels;
-using ClipboardCanvas.Models;
-using ClipboardCanvas.ModelViews;
-using ClipboardCanvas.ViewModels.Pages;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+
+using ClipboardCanvas.ViewModels.Pages;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -23,6 +21,7 @@ namespace ClipboardCanvas.Pages
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             CollectionsWidget.ViewModel.Dispose();
+            this.ViewModel.Dispose();
 
             base.OnNavigatingFrom(e);
         }
@@ -32,6 +31,11 @@ namespace ClipboardCanvas.Pages
             this.InitializeComponent();
 
             this.ViewModel = new HomePageViewModel();
+        }
+
+        private async void TimelineWidget_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            await this.ViewModel.LoadWidgets();
         }
     }
 }

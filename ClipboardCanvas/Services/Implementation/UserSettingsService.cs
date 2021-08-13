@@ -18,9 +18,9 @@ namespace ClipboardCanvas.Services
 
         #region IUserSettings
 
-        public bool EnableDetailedLogging
+        public bool ShowTimelineOnHomepage
         {
-            get => Get<bool>(false);
+            get => Get<bool>(true);
             set => Set<bool>(value);
         }
 

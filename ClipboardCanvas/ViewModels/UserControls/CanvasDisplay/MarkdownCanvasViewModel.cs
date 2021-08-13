@@ -1,24 +1,17 @@
-﻿using System.IO;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Media.Core;
 using Windows.Storage;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
-using ClipboardCanvas.Models;
-using ClipboardCanvas.Enums;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Helpers.Filesystem;
-using ClipboardCanvas.ReferenceItems;
-using ClipboardCanvas.Helpers;
-using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.CanavsPasteModels;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {

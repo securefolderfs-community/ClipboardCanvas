@@ -69,11 +69,14 @@ namespace ClipboardCanvas
 
             services
                 .AddSingleton<INavigationService, NavigationService>()
+                .AddSingleton<ITimelineService, TimelineService>()
                 .AddSingleton<IDialogService, DefaultDialogService>()
                 .AddSingleton<ILogger, ExceptionToFileLogger>()
 
+                // Settings services
                 .AddSingleton<IUserSettingsService, UserSettingsService>()
                 .AddSingleton<ICollectionsSettingsService, CollectionsSettingsService>()
+                .AddSingleton<ITimelineSettingsService, TimelineSettingsService>()
                 .AddSingleton<ICanvasSettingsService, CanvasSettingsService>()
                 .AddSingleton<IApplicationSettingsService, ApplicationSettingsService>();
 

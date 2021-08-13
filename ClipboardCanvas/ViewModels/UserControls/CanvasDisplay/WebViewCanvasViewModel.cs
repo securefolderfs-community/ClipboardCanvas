@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -13,6 +12,7 @@ using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.UnsafeNative;
 using ClipboardCanvas.CanavsPasteModels;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {

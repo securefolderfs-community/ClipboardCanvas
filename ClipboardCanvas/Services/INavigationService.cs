@@ -1,9 +1,10 @@
 ﻿using System;
 
+using ClipboardCanvas.DataModels.Navigation;
 using ClipboardCanvas.DisplayFrameEventArgs;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Models;
-using ClipboardCanvas.ViewModels.UserControls;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.Services
 {
@@ -19,10 +20,10 @@ namespace ClipboardCanvas.Services
 
         bool OpenNewCanvas(ICollectionModel collection, NavigationTransitionType transitionType = NavigationTransitionType.DrillInTransition, CanvasType? canvasType = null);
 
-        bool OpenCanvasPage(ICollectionModel collection, CollectionItemViewModel collectionItem = null, NavigationTransitionType transitionType = NavigationTransitionType.DrillInTransition);
+        bool OpenCanvasPage(ICollectionModel collection, CollectionItemViewModel collectionItem = null, CanvasPageNavigationParameterModel navigationParameter = null, NavigationTransitionType transitionType = NavigationTransitionType.DrillInTransition);
 
-        bool OpenHomepage(NavigationTransitionType transitionType = NavigationTransitionType.DrillInTransition);
+        bool OpenHomepage(HomepageNavigationParameterModel navigationParameter = null, NavigationTransitionType transitionType = NavigationTransitionType.DrillInTransition);
 
-        bool OpenCollectionPreviewPage(ICollectionModel collection, NavigationTransitionType transitionType = NavigationTransitionType.EntranceTransition, CanvasType? canvasType = null);
+        bool OpenCollectionPreviewPage(ICollectionModel collection, CollectionPreviewPageNavigationParameterModel navigationParameter = null, NavigationTransitionType transitionType = NavigationTransitionType.EntranceTransition, CanvasType? canvasType = null);
     }
 }

@@ -134,8 +134,7 @@
                                 x:Name="SimpleCanvasPreviewControl"
                                 Grid.RowSpan="2"
                                 HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                CornerRadius="8">
+                                VerticalAlignment="Stretch">
 
                                 <Viewbox
                                     HorizontalAlignment="Stretch"
