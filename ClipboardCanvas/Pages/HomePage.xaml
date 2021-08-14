@@ -10,17 +10,24 @@
     NavigationCacheMode="Disabled"
     mc:Ignorable="d">
 
-    <Grid Padding="15,10,15,10" RowSpacing="16">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
+    <ScrollViewer>
+        <Grid Padding="15,10,15,10" RowSpacing="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="2*" />
+            </Grid.RowDefinitions>
 
-        <w:CollectionsWidget x:Name="CollectionsWidget" Grid.Row="0" />
-        <w:TimelineWidget
-            x:Name="TimelineWidget"
-            Grid.Row="1"
-            x:Load="{x:Bind ViewModel.IsTimelineWidgetEnabled, Mode=OneWay}"
-            Loaded="TimelineWidget_Loaded" />
-    </Grid>
+            <w:CollectionsWidget
+                x:Name="CollectionsWidget"
+                Grid.Row="0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch" />
+
+            <w:TimelineWidget
+                x:Name="TimelineWidget"
+                Grid.Row="1"
+                x:Load="{x:Bind ViewModel.IsTimelineWidgetEnabled, Mode=OneWay}"
+                Loaded="TimelineWidget_Loaded" />
+        </Grid>
+    </ScrollViewer>
 </Page>

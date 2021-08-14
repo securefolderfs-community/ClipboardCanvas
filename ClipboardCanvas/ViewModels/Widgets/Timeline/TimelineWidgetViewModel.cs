@@ -29,6 +29,8 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
         #region Properties
 
         public static ObservableCollection<TimelineSectionViewModel> Sections { get; private set; } = new ObservableCollection<TimelineSectionViewModel>();
+        
+        public static bool IsInitialized { get; private set; }
 
         #endregion
 
@@ -94,14 +96,12 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
 
         public static async Task ReloadAllSections()
         {
-            IUserSettingsService userSettingsService = Ioc.Default.GetService<IUserSettingsService>();
-
-            // Don't load if we don't use it
-            if (!userSettingsService.ShowTimelineOnHomepage)
+            if (!await CheckIfTimelineEnabled(false))
             {
                 return;
             }
 
+            IsInitialized = true;
             ITimelineSettingsService timelineSettingsService = Ioc.Default.GetService<ITimelineSettingsService>();
             TimelineConfigurationModel configurationModel = timelineSettingsService.UserTimeline;
 
@@ -152,6 +152,23 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
                     Sections.RemoveAt(i);
                 }
             }
+        }
+
+        public static async Task<bool> CheckIfTimelineEnabled(bool initializeIfNecessary = true)
+        {
+            IUserSettingsService userSettingsService = Ioc.Default.GetService<IUserSettingsService>();
+
+            // Don't load if we don't use it
+            if (!userSettingsService.ShowTimelineOnHomepage)
+            {
+                return false;
+            }
+            else if (!IsInitialized && initializeIfNecessary)
+            {
+                await ReloadAllSections();
+            }
+
+            return true;
         }
 
         #endregion

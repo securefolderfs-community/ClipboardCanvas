@@ -10,11 +10,11 @@ namespace ClipboardCanvas.Services
 {
     public interface ITimelineService
     {
-        TimelineSectionItemViewModel AddItemForSection(TimelineSectionViewModel timelineSection, ICollectionModel collectionModel, CollectionItemViewModel collectionItemViewModel);
+        Task<TimelineSectionItemViewModel> AddItemForSection(TimelineSectionViewModel timelineSection, ICollectionModel collectionModel, CollectionItemViewModel collectionItemViewModel);
 
         bool RemoveItemFromSection(TimelineSectionViewModel timelineSection, TimelineSectionItemViewModel timelineSectionItem);
 
-        TimelineSectionViewModel GetOrCreateTodaySection();
+        Task<TimelineSectionViewModel> GetOrCreateTodaySection();
 
         Task LoadSectionAsync(TimelineSectionViewModel timelineSection);
 

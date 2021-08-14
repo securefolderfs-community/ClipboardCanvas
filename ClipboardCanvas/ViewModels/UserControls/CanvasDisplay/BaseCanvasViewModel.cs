@@ -124,7 +124,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return SafeWrapperResult.CANCEL;
             }
 
-            OnPasteSucceeded();
+            await OnPasteSucceeded();
 
             if (UserSettings.OpenNewCanvasOnPaste)
             {
@@ -307,11 +307,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Protected Helpers
 
-        protected virtual void OnPasteSucceeded()
+        protected virtual async Task OnPasteSucceeded()
         {
             // Add new item on Timeline
-            var todaySection = TimelineService.GetOrCreateTodaySection();
-            TimelineService.AddItemForSection(todaySection, associatedCollection, associatedItemViewModel);
+            var todaySection = await TimelineService.GetOrCreateTodaySection();
+            await TimelineService.AddItemForSection(todaySection, associatedCollection, associatedItemViewModel);
         }
 
         protected virtual Task OnReferencePasted()

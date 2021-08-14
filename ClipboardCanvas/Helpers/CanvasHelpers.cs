@@ -39,7 +39,7 @@ namespace ClipboardCanvas.Helpers
 
                     // Also remove it from Timeline
                     ITimelineService timelineService = Ioc.Default.GetService<ITimelineService>();
-                    var todaySection = timelineService.GetOrCreateTodaySection();
+                    var todaySection = await timelineService.GetOrCreateTodaySection();
                     var timelineSectionItem = timelineService.FindTimelineSectionItem(todaySection, collectionItem);
                     if (timelineSectionItem != null)
                     {

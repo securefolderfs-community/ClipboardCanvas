@@ -46,11 +46,17 @@
         <GridView
             x:Name="CollectionsGrid"
             Grid.Row="1"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
             AllowDrop="True"
             CanReorderItems="True"
             IsItemClickEnabled="True"
             ItemsSource="{x:Bind vm:CollectionsWidgetViewModel.Collections}"
             ReorderMode="Enabled"
+            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+            ScrollViewer.HorizontalScrollMode="Auto"
+            ScrollViewer.VerticalScrollBarVisibility="Disabled"
+            ScrollViewer.VerticalScrollMode="Disabled"
             SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
             SelectionMode="Single">
             <i:Interaction.Behaviors>
@@ -76,6 +82,11 @@
                     </Setter>
                 </Style>
             </GridView.ItemContainerStyle>
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VariableSizedWrapGrid MaxHeight="300" Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="vm:BaseCollectionViewModel">
                     <Grid

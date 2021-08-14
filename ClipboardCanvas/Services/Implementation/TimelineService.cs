@@ -13,10 +13,9 @@ namespace ClipboardCanvas.Services.Implementation
     {
         private IUserSettingsService UserSettingsService { get; } = Ioc.Default.GetService<IUserSettingsService>();
 
-        public TimelineSectionItemViewModel AddItemForSection(TimelineSectionViewModel timelineSection, ICollectionModel collectionModel, CollectionItemViewModel collectionItemViewModel)
+        public async Task<TimelineSectionItemViewModel> AddItemForSection(TimelineSectionViewModel timelineSection, ICollectionModel collectionModel, CollectionItemViewModel collectionItemViewModel)
         {
-            // Don't load if we don't use it
-            if (!UserSettingsService.ShowTimelineOnHomepage)
+            if (!await TimelineWidgetViewModel.CheckIfTimelineEnabled())
             {
                 return null;
             }
@@ -29,10 +28,9 @@ namespace ClipboardCanvas.Services.Implementation
             return timelineSection?.RemoveItem(timelineSectionItem) ?? false;
         }
 
-        public TimelineSectionViewModel GetOrCreateTodaySection()
+        public async Task<TimelineSectionViewModel> GetOrCreateTodaySection()
         {
-            // Don't load if we don't use it
-            if (!UserSettingsService.ShowTimelineOnHomepage)
+            if (!await TimelineWidgetViewModel.CheckIfTimelineEnabled())
             {
                 return null;
             }
@@ -42,8 +40,7 @@ namespace ClipboardCanvas.Services.Implementation
 
         public async Task LoadSectionAsync(TimelineSectionViewModel timelineSection)
         {
-            // Don't load if we don't use it
-            if (!UserSettingsService.ShowTimelineOnHomepage)
+            if (!await TimelineWidgetViewModel.CheckIfTimelineEnabled())
             {
                 return;
             }
@@ -56,8 +53,7 @@ namespace ClipboardCanvas.Services.Implementation
 
         public async Task LoadAllSectionsAsync()
         {
-            // Don't load if we don't use it
-            if (!UserSettingsService.ShowTimelineOnHomepage)
+            if (!await TimelineWidgetViewModel.CheckIfTimelineEnabled())
             {
                 return;
             }
