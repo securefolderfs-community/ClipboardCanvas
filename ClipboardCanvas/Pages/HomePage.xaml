@@ -17,6 +17,10 @@
         </Grid.RowDefinitions>
 
         <w:CollectionsWidget x:Name="CollectionsWidget" Grid.Row="0" />
-        <w:TimelineWidget Loaded="TimelineWidget_Loaded" x:Name="TimelineWidget" Grid.Row="1" />
+        <w:TimelineWidget
+            x:Name="TimelineWidget"
+            Grid.Row="1"
+            x:Load="{x:Bind ViewModel.IsTimelineWidgetEnabled, Mode=OneWay}"
+            Loaded="TimelineWidget_Loaded" />
     </Grid>
 </Page>

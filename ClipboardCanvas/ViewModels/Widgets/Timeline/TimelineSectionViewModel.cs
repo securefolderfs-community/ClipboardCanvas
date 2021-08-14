@@ -146,7 +146,7 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
 
         public TimelineSectionItemViewModel FindTimelineSectionItem(CanvasItem canvasItem)
         {
-            return Items.FirstOrDefault((item) => item.CanvasItem.AssociatedItem.Path == canvasItem.AssociatedItem.Path);
+            return Items.FirstOrDefault((item) => item.CanvasItem.AssociatedItem.Path == canvasItem?.AssociatedItem.Path);
         }
 
         public TimelineSectionConfigurationModel ConstructConfigurationModel()

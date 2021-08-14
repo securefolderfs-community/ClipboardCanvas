@@ -94,6 +94,14 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
 
         public static async Task ReloadAllSections()
         {
+            IUserSettingsService userSettingsService = Ioc.Default.GetService<IUserSettingsService>();
+
+            // Don't load if we don't use it
+            if (!userSettingsService.ShowTimelineOnHomepage)
+            {
+                return;
+            }
+
             ITimelineSettingsService timelineSettingsService = Ioc.Default.GetService<ITimelineSettingsService>();
             TimelineConfigurationModel configurationModel = timelineSettingsService.UserTimeline;
 

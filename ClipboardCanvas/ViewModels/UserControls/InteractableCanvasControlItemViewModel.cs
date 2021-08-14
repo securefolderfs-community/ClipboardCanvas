@@ -148,6 +148,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             dataPackage.SetStorageItems(new List<IStorageItem>() { await CanvasItem.SourceItem });
 
             Clipboard.SetContent(dataPackage);
+            Clipboard.Flush();
         }
 
         private async Task OpenContainingFolder()

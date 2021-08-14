@@ -239,6 +239,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             dataPackage.SetStorageItems(new List<IStorageItem>() { await sourceItem });
 
             Clipboard.SetContent(dataPackage);
+            Clipboard.Flush();
 
             return true;
         }
