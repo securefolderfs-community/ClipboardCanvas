@@ -18,7 +18,7 @@
                 ContextMenuOpening="ContentText_ContextMenuOpening"
                 IsTextSelectionEnabled="True">
                 <Paragraph>
-                    <Run Text="{x:Bind ViewModel.ContentText, Mode=OneWay}" />
+                    <Run Text="{x:Bind ViewModel.Text, Mode=OneWay}" />
                 </Paragraph>
             </RichTextBlock>
         </ScrollViewer>

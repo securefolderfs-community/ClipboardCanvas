@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Diagnostics;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
@@ -11,7 +8,7 @@ using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.CanavsPasteModels;
-using ClipboardCanvas.ViewModels.UserControls.Collections;
+using ClipboardCanvas.Contexts.Operations;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -19,25 +16,24 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
     {
         #region Public Properties
 
-        protected override IPasteModel CanvasPasteModel => null;
+        private MarkdownPasteModel MarkdownPasteModel => canvasPasteModel as MarkdownPasteModel;
 
         public static List<string> Extensions => new List<string>() {
             ".md", ".markdown",
         };
 
-        private string _TextMarkdown;
-        public string TextMarkdown
+        private string _MarkdownText;
+        public string MarkdownText
         {
-            get => _TextMarkdown;
-            set => SetProperty(ref _TextMarkdown, value);
+            get => MarkdownPasteModel?.MarkdownText ?? _MarkdownText;
         }
 
         #endregion
 
         #region Constructor
 
-        public MarkdownCanvasViewModel(IBaseCanvasPreviewControlView view)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new MarkdownContentType(), view)
+        public MarkdownCanvasViewModel(IBaseCanvasPreviewControlView view, BaseContentTypeModel contentType)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, contentType, view)
         {
         }
 
@@ -45,14 +41,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Override
 
-        public override async Task<SafeWrapperResult> TrySaveData()
-        {
-            SafeWrapperResult result = await FilesystemOperations.WriteFileText(await sourceFile, TextMarkdown);
-
-            return result;
-        }
-
-        protected override async Task<SafeWrapperResult> SetDataFromExistingFile(IStorageItem item)
+        protected override async Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item)
         {
             if (item is not StorageFile file)
             {
@@ -61,50 +50,21 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             SafeWrapper<string> text = await FilesystemOperations.ReadFileText(file);
 
-            this._TextMarkdown = text;
+            this._MarkdownText = text;
 
             return text;
         }
 
-        protected override async Task<SafeWrapperResult> SetData(DataPackageView dataPackage)
-        {
-            SafeWrapper<string> text = await SafeWrapperRoutines.SafeWrapAsync(
-                           () => dataPackage.GetTextAsync().AsTask());
-
-            if (!text)
-            {
-                Debugger.Break();
-                return (SafeWrapperResult)text;
-            }
-
-            _TextMarkdown = text;
-
-            return (SafeWrapperResult)text;
-        }
-
         protected override async Task<SafeWrapperResult> TryFetchDataToView()
         {
-            OnPropertyChanged(nameof(TextMarkdown));
+            OnPropertyChanged(nameof(MarkdownText));
 
             return await Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
-        protected override async Task<SafeWrapper<CollectionItemViewModel>> TrySetFileWithExtension()
+        protected override IPasteModel SetCanvasPasteModel()
         {
-            SafeWrapper<CollectionItemViewModel> itemViewModel = await associatedCollection.CreateNewCollectionItemFromExtension(".md");
-
-            return itemViewModel;
-        }
-
-        #endregion
-
-        #region IDisposable
-
-        public override void Dispose()
-        {
-            base.Dispose();
-
-            TextMarkdown = null;
+            return new MarkdownPasteModel(associatedCollection, new StatusCenterOperationReceiver());
         }
 
         #endregion

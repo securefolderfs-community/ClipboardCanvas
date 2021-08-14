@@ -3,24 +3,20 @@
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.Models.Configuration;
-using ClipboardCanvas.ViewModels.UserControls.Collections;
 using ClipboardCanvas.ViewModels.Widgets.Timeline;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace ClipboardCanvas.Services.Implementation
 {
     public class TimelineService : ITimelineService
     {
-        private IUserSettingsService UserSettingsService { get; } = Ioc.Default.GetService<IUserSettingsService>();
-
-        public async Task<TimelineSectionItemViewModel> AddItemForSection(TimelineSectionViewModel timelineSection, ICollectionModel collectionModel, CollectionItemViewModel collectionItemViewModel)
+        public async Task<TimelineSectionItemViewModel> AddItemForSection(TimelineSectionViewModel timelineSection, ICollectionModel collectionModel, CanvasItem canvasItem)
         {
             if (!await TimelineWidgetViewModel.CheckIfTimelineEnabled())
             {
                 return null;
             }
 
-            return timelineSection.AddItem(collectionModel, collectionItemViewModel);
+            return timelineSection.AddItem(collectionModel, canvasItem);
         }
 
         public bool RemoveItemFromSection(TimelineSectionViewModel timelineSection, TimelineSectionItemViewModel timelineSectionItem)

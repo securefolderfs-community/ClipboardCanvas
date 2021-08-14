@@ -4,19 +4,19 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using ClipboardCanvas.CanvasFileReceivers;
 
-using ClipboardCanvas.Contexts;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.Filesystem;
+using ClipboardCanvas.Contexts.Operations;
 
 namespace ClipboardCanvas.CanavsPasteModels
 {
     public class MarkdownPasteModel : BasePasteModel
     {
-        private string _text;
+        public string MarkdownText { get; private set; }
 
-        public MarkdownPasteModel(ICanvasFileReceiverModel canvasFileReceiver, IOperationContext operationContext)
-            : base(canvasFileReceiver, operationContext)
+        public MarkdownPasteModel(ICanvasFileReceiverModel canvasFileReceiver, IOperationContextReceiver operationContextReceiver)
+            : base(canvasFileReceiver, operationContextReceiver)
         {
         }
 
@@ -27,7 +27,7 @@ namespace ClipboardCanvas.CanavsPasteModels
 
         protected async override Task<SafeWrapperResult> SaveDataToFile()
         {
-            return await FilesystemOperations.WriteFileText(await sourceFile, _text);
+            return await FilesystemOperations.WriteFileText(await sourceFile, MarkdownText);
         }
 
         protected override async Task<SafeWrapperResult> SetDataFromDataPackage(DataPackageView dataPackage)
@@ -35,12 +35,12 @@ namespace ClipboardCanvas.CanavsPasteModels
             SafeWrapper<string> text = await SafeWrapperRoutines.SafeWrapAsync(
                           () => dataPackage.GetTextAsync().AsTask());
 
-            _text = text;
+            MarkdownText = text;
 
             return text;
         }
 
-        protected override async Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item)
+        public override async Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item)
         {
             if (item is not StorageFile file)
             {
@@ -49,7 +49,7 @@ namespace ClipboardCanvas.CanavsPasteModels
 
             SafeWrapper<string> text = await FilesystemOperations.ReadFileText(file);
 
-            this._text = text;
+            this.MarkdownText = text;
 
             return text;
         }

@@ -63,6 +63,12 @@ namespace ClipboardCanvas.Pages
 
         public void PrepareConnectedAnimation(int itemIndex)
         {
+            // Prevent crash when canvas preview is null
+            if (!ViewModel.Items[itemIndex].ReadOnlyCanvasPreviewModel.IsContentLoaded)
+            {
+                return;
+            }
+
             UIElement sourceAnimationControl = ((ItemsGrid.ContainerFromIndex(itemIndex) as ContentControl).ContentTemplateRoot as FrameworkElement).FindName("SimpleCanvasPreviewControl") as UIElement;
 
             ConnectedAnimation connectedAnimation = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(

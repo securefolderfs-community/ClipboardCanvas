@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Storage.FileProperties;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
-using System.IO;
 using Windows.Storage;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
@@ -12,63 +10,60 @@ using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.CanavsPasteModels;
-using ClipboardCanvas.ViewModels.UserControls.Collections;
+using ClipboardCanvas.Contexts.Operations;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
     public class FallbackCanvasViewModel : BaseCanvasViewModel
     {
-        #region Private Members
+        #region Members
 
-        private StorageItemThumbnail _thumbnail;
+        private StorageItemThumbnail _itemThumbnail;
+
+        private bool _isFolder;
 
         #endregion
 
-        #region Public Properties
+        #region Properties
 
-        protected override IPasteModel CanvasPasteModel => null;
+        private FallbackPasteModel FallbackPasteModel => canvasPasteModel as FallbackPasteModel;
 
         private string _FileName;
         public string FileName
         {
-            get => _FileName;
-            set => SetProperty(ref _FileName, value);
+            get => FallbackPasteModel?.FileName ?? _FileName;
         }
 
         private string _FilePath;
         public string FilePath
         {
-            get => _FilePath;
-            set => SetProperty(ref _FilePath, value);
+            get => FallbackPasteModel?.FilePath ?? _FilePath;
         }
 
         private DateTime _DateCreated;
         public DateTime DateCreated
         {
-            get => _DateCreated;
-            set => SetProperty(ref _DateCreated, value);
+            get => FallbackPasteModel?.DateCreated ?? _DateCreated;
         }
 
         private DateTime _DateModified;
         public DateTime DateModified
         {
-            get => _DateModified;
-            set => SetProperty(ref _DateModified, value);
+            get => FallbackPasteModel?.DateModified ?? _DateModified;
         }
 
         private BitmapImage _FileIcon;
         public BitmapImage FileIcon
         {
-            get => _FileIcon; 
-            set => SetProperty(ref _FileIcon, value);
+            get => FallbackPasteModel?.FileIcon ?? _FileIcon;
         }
 
         #endregion
 
         #region Constructor
 
-        public FallbackCanvasViewModel(IBaseCanvasPreviewControlView view)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new FallbackContentType(), view)
+        public FallbackCanvasViewModel(IBaseCanvasPreviewControlView view, BaseContentTypeModel contentType)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, contentType, view)
         {
         }
 
@@ -76,24 +71,20 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Override
 
-        public override async Task<SafeWrapperResult> TrySaveData()
-        {
-            return await Task.FromResult(SafeWrapperResult.SUCCESS);
-        }
-
-        protected override async Task<SafeWrapperResult> SetDataFromExistingFile(IStorageItem item)
+        protected override async Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item)
         {
             // Read file properties
             if (item is StorageFile file)
             {
-                _thumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem);
+                _itemThumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem);
             }
             else if (item is StorageFolder folder)
             {
-                _thumbnail = await folder.GetThumbnailAsync(ThumbnailMode.SingleItem);
+                _isFolder = true;
+                _itemThumbnail = await folder.GetThumbnailAsync(ThumbnailMode.SingleItem);
             }
 
-            this._FileName = Path.GetFileName(item.Path);
+            this._FileName = item.Name;
             this._FilePath = item.Path;
             this._DateCreated = item.DateCreated.DateTime;
 
@@ -101,28 +92,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             this._DateModified = properties.DateModified.DateTime;
 
             _FileIcon = new BitmapImage();
-            await _FileIcon.SetSourceAsync(_thumbnail);
+            await FileIcon.SetSourceAsync(_itemThumbnail);
 
             return SafeWrapperResult.SUCCESS;
-        }
-
-        protected override async Task<SafeWrapperResult> SetDataInternal(DataPackageView dataPackage)
-        {
-            SafeWrapperResult result = await base.SetDataInternal(dataPackage);
-
-            if (result && dataPackage.Contains(StandardDataFormats.StorageItems))
-            {
-                // It was an item, otherwise SetData() is called
-
-                return await SetDataFromExistingFile(await sourceFile);
-            }
-
-            return result;
-        }
-
-        protected override async Task<SafeWrapperResult> SetData(DataPackageView dataPackage)
-        {
-            return await Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()
@@ -136,9 +108,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return await Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
-        protected override async Task<SafeWrapper<CollectionItemViewModel>> TrySetFileWithExtension()
+        protected override IPasteModel SetCanvasPasteModel()
         {
-            return await Task.FromResult(new SafeWrapper<CollectionItemViewModel>(null, SafeWrapperResult.SUCCESS));
+            return new FallbackPasteModel(associatedCollection, new StatusCenterOperationReceiver());
+        }
+
+        protected override bool CheckCanPasteReference()
+        {
+            return !_isFolder;
         }
 
         #endregion
@@ -158,7 +135,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             base.Dispose();
 
-            _thumbnail?.Dispose();
+            _itemThumbnail?.Dispose();
+
+            _itemThumbnail = null;
+            _FileIcon = null;
         }
 
         #endregion

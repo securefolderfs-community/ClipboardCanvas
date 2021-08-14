@@ -4,7 +4,7 @@ using System.Threading;
 using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 
-namespace ClipboardCanvas.Contexts
+namespace ClipboardCanvas.Contexts.Operations
 {
     public sealed class OperationContext : IOperationContext
     {

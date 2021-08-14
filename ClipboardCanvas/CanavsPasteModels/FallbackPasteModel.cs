@@ -1,21 +1,35 @@
-﻿using ClipboardCanvas.CanvasFileReceivers;
-using ClipboardCanvas.Contexts;
-using ClipboardCanvas.DataModels;
-using ClipboardCanvas.Helpers.SafetyHelpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
+using Windows.UI.Xaml.Media.Imaging;
+
+using ClipboardCanvas.CanvasFileReceivers;
+using ClipboardCanvas.Contexts.Operations;
+using ClipboardCanvas.DataModels;
+using ClipboardCanvas.Helpers.SafetyHelpers;
 
 namespace ClipboardCanvas.CanavsPasteModels
 {
     public class FallbackPasteModel : BasePasteModel
     {
-        public FallbackPasteModel(ICanvasFileReceiverModel canvasFileReceiver, IOperationContext operationContext)
-            : base(canvasFileReceiver, operationContext)
+        private bool _isFolder;
+
+        public StorageItemThumbnail ItemThumbnail { get; private set; }
+
+        public string FileName { get; private set; }
+
+        public string FilePath { get; private set; }
+
+        public DateTime DateCreated { get; private set; }
+
+        public DateTime DateModified { get; private set; }
+
+        public BitmapImage FileIcon { get; private set; }
+
+        public FallbackPasteModel(ICanvasFileReceiverModel canvasFileReceiver, IOperationContextReceiver operationContextReceiver)
+            : base(canvasFileReceiver, operationContextReceiver)
         {
         }
 
@@ -34,9 +48,49 @@ namespace ClipboardCanvas.CanavsPasteModels
             return Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
-        protected override Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item)
+        public override async Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item)
         {
-            return Task.FromResult(SafeWrapperResult.SUCCESS);
+            // Read file properties
+            if (item is StorageFile file)
+            {
+                ItemThumbnail = await file.GetThumbnailAsync(ThumbnailMode.SingleItem);
+            }
+            else if (item is StorageFolder folder)
+            {
+                _isFolder = true;
+                ItemThumbnail = await folder.GetThumbnailAsync(ThumbnailMode.SingleItem);
+            }
+
+            this.FileName = item.Name;
+            this.FilePath = item.Path;
+            this.DateCreated = item.DateCreated.DateTime;
+
+            var properties = await item.GetBasicPropertiesAsync();
+            this.DateModified = properties.DateModified.DateTime;
+
+            FileIcon = new BitmapImage();
+            await FileIcon.SetSourceAsync(ItemThumbnail);
+
+            return SafeWrapperResult.SUCCESS;
         }
+
+        protected override bool CheckCanPasteReference()
+        {
+            return !_isFolder;
+        }
+
+        #region IDisposable
+
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            ItemThumbnail?.Dispose();
+
+            ItemThumbnail = null;
+            FileIcon = null;
+        }
+
+        #endregion
     }
 }

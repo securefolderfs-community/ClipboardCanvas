@@ -3,16 +3,16 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 
 using ClipboardCanvas.CanvasFileReceivers;
-using ClipboardCanvas.Contexts;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
+using ClipboardCanvas.Contexts.Operations;
 
 namespace ClipboardCanvas.CanavsPasteModels
 {
     public class MediaPasteModel : BasePasteModel
     {
-        public MediaPasteModel(ICanvasFileReceiverModel canvasFileReceiver, IOperationContext operationContext)
-            : base(canvasFileReceiver, operationContext)
+        public MediaPasteModel(ICanvasFileReceiverModel canvasFileReceiver, IOperationContextReceiver operationContextReceiver)
+            : base(canvasFileReceiver, operationContextReceiver)
         {
         }
 
@@ -31,7 +31,7 @@ namespace ClipboardCanvas.CanavsPasteModels
             return Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
-        protected override Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item)
+        public override Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item)
         {
             return Task.FromResult(SafeWrapperResult.SUCCESS);
         }

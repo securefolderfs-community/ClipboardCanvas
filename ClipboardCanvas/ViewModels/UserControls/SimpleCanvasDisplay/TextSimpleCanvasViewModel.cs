@@ -35,7 +35,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
 
         #region Override
 
-        protected override async Task<SafeWrapperResult> SetDataFromExistingFile(IStorageItem item)
+        protected override async Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item)
         {
             if (item is not StorageFile file)
             {

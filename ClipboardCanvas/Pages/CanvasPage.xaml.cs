@@ -54,7 +54,7 @@ namespace ClipboardCanvas.Pages
             ViewModel.CanvasContextMenuOpeningCommand.Execute(null);
         }
 
-        public void OnContentFinishedLoading()
+        public void FinishConnectedAnimation()
         {
             // Check if connected animation is available
             ConnectedAnimation connectedAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation(

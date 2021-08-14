@@ -459,22 +459,24 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private void PasteCanvasModel_OnContentLoadedEvent(object sender, ContentLoadedEventArgs e)
         {
-            PastedAsReferenceLoad = e.pastedByReference;
+            PastedAsReferenceLoad = e.pastedAsReference;
+            OverrideReferenceEnabled = e.canPasteReference;
             InfiniteCanvasHeaderLoad = e.isInfiniteCanvas;
             CanvasRingLoad = false;
             _contentFinishedLoading = true;
             NewCanvasScreenLoad = false;
             TipTextLoad = false;
             ErrorTextLoad = false;
-            _view?.OnContentFinishedLoading();
+            _view?.FinishConnectedAnimation();
         }
 
         private void PasteCanvasModel_OnContentLoadFailedEvent(object sender, ErrorOccurredEventArgs e)
         {
             _contentFinishedLoading = true;
             CanvasRingLoad = false;
+            PastedAsReferenceLoad = false;
 
-            _view?.OnContentFinishedLoading();
+            _view?.FinishConnectedAnimation();
         }
 
         private async void PasteCanvasModel_OnPasteInitiatedEvent(object sender, PasteInitiatedEventArgs e)

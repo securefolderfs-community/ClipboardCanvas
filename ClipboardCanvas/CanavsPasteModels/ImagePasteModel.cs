@@ -7,11 +7,11 @@ using Windows.Storage.Streams;
 using System.Collections.Generic;
 using System.Linq;
 
-using ClipboardCanvas.Contexts;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.CanvasFileReceivers;
+using ClipboardCanvas.Contexts.Operations;
 
 namespace ClipboardCanvas.CanavsPasteModels
 {
@@ -19,8 +19,8 @@ namespace ClipboardCanvas.CanavsPasteModels
     {
         public SoftwareBitmap SoftwareBitmap { get; private set; }
 
-        public ImagePasteModel(ICanvasFileReceiverModel canvasFileReceiver, IOperationContext operationContext)
-            : base (canvasFileReceiver, operationContext)
+        public ImagePasteModel(ICanvasFileReceiverModel canvasFileReceiver, IOperationContextReceiver operationContextReceiver)
+            : base (canvasFileReceiver, operationContextReceiver)
         {
         }
 
@@ -131,7 +131,7 @@ namespace ClipboardCanvas.CanavsPasteModels
             return result;
         }
 
-        protected override async Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item)
+        public override async Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item)
         {
             if (item is not StorageFile file)
             {
@@ -146,11 +146,15 @@ namespace ClipboardCanvas.CanavsPasteModels
                 return openedStream;
             }
 
-            return await SafeWrapperRoutines.SafeWrapAsync(async () =>
+            SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
             {
                 BitmapDecoder bitmapDecoder = await BitmapDecoder.CreateAsync(openedStream.Result);
                 SoftwareBitmap = await bitmapDecoder.GetSoftwareBitmapAsync();
             });
+
+            openedStream.Result.Dispose();
+
+            return result;
         }
 
         public override void Dispose()

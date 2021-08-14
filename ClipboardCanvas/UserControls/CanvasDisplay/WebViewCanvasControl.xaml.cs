@@ -35,5 +35,14 @@ namespace ClipboardCanvas.UserControls.CanvasDisplay
         {
             this.ContentWebView.Source = new Uri(source);
         }
+
+        #region IDisposable
+
+        public void Dispose()
+        {
+            // TODO: Dispose WebView
+        }
+
+        #endregion
     }
 }

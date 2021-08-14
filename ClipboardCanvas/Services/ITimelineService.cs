@@ -3,14 +3,13 @@
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.Models.Configuration;
-using ClipboardCanvas.ViewModels.UserControls.Collections;
 using ClipboardCanvas.ViewModels.Widgets.Timeline;
 
 namespace ClipboardCanvas.Services
 {
     public interface ITimelineService
     {
-        Task<TimelineSectionItemViewModel> AddItemForSection(TimelineSectionViewModel timelineSection, ICollectionModel collectionModel, CollectionItemViewModel collectionItemViewModel);
+        Task<TimelineSectionItemViewModel> AddItemForSection(TimelineSectionViewModel timelineSection, ICollectionModel collectionModel, CanvasItem canvasItem);
 
         bool RemoveItemFromSection(TimelineSectionViewModel timelineSection, TimelineSectionItemViewModel timelineSectionItem);
 

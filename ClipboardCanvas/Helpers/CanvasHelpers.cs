@@ -9,11 +9,11 @@ using ClipboardCanvas.Models;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.CanavsPasteModels;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
-using ClipboardCanvas.Contexts;
 using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
+using ClipboardCanvas.Contexts.Operations;
 
 namespace ClipboardCanvas.Helpers
 {
@@ -21,7 +21,7 @@ namespace ClipboardCanvas.Helpers
     {
         public static async Task<SafeWrapperResult> DeleteCanvasFile(ICollectionModel collectionModel, CanvasItem canvasItem, bool hideConfirmation = false)
         {
-            bool deletePermanently;
+            bool deletePermanently = false; // TODO: Option for permanent
 
             IUserSettingsService userSettings = Ioc.Default.GetService<IUserSettingsService>();
             IDialogService dialogService = Ioc.Default.GetService<IDialogService>();
@@ -31,35 +31,39 @@ namespace ClipboardCanvas.Helpers
                 DeleteConfirmationDialogViewModel deleteConfirmationDialogViewModel = new DeleteConfirmationDialogViewModel(Path.GetFileName(canvasItem.AssociatedItem.Path));
                 DialogResult dialogOption = await dialogService.ShowDialog(deleteConfirmationDialogViewModel);
 
-                if (dialogOption == DialogResult.Primary)
+                if (dialogOption != DialogResult.Primary)
                 {
-                    deletePermanently = deleteConfirmationDialogViewModel.PermanentlyDelete;
-
-                    CollectionItemViewModel collectionItem = collectionModel.FindCollectionItem(canvasItem);
-
-                    // Also remove it from Timeline
-                    ITimelineService timelineService = Ioc.Default.GetService<ITimelineService>();
-                    var todaySection = await timelineService.GetOrCreateTodaySection();
-                    var timelineSectionItem = timelineService.FindTimelineSectionItem(todaySection, collectionItem);
-                    if (timelineSectionItem != null)
-                    {
-                        timelineService.RemoveItemFromSection(todaySection, timelineSectionItem);
-                    }
-
-                    if (collectionItem == null)
-                    {
-                        // Just delete the canvasItem
-                        return await FilesystemOperations.DeleteItem(canvasItem.AssociatedItem, deletePermanently);
-                    }
-                    else
-                    {
-                        // Delete from collection
-                        return await collectionModel.DeleteCollectionItem(collectionItem, deletePermanently);
-                    }
+                    return SafeWrapperResult.CANCEL;
                 }
+
+                deletePermanently = deleteConfirmationDialogViewModel.PermanentlyDelete;
+            }
+            else if (hideConfirmation)
+            {
+                deletePermanently = true;
             }
 
-            return SafeWrapperResult.CANCEL;
+            CollectionItemViewModel collectionItem = collectionModel.FindCollectionItem(canvasItem);
+
+            // Also remove it from Timeline
+            ITimelineService timelineService = Ioc.Default.GetService<ITimelineService>();
+            var todaySection = await timelineService.GetOrCreateTodaySection();
+            var timelineSectionItem = timelineService.FindTimelineSectionItem(todaySection, collectionItem);
+            if (timelineSectionItem != null)
+            {
+                timelineService.RemoveItemFromSection(todaySection, timelineSectionItem);
+            }
+            
+            if (collectionItem == null)
+            {
+                // Just delete the canvasItem
+                return await FilesystemOperations.DeleteItem(canvasItem.AssociatedItem, deletePermanently);
+            }
+            else
+            {
+                // Delete from collection
+                return await collectionModel.DeleteCollectionItem(collectionItem, deletePermanently);
+            }
         }
 
         public static CanvasType GetDefaultCanvasType()
@@ -76,24 +80,27 @@ namespace ClipboardCanvas.Helpers
             }
         }
 
-        public static IPasteModel GetPasteModelFromContentType(this BaseContentTypeModel contentType, ICanvasFileReceiverModel canvasFileReceiver, IOperationContext operationContext)
+        public static IPasteModel GetPasteModelFromContentType(this BaseContentTypeModel contentType, ICanvasFileReceiverModel canvasFileReceiver, IOperationContextReceiver operationContextReceiver)
         {
             switch (contentType)
             {
                 case ImageContentType:
-                    return new ImagePasteModel(canvasFileReceiver, operationContext);
+                    return new ImagePasteModel(canvasFileReceiver, operationContextReceiver);
 
                 case TextContentType:
-                    return new TextPasteModel(canvasFileReceiver, operationContext);
+                    return new TextPasteModel(canvasFileReceiver, operationContextReceiver);
 
                 case MediaContentType:
-                    return new MediaPasteModel(canvasFileReceiver, operationContext);
+                    return new MediaPasteModel(canvasFileReceiver, operationContextReceiver);
 
                 case MarkdownContentType:
-                    return new MarkdownPasteModel(canvasFileReceiver, operationContext);
+                    return new MarkdownPasteModel(canvasFileReceiver, operationContextReceiver);
+
+                case WebViewContentType webViewContentType:
+                    return new WebViewPasteModel(webViewContentType.mode, canvasFileReceiver, operationContextReceiver);
 
                 case FallbackContentType:
-                    return new FallbackPasteModel(canvasFileReceiver, operationContext);
+                    return new FallbackPasteModel(canvasFileReceiver, operationContextReceiver);
 
                 default:
                     return null;

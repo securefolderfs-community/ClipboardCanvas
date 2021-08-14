@@ -481,13 +481,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             return new CollectionConfigurationModel(CollectionPath, UsesCustomIcon, iconFile?.Name);
         }
 
-        public virtual async Task LoadCanvasFromCollection(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken, CollectionItemViewModel collectionItemViewModel = null)
+        public virtual async Task<SafeWrapperResult> LoadCanvasFromCollection(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken, CollectionItemViewModel collectionItemViewModel = null)
         {
             // You can only load existing data
             if (CollectionItems.IsEmpty() || (canvasNavigationDirection == CanvasNavigationDirection.Forward && (IsOnNewCanvas && collectionItemViewModel == null)))
             {
                 OnOpenNewCanvasRequestedEvent?.Invoke(this, new OpenNewCanvasRequestedEventArgs());
-                return;
+                return SafeWrapperResult.SUCCESS;
             }
             else
             {
@@ -513,7 +513,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
                         // TODO: Pass error code here in the future
                         OnGoToHomepageRequestedEvent?.Invoke(this, new GoToHomepageRequestedEventArgs());
-                        return;
+                        return result;
                     }
 
                     // We must reload items because some were missing
@@ -543,7 +543,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                     if (CollectionItems.IsEmpty())
                     {
                         OnOpenNewCanvasRequestedEvent?.Invoke(this, new OpenNewCanvasRequestedEventArgs());
-                        return;
+                        return SafeWrapperResult.SUCCESS;
                     }
                     else
                     {
@@ -570,13 +570,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 else if (result == OperationErrorCode.InvalidOperation)
                 {
                     // View Model wasn't found
-                    // Cannot display content for this file. - i.e. canvas display doesn't exists for this file
+                    // Cannot display content for this file. - e.g. canvas display doesn't exists for this file
                 }
 
                 if (!result)
                 {
                     OnCanvasLoadFailedEvent?.Invoke(this, new CanvasLoadFailedEventArgs(result));
                 }
+
+                return result;
             }
         }
 

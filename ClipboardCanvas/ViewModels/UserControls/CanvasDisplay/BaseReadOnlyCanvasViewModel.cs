@@ -94,6 +94,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public bool IsContentLoaded { get; protected set; }
 
+        public bool CanPasteReference { get; protected set; }
+
         public List<BaseMenuFlyoutItemViewModel> ContextMenuItems { get; protected set; }
 
         #endregion
@@ -185,7 +187,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return SafeWrapperResult.CANCEL;
             }
 
-            result = await SetDataFromExistingFile(await sourceItem);
+            result = await SetDataFromExistingItem(await sourceItem);
             if (!AssertNoError(result))
             {
                 return result;
@@ -204,9 +206,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             IsContentLoaded = true;
+            CanPasteReference = CheckCanPasteReference();
 
             RefreshContextMenuItems();
-            RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, IsContentLoaded, isContentAsReference));
+            RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, IsContentLoaded, isContentAsReference, CanPasteReference));
 
             return result;
         }
@@ -241,6 +244,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             Clipboard.SetContent(dataPackage);
             Clipboard.Flush();
 
+            return true;
+        }
+
+        protected virtual bool CheckCanPasteReference()
+        {
             return true;
         }
 
@@ -301,7 +309,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             });
         }
 
-        protected abstract Task<SafeWrapperResult> SetDataFromExistingFile(IStorageItem item);
+        protected abstract Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item);
 
         protected abstract Task<SafeWrapperResult> TryFetchDataToView();
 

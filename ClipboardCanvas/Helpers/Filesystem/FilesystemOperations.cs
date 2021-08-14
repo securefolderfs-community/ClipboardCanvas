@@ -5,7 +5,7 @@ using Windows.Storage;
 
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers.SafetyHelpers;
-using ClipboardCanvas.Contexts;
+using ClipboardCanvas.Contexts.Operations;
 
 namespace ClipboardCanvas.Helpers.Filesystem
 {

@@ -67,7 +67,7 @@ namespace ClipboardCanvas.Models
         /// <param name="pasteCanvasModel"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task LoadCanvasFromCollection(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken, CollectionItemViewModel collectionItemViewModel = null);
+        Task<SafeWrapperResult> LoadCanvasFromCollection(ICanvasPreviewModel pasteCanvasModel, CancellationToken cancellationToken, CollectionItemViewModel collectionItemViewModel = null);
 
         /// <summary>
         /// Returns true, if it's possible to navigate canvas forward

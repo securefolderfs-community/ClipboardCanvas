@@ -7,17 +7,19 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 
-using ClipboardCanvas.Contexts;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.CanvasFileReceivers;
+using ClipboardCanvas.EventArguments.CanvasControl;
+using ClipboardCanvas.Contexts.Operations;
+using ClipboardCanvas.CanvasLoadModels;
 
 namespace ClipboardCanvas.CanavsPasteModels
 {
-    public abstract class BasePasteModel : IPasteModel
+    public abstract class BasePasteModel : IPasteModel, ILoadModel
     {
         private IStorageItem _pastedItem;
 
@@ -25,11 +27,11 @@ namespace ClipboardCanvas.CanavsPasteModels
 
         protected IOperationContext operationContext;
 
+        protected IOperationContextReceiver operationContextReceiver;
+
         protected CancellationToken cancellationToken;
 
         protected CanvasItem canvasItem;
-
-        protected bool isContentAsReference;
 
         protected IStorageItem associatedItem => canvasItem.AssociatedItem;
 
@@ -41,10 +43,20 @@ namespace ClipboardCanvas.CanavsPasteModels
 
         protected readonly SafeWrapperResult ItemIsNotAFileResult = new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentException(), "The provided item is not a file.");
 
-        public BasePasteModel(ICanvasFileReceiverModel canvasFileReceiver, IOperationContext operationContext)
+        public bool IsContentAsReference { get; protected set; }
+
+        public bool CanPasteReference { get; protected set; }
+
+        #region Events
+
+        public event EventHandler<TipTextUpdateRequestedEventArgs> OnTipTextUpdateRequestedEvent;
+
+        #endregion
+
+        public BasePasteModel(ICanvasFileReceiverModel canvasFileReceiver, IOperationContextReceiver operationContextReceiver)
         {
             this.canvasFileReceiver = canvasFileReceiver;
-            this.operationContext = operationContext;
+            this.operationContextReceiver = operationContextReceiver;
         }
 
         public async Task<SafeWrapper<CanvasItem>> PasteData(DataPackageView dataPackage, bool pasteAsReference, CancellationToken cancellationToken)
@@ -52,7 +64,7 @@ namespace ClipboardCanvas.CanavsPasteModels
             SafeWrapperResult result;
 
             this.cancellationToken = cancellationToken;
-            this.isContentAsReference = pasteAsReference;
+            this.IsContentAsReference = pasteAsReference;
 
             result = await SetDataFromDataPackageInternal(dataPackage);
             if (!result)
@@ -60,7 +72,7 @@ namespace ClipboardCanvas.CanavsPasteModels
                 return (null, result);
             }
 
-            result = await SetCanvasFileInternal();
+            result = await SetCanvasItemInternal();
             if (!result)
             {
                 return (null, result);
@@ -71,6 +83,8 @@ namespace ClipboardCanvas.CanavsPasteModels
             {
                 return (null, result);
             }
+
+            this.CanPasteReference = CheckCanPasteReference();
 
             return (canvasItem, result);
         }
@@ -104,45 +118,51 @@ namespace ClipboardCanvas.CanavsPasteModels
             }
         }
 
-        protected async Task<SafeWrapperResult> SetCanvasFileInternal()
+        protected async Task<SafeWrapperResult> SetCanvasItemInternal()
         {
-            SafeWrapper<CanvasItem> canvasFile;
+            SafeWrapper<CanvasItem> canvasItem;
 
-            if (isContentAsReference && _pastedItem != null)
+            if (IsContentAsReference && _pastedItem != null)
             {
-                canvasFile = await canvasFileReceiver.CreateNewCanvasFileFromExtension(Constants.FileSystem.REFERENCE_FILE_EXTENSION);
+                canvasItem = await canvasFileReceiver.CreateNewCanvasFileFromExtension(Constants.FileSystem.REFERENCE_FILE_EXTENSION);
             }
             else
             {
                 if (_pastedItem != null)
                 {
                     string pastedItemFileName = Path.GetFileName(_pastedItem.Path);
-                    canvasFile = await canvasFileReceiver.CreateNewCanvasFile(pastedItemFileName);
+                    canvasItem = await canvasFileReceiver.CreateNewCanvasFile(pastedItemFileName);
                 }
                 else
                 {
-                    canvasFile = await GetCanvasFileFromExtension(canvasFileReceiver);
+                    canvasItem = await GetCanvasFileFromExtension(canvasFileReceiver);
                 }
             }
 
-            this.canvasItem = canvasFile;
-            return canvasFile;
+            this.canvasItem = canvasItem;
+            return canvasItem;
         }
 
         protected async Task<SafeWrapperResult> SaveDataToFileInternal()
         {
-            if (isContentAsReference && await sourceItem == null)
+            if (IsContentAsReference && await sourceItem == null)
             {
                 // We need to update the reference file because the one we created is empty
                 ReferenceFile referenceFile = await ReferenceFile.GetFile(associatedFile);
-                return await referenceFile.UpdateReferenceFile(new ReferenceFileData(_pastedItem.Path));
+                return await referenceFile.UpdateReference(new ReferenceFileData(_pastedItem.Path));
             } 
             else
             {
-                if (_pastedItem != null && _pastedItem.Path != associatedItem.Path)
+                // If pasting a file and not raw data from clipboard...
+                if (_pastedItem is StorageFile pastedFile && pastedFile.Path != associatedItem.Path)
                 {
+                    // Signalize that the file is being pasted
+                    RaiseOnTipTextUpdateRequestedEvent(this, new TipTextUpdateRequestedEventArgs("The file is being pasted, please wait.", TimeSpan.FromMilliseconds(Constants.UI.CanvasContent.FILE_PASTING_TIP_DELAY)));
+
+                    this.operationContext = operationContextReceiver.GetOperationContext();
+
                     // Copy the file data directly when pasting a file and not raw data from clipboard
-                    return await FilesystemOperations.CopyFileAsync(_pastedItem as StorageFile, associatedFile, operationContext);
+                    return await FilesystemOperations.CopyFileAsync(pastedFile, associatedFile, operationContext);
                 }
                 else
                 {
@@ -151,13 +171,24 @@ namespace ClipboardCanvas.CanavsPasteModels
             }
         }
 
-        protected abstract Task<SafeWrapper<CanvasItem>> GetCanvasFileFromExtension(ICanvasFileReceiverModel canvasFileReceiver);
+        protected virtual bool CheckCanPasteReference()
+        {
+            return true;
+        }
 
-        protected abstract Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item);
+        protected abstract Task<SafeWrapper<CanvasItem>> GetCanvasFileFromExtension(ICanvasFileReceiverModel canvasFileReceiver);
 
         protected abstract Task<SafeWrapperResult> SetDataFromDataPackage(DataPackageView dataPackage);
 
         protected abstract Task<SafeWrapperResult> SaveDataToFile();
+
+        public abstract Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item);
+
+        #region Event Raisers
+
+        protected void RaiseOnTipTextUpdateRequestedEvent(object s, TipTextUpdateRequestedEventArgs e) => OnTipTextUpdateRequestedEvent?.Invoke(s, e);
+
+        #endregion
 
         public virtual void Dispose()
         {

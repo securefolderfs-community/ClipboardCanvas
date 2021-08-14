@@ -29,7 +29,7 @@ namespace ClipboardCanvas.ReferenceItems
             this.ReferencedItem = referencedItem;
         }
 
-        public async Task<SafeWrapperResult> UpdateReferenceFile(ReferenceFileData referenceFileData)
+        public async Task<SafeWrapperResult> UpdateReference(ReferenceFileData referenceFileData)
         {
             string serialized = JsonConvert.SerializeObject(referenceFileData, Formatting.Indented);
             SafeWrapperResult result = await FilesystemOperations.WriteFileText(_innerReferenceFile, serialized);

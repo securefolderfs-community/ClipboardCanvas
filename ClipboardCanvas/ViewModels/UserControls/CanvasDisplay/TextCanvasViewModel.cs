@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Microsoft.Toolkit.Mvvm.Input;
-using System.Diagnostics;
 using System.Collections.Generic;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
@@ -14,7 +12,7 @@ using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.CanavsPasteModels;
-using ClipboardCanvas.ViewModels.UserControls.Collections;
+using ClipboardCanvas.Contexts.Operations;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -22,13 +20,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
     {
         #region Public Properties
 
-        protected override IPasteModel CanvasPasteModel => null;
+        private TextPasteModel TextPasteModel => canvasPasteModel as TextPasteModel;
 
-        private string _ContentText;
-        public string ContentText
+        private string _Text;
+        public string Text
         {
-            get => _ContentText;
-            set => SetProperty(ref _ContentText, value);
+            get => TextPasteModel?.Text ?? _Text;
         }
 
         public static List<string> Extensions => new List<string>() {
@@ -41,8 +38,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public TextCanvasViewModel(IBaseCanvasPreviewControlView view)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new TextContentType(), view)
+        public TextCanvasViewModel(IBaseCanvasPreviewControlView view, BaseContentTypeModel contentType)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, contentType, view)
         {
         }
 
@@ -50,23 +47,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Override
 
-        protected override async Task<SafeWrapperResult> SetData(DataPackageView dataPackage)
-        {
-            SafeWrapper<string> text = await SafeWrapperRoutines.SafeWrapAsync(
-                           () => dataPackage.GetTextAsync().AsTask());
-
-            if (!text)
-            {
-                Debugger.Break();
-                return (SafeWrapperResult)text;
-            }
-
-            _ContentText = text;
-
-            return (SafeWrapperResult)text;
-        }
-
-        protected override async Task<SafeWrapperResult> SetDataFromExistingFile(IStorageItem item)
+        protected override async Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item)
         {
             if (item is not StorageFile file)
             {
@@ -75,30 +56,21 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             SafeWrapper<string> text = await FilesystemOperations.ReadFileText(file);
 
-            this._ContentText = text;
+            this._Text = text;
 
             return text;
         }
 
-        protected override async Task<SafeWrapper<CollectionItemViewModel>> TrySetFileWithExtension()
+        protected override Task<SafeWrapperResult> TryFetchDataToView()
         {
-            SafeWrapper<CollectionItemViewModel> itemViewModel = await associatedCollection.CreateNewCollectionItemFromExtension(".txt");
+            OnPropertyChanged(nameof(Text));
 
-            return itemViewModel;
+            return Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
-        public override async Task<SafeWrapperResult> TrySaveData()
+        protected override IPasteModel SetCanvasPasteModel()
         {
-            SafeWrapperResult result = await FilesystemOperations.WriteFileText(await sourceFile, ContentText);
-
-            return result;
-        }
-
-        protected override async Task<SafeWrapperResult> TryFetchDataToView()
-        {
-            OnPropertyChanged(nameof(ContentText));
-
-            return await Task.FromResult(SafeWrapperResult.SUCCESS);
+            return new TextPasteModel(associatedCollection, new StatusCenterOperationReceiver());
         }
 
         protected override void RefreshContextMenuItems()
@@ -137,7 +109,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #endregion
 
-        #region Public Helpers
+        #region Helpers
 
         public static async Task<bool> CanLoadAsText(StorageFile file)
         {

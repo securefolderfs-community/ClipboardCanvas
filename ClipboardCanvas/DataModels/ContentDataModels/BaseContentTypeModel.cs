@@ -20,8 +20,6 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
 {
     public abstract class BaseContentTypeModel
     {
-        public static readonly SafeWrapperResult FoldersNotSupportedResult = new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Displaying content for folders is not yet supported.");
-
         public static readonly SafeWrapperResult CannotDisplayContentForTypeResult = new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Couldn't display content for this file");
 
         public static readonly SafeWrapperResult CannotReceiveClipboardDataResult = new SafeWrapperResult(OperationErrorCode.AccessUnauthorized, "Couldn't retrieve clipboard data");
@@ -49,7 +47,7 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
                 }
                 else
                 {
-                    return new InvalidContentTypeDataModel(FoldersNotSupportedResult, false);
+                    return new FallbackContentType();
                 }    
             }
             else if ((await canvasFile.SourceItem) is StorageFile file)
@@ -109,7 +107,7 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
             }
             else if (item is StorageFolder)
             {
-                return new InvalidContentTypeDataModel(FoldersNotSupportedResult, false);
+                return new FallbackContentType();
             }
             else
             {
@@ -127,12 +125,13 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
                 }
                 else
                 {
-                    return new InvalidContentTypeDataModel(FoldersNotSupportedResult, false);
+                    return new FallbackContentType();
                 }
             }
 
             if (item is not StorageFile file)
             {
+                // Shouldn't happen
                 return null;
             }
 

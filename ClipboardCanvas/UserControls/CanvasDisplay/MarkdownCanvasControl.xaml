@@ -13,7 +13,7 @@
 
     <Grid>
         <ScrollViewer tui:ScrollViewerExtensions.EnableMiddleClickScrolling="True">
-            <tuc:MarkdownTextBlock x:Name="ContentText" Text="{x:Bind ViewModel.TextMarkdown, Mode=OneWay}" />
+            <tuc:MarkdownTextBlock x:Name="ContentText" Text="{x:Bind ViewModel.MarkdownText, Mode=OneWay}" />
         </ScrollViewer>
     </Grid>
 </UserControl>

@@ -113,6 +113,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
             // Update title bar text
             UpdateTitleBar();
 
+            SafeWrapperResult canvasLoadResult = null;
+
             // We might navigate from home to a canvas that's already filled, so initialize the content
             if ((e.collection?.IsCollectionInitialized ?? false)
                 && (!e.collection?.IsCollectionInitializing ?? false)
@@ -123,14 +125,14 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 _canvasLoadCancellationTokenSource.Dispose();
                 _canvasLoadCancellationTokenSource = new CancellationTokenSource();
 
-                await e.collection.LoadCanvasFromCollection(PasteCanvasPageModel.PasteCanvasModel, _canvasLoadCancellationTokenSource.Token, e.collectionItemToLoad);
+                canvasLoadResult = await e.collection.LoadCanvasFromCollection(PasteCanvasPageModel.PasteCanvasModel, _canvasLoadCancellationTokenSource.Token, e.collectionItemToLoad);
             }
 
             // Update navigation buttons
             await UpdateNavigationOnPageNavigation(e.collection);
 
             // Update Suggested Actions
-            await SetSuggestedActions(e.collection);
+            await SetSuggestedActions(e.collection, canvasLoadResult);
         }
 
         #endregion

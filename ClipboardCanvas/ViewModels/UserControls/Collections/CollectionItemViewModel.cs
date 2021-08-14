@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.DataModels;
-using ClipboardCanvas.Contexts;
+using ClipboardCanvas.Contexts.Operations;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {

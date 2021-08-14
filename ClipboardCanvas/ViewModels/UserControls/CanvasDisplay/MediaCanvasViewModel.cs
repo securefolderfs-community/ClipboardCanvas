@@ -1,29 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.Media.Core;
-using Windows.Storage;
 using System.Threading;
+using Windows.Storage;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.CanavsPasteModels;
-using ClipboardCanvas.ViewModels.UserControls.Collections;
+using ClipboardCanvas.DataModels;
+using ClipboardCanvas.Contexts.Operations;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
     public class MediaCanvasViewModel : BaseCanvasViewModel
     {
-        #region Private Members
+        #region Properties
 
-        private MediaContentType _mediaContentType => contentType as MediaContentType;
+        private MediaContentType MediaContentType => contentType as MediaContentType;
 
-        #endregion
-
-        #region Private Properties
+        private MediaPasteModel MediaPasteModel => canvasPasteModel as MediaPasteModel;
 
         private TimeSpan Position
         {
@@ -42,12 +40,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             get => ControlView.Volume;
             set => ControlView.Volume = value;
         }
-
-        #endregion
-
-        #region Public Properties
-
-        protected override IPasteModel CanvasPasteModel => null;
 
         public static List<string> Extensions => new List<string>() {
             // Video
@@ -76,8 +68,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public MediaCanvasViewModel(IBaseCanvasPreviewControlView view)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new MediaContentType(), view)
+        public MediaCanvasViewModel(IBaseCanvasPreviewControlView view, BaseContentTypeModel contentType)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, contentType, view)
         {
         }
 
@@ -85,9 +77,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Override
 
-        public override async Task<SafeWrapperResult> TryLoadExistingData(CollectionItemViewModel itemData, CancellationToken cancellationToken)
+        public override async Task<SafeWrapperResult> TryLoadExistingData(CanvasItem canvasItem, BaseContentTypeModel contentType, CancellationToken cancellationToken)
         {
-            SafeWrapperResult result = await base.TryLoadExistingData(itemData, cancellationToken);
+            SafeWrapperResult result = await base.TryLoadExistingData(canvasItem, contentType, cancellationToken);
 
             if (result)
             {
@@ -97,24 +89,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return result;
         }
 
-        public override async Task<SafeWrapperResult> TrySaveData()
-        {
-            return await Task.FromResult(SafeWrapperResult.SUCCESS);
-        }
 
-        protected override async Task<SafeWrapperResult> SetData(DataPackageView dataPackage)
+        protected override Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item)
         {
-            return await Task.FromResult(SafeWrapperResult.SUCCESS);
-        }
-
-        protected override async Task<SafeWrapperResult> SetDataFromExistingFile(IStorageItem item)
-        {
-            return await Task.FromResult(SafeWrapperResult.SUCCESS);
-        }
-
-        protected override async Task<SafeWrapper<CollectionItemViewModel>> TrySetFileWithExtension()
-        {
-            return await Task.FromResult(new SafeWrapper<CollectionItemViewModel>(null, SafeWrapperResult.SUCCESS));
+            return Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()
@@ -131,15 +109,20 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             _ContentMedia = MediaSource.CreateFromStorageFile(await sourceFile);
         }
 
+        protected override IPasteModel SetCanvasPasteModel()
+        {
+            return new MediaPasteModel(associatedCollection, new StatusCenterOperationReceiver());
+        }
+
         #endregion
 
         #region Public Helpers
 
         public void UpdateMediaControl()
         {
-            if (ControlView != null && _mediaContentType != null)
+            if (ControlView != null && MediaContentType != null)
             {
-                this.Position = _mediaContentType.savedPosition;
+                this.Position = MediaContentType.savedPosition;
                 this.IsLoopingEnabled = CanvasSettings.MediaCanvas_IsLoopingEnabled;
                 this.Volume = CanvasSettings.MediaCanvas_UniversalVolume;
             }

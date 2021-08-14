@@ -3,20 +3,20 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 
-using ClipboardCanvas.Contexts;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.Helpers.Filesystem;
+using ClipboardCanvas.Contexts.Operations;
 
 namespace ClipboardCanvas.CanavsPasteModels
 {
     public class TextPasteModel : BasePasteModel
     {
-        private string _text;
+        public string Text { get; private set; }
 
-        public TextPasteModel(ICanvasFileReceiverModel canvasFileReceiver, IOperationContext operationContext)
-            : base(canvasFileReceiver, operationContext)
+        public TextPasteModel(ICanvasFileReceiverModel canvasFileReceiver, IOperationContextReceiver operationContextReceiver)
+            : base(canvasFileReceiver, operationContextReceiver)
         {
         }
 
@@ -27,7 +27,7 @@ namespace ClipboardCanvas.CanavsPasteModels
 
         protected override async Task<SafeWrapperResult> SaveDataToFile()
         {
-            return await FilesystemOperations.WriteFileText(await sourceFile, _text);
+            return await FilesystemOperations.WriteFileText(await sourceFile, Text);
         }
 
         protected async override Task<SafeWrapperResult> SetDataFromDataPackage(DataPackageView dataPackage)
@@ -35,12 +35,12 @@ namespace ClipboardCanvas.CanavsPasteModels
             SafeWrapper<string> text = await SafeWrapperRoutines.SafeWrapAsync(
                () => dataPackage.GetTextAsync().AsTask());
 
-            _text = text;
+            Text = text;
 
             return text;
         }
 
-        protected async override Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item)
+        public async override Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item)
         {
             if (item is not StorageFile file)
             {
@@ -49,7 +49,7 @@ namespace ClipboardCanvas.CanavsPasteModels
 
             SafeWrapper<string> text = await FilesystemOperations.ReadFileText(file);
 
-            this._text = text;
+            this.Text = text;
 
             return text;
         }

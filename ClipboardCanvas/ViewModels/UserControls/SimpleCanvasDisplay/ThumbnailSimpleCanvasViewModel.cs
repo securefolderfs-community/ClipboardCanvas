@@ -46,7 +46,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
 
         #region Override
 
-        protected override async Task<SafeWrapperResult> SetDataFromExistingFile(IStorageItem item)
+        protected override async Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item)
         {
             // Get thumbnail for Infinite Canvas
             StorageFolder folder = item as StorageFolder;

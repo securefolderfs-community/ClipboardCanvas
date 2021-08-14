@@ -15,15 +15,18 @@ namespace ClipboardCanvas.EventArguments.CanvasControl
 
         public readonly bool isFilled;
 
-        public readonly bool pastedByReference;
+        public readonly bool pastedAsReference;
+
+        public readonly bool canPasteReference;
 
         public readonly bool isInfiniteCanvas;
 
-        public ContentLoadedEventArgs(BaseContentTypeModel contentDataModel, bool isFilled, bool pastedByReference, bool isInfiniteCanvas = false)
+        public ContentLoadedEventArgs(BaseContentTypeModel contentDataModel, bool isFilled, bool pastedAsReference, bool canPasteReference, bool isInfiniteCanvas = false)
         {
             this.contentDataModel = contentDataModel;
             this.isFilled = isFilled;
-            this.pastedByReference = pastedByReference;
+            this.pastedAsReference = pastedAsReference;
+            this.canPasteReference = canPasteReference;
             this.isInfiniteCanvas = isInfiniteCanvas;
         }
     }

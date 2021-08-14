@@ -140,9 +140,13 @@
     <Compile Include="CanavsPasteModels\FallbackPasteModel.cs" />
     <Compile Include="CanavsPasteModels\MarkdownPasteModel.cs" />
     <Compile Include="CanavsPasteModels\MediaPasteModel.cs" />
+    <Compile Include="CanavsPasteModels\WebViewPasteModel.cs" />
     <Compile Include="CanvasFileReceivers\ICanvasFileReceiverModel.cs" />
     <Compile Include="CanvasFileReceivers\InfiniteCanvasFileReceiver.cs" />
-    <Compile Include="Contexts\IOperationContext.cs" />
+    <Compile Include="CanvasLoadModels\ILoadModel.cs" />
+    <Compile Include="Contexts\Operations\IOperationContext.cs" />
+    <Compile Include="Contexts\Operations\IOperationContextReceiver.cs" />
+    <Compile Include="Contexts\Operations\StatusCenterOperationReceiver.cs" />
     <Compile Include="DataModels\BaseAdditionalData.cs" />
     <Compile Include="DataModels\InfiniteCanvasItem.cs" />
     <Compile Include="DataModels\Navigation\CanvasPageNavigationParameterModel.cs" />
@@ -187,7 +191,7 @@
     <Compile Include="AttachedProperties\TextBoxAttachedProperties.cs" />
     <Compile Include="AttachedProperties\ViewModelAttachedProperties.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Contexts\OperationContext.cs" />
+    <Compile Include="Contexts\Operations\OperationContext.cs" />
     <Compile Include="DataModels\CanvasItem.cs" />
     <Compile Include="DataModels\Navigation\DisplayFrameNavigationDataModel.cs" />
     <Compile Include="DataModels\Navigation\BaseDisplayFrameParameterDataModel.cs" />

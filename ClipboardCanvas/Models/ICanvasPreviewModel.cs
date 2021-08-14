@@ -27,12 +27,6 @@ namespace ClipboardCanvas.Models
         Task<SafeWrapperResult> TryPasteData(DataPackageView dataPackage, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Attempts to save current data to file in associated collection
-        /// </summary>
-        /// <returns></returns>
-        Task<SafeWrapperResult> TrySaveData();
-
-        /// <summary>
         /// Overrides the reference and pastes the file to the collection
         /// </summary>
         /// <returns></returns>

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
@@ -10,17 +8,14 @@ using ClipboardCanvas.Enums;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
-using ClipboardCanvas.UnsafeNative;
 using ClipboardCanvas.CanavsPasteModels;
-using ClipboardCanvas.ViewModels.UserControls.Collections;
+using ClipboardCanvas.Contexts.Operations;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
     public class WebViewCanvasViewModel : BaseCanvasViewModel
     {
         #region Members
-
-        private readonly WebViewCanvasMode _mode;
 
         private bool _webViewNeedsUpdate;
 
@@ -30,7 +25,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Properties
 
-        protected override IPasteModel CanvasPasteModel => null;
+        private WebViewPasteModel WebViewPasteModel => canvasPasteModel as WebViewPasteModel;
+
+        private WebViewContentType WebViewContentType => contentType as WebViewContentType;
+
+        public WebViewCanvasMode Mode => WebViewContentType.mode;
 
         public static List<string> Extensions => new List<string>() {
             ".html", ".htm", Constants.FileSystem.WEBSITE_LINK_FILE_EXTENSION,
@@ -43,9 +42,17 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             set => SetProperty(ref _ContentWebViewLoad, value);
         }
 
-        public string TextHtml { get; private set; }
+        private string _HtmlText;
+        public string TextHtml
+        {
+            get => WebViewPasteModel?.HtmlText ?? _HtmlText;
+        }
 
-        public string Source { get; private set; }
+        private string _Source;
+        public string Source
+        {
+            get => WebViewPasteModel?.Source ?? _Source;
+        }
 
         public IWebViewCanvasControlView ControlView { get; set; }
 
@@ -53,107 +60,34 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Constructor
 
-        public WebViewCanvasViewModel(IBaseCanvasPreviewControlView view, WebViewCanvasMode mode)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new WebViewContentType(mode), view)
+        public WebViewCanvasViewModel(IBaseCanvasPreviewControlView view, BaseContentTypeModel contentType)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, contentType, view)
         {
-            this._mode = mode;
         }
 
         #endregion
 
         #region Override
 
-        protected override async Task<SafeWrapperResult> SetDataInternal(DataPackageView dataPackage)
+        protected override async Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item)
         {
-            // We override the function there because if clipboard contains link, checking dataPackage.Contains() is true
-            // for some reason for both StandardDataFormats.Text and StandardDataFormats.StorageItems -> Since we know it's the text we must check it first
-            // to avoid exceptions and only then if not text, StandardDataFormats.StorageItems
-
-            if (dataPackage.Contains(StandardDataFormats.Text))
+            if (item is not StorageFile file)
             {
-                // Check for text
-                return await SetData(dataPackage);
+                return ItemIsNotAFileResult;
+            }
+
+            SafeWrapper<string> text = await FilesystemOperations.ReadFileText(file);
+
+            if (Mode == WebViewCanvasMode.ReadWebsite)
+            {
+                _Source = text;
             }
             else
             {
-                // Check for storage items
-                return await base.SetDataInternal(dataPackage);
-            }
-        }
-
-        protected override async Task<SafeWrapperResult> SetData(DataPackageView dataPackage)
-        {
-            SafeWrapper<string> text = await SafeWrapperRoutines.SafeWrapAsync(() => dataPackage.GetTextAsync().AsTask());
-
-            if (_mode == WebViewCanvasMode.ReadWebsite)
-            {
-                Source = text;
-            }
-            else
-            {
-                TextHtml = text;
+                _HtmlText = text;
             }
 
             return text;
-        }
-
-        public override async Task<SafeWrapperResult> TrySaveData()
-        {
-            SafeWrapperResult result;
-
-            if (associatedFile == null)
-            {
-                return ItemIsNotAFileResult;
-            }
-
-            if (_mode == WebViewCanvasMode.ReadWebsite)
-            {
-                result = await FilesystemOperations.WriteFileText(associatedFile, Source);
-            }
-            else
-            {
-                result = await FilesystemOperations.WriteFileText(associatedFile, TextHtml);
-            }
-
-            return result;
-        }
-
-        protected override async Task<SafeWrapperResult> SetDataFromExistingFile(IStorageItem item)
-        {
-            StorageFile file = item as StorageFile;
-            if (file == null)
-            {
-                return ItemIsNotAFileResult;
-            }
-
-            SafeWrapper<string> text = SafeWrapperRoutines.SafeWrap(() => UnsafeNativeHelpers.ReadStringFromFile(file.Path));
-
-            if (_mode == WebViewCanvasMode.ReadWebsite)
-            {
-                Source = text;
-            }
-            else
-            {
-                TextHtml = text;
-            }
-
-            return await Task.FromResult(text);
-        }
-
-        protected override async Task<SafeWrapper<CollectionItemViewModel>> TrySetFileWithExtension()
-        {
-            SafeWrapper<CollectionItemViewModel> itemViewModel;
-
-            if (_mode == WebViewCanvasMode.ReadWebsite)
-            {
-                itemViewModel = await associatedCollection.CreateNewCollectionItemFromExtension(Constants.FileSystem.WEBSITE_LINK_FILE_EXTENSION);
-            }
-            else
-            {
-                itemViewModel = await associatedCollection.CreateNewCollectionItemFromExtension(".html");
-            }
-
-            return itemViewModel;
         }
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()
@@ -166,7 +100,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             else
             {
-                if (_mode == WebViewCanvasMode.ReadWebsite)
+                if (Mode == WebViewCanvasMode.ReadWebsite)
                 {
                     ControlView.NavigateToSource(Source);
                 }
@@ -177,6 +111,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             return await Task.FromResult(SafeWrapperResult.SUCCESS);
+        }
+
+        protected override IPasteModel SetCanvasPasteModel()
+        {
+            return new WebViewPasteModel(Mode, associatedCollection, new StatusCenterOperationReceiver());
         }
 
         #endregion
@@ -191,7 +130,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 _webViewNeedsUpdate = false;
 
-                if (_mode == WebViewCanvasMode.ReadWebsite)
+                if (Mode == WebViewCanvasMode.ReadWebsite)
                 {
                     ControlView.NavigateToSource(Source);
                 }
@@ -210,6 +149,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             base.Dispose();
 
+            this.ControlView?.Dispose();
+
+            this.ControlView = null;
             this.ContentWebViewLoad = false;
         }
 

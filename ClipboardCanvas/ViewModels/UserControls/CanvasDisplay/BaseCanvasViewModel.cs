@@ -18,10 +18,10 @@ using ClipboardCanvas.Models;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.EventArguments.CanvasControl;
-using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.CanavsPasteModels;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
+using ClipboardCanvas.DataModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -29,13 +29,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
     {
         #region Members
 
-        protected IStorageItem _temporarySourceItem;
-
-        #endregion
-
-        #region Properties
-
-        protected abstract IPasteModel CanvasPasteModel { get; }
+        protected IPasteModel canvasPasteModel;
 
         #endregion
 
@@ -60,6 +54,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Canvas Operations
 
+        protected abstract IPasteModel SetCanvasPasteModel();
+
         public virtual async Task<SafeWrapperResult> TryPasteData(DataPackageView dataPackage, CancellationToken cancellationToken)
         {
             SafeWrapperResult result;
@@ -80,51 +76,31 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return result;
             }
 
-            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            canvasPasteModel = SetCanvasPasteModel();
+
+            if (canvasPasteModel == null)
             {
-                DiscardData();
-                return SafeWrapperResult.CANCEL;
+                return new SafeWrapperResult(OperationErrorCode.AccessUnauthorized, null, "Couldn't paste content.");
             }
 
-            result = await SetDataInternal(dataPackage);
-            if (!AssertNoError(result))
+            SafeWrapper<CanvasItem> pasteResult = await canvasPasteModel.PasteData(dataPackage, CanPasteAsReference(), cancellationToken);
+            this.canvasItem = pasteResult.Result;
+
+            if (!AssertNoError(pasteResult))
             {
-                return result;
+                return pasteResult;
             }
 
-            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
-            {
-                DiscardData();
-                return SafeWrapperResult.CANCEL;
-            }
-
-            SetContentModeForPasting();
-
-            result = await CreateAndSetCanvasItem();
-            if (!AssertNoError(result))
-            {
-                return result;
-            }
-
-            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
-            {
-                DiscardData();
-                return SafeWrapperResult.CANCEL;
-            }
-
-            result = await TrySaveDataInternal();
-            if (!AssertNoError(result))
-            {
-                return result;
-            }
-
-            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
-            {
-                DiscardData();
-                return SafeWrapperResult.CANCEL;
-            }
-
+            // Set collectionItemViewModel because it wasn't set before
+            this.associatedItemViewModel = associatedCollection.FindCollectionItem(canvasItem);
+            
             await OnPasteSucceeded();
+
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return SafeWrapperResult.CANCEL;
+            }
 
             if (UserSettings.OpenNewCanvasOnPaste)
             {
@@ -141,56 +117,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
                 IsContentLoaded = true;
                 RefreshContextMenuItems();
-                RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, IsContentLoaded, isContentAsReference));
+                RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, IsContentLoaded, canvasPasteModel.IsContentAsReference, CanPasteReference));
             }
 
-            return result;
+            return SafeWrapperResult.SUCCESS;
         }
-
-        protected virtual async Task<SafeWrapperResult> TrySaveDataInternal()
-        {
-            if (isContentAsReference && await sourceItem == null)
-            {
-                ReferenceFile referenceFile = await ReferenceFile.GetFile(associatedFile);
-
-                // We need to update it since it's empty
-                return await referenceFile.UpdateReferenceFile(new ReferenceFileData(_temporarySourceItem.Path));
-            }
-            else
-            {
-                if (_temporarySourceItem != null && _temporarySourceItem.Path != associatedItem.Path) // Make sure we don't copy to the same path
-                {
-                    // If pasting a file not raw data from clipboard...
-
-                    // Signalize that the file is being pasted
-                    RaiseOnTipTextUpdateRequestedEvent(this, new TipTextUpdateRequestedEventArgs("The file is being pasted, please wait.", TimeSpan.FromMilliseconds(Constants.UI.CanvasContent.FILE_PASTING_TIP_DELAY)));
-
-                    SafeWrapperResult copyResult = SafeWrapperResult.UNKNOWN_FAIL;
-
-                    // Copy to collection
-                    this.associatedItemViewModel.OperationContext.CancellationToken = cancellationToken;
-                    this.associatedItemViewModel.OperationContext.ProgressDelegate = ReportProgress;
-
-                    await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(async () =>
-                    {
-                        copyResult = await FilesystemOperations.CopyFileAsync(_temporarySourceItem as StorageFile, associatedFile, associatedItemViewModel.OperationContext);
-                    });
-
-                    return copyResult;
-                }
-
-                SafeWrapperResult result = await TrySaveData();
-
-                if (result)
-                {
-                    RaiseOnFileModifiedEvent(this, new FileModifiedEventArgs(associatedItem));
-                }
-
-                return result;
-            }
-        }
-
-        public abstract Task<SafeWrapperResult> TrySaveData();
 
         public virtual async Task<SafeWrapperResult> PasteOverrideReference()
         {
@@ -319,90 +250,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return Task.CompletedTask;
         }
 
-        protected virtual async Task<SafeWrapperResult> SetDataInternal(DataPackageView dataPackage)
-        {
-            if (dataPackage.Contains(StandardDataFormats.StorageItems)
-                && !dataPackage.Contains(StandardDataFormats.ApplicationLink)
-                && !dataPackage.Contains(StandardDataFormats.Bitmap)
-                && !dataPackage.Contains(StandardDataFormats.Html)
-                && !dataPackage.Contains(StandardDataFormats.Rtf)
-                && !dataPackage.Contains(StandardDataFormats.Text)
-                && !dataPackage.Contains(StandardDataFormats.UserActivityJsonArray)
-                && !dataPackage.Contains(StandardDataFormats.WebLink))
-            {
-                SafeWrapper<IReadOnlyList<IStorageItem>> items = await SafeWrapperRoutines.SafeWrapAsync(
-                    () => dataPackage.GetStorageItemsAsync().AsTask());
-
-                if (!items)
-                {
-                    Debugger.Break();
-                    return (SafeWrapperResult)items;
-                }
-
-                _temporarySourceItem = items.Result.First();
-
-                SafeWrapperResult result = await SetDataFromExistingFile(_temporarySourceItem);
-
-                return result;
-            }
-            else
-            {
-                return await SetData(dataPackage);
-            }
-        }
-
-        protected virtual async Task<SafeWrapperResult> CreateAndSetCanvasItem()
-        {
-            SafeWrapper<CollectionItemViewModel> itemViewModel;
-
-            if (isContentAsReference)
-            {
-                itemViewModel = await associatedCollection.CreateNewCollectionItemFromExtension(Constants.FileSystem.REFERENCE_FILE_EXTENSION);
-            }
-            else
-            {
-                if (_temporarySourceItem != null)
-                {
-                    string fileName = Path.GetFileName(_temporarySourceItem.Path);
-                    itemViewModel = await associatedCollection.CreateNewCollectionItem(fileName);
-                }
-                else
-                {
-                    itemViewModel = await TrySetFileWithExtension();
-                }
-            }
-
-            this.associatedItemViewModel = itemViewModel;
-            this.canvasItem = associatedItemViewModel;
-
-            if (itemViewModel)
-            {
-                RaiseOnFileCreatedEvent(this, new FileCreatedEventArgs(contentType, associatedItem));
-            }
-
-            return itemViewModel;
-        }
-
-        protected void SetContentModeForPasting()
-        {
-            if (UserSettings.AlwaysPasteFilesAsReference && CanPasteAsReference())
-            {
-                isContentAsReference = true;
-            }
-            else
-            {
-                isContentAsReference = false;
-            }
-        }
-
         protected virtual bool CanPasteAsReference()
         {
-            return _temporarySourceItem != null;
+            return UserSettings.AlwaysPasteFilesAsReference;
         }
-
-        protected abstract Task<SafeWrapperResult> SetData(DataPackageView dataPackage);
-
-        protected abstract Task<SafeWrapper<CollectionItemViewModel>> TrySetFileWithExtension();
 
         #endregion
 
@@ -413,7 +264,18 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         protected void RaiseOnFileCreatedEvent(object s, FileCreatedEventArgs e) => OnFileCreatedEvent?.Invoke(s, e);
 
         protected void RaiseOnFileModifiedEvent(object s, FileModifiedEventArgs e) => OnFileModifiedEvent?.Invoke(s, e);
-        
+
+        #endregion
+
+        #region IDisposable
+
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            this.canvasPasteModel?.Dispose();
+        }
+
         #endregion
     }
 }

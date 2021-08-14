@@ -70,16 +70,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             return result;
         }
 
-        public async Task<SafeWrapperResult> TrySaveData()
-        {
-            if (CanvasViewModel == null)
-            {
-                return CanvasNullResult;
-            }
-
-            return await CanvasViewModel.TrySaveData();
-        }
-
         public async Task<SafeWrapperResult> PasteOverrideReference()
         {
             if (CanvasViewModel == null)

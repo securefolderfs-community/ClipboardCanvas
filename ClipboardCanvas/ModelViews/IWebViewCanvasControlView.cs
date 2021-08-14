@@ -1,6 +1,8 @@
-﻿namespace ClipboardCanvas.ModelViews
+﻿using System;
+
+namespace ClipboardCanvas.ModelViews
 {
-    public interface IWebViewCanvasControlView
+    public interface IWebViewCanvasControlView : IDisposable
     {
         void NavigateToHtml(string html);
 
