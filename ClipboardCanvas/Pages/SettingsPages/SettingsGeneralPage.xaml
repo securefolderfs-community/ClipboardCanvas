@@ -20,6 +20,8 @@
 
                 <ToggleSwitch Header="Show confirmation dialog when deleting items" IsOn="{x:Bind ViewModel.ShowDeleteConfirmationDialog, Mode=TwoWay}" />
 
+                <ToggleSwitch Header="Permanently delete items as default" IsOn="{x:Bind ViewModel.DeletePermanentlyAsDefault, Mode=TwoWay}" />
+
                 <ToggleSwitch Header="Show Timeline widget on Homepage" IsOn="{x:Bind ViewModel.ShowTimelineOnHomepage, Mode=TwoWay}" />
             </StackPanel>
 

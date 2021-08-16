@@ -11,6 +11,11 @@ namespace ClipboardCanvas.Services
         /// Determines whether to show Timeline widget on homepage
         /// </summary>
         bool ShowTimelineOnHomepage { get; set; }
+
+        /// <summary>
+        /// Determines whether to enable permanent deletion option as default
+        /// </summary>
+        bool DeletePermanentlyAsDefault { get; set; }
         
         /// <summary>
         /// Determines whether to open new canvas on paste

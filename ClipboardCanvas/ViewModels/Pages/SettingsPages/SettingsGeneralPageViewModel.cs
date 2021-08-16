@@ -37,6 +37,20 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
             }
         }
 
+        public bool DeletePermanentlyAsDefault
+        {
+            get => UserSettings.DeletePermanentlyAsDefault;
+            set
+            {
+                if (value != UserSettings.DeletePermanentlyAsDefault)
+                {
+                    UserSettings.DeletePermanentlyAsDefault = value;
+
+                    OnPropertyChanged(nameof(DeletePermanentlyAsDefault));
+                }
+            }
+        }
+
         public bool ShowTimelineOnHomepage
         {
             get => UserSettings.ShowTimelineOnHomepage;

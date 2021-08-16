@@ -79,15 +79,14 @@ namespace ClipboardCanvas.CanavsPasteModels
                 return openedStream;
             }
 
-            SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
+            return await SafeWrapperRoutines.SafeWrapAsync(async () =>
             {
-                BitmapDecoder bitmapDecoder = await BitmapDecoder.CreateAsync(openedStream.Result);
-                SoftwareBitmap = await bitmapDecoder.GetSoftwareBitmapAsync();
+                using (openedStream.Result)
+                {
+                    BitmapDecoder bitmapDecoder = await BitmapDecoder.CreateAsync(openedStream.Result);
+                    SoftwareBitmap = await bitmapDecoder.GetSoftwareBitmapAsync();
+                }
             });
-
-            openedStream.Result?.Dispose();
-            
-            return result;
         }
 
         protected override async Task<SafeWrapper<CanvasItem>> GetCanvasFileFromExtension(ICanvasItemReceiverModel canvasFileReceiver)
@@ -146,15 +145,14 @@ namespace ClipboardCanvas.CanavsPasteModels
                 return openedStream;
             }
 
-            SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
+            return await SafeWrapperRoutines.SafeWrapAsync(async () =>
             {
-                BitmapDecoder bitmapDecoder = await BitmapDecoder.CreateAsync(openedStream.Result);
-                SoftwareBitmap = await bitmapDecoder.GetSoftwareBitmapAsync();
+                using (openedStream.Result)
+                {
+                    BitmapDecoder bitmapDecoder = await BitmapDecoder.CreateAsync(openedStream.Result);
+                    SoftwareBitmap = await bitmapDecoder.GetSoftwareBitmapAsync();
+                }
             });
-
-            openedStream.Result.Dispose();
-
-            return result;
         }
 
         public override void Dispose()

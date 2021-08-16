@@ -24,6 +24,12 @@ namespace ClipboardCanvas.Services
             set => Set<bool>(value);
         }
 
+        public bool DeletePermanentlyAsDefault
+        {
+            get => Get<bool>(false);
+            set => Set<bool>(value);
+        }
+
         public bool OpenNewCanvasOnPaste
         {
             get => Get<bool>(false);

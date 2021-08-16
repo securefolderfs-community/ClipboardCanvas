@@ -21,14 +21,14 @@ namespace ClipboardCanvas.Helpers
     {
         public static async Task<SafeWrapperResult> DeleteCanvasFile(ICanvasItemReceiverModel canvasItemReceiverModel, CanvasItem canvasItem, bool hideConfirmation = false)
         {
-            bool deletePermanently = false; // TODO: Option for permanent
+            IUserSettingsService userSettingsService = Ioc.Default.GetService<IUserSettingsService>();
 
-            IUserSettingsService userSettings = Ioc.Default.GetService<IUserSettingsService>();
-            IDialogService dialogService = Ioc.Default.GetService<IDialogService>();
-
-            if (userSettings.ShowDeleteConfirmationDialog && !hideConfirmation)
+            bool deletePermanently = userSettingsService.DeletePermanentlyAsDefault; // TODO: Option for permanent
+            if (userSettingsService.ShowDeleteConfirmationDialog && !hideConfirmation)
             {
-                DeleteConfirmationDialogViewModel deleteConfirmationDialogViewModel = new DeleteConfirmationDialogViewModel(Path.GetFileName(canvasItem.AssociatedItem.Path));
+                IDialogService dialogService = Ioc.Default.GetService<IDialogService>();
+
+                DeleteConfirmationDialogViewModel deleteConfirmationDialogViewModel = new DeleteConfirmationDialogViewModel(Path.GetFileName(canvasItem.AssociatedItem.Path), deletePermanently);
                 DialogResult dialogOption = await dialogService.ShowDialog(deleteConfirmationDialogViewModel);
 
                 if (dialogOption != DialogResult.Primary)

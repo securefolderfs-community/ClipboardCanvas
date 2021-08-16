@@ -19,9 +19,10 @@ namespace ClipboardCanvas.ViewModels.Dialogs
 
         #region Constructor
 
-        public DeleteConfirmationDialogViewModel(string fileName)
+        public DeleteConfirmationDialogViewModel(string fileName, bool permanentlyDelete)
         {
             this.FileName = fileName;
+            this.PermanentlyDelete = permanentlyDelete;
         }
 
         #endregion

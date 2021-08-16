@@ -28,11 +28,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
     public class InfiniteCanvasViewModel : BaseCanvasViewModel
     {
-        private ICanvasItemReceiverModel _infiniteCanvasFileReceiver;
-
         private InfiniteCanvasItem InfiniteCanvasItem => canvasItem as InfiniteCanvasItem;
 
-        private volatile InteractableCanvasControlItemViewModel _currentCanvasItem;
+        private ICanvasItemReceiverModel _infiniteCanvasFileReceiver;
 
         private IInteractableCanvasControlModel InteractableCanvasControlModel => ControlView?.InteractableCanvasModel;
 
@@ -101,9 +99,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 return pastedFile;
             }
-            
+
             // Add new object to Infinite Canvas
-            _currentCanvasItem = await InteractableCanvasControlModel.AddItem(associatedCollection, contentType, pastedFile, _infiniteCanvasFileReceiver, cancellationToken);
+            var interactableCanvasControlCanvasItem = await InteractableCanvasControlModel.AddItem(associatedCollection, contentType, pastedFile, _infiniteCanvasFileReceiver, cancellationToken);
 
             // Wait for control to load
             await Task.Delay(Constants.UI.CONTROL_LOAD_DELAY);
@@ -113,7 +111,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             AssertNoError(saveDataResult); // Only for notification
 
             // Fetch data to view
-            SafeWrapperResult fetchDataToViewResult = await TryFetchDataToView();
+            SafeWrapperResult fetchDataToViewResult = await interactableCanvasControlCanvasItem.LoadContent();
 
             RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, false, false, CanPasteReference, true));
 
@@ -209,9 +207,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return Task.FromResult(SafeWrapperResult.CANCEL);
         }
 
-        protected override async Task<SafeWrapperResult> TryFetchDataToView()
+        protected override Task<SafeWrapperResult> TryFetchDataToView()
         {
-            return await _currentCanvasItem.LoadContent();
+            return Task.FromResult(SafeWrapperResult.CANCEL);
         }
 
         public override async Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions()
@@ -256,13 +254,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Save canvas image preview
             SafeWrapperResult imagePreviewSaveResult = await SafeWrapperRoutines.SafeWrapAsync(async () =>
             {
-                using (IRandomAccessStream fileStream = await InfiniteCanvasItem.CanvasPreviewImageFile.OpenAsync(FileAccessMode.ReadWrite))
+                using (e.canvasImageStream)
                 {
-                    await e.canvasImageStream.AsStreamForRead().CopyToAsync(fileStream.AsStreamForWrite());
+                    using (IRandomAccessStream fileStream = await InfiniteCanvasItem.CanvasPreviewImageFile.OpenAsync(FileAccessMode.ReadWrite))
+                    {
+                        await e.canvasImageStream.AsStreamForRead().CopyToAsync(fileStream.AsStreamForWrite());
+                    }
                 }
             });
-
-            e.canvasImageStream?.Dispose();
         }
 
         #endregion
