@@ -68,8 +68,39 @@ namespace ClipboardCanvas.UserControls
                 Canvas.SetTop(container, dropPoint.Y - _savedClickPosition.Y);
 
                 element.Opacity = 1.0d;
+
+                // Update the ZIndex of the element - set it on top
+                SetOnTop(container);
+
                 this.ViewModel.ItemRearranged();
             }
+        }
+
+        private void SetOnTop(UIElement element)
+        {
+            if (element == null)
+            {
+                return;
+            }
+
+            int elementZIndex = Canvas.GetZIndex(element);
+            int highestZIndex = Math.Max(elementZIndex, 1);
+
+            foreach (object item in ItemsHolder.Items)
+            {
+                UIElement uiItemContainer = ItemsHolder.ContainerFromItem(item) as UIElement;
+
+                int itemZIndex = Canvas.GetZIndex(uiItemContainer);
+                highestZIndex = Math.Max(itemZIndex, highestZIndex);
+
+                if (itemZIndex > elementZIndex)
+                {
+                    Canvas.SetZIndex(uiItemContainer, itemZIndex - 1);
+                }
+            }
+
+            // Set the highest ZIndex
+            Canvas.SetZIndex(element, highestZIndex);
         }
 
         private void Canvas_DragOver(object sender, DragEventArgs e)
@@ -132,21 +163,27 @@ namespace ClipboardCanvas.UserControls
         public Vector2 GetItemPosition(InteractableCanvasControlItemViewModel itemViewModel)
         {
             int indexOfItem = this.ViewModel.Items.IndexOf(itemViewModel);
-            UIElement container = ItemsHolder.ContainerFromIndex(indexOfItem) as UIElement;
 
-            float x = (float)Canvas.GetLeft(container);
-            float y = (float)Canvas.GetTop(container);
+            if (ItemsHolder.ContainerFromIndex(indexOfItem) is UIElement container)
+            {
+                float x = (float)Canvas.GetLeft(container);
+                float y = (float)Canvas.GetTop(container);
 
-            return new Vector2(x, y);
+                return new Vector2(x, y);
+            }
+
+            return new Vector2(0, 0);
         }
 
         public void SetItemPosition(InteractableCanvasControlItemViewModel itemViewModel, Vector2 position)
         {
             int indexOfItem = this.ViewModel.Items.IndexOf(itemViewModel);
-            UIElement container = ItemsHolder.ContainerFromIndex(indexOfItem) as UIElement;
 
-            Canvas.SetLeft(container, (double)position.X);
-            Canvas.SetTop(container, (double)position.Y);
+            if (ItemsHolder.ContainerFromIndex(indexOfItem) is UIElement container)
+            {
+                Canvas.SetLeft(container, (double)position.X);
+                Canvas.SetTop(container, (double)position.Y);
+            }
         }
 
         public async Task<IRandomAccessStream> GetCanvasImageStream()
@@ -175,6 +212,29 @@ namespace ClipboardCanvas.UserControls
             Array.Clear(pixelArray, 0, pixelArray.Length);
 
             return stream;
+        }
+
+        public void SetOnTop(InteractableCanvasControlItemViewModel itemViewModel)
+        {
+            SetOnTop(ItemsHolder.ContainerFromItem(itemViewModel) as UIElement);
+        }
+
+        public int GetCanvasTopIndex(InteractableCanvasControlItemViewModel itemViewModel)
+        {
+            if (ItemsHolder.ContainerFromItem(itemViewModel) is UIElement container)
+            {
+                return Canvas.GetZIndex(container);
+            }
+
+            return 0;
+        }
+
+        public void SetCanvasTopIndex(InteractableCanvasControlItemViewModel itemViewModel, int topIndex)
+        {
+            if (ItemsHolder.ContainerFromItem(itemViewModel) is UIElement container)
+            {
+                Canvas.SetZIndex(container, topIndex);
+            }
         }
     }
 }

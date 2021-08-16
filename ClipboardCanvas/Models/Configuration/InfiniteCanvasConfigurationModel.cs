@@ -24,11 +24,14 @@ namespace ClipboardCanvas.Models
 
         public readonly Vector2 locationVector;
 
+        public readonly int canvasTopIndex;
+
         [JsonConstructor]
-        public InfiniteCanvasConfigurationItemModel(string associatedItemPath, Vector2 locationVector)
+        public InfiniteCanvasConfigurationItemModel(string associatedItemPath, Vector2 locationVector, int canvasTopIndex)
         {
             this.associatedItemPath = associatedItemPath;
             this.locationVector = locationVector;
+            this.canvasTopIndex = canvasTopIndex;
         }
     }
 }

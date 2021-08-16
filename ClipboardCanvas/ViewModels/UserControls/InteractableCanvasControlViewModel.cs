@@ -101,6 +101,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
             await item.InitializeItem();
             NoItemsTextLoad = false;
 
+            _view?.SetCanvasTopIndex(item, Items.Count);
+
             return item;
         }
 
@@ -118,7 +120,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             foreach (var item in Items)
             {
-                canvasConfigurationModel.elements.Add(new InfiniteCanvasConfigurationItemModel(item.CanvasItem.AssociatedItem.Path, item.ItemPosition));
+                canvasConfigurationModel.elements.Add(new InfiniteCanvasConfigurationItemModel(item.CanvasItem.AssociatedItem.Path, item.ItemPosition, item.CanvasTopIndex));
             }
 
             return canvasConfigurationModel;
@@ -138,6 +140,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     if (item1.CanvasItem.AssociatedItem.Path == item2.associatedItemPath)
                     {
                         item1.ItemPosition = item2.locationVector;
+                        item1.CanvasTopIndex = item2.canvasTopIndex;
                     }
                 }
             }

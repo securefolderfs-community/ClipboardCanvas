@@ -82,6 +82,15 @@ namespace ClipboardCanvas.ViewModels.UserControls
             set => SetProperty(ref _DisplayName, value);
         }
 
+        public int CanvasTopIndex
+        {
+            get => _view.GetCanvasTopIndex(this);
+            set => _view.SetCanvasTopIndex(this, value);
+        }
+
+        /// <summary>
+        /// The item position
+        /// </summary>
         public Vector2 ItemPosition
         {
             get => _view.GetItemPosition(this);
