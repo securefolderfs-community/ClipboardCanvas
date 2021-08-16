@@ -93,6 +93,42 @@
                                 BorderThickness="0"
                                 ToolTipService.ToolTip="Item pasted as Reference">
                                 <FontIcon FontSize="18" Glyph="&#xE71B;" />
+                                <Button.Flyout>
+                                    <Flyout>
+                                        <Grid RowSpacing="8">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <!--  Title  -->
+                                            <TextBlock
+                                                Grid.Row="0"
+                                                FontSize="16"
+                                                FontWeight="SemiBold"
+                                                Text="Reference Files" />
+
+                                            <!--  Content text  -->
+                                            <TextBlock
+                                                Grid.Row="1"
+                                                Width="300"
+                                                Text="This file has been pasted as a reference to the original file. Clipboard Canvas loads the original file that the reference is pointing to.&#x0a;&#x0a;You can override the reference and copy the item directly to this collection by pressing the button below."
+                                                TextTrimming="WordEllipsis"
+                                                TextWrapping="Wrap" />
+
+                                            <!--  Paste reference  -->
+                                            <Button
+                                                Grid.Row="2"
+                                                Margin="0,16,0,0"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Center"
+                                                Command="{x:Bind OverrideReferenceCommand}"
+                                                Content="Paste reference"
+                                                IsEnabled="{x:Bind OverrideReferenceEnabled, Mode=OneWay}" />
+                                        </Grid>
+                                    </Flyout>
+                                </Button.Flyout>
                             </Button>
 
                             <!--  Filename  -->

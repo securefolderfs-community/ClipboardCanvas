@@ -338,6 +338,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             return (result.Result, result.Details);
         }
 
+        public async Task<SafeWrapperResult> DeleteItem(IStorageItem itemToDelete, bool permanently)
+        {
+            return await DeleteCollectionItem(FindCollectionItem(itemToDelete), permanently);
+        }
+
         public async Task<SafeWrapper<CollectionItemViewModel>> CreateNewCollectionItemFromExtension(string extension)
         {
             string fileName = DateTime.Now.ToString(Constants.FileSystem.CANVAS_FILE_FILENAME_DATE_FORMAT);
@@ -380,6 +385,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         public CollectionItemViewModel FindCollectionItem(CanvasItem canvasItem)
         {
             return CollectionItems.FirstOrDefault((item) => item.AssociatedItem.Path == canvasItem.AssociatedItem.Path);
+        }
+
+        public CollectionItemViewModel FindCollectionItem(IStorageItem storageItem)
+        {
+            return CollectionItems.FirstOrDefault((item) => item.AssociatedItem.Path == storageItem.Path);
         }
 
         public virtual void NavigateFirst(ICanvasPreviewModel pasteCanvasModel)

@@ -31,7 +31,7 @@
 
                 public const int FILE_PASTING_TIP_DELAY = 150;
 
-                public const uint SIMPLE_CANVAS_THUMBNAIL_SIZE = 256u;
+                public const uint SIMPLE_CANVAS_THUMBNAIL_SIZE = 128u;
 
                 public const int INFINITE_CANVAS_SAVE_INTERVAL = 1000;
 

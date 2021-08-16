@@ -91,16 +91,7 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
                         return new InvalidContentTypeDataModel(referenceFile.LastError, false);
                     }
 
-                    if (referenceFile.ReferencedItem is StorageFolder)
-                    {
-                        return new InvalidContentTypeDataModel(new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Displaying content for folders is not yet supported."), false);
-                    }
-                    else
-                    {
-                        file = referenceFile.ReferencedItem as StorageFile;
-                    }
-
-                    ext = Path.GetExtension(file.Path);
+                    return await GetContentType(referenceFile.ReferencedItem, contentType);
                 }
 
                 return await GetContentTypeFromExtension(file, ext);

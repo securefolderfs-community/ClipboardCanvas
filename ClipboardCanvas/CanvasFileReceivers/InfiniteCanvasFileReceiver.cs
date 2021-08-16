@@ -10,7 +10,7 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 
 namespace ClipboardCanvas.CanvasFileReceivers
 {
-    public class InfiniteCanvasFileReceiver : ICanvasFileReceiverModel
+    public class InfiniteCanvasFileReceiver : ICanvasItemReceiverModel
     {
         private CanvasItem _infiniteCanvasFolder;
 
@@ -43,6 +43,11 @@ namespace ClipboardCanvas.CanvasFileReceivers
             SafeWrapper<StorageFile> file = await FilesystemOperations.CreateFile(folder, fileName);
 
             return (new CanvasItem(file.Result), file.Details);
+        }
+
+        public async Task<SafeWrapperResult> DeleteItem(IStorageItem itemToDelete, bool permanently)
+        {
+            return await FilesystemOperations.DeleteItem(itemToDelete, permanently);
         }
     }
 }

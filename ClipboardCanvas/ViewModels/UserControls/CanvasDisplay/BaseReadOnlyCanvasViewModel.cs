@@ -74,7 +74,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected ICollectionModel associatedCollection => view?.CollectionModel;
 
-        protected CollectionItemViewModel associatedItemViewModel;
+        protected CollectionItemViewModel collectionItemViewModel;
 
         protected CanvasItem canvasItem;
 
@@ -82,15 +82,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Protected Properties
 
-        protected readonly SafeWrapperResult ReferencedFileNotFoundResult = new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "The file referenced was not found");
-
-        protected readonly SafeWrapperResult ItemIsNotAFileResult = new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentException(), "The provided item is not a file.");
-
         protected bool IsDisposed { get; private set; }
 
         #endregion
 
         #region Public Properties
+
+        public static readonly SafeWrapperResult ReferencedFileNotFoundResult = new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "The file referenced was not found");
+
+        public static readonly SafeWrapperResult ItemIsNotAFileResult = new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentException(), "The provided item is not a file.");
 
         public bool IsContentLoaded { get; protected set; }
 
@@ -135,7 +135,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public virtual async Task<SafeWrapperResult> TryLoadExistingData(CollectionItemViewModel itemData, CancellationToken cancellationToken)
         {
-            this.associatedItemViewModel = itemData;
+            this.collectionItemViewModel = itemData;
 
             return await TryLoadExistingData(itemData, itemData.ContentType, cancellationToken);
         }
@@ -155,15 +155,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 // We don't invoke OnErrorOccurredEvent here because we want to discard this canvas immediately and not show the error
                 return new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "Canvas not found.");
             }
-            else if (associatedItemViewModel?.OperationContext.IsOperationOngoing ?? false) // Check if it's being pasted
+            else if (collectionItemViewModel?.OperationContext.IsOperationOngoing ?? false) // Check if it's being pasted
             {
                 // Hook event to operation finished event
-                if (!associatedItemViewModel.OperationContext.IsEventAlreadyHooked)
+                if (!collectionItemViewModel.OperationContext.IsEventAlreadyHooked)
                 {
-                    associatedItemViewModel.OperationContext.OnOperationFinishedEvent += OperationContext_OnOperationFinishedEvent;
-                    associatedItemViewModel.OperationContext.IsEventAlreadyHooked = true;
+                    collectionItemViewModel.OperationContext.OnOperationFinishedEvent += OperationContext_OnOperationFinishedEvent;
+                    collectionItemViewModel.OperationContext.IsEventAlreadyHooked = true;
                 }
-                this.associatedItemViewModel.OperationContext.ProgressDelegate = ReportProgress;
+                this.collectionItemViewModel.OperationContext.ProgressDelegate = ReportProgress;
 
                 RaiseOnTipTextUpdateRequestedEvent(this, new TipTextUpdateRequestedEventArgs("The file is being pasted, please wait."));
                 return new SafeWrapperResult(OperationErrorCode.InProgress, "Pasting is still in progress");
@@ -216,7 +216,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public virtual async Task<SafeWrapperResult> TryDeleteData(bool hideConfirmation = false)
         {
-            SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(associatedCollection, associatedItemViewModel, hideConfirmation);
+            SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(associatedCollection, collectionItemViewModel, hideConfirmation);
 
             if (result != OperationErrorCode.Canceled && !AssertNoError(result))
             {
@@ -257,7 +257,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             ContextMenuItems.DisposeClear();
 
             // May occur when quickly switching between canvases
-            if (associatedItemViewModel == null)
+            if (collectionItemViewModel == null)
             {
                 return;
             }
@@ -265,7 +265,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Open item
             ContextMenuItems.Add(new MenuFlyoutItemViewModel()
             {
-                Command = new AsyncRelayCommand(associatedItemViewModel.OpenFile),
+                Command = new AsyncRelayCommand(collectionItemViewModel.OpenFile),
                 IconGlyph = "\uE8E5",
                 Text = "Open file"
             });
@@ -284,7 +284,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Open containing folder
             ContextMenuItems.Add(new MenuFlyoutItemViewModel()
             {
-                Command = new AsyncRelayCommand(associatedItemViewModel.OpenContainingFolder),
+                Command = new AsyncRelayCommand(collectionItemViewModel.OpenContainingFolder),
                 IconGlyph = "\uE838",
                 Text = "Open containing folder"
             });
@@ -294,7 +294,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 ContextMenuItems.Add(new MenuFlyoutItemViewModel()
                 {
-                    Command = new AsyncRelayCommand(() => associatedItemViewModel.OpenContainingFolder(checkForReference: false)),
+                    Command = new AsyncRelayCommand(() => collectionItemViewModel.OpenContainingFolder(checkForReference: false)),
                     IconGlyph = "\uE838",
                     Text = "Open reference containing folder"
                 });
@@ -388,13 +388,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         private async void OperationContext_OnOperationFinishedEvent(object sender, OperationFinishedEventArgs e)
         {
-            associatedItemViewModel.OperationContext.OnOperationFinishedEvent -= OperationContext_OnOperationFinishedEvent;
-            associatedItemViewModel.OperationContext.IsEventAlreadyHooked = false;
+            collectionItemViewModel.OperationContext.OnOperationFinishedEvent -= OperationContext_OnOperationFinishedEvent;
+            collectionItemViewModel.OperationContext.IsEventAlreadyHooked = false;
 
             // Load data again when it's finished, and check if we are still on the canvas to load
-            if (e.result && associatedCollection.IsOnOpenedCanvas(associatedItemViewModel))
+            if (e.result && associatedCollection.IsOnOpenedCanvas(collectionItemViewModel))
             {
-                await TryLoadExistingData(associatedItemViewModel, cancellationToken);
+                await TryLoadExistingData(collectionItemViewModel, cancellationToken);
             }
         }
 

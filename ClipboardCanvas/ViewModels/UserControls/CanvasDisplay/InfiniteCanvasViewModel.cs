@@ -28,7 +28,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
     public class InfiniteCanvasViewModel : BaseCanvasViewModel
     {
-        private ICanvasFileReceiverModel _infiniteCanvasFileReceiver;
+        private ICanvasItemReceiverModel _infiniteCanvasFileReceiver;
 
         private InfiniteCanvasItem InfiniteCanvasItem => canvasItem as InfiniteCanvasItem;
 
@@ -103,7 +103,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             
             // Add new object to Infinite Canvas
-            _currentCanvasItem = await InteractableCanvasControlModel.AddItem(associatedCollection, contentType, pastedFile, cancellationToken);
+            _currentCanvasItem = await InteractableCanvasControlModel.AddItem(associatedCollection, contentType, pastedFile, _infiniteCanvasFileReceiver, cancellationToken);
 
             // Wait for control to load
             await Task.Delay(Constants.UI.CONTROL_LOAD_DELAY);
@@ -164,7 +164,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 }
 
                 // Add to canvas
-                var interactableCanvasItem = await InteractableCanvasControlModel?.AddItem(associatedCollection, itemContentType, itemCanvasItem, cancellationToken);
+                var interactableCanvasItem = await InteractableCanvasControlModel?.AddItem(associatedCollection, itemContentType, itemCanvasItem, _infiniteCanvasFileReceiver, cancellationToken);
                 interactableCanvasList.Add(interactableCanvasItem);
             }
 
@@ -273,7 +273,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             if (InfiniteCanvasItem != null)
             {
-                return await InfiniteCanvasItem.InitializeCanvasFolder();
+                SafeWrapperResult result = await InfiniteCanvasItem.InitializeCanvasFolder();
+
+                if (!result)
+                {
+                    return result;
+                }
             }
             else
             {

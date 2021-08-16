@@ -15,12 +15,12 @@ namespace ClipboardCanvas.CanavsPasteModels
     {
         public string MarkdownText { get; private set; }
 
-        public MarkdownPasteModel(ICanvasFileReceiverModel canvasFileReceiver, IOperationContextReceiver operationContextReceiver)
+        public MarkdownPasteModel(ICanvasItemReceiverModel canvasFileReceiver, IOperationContextReceiver operationContextReceiver)
             : base(canvasFileReceiver, operationContextReceiver)
         {
         }
 
-        protected override async Task<SafeWrapper<CanvasItem>> GetCanvasFileFromExtension(ICanvasFileReceiverModel canvasFileReceiver)
+        protected override async Task<SafeWrapper<CanvasItem>> GetCanvasFileFromExtension(ICanvasItemReceiverModel canvasFileReceiver)
         {
             return await canvasFileReceiver.CreateNewCanvasFileFromExtension(".md");
         }

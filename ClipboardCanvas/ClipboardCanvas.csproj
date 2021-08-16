@@ -141,7 +141,7 @@
     <Compile Include="CanavsPasteModels\MarkdownPasteModel.cs" />
     <Compile Include="CanavsPasteModels\MediaPasteModel.cs" />
     <Compile Include="CanavsPasteModels\WebViewPasteModel.cs" />
-    <Compile Include="CanvasFileReceivers\ICanvasFileReceiverModel.cs" />
+    <Compile Include="CanvasFileReceivers\ICanvasItemReceiverModel.cs" />
     <Compile Include="CanvasFileReceivers\InfiniteCanvasFileReceiver.cs" />
     <Compile Include="CanvasLoadModels\ILoadModel.cs" />
     <Compile Include="Contexts\Operations\IOperationContext.cs" />

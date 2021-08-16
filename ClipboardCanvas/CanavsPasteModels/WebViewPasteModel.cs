@@ -20,7 +20,7 @@ namespace ClipboardCanvas.CanavsPasteModels
 
         public string Source { get; private set; }
 
-        public WebViewPasteModel(WebViewCanvasMode mode, ICanvasFileReceiverModel canvasFileReceiver, IOperationContextReceiver operationContextReceiver)
+        public WebViewPasteModel(WebViewCanvasMode mode, ICanvasItemReceiverModel canvasFileReceiver, IOperationContextReceiver operationContextReceiver)
             : base(canvasFileReceiver, operationContextReceiver)
         {
             this._mode = mode;
@@ -47,7 +47,7 @@ namespace ClipboardCanvas.CanavsPasteModels
             return text;
         }
 
-        protected override async Task<SafeWrapper<CanvasItem>> GetCanvasFileFromExtension(ICanvasFileReceiverModel canvasFileReceiver)
+        protected override async Task<SafeWrapper<CanvasItem>> GetCanvasFileFromExtension(ICanvasItemReceiverModel canvasFileReceiver)
         {
             if (_mode == WebViewCanvasMode.ReadWebsite)
             {

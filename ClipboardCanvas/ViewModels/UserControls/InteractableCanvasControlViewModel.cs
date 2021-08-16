@@ -12,6 +12,7 @@ using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.EventArguments.InfiniteCanvasEventArgs;
 using ClipboardCanvas.Extensions;
+using ClipboardCanvas.CanvasFileReceivers;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -88,9 +89,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Public Helpers
 
-        public async Task<InteractableCanvasControlItemViewModel> AddItem(ICollectionModel collectionModel, BaseContentTypeModel contentType, CanvasItem canvasFile, CancellationToken cancellationToken)
+        public async Task<InteractableCanvasControlItemViewModel> AddItem(ICollectionModel collectionModel, BaseContentTypeModel contentType, CanvasItem canvasFile, ICanvasItemReceiverModel inifinteCanvasFileReceiver, CancellationToken cancellationToken)
         {
-            var item = new InteractableCanvasControlItemViewModel(_view, collectionModel, contentType, canvasFile, cancellationToken);
+            var item = new InteractableCanvasControlItemViewModel(_view, collectionModel, contentType, canvasFile, inifinteCanvasFileReceiver, cancellationToken);
             item.OnInfiniteCanvasItemRemovalRequestedEvent += Item_OnInfiniteCanvasItemRemovalRequestedEvent;
             Items.Add(item);
             await item.InitializeItem();

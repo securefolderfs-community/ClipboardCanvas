@@ -22,6 +22,8 @@ using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.CanavsPasteModels;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
 using ClipboardCanvas.DataModels;
+using ClipboardCanvas.Helpers;
+using ClipboardCanvas.Contexts.Operations;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -92,7 +94,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             // Set collectionItemViewModel because it wasn't set before
-            this.associatedItemViewModel = associatedCollection.FindCollectionItem(canvasItem);
+            this.collectionItemViewModel = associatedCollection.FindCollectionItem(canvasItem);
             
             await OnPasteSucceeded();
 
@@ -130,59 +132,23 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Cannot paste file that's not a reference");
             }
 
-            // Check referenced file
-            if (await sourceFile == null)
+            SafeWrapper<CanvasItem> newCanvasItemResult = await CanvasHelpers.PasteOverrideReference(canvasItem, associatedCollection, new StatusCenterOperationReceiver());
+
+            if (newCanvasItemResult)
             {
-                Debugger.Break();
-                return ReferencedFileNotFoundResult;
+                this.canvasItem = newCanvasItemResult;
+                this.collectionItemViewModel = associatedCollection.FindCollectionItem(newCanvasItemResult);
+
+                isContentAsReference = false;
+
+                if (newCanvasItemResult)
+                {
+                    RefreshContextMenuItems();
+                    await OnReferencePasted();
+                }
             }
 
-            IStorageItem savedSourceItem = await sourceItem;
-
-            // Delete reference file
-            SafeWrapperResult deletionResult = await associatedCollection.DeleteCollectionItem(associatedItemViewModel, true);
-            if (!AssertNoError(deletionResult))
-            {
-                return deletionResult;
-            }
-
-            string fileName = Path.GetFileName((await sourceFile).Path);
-            SafeWrapper<CollectionItemViewModel> newItemViewModel = await associatedCollection.CreateNewCollectionItem(fileName);
-
-            if (!AssertNoError(newItemViewModel))
-            {
-                return newItemViewModel;
-            }
-
-            associatedItemViewModel = newItemViewModel.Result;
-            canvasItem = associatedItemViewModel;
-
-            // Copy to the collection
-            this.associatedItemViewModel.OperationContext.CancellationToken = cancellationToken;
-            this.associatedItemViewModel.OperationContext.ProgressDelegate = ReportProgress;
-
-            SafeWrapperResult copyResult = SafeWrapperResult.UNKNOWN_FAIL;
-            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(async () =>
-            {
-                copyResult = await FilesystemOperations.CopyFileAsync(savedSourceItem as StorageFile, associatedFile, associatedItemViewModel.OperationContext);
-            });
-
-            if (!AssertNoError(copyResult))
-            {
-                // Failed
-                Debugger.Break();
-                return copyResult;
-            }
-
-            isContentAsReference = false;
-
-            if (copyResult)
-            {
-                RefreshContextMenuItems();
-                await OnReferencePasted();
-            }
-
-            return copyResult;
+            return newCanvasItemResult;
         }
 
         public virtual void OpenNewCanvas()
@@ -242,7 +208,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             // Add new item on Timeline
             var todaySection = await TimelineService.GetOrCreateTodaySection();
-            await TimelineService.AddItemForSection(todaySection, associatedCollection, associatedItemViewModel);
+            await TimelineService.AddItemForSection(todaySection, associatedCollection, collectionItemViewModel);
         }
 
         protected virtual Task OnReferencePasted()

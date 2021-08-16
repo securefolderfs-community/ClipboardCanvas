@@ -23,7 +23,7 @@ namespace ClipboardCanvas.CanavsPasteModels
     {
         private IStorageItem _pastedItem;
 
-        protected ICanvasFileReceiverModel canvasFileReceiver;
+        protected ICanvasItemReceiverModel canvasFileReceiver;
 
         protected IOperationContext operationContext;
 
@@ -53,7 +53,7 @@ namespace ClipboardCanvas.CanavsPasteModels
 
         #endregion
 
-        public BasePasteModel(ICanvasFileReceiverModel canvasFileReceiver, IOperationContextReceiver operationContextReceiver)
+        public BasePasteModel(ICanvasItemReceiverModel canvasFileReceiver, IOperationContextReceiver operationContextReceiver)
         {
             this.canvasFileReceiver = canvasFileReceiver;
             this.operationContextReceiver = operationContextReceiver;
@@ -176,7 +176,7 @@ namespace ClipboardCanvas.CanavsPasteModels
             return true;
         }
 
-        protected abstract Task<SafeWrapper<CanvasItem>> GetCanvasFileFromExtension(ICanvasFileReceiverModel canvasFileReceiver);
+        protected abstract Task<SafeWrapper<CanvasItem>> GetCanvasFileFromExtension(ICanvasItemReceiverModel canvasFileReceiver);
 
         protected abstract Task<SafeWrapperResult> SetDataFromDataPackage(DataPackageView dataPackage);
 

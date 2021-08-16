@@ -8,16 +8,21 @@ using Microsoft.Toolkit.Mvvm.Input;
 using System.Windows.Input;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
-using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.EventArguments.InfiniteCanvasEventArgs;
+using ClipboardCanvas.Contexts.Operations;
+using ClipboardCanvas.CanvasFileReceivers;
+using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
+using ClipboardCanvas.Services;
+using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -27,15 +32,17 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private IInteractableCanvasControlView _view;
 
-        private BaseContentTypeModel _contentType;
+        private readonly BaseContentTypeModel _contentType;
 
         private CancellationToken _cancellationToken;
+
+        private readonly ICanvasItemReceiverModel _inifinteCanvasFileReceiver;
 
         #endregion
 
         #region Properties
 
-        public List<BaseMenuFlyoutItemViewModel> ContextMenuItems { get; private set; }
+        private IDialogService DialogService { get; } = Ioc.Default.GetService<IDialogService>();
 
         public IReadOnlyCanvasPreviewModel ReadOnlyCanvasPreviewModel { get; set; }
 
@@ -54,6 +61,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     OnPropertyChanged(nameof(DeleteItemText));
                 }
             }
+        }
+
+        private bool _OverrideReferenceEnabled;
+        public bool OverrideReferenceEnabled
+        {
+            get => _OverrideReferenceEnabled;
+            set => SetProperty(ref _OverrideReferenceEnabled, value);
         }
 
         public string DeleteItemText
@@ -112,16 +126,19 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public ICommand DeleteItemCommand { get; private set; }
 
+        public ICommand OverrideReferenceCommand { get; private set; }
+
         #endregion
 
         #region Constructor
 
-        internal InteractableCanvasControlItemViewModel(IInteractableCanvasControlView view, ICollectionModel collectionModel, BaseContentTypeModel contentType, CanvasItem canvasItem, CancellationToken cancellationToken)
+        internal InteractableCanvasControlItemViewModel(IInteractableCanvasControlView view, ICollectionModel collectionModel, BaseContentTypeModel contentType, CanvasItem canvasItem, ICanvasItemReceiverModel inifinteCanvasFileReceiver, CancellationToken cancellationToken)
         {
             this._view = view;
             this.CollectionModel = collectionModel;
             this._contentType = contentType;
             this.CanvasItem = canvasItem;
+            this._inifinteCanvasFileReceiver = inifinteCanvasFileReceiver;
             this._cancellationToken = cancellationToken;
 
             // Create commands
@@ -130,6 +147,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             OpenContainingFolderCommand = new AsyncRelayCommand(OpenContainingFolder);
             OpenReferenceContainingFolderCommand = new AsyncRelayCommand(() => OpenContainingFolder(false));
             DeleteItemCommand = new AsyncRelayCommand(DeleteItem);
+            OverrideReferenceCommand = new AsyncRelayCommand(OverrideReference);
         }
 
         #endregion
@@ -170,7 +188,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async Task DeleteItem()
         {
-            SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(CollectionModel, CanvasItem, false);
+            SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(_inifinteCanvasFileReceiver, CanvasItem, false);
 
             if (result)
             {
@@ -178,16 +196,36 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
-        #endregion
-
-        private async Task InitializeItemName()
+        private async Task OverrideReference()
         {
-            DisplayName = (await CanvasItem.SourceItem)?.Name ?? "Invalid file.";
+            if (!IsPastedAsReference)
+            {
+                return;
+            }
+
+            SafeWrapper<CanvasItem> newCanvasItemResult = await CanvasHelpers.PasteOverrideReference(CanvasItem, _inifinteCanvasFileReceiver, new StatusCenterOperationReceiver());
+
+            if (newCanvasItemResult)
+            {
+                this.CanvasItem = newCanvasItemResult;
+                IsPastedAsReference = false;
+            }
+            else if (newCanvasItemResult != OperationErrorCode.Canceled)
+            {
+                IInAppNotification notification = DialogService.GetNotification();
+                notification.ViewModel.NotificationText = $"Error whilst overriding reference. Error: {newCanvasItemResult.ErrorCode}";
+                notification.ViewModel.ShownButtons = InAppNotificationButtonType.OkButton;
+
+                await notification.ShowAsync(4000);
+            }
         }
+
+        #endregion
 
         public async Task InitializeItem()
         {
-            await InitializeItemName();
+            DisplayName = (await CanvasItem.SourceItem)?.Name ?? "Invalid file.";
+            OverrideReferenceEnabled = (await CanvasItem.SourceItem) is not StorageFolder;
         }
 
         public async Task<SafeWrapperResult> LoadContent(bool withLoadDelay = false)

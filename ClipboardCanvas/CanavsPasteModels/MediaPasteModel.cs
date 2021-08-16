@@ -11,12 +11,12 @@ namespace ClipboardCanvas.CanavsPasteModels
 {
     public class MediaPasteModel : BasePasteModel
     {
-        public MediaPasteModel(ICanvasFileReceiverModel canvasFileReceiver, IOperationContextReceiver operationContextReceiver)
+        public MediaPasteModel(ICanvasItemReceiverModel canvasFileReceiver, IOperationContextReceiver operationContextReceiver)
             : base(canvasFileReceiver, operationContextReceiver)
         {
         }
 
-        protected override Task<SafeWrapper<CanvasItem>> GetCanvasFileFromExtension(ICanvasFileReceiverModel canvasFileReceiver)
+        protected override Task<SafeWrapper<CanvasItem>> GetCanvasFileFromExtension(ICanvasItemReceiverModel canvasFileReceiver)
         {
             return Task.FromResult<SafeWrapper<CanvasItem>>((null, SafeWrapperResult.SUCCESS));
         }

@@ -19,7 +19,7 @@ namespace ClipboardCanvas.CanavsPasteModels
     {
         public SoftwareBitmap SoftwareBitmap { get; private set; }
 
-        public ImagePasteModel(ICanvasFileReceiverModel canvasFileReceiver, IOperationContextReceiver operationContextReceiver)
+        public ImagePasteModel(ICanvasItemReceiverModel canvasFileReceiver, IOperationContextReceiver operationContextReceiver)
             : base (canvasFileReceiver, operationContextReceiver)
         {
         }
@@ -90,7 +90,7 @@ namespace ClipboardCanvas.CanavsPasteModels
             return result;
         }
 
-        protected override async Task<SafeWrapper<CanvasItem>> GetCanvasFileFromExtension(ICanvasFileReceiverModel canvasFileReceiver)
+        protected override async Task<SafeWrapper<CanvasItem>> GetCanvasFileFromExtension(ICanvasItemReceiverModel canvasFileReceiver)
         {
             return await canvasFileReceiver.CreateNewCanvasFileFromExtension(".png");
         }

@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.EventArguments.InfiniteCanvasEventArgs;
@@ -13,7 +14,7 @@ namespace ClipboardCanvas.Models
     {
         event EventHandler<InfiniteCanvasSaveRequestedEventArgs> OnInfiniteCanvasSaveRequestedEvent;
 
-        Task<InteractableCanvasControlItemViewModel> AddItem(ICollectionModel collectionModel, BaseContentTypeModel contentType, CanvasItem canvasFile, CancellationToken cancellationToken);
+        Task<InteractableCanvasControlItemViewModel> AddItem(ICollectionModel collectionModel, BaseContentTypeModel contentType, CanvasItem canvasFile, ICanvasItemReceiverModel inifinteCanvasFileReceiver, CancellationToken cancellationToken);
 
         void RemoveItem(InteractableCanvasControlItemViewModel item);
 

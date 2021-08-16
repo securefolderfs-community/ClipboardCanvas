@@ -51,13 +51,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
         {
             BaseContentTypeModel contentType;
             
-            if (GetRequestedCanvasTypeFunc() == CanvasType.OneCanvas)
+            if (GetRequestedCanvasTypeFunc() == CanvasType.InfiniteCanvas || CanvasViewModel is InfiniteCanvasViewModel)
             {
-                contentType = await BaseContentTypeModel.GetContentTypeFromDataPackage(dataPackage);
+                contentType = new InfiniteCanvasContentType();
             }
             else
             {
-                contentType = new InfiniteCanvasContentType();
+                contentType = await BaseContentTypeModel.GetContentTypeFromDataPackage(dataPackage);
             }
 
             SafeWrapperResult result = await InitializeViewModelAndPaste(dataPackage, contentType, cancellationToken);
