@@ -80,7 +80,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             // Get thumbnail for folder
             else if (folder != null)
             {
-                _thumbnail = await folder.GetThumbnailAsync(ThumbnailMode.SingleItem, Constants.UI.CanvasContent.SIMPLE_CANVAS_THUMBNAIL_SIZE);
+                _thumbnail = await folder.GetThumbnailAsync(ThumbnailMode.SingleItem, Constants.UI.CanvasContent.SIMPLE_CANVAS_THUMBNAIL_SIZE, ThumbnailOptions.ResizeThumbnail);
             }
             else
             {

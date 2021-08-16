@@ -423,6 +423,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         public virtual void Dispose()
         {
             IsDisposed = true;
+            IsContentLoaded = false;
         }
 
         #endregion
