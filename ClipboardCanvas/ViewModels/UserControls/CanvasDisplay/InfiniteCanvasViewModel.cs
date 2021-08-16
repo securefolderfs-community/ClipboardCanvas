@@ -101,17 +101,20 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             // Add new object to Infinite Canvas
-            var interactableCanvasControlCanvasItem = await InteractableCanvasControlModel.AddItem(associatedCollection, contentType, pastedFile, _infiniteCanvasFileReceiver, cancellationToken);
+            var interactableCanvasControlItem = await InteractableCanvasControlModel.AddItem(associatedCollection, contentType, pastedFile, _infiniteCanvasFileReceiver, cancellationToken);
 
             // Wait for control to load
             await Task.Delay(Constants.UI.CONTROL_LOAD_DELAY);
+
+            // Update item position based on datapackage
+            InteractableCanvasControlModel.UpdateItemPositionFromDataPackage(dataPackage, interactableCanvasControlItem);
 
             // Save data after pasting
             SafeWrapperResult saveDataResult = await SaveConfigurationModel();
             AssertNoError(saveDataResult); // Only for notification
 
             // Fetch data to view
-            SafeWrapperResult fetchDataToViewResult = await interactableCanvasControlCanvasItem.LoadContent();
+            SafeWrapperResult fetchDataToViewResult = await interactableCanvasControlItem.LoadContent();
 
             RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, false, false, CanPasteReference, true));
 

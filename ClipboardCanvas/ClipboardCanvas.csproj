@@ -149,6 +149,7 @@
     <Compile Include="Contexts\Operations\StatusCenterOperationReceiver.cs" />
     <Compile Include="DataModels\BaseAdditionalData.cs" />
     <Compile Include="DataModels\InfiniteCanvasItem.cs" />
+    <Compile Include="DataModels\InteractableCanvasDataPackageComparisionDataModel.cs" />
     <Compile Include="DataModels\Navigation\CanvasPageNavigationParameterModel.cs" />
     <Compile Include="DataModels\Navigation\CollectionPreviewPageNavigationParameterModel.cs" />
     <Compile Include="DataModels\Navigation\HomepageNavigationParameterModel.cs" />

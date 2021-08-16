@@ -9,15 +9,16 @@ using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 using System.Numerics;
+using Windows.Graphics.Display;
+using Windows.Graphics.Imaging;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 using ClipboardCanvas.ViewModels.UserControls;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.Extensions;
-using Windows.Graphics.Display;
-using Windows.Graphics.Imaging;
-using System.Runtime.InteropServices.WindowsRuntime;
 using ClipboardCanvas.Helpers.Filesystem;
+using ClipboardCanvas.DataModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -42,30 +43,33 @@ namespace ClipboardCanvas.UserControls
             this.ViewModel = new InteractableCanvasControlViewModel(this);
         }
 
-        private void Canvas_Loaded(object sender, RoutedEventArgs e)
+        private async void Canvas_Loaded(object sender, RoutedEventArgs e)
         {
             _canvasPanel = sender as Canvas;
-            this.ViewModel.CanvasLoaded();
+            await this.ViewModel.CanvasLoaded();
         }
 
         private void Canvas_Drop(object sender, DragEventArgs e)
         {
-            FrameworkElement element = e.DataView.Properties[Constants.UI.CanvasContent.INFINITE_CANVAS_DRAGGED_OBJECT_ID] as FrameworkElement;
-            if (element?.DataContext == null)
-            {
-                return;
-            }
-
-            int indexOfItem = this.ViewModel.Items.IndexOf(element.DataContext as InteractableCanvasControlItemViewModel);
-            UIElement container = ItemsHolder.ContainerFromIndex(indexOfItem) as UIElement;
-
             Point dropPoint = e.GetPosition(_canvasPanel);
-            
-            Canvas.SetLeft(container, dropPoint.X - _savedClickPosition.X);
-            Canvas.SetTop(container, dropPoint.Y - _savedClickPosition.Y);
 
-            element.Opacity = 1.0d;
-            this.ViewModel.ItemRearranged();
+            FrameworkElement element = e.DataView.Properties[Constants.UI.CanvasContent.INFINITE_CANVAS_DRAGGED_OBJECT_ID] as FrameworkElement;
+            if (element?.DataContext == null && e.DataView != null)
+            {
+                // Save position and dataPackage
+                this.ViewModel.DataPackageComparisionDataModel = new InteractableCanvasDataPackageComparisionDataModel(e.DataView, dropPoint);
+            }
+            else
+            {
+                int indexOfItem = this.ViewModel.Items.IndexOf(element.DataContext as InteractableCanvasControlItemViewModel);
+                UIElement container = ItemsHolder.ContainerFromIndex(indexOfItem) as UIElement;
+
+                Canvas.SetLeft(container, dropPoint.X - _savedClickPosition.X);
+                Canvas.SetTop(container, dropPoint.Y - _savedClickPosition.Y);
+
+                element.Opacity = 1.0d;
+                this.ViewModel.ItemRearranged();
+            }
         }
 
         private void Canvas_DragOver(object sender, DragEventArgs e)

@@ -39,14 +39,14 @@
                     <Grid
                         x:Name="RootContentGrid"
                         Padding="2"
-                        DoubleTapped="RootContentGrid_DoubleTapped"
-                        IsDoubleTapEnabled="True"
                         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                         BorderBrush="{ThemeResource SubtleBackgroundBrush}"
                         BorderThickness="2"
                         CanDrag="True"
                         CornerRadius="8"
+                        DoubleTapped="RootContentGrid_DoubleTapped"
                         DragStarting="RootContentGrid_DragStarting"
+                        IsDoubleTapEnabled="True"
                         RowSpacing="2">
 
                         <Grid.RowDefinitions>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 
 using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.DataModels;
@@ -23,5 +24,7 @@ namespace ClipboardCanvas.Models
         Task RegenerateCanvasPreview();
 
         void SetConfigurationModel(InfiniteCanvasConfigurationModel canvasConfigurationModel);
+
+        void UpdateItemPositionFromDataPackage(DataPackageView dataPackage, InteractableCanvasControlItemViewModel interactableCanvasControlItem);
     }
 }

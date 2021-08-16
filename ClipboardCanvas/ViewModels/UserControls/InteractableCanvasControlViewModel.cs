@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
+using System.Numerics;
+using Windows.ApplicationModel.DataTransfer;
 
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
@@ -36,6 +38,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
             get => _NoItemsTextLoad;
             set => SetProperty(ref _NoItemsTextLoad, value);
         }
+
+        public InteractableCanvasDataPackageComparisionDataModel DataPackageComparisionDataModel { get; set; }
 
         #endregion
 
@@ -122,6 +126,11 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public void SetConfigurationModel(InfiniteCanvasConfigurationModel canvasConfigurationModel)
         {
+            if (canvasConfigurationModel == null)
+            {
+                return;
+            }
+
             foreach (var item1 in Items)
             {
                 foreach (var item2 in canvasConfigurationModel.elements)
@@ -134,13 +143,30 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
+        public void UpdateItemPositionFromDataPackage(DataPackageView dataPackage, InteractableCanvasControlItemViewModel interactableCanvasControlItem)
+        {
+            // If saved dataPackage == dataPackage from InfiniteCanvasViewModel
+            if (DataPackageComparisionDataModel?.dataPackage == dataPackage)
+            {
+                // Set the position
+                interactableCanvasControlItem.ItemPosition = new Vector2((float)DataPackageComparisionDataModel.dropPoint.X, (float)DataPackageComparisionDataModel.dropPoint.Y);
+
+                // We don't need it anymore, null it so it doesn't cause trouble
+                DataPackageComparisionDataModel = null;
+            }
+        }
+
         public async Task RegenerateCanvasPreview()
         {
             await SaveCanvas();
         }
 
-        public void CanvasLoaded()
+        public async Task CanvasLoaded()
         {
+            // Await so text doesn't flash
+            await Task.Delay(Constants.UI.CONTROL_LOAD_DELAY);
+
+            // Items might change after the delay
             NoItemsTextLoad = Items.IsEmpty();
         }
 
