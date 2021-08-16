@@ -10,9 +10,9 @@ namespace ClipboardCanvas.CanvasFileReceivers
     {
         Task<SafeWrapper<CanvasItem>> CreateNewCanvasFolder(string folderName = null);
 
-        Task<SafeWrapper<CanvasItem>> CreateNewCanvasFileFromExtension(string extension);
+        Task<SafeWrapper<CanvasItem>> CreateNewCanvasItemFromExtension(string extension);
 
-        Task<SafeWrapper<CanvasItem>> CreateNewCanvasFile(string fileName);
+        Task<SafeWrapper<CanvasItem>> CreateNewCanvasItem(string fileName);
 
         Task<SafeWrapperResult> DeleteItem(IStorageItem itemToDelete, bool permanently);
     }

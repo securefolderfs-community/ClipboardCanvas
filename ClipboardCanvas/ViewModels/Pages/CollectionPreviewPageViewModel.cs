@@ -38,8 +38,6 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private readonly ICollectionPreviewPageView _view;
 
-        private readonly DoubleClickWrapper _canvasPreviewItemDoubleClickWrapper;
-
         private bool _collectionInitializationFinishedEventHooked;
 
         private bool _suppressIndexReset;
@@ -159,8 +157,6 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public ICommand OpenNewInfiniteCanvasCommand { get; private set; }
 
-        public ICommand ItemClickCommand { get; private set; }
-
         public ICommand ShowOrHideSearchCommand { get; private set; }
 
         public ICommand ContainerChangingCommand { get; private set; }
@@ -177,11 +173,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
             HookEvents();
 
-            this._canvasPreviewItemDoubleClickWrapper = new DoubleClickWrapper(
-                ItemOpenRequested,
-                TimeSpan.FromMilliseconds(Constants.Collections.DOUBLE_CLICK_DELAY_MILLISECONDS));
             this.Items = new RangeObservableCollection<CollectionPreviewItemViewModel>();
-
             _searchControlModel.SearchItems = this;
             _searchControlModel.IsKeyboardAcceleratorEnabled = true;
 
@@ -189,7 +181,6 @@ namespace ClipboardCanvas.ViewModels.Pages
             SplitButtonDefaultOptionCommand = new RelayCommand(SplitButtonDefaultOption);
             OpenNewCanvasCommand = new RelayCommand(OpenNewCanvas);
             OpenNewInfiniteCanvasCommand = new RelayCommand(OpenNewInfiniteCanvas);
-            ItemClickCommand = new RelayCommand<ItemClickEventArgs>(ItemClick);
             ShowOrHideSearchCommand = new RelayCommand(ShowOrHideSearch);
             ContainerChangingCommand = new RelayCommand<ContainerContentChangingEventArgs>(ContainerContentChanging);
             DefaultKeyboardAcceleratorInvokedCommand = new RelayCommand<KeyboardAcceleratorInvokedEventArgs>(DefaultKeyboardAcceleratorInvoked);
@@ -219,11 +210,6 @@ namespace ClipboardCanvas.ViewModels.Pages
         private void OpenNewInfiniteCanvas()
         {
             NavigationService.OpenNewCanvas(_associatedCollectionModel, canvasType: CanvasType.InfiniteCanvas);
-        }
-
-        private void ItemClick(ItemClickEventArgs e)
-        {
-            _canvasPreviewItemDoubleClickWrapper.Click();
         }
 
         private void ShowOrHideSearch()
@@ -325,6 +311,15 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         #region Public Helpers
 
+        public void OpenItem(CollectionPreviewItemViewModel itemToOpen)
+        {
+            int indexOfSelectedItem = Items.IndexOf(itemToOpen);
+            _view?.PrepareConnectedAnimation(indexOfSelectedItem);
+
+            // Navigate to canvas and suppress transition since we use ConnectedAnimation
+            NavigationService.OpenCanvasPage(_associatedCollectionModel, itemToOpen.CollectionItemViewModel, null, NavigationTransitionType.Suppress);
+        }
+
         public void CheckSearchContext()
         {
             if (_associatedCollectionModel.SearchContext != null)
@@ -383,15 +378,6 @@ namespace ClipboardCanvas.ViewModels.Pages
                 // If _canvasItemToScrollTo was set -- it will scroll to it, otherwise it'll do nothing
                 _view?.ScrollToItemOnInitialization(null);
             }
-        }
-
-        private void ItemOpenRequested()
-        {
-            int indexOfSelectedItem = Items.IndexOf(SelectedItem);
-            _view?.PrepareConnectedAnimation(indexOfSelectedItem);
-
-            // Navigate to canvas and suppress transition since we use ConnectedAnimation
-            NavigationService.OpenCanvasPage(_associatedCollectionModel, SelectedItem.CollectionItemViewModel, null, NavigationTransitionType.Suppress);
         }
 
         private void ShowSearch()
@@ -473,7 +459,6 @@ namespace ClipboardCanvas.ViewModels.Pages
             await Task.Delay(1000); // Delay so item preview doesn't disappear instantly for connected animation
 
             Items?.DisposeClear();
-            _canvasPreviewItemDoubleClickWrapper?.Dispose();
             UnhookEvents();
 
             if (SearchControlVisible)

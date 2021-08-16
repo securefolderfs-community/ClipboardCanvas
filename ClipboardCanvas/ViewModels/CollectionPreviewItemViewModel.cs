@@ -51,18 +51,6 @@ namespace ClipboardCanvas.ViewModels
 
         #endregion
 
-        #region Constructor
-
-        public CollectionPreviewItemViewModel()
-        {
-        }
-
-        #endregion
-
-        #region Command Implementation
-
-        #endregion
-
         #region Public Helpers
 
         public async Task RequestCanvasLoad()

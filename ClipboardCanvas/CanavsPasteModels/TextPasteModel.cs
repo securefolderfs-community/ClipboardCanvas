@@ -22,7 +22,7 @@ namespace ClipboardCanvas.CanavsPasteModels
 
         protected async override Task<SafeWrapper<CanvasItem>> GetCanvasFileFromExtension(ICanvasItemReceiverModel canvasFileReceiver)
         {
-            return await canvasFileReceiver.CreateNewCanvasFileFromExtension(".txt");
+            return await canvasFileReceiver.CreateNewCanvasItemFromExtension(".txt");
         }
 
         protected override async Task<SafeWrapperResult> SaveDataToFile()

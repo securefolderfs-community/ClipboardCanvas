@@ -39,6 +39,8 @@
                     <Grid
                         x:Name="RootContentGrid"
                         Padding="2"
+                        DoubleTapped="RootContentGrid_DoubleTapped"
+                        IsDoubleTapEnabled="True"
                         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                         BorderBrush="{ThemeResource SubtleBackgroundBrush}"
                         BorderThickness="2"

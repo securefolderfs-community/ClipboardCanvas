@@ -17,6 +17,7 @@ using ClipboardCanvas.Extensions;
 using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
 using System.Runtime.InteropServices.WindowsRuntime;
+using ClipboardCanvas.Helpers.Filesystem;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -113,6 +114,14 @@ namespace ClipboardCanvas.UserControls
             if (e.DataView.Properties[Constants.UI.CanvasContent.INFINITE_CANVAS_DRAGGED_OBJECT_ID] is FrameworkElement draggedElement)
             {
                 draggedElement.Opacity = 1.0d;
+            }
+        }
+
+        private async void RootContentGrid_DoubleTapped(object sender, Windows.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
+        {
+            if ((sender as FrameworkElement)?.DataContext is InteractableCanvasControlItemViewModel itemViewModel)
+            {
+                await StorageHelpers.OpenFile(await itemViewModel.CanvasItem.SourceItem);
             }
         }
 

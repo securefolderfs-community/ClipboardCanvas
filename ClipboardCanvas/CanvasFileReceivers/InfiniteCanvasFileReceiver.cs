@@ -25,15 +25,15 @@ namespace ClipboardCanvas.CanvasFileReceivers
             return Task.FromResult(new SafeWrapper<CanvasItem>(null, new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Cannot create folders inside Infinite Canvas.")));
         }
 
-        public async Task<SafeWrapper<CanvasItem>> CreateNewCanvasFileFromExtension(string extension)
+        public async Task<SafeWrapper<CanvasItem>> CreateNewCanvasItemFromExtension(string extension)
         {
             string fileName = DateTime.Now.ToString(Constants.FileSystem.CANVAS_FILE_FILENAME_DATE_FORMAT);
             fileName = $"{fileName}{extension}";
 
-            return await CreateNewCanvasFile(fileName);
+            return await CreateNewCanvasItem(fileName);
         }
 
-        public async Task<SafeWrapper<CanvasItem>> CreateNewCanvasFile(string fileName)
+        public async Task<SafeWrapper<CanvasItem>> CreateNewCanvasItem(string fileName)
         {
             if (_infiniteCanvasFolder == null || await _infiniteCanvasFolder.SourceItem is not StorageFolder folder)
             {

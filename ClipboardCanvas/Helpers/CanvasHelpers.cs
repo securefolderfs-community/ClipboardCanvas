@@ -114,7 +114,7 @@ namespace ClipboardCanvas.Helpers
             }
 
             string fileName = (await canvasItem.SourceItem).Name;
-            SafeWrapper<CanvasItem> newCanvasItemResult = await canvasItemReceiverModel.CreateNewCanvasFile(fileName);
+            SafeWrapper<CanvasItem> newCanvasItemResult = await canvasItemReceiverModel.CreateNewCanvasItem(fileName);
             if (!newCanvasItemResult)
             {
                 return newCanvasItemResult;

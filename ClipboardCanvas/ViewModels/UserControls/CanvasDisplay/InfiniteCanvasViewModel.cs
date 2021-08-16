@@ -69,7 +69,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             this.cancellationToken = cancellationToken;
 
-            RaiseOnPasteInitiatedEvent(this, new PasteInitiatedEventArgs(false, null));
+            RaiseOnPasteInitiatedEvent(this, new PasteInitiatedEventArgs(false, null, associatedCollection));
 
             // First, set Infinite Canvas folder
             SafeWrapperResult initializeInfiniteCanvasFolderResult = await InitializeInfiniteCanvasFolder();

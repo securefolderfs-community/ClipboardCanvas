@@ -23,7 +23,7 @@ namespace ClipboardCanvas.CanavsPasteModels
     {
         private IStorageItem _pastedItem;
 
-        protected ICanvasItemReceiverModel canvasFileReceiver;
+        protected ICanvasItemReceiverModel canvasItemReceiver;
 
         protected IOperationContext operationContext;
 
@@ -55,7 +55,7 @@ namespace ClipboardCanvas.CanavsPasteModels
 
         public BasePasteModel(ICanvasItemReceiverModel canvasFileReceiver, IOperationContextReceiver operationContextReceiver)
         {
-            this.canvasFileReceiver = canvasFileReceiver;
+            this.canvasItemReceiver = canvasFileReceiver;
             this.operationContextReceiver = operationContextReceiver;
         }
 
@@ -124,18 +124,18 @@ namespace ClipboardCanvas.CanavsPasteModels
 
             if (IsContentAsReference && _pastedItem != null)
             {
-                canvasItem = await canvasFileReceiver.CreateNewCanvasFileFromExtension(Constants.FileSystem.REFERENCE_FILE_EXTENSION);
+                canvasItem = await canvasItemReceiver.CreateNewCanvasItemFromExtension(Constants.FileSystem.REFERENCE_FILE_EXTENSION);
             }
             else
             {
                 if (_pastedItem != null)
                 {
                     string pastedItemFileName = Path.GetFileName(_pastedItem.Path);
-                    canvasItem = await canvasFileReceiver.CreateNewCanvasFile(pastedItemFileName);
+                    canvasItem = await canvasItemReceiver.CreateNewCanvasItem(pastedItemFileName);
                 }
                 else
                 {
-                    canvasItem = await GetCanvasFileFromExtension(canvasFileReceiver);
+                    canvasItem = await GetCanvasFileFromExtension(canvasItemReceiver);
                 }
             }
 

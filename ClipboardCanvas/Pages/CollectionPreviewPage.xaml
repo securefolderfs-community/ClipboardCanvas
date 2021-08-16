@@ -78,9 +78,6 @@
             SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
             SelectionMode="Single">
             <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="ItemClick">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.ItemClickCommand}" />
-                </icore:EventTriggerBehavior>
                 <icore:EventTriggerBehavior EventName="ContainerContentChanging">
                     <icore:InvokeCommandAction Command="{x:Bind ViewModel.ContainerChangingCommand}" />
                 </icore:EventTriggerBehavior>
@@ -111,8 +108,11 @@
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="vm:CollectionPreviewItemViewModel">
                     <tuc:DropShadowPanel
+                        x:Name="RootPanel"
                         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                         BlurRadius="10"
+                        DoubleTapped="RootPanel_DoubleTapped"
+                        IsDoubleTapEnabled="True"
                         IsMasked="True"
                         ShadowOpacity="{x:Bind IsHighlighted, Mode=OneWay, Converter={StaticResource BooleanSearchedItemToShadowOpacityConverter}}"
                         Color="{ThemeResource SystemAccentColor}">

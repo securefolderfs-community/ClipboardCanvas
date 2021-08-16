@@ -100,5 +100,13 @@ namespace ClipboardCanvas.Pages
                 }
             }    
         }
+
+        private void RootPanel_DoubleTapped(object sender, Windows.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
+        {
+            if ((sender as FrameworkElement)?.DataContext is CollectionPreviewItemViewModel itemViewModel)
+            {
+                this.ViewModel.OpenItem(itemViewModel);
+            }
+        }
     }
 }

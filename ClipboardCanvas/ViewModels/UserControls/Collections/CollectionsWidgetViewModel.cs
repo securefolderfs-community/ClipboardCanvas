@@ -8,7 +8,6 @@ using System.Windows.Input;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
@@ -27,8 +26,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
     public class CollectionsWidgetViewModel : ObservableObject, IDisposable
     {
         #region Private Members
-
-        private readonly DoubleClickWrapper _collectionDoubleClickWrapper;
 
         private static bool s_itemAddedInternally;
 
@@ -109,8 +106,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public ICommand DropCommand { get; private set; }
 
-        public ICommand ItemClickCommand { get; private set; }
-
         #endregion
 
         #region Constructor
@@ -119,14 +114,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         {
             HookEvents();
 
-            _collectionDoubleClickWrapper = new DoubleClickWrapper(
-                () => OnCollectionOpenRequestedEvent?.Invoke(this, new CollectionOpenRequestedEventArgs(CurrentCollection)),
-                TimeSpan.FromMilliseconds(Constants.Collections.DOUBLE_CLICK_DELAY_MILLISECONDS));
-
             // Create commands
             DragOverCommand = new AsyncRelayCommand<DragEventArgs>(DragOver);
             DropCommand = new AsyncRelayCommand<DragEventArgs>(Drop);
-            ItemClickCommand = new RelayCommand<ItemClickEventArgs>(ItemClick);
         }
 
         #endregion
@@ -203,11 +193,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             }
         }
 
-        private void ItemClick(ItemClickEventArgs e)
-        {
-            _collectionDoubleClickWrapper.Click();
-        }
-
         #endregion
 
         #region Event Handlers
@@ -282,6 +267,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         #endregion
 
         #region Public Helpers
+
+        public void OpenItem(BaseCollectionViewModel collectionViewModel)
+        {
+            OnCollectionOpenRequestedEvent?.Invoke(this, new CollectionOpenRequestedEventArgs(collectionViewModel));
+        }
 
         public static async Task ReloadAllCollections()
         {
@@ -503,7 +493,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public void Dispose()
         {
-            _collectionDoubleClickWrapper?.Dispose();
             UnhookEvents();
         }
 

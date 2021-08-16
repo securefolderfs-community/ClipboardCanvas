@@ -51,11 +51,11 @@ namespace ClipboardCanvas.CanavsPasteModels
         {
             if (_mode == WebViewCanvasMode.ReadWebsite)
             {
-                return await canvasFileReceiver.CreateNewCanvasFileFromExtension(Constants.FileSystem.WEBSITE_LINK_FILE_EXTENSION);
+                return await canvasFileReceiver.CreateNewCanvasItemFromExtension(Constants.FileSystem.WEBSITE_LINK_FILE_EXTENSION);
             }
             else
             {
-                return await canvasFileReceiver.CreateNewCanvasFileFromExtension(".html");
+                return await canvasFileReceiver.CreateNewCanvasItemFromExtension(".html");
             }
         }
 

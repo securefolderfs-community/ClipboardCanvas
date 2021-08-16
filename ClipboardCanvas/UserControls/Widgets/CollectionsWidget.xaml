@@ -59,11 +59,6 @@
             ScrollViewer.VerticalScrollMode="Disabled"
             SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
             SelectionMode="Single">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="ItemClick">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.ItemClickCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
             <!--  Remove Reveal Highlight Effect  -->
             <GridView.ItemContainerStyle>
                 <Style TargetType="GridViewItem">
@@ -90,12 +85,15 @@
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="vm:BaseCollectionViewModel">
                     <Grid
+                        x:Name="RootGrid"
                         Width="260"
                         Height="140"
                         Background="{ThemeResource SubtleBackgroundBrush}"
                         BorderBrush="{ThemeResource SystemAccentColor}"
                         BorderThickness="{x:Bind IsSelected, Mode=OneWay, Converter={StaticResource SelectedItemToBorderThicknessConverter}}"
-                        CornerRadius="8">
+                        CornerRadius="8"
+                        DoubleTapped="RootGrid_DoubleTapped"
+                        IsDoubleTapEnabled="True">
                         <Grid.RowDefinitions>
                             <!--  Icon  -->
                             <RowDefinition Height="9*" />

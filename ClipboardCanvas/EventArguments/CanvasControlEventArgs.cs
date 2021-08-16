@@ -6,9 +6,20 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers;
+using ClipboardCanvas.Models;
 
 namespace ClipboardCanvas.EventArguments.CanvasControl
 {
+    public abstract class BaseCanvasControlEventArgs : EventArgs
+    {
+        public readonly ICollectionModel collectionModel;
+
+        public BaseCanvasControlEventArgs(ICollectionModel collectionModel)
+        {
+            this.collectionModel = collectionModel;
+        }
+    }
+
     public class ContentLoadedEventArgs : EventArgs
     {
         public readonly BaseContentTypeModel contentDataModel;
@@ -41,13 +52,14 @@ namespace ClipboardCanvas.EventArguments.CanvasControl
         }
     }
 
-    public class PasteInitiatedEventArgs : EventArgs
+    public class PasteInitiatedEventArgs : BaseCanvasControlEventArgs
     {
         public readonly bool pasteInNewCanvas;
 
         public readonly DataPackageView forwardedDataPackage;
 
-        public PasteInitiatedEventArgs(bool pasteInNewCanvas, DataPackageView forwardedDataPackage)
+        public PasteInitiatedEventArgs(bool pasteInNewCanvas, DataPackageView forwardedDataPackage, ICollectionModel collectionModel)
+            : base(collectionModel)
         {
             this.pasteInNewCanvas = pasteInNewCanvas;
             this.forwardedDataPackage = forwardedDataPackage;
@@ -77,11 +89,12 @@ namespace ClipboardCanvas.EventArguments.CanvasControl
         }
     }
 
-    public class FileDeletedEventArgs : EventArgs
+    public class FileDeletedEventArgs : BaseCanvasControlEventArgs
     {
         public readonly IStorageItem item;
 
-        public FileDeletedEventArgs(IStorageItem item)
+        public FileDeletedEventArgs(IStorageItem item, ICollectionModel collectionModel)
+            : base(collectionModel)
         {
             this.item = item;
         }

@@ -324,14 +324,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             return (collectionItem, folder.Details);
         }
 
-        public async Task<SafeWrapper<CanvasItem>> CreateNewCanvasFile(string fileName)
+        public async Task<SafeWrapper<CanvasItem>> CreateNewCanvasItem(string fileName)
         {
             var result = await CreateNewCollectionItem(fileName);
 
             return (result.Result, result.Details);
         }
 
-        public async Task<SafeWrapper<CanvasItem>> CreateNewCanvasFileFromExtension(string extension)
+        public async Task<SafeWrapper<CanvasItem>> CreateNewCanvasItemFromExtension(string extension)
         {
             var result = await CreateNewCollectionItemFromExtension(extension);
 

@@ -134,7 +134,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
                 }
                 else if (result != OperationErrorCode.Canceled)
                 {
-                    OnFileDeletedEvent?.Invoke(this, new FileDeletedEventArgs(associatedItem));
+                    OnFileDeletedEvent?.Invoke(this, new FileDeletedEventArgs(associatedItem, collectionModel));
                 }
 
                 return result;
