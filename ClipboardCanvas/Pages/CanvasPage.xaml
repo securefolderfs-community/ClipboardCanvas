@@ -39,7 +39,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="14*" />
             <RowDefinition />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -220,14 +219,5 @@
             x:Load="{x:Bind ViewModel.ErrorTextLoad, Mode=OneWay}"
             Opacity="0.8"
             Text="{x:Bind ViewModel.ErrorText, Mode=OneWay}" />
-
-        <!--  Large file paste progress  -->
-        <ProgressBar
-            x:Name="OperationProgressBar"
-            Grid.Row="2"
-            Grid.ColumnSpan="2"
-            x:Load="{x:Bind ViewModel.OperationProgressBarLoad, Mode=OneWay}"
-            IsIndeterminate="{x:Bind ViewModel.OperationProgressBarIndeterminate, Mode=OneWay}"
-            Value="{x:Bind ViewModel.OperationProgressBarValue, Mode=OneWay}" />
     </Grid>
 </Page>

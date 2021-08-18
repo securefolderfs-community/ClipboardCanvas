@@ -120,15 +120,9 @@ namespace ClipboardCanvas.EventArguments.CanvasControl
     {
         public readonly float value;
 
-        public readonly bool isIndeterminate;
-
-        public readonly CanvasPageProgressType progressType;
-
-        public ProgressReportedEventArgs(float value, bool isIndeterminate, CanvasPageProgressType progressType)
+        public ProgressReportedEventArgs(float value)
         {
             this.value = value;
-            this.isIndeterminate = isIndeterminate;
-            this.progressType = progressType;
         }
     }
 

@@ -89,7 +89,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return result;
         }
 
-
         protected override Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item)
         {
             return Task.FromResult(SafeWrapperResult.SUCCESS);
@@ -136,7 +135,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             if (ControlView != null && ContentMediaLoad)
             {
-                if (associatedCollection.CurrentCollectionItemViewModel?.ContentType is MediaContentType mediaContentType)
+                if (collectionItemViewModel?.ContentType is MediaContentType mediaContentType)
                 {
                     mediaContentType.savedPosition = Position;
                 }

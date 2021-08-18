@@ -10,12 +10,16 @@ namespace ClipboardCanvas.Contexts.Operations
     {
         event EventHandler<OperationFinishedEventArgs> OnOperationFinishedEvent;
 
-        bool IsOperationOngoing { get; set; }
+        bool IsOperationStarted { get; }
 
-        CancellationToken CancellationToken { get; set; }
+        bool IsOperationFinished { get; }
 
-        Action<float> ProgressDelegate { get; set; }
+        CancellationToken CancellationToken { get; }
 
-        void OperationFinished(SafeWrapperResult result);
+        IProgress<double> OperationProgress { get; }
+
+        void StartOperation();
+
+        void FinishOperation(SafeWrapperResult result);
     }
 }

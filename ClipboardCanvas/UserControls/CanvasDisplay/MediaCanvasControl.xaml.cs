@@ -37,7 +37,7 @@ namespace ClipboardCanvas.UserControls.CanvasDisplay
             this.InitializeComponent();
         }
 
-        private void UserControl_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void UserControl_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             this.ViewModel.ControlView = this;
             this.ViewModel.UpdateMediaControl();

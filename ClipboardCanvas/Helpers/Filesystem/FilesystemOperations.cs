@@ -15,12 +15,9 @@ namespace ClipboardCanvas.Helpers.Filesystem
         {
             long fileSize = await StorageHelpers.GetFileSize(source);
             byte[] buffer = new byte[Constants.FileSystem.COPY_FILE_BUFFER_SIZE];
-            SafeWrapperResult result = SafeWrapperResult.UNKNOWN_FAIL;
+            SafeWrapperResult result = SafeWrapperResult.SUCCESS;
 
-            if (operationContext != null)
-            {
-                operationContext.IsOperationOngoing = true;
-            }
+            operationContext?.StartOperation();
 
             using (Stream sourceStream = (await source.OpenReadAsync()).AsStreamForRead())
             {
@@ -35,20 +32,20 @@ namespace ClipboardCanvas.Helpers.Filesystem
                         float percentage = (float)bytesTransferred * 100.0f / (float)fileSize;
 
                         await destinationStream.WriteAsync(buffer, 0, currentBlockSize);
-                        operationContext?.ProgressDelegate?.Invoke(percentage);
+                        operationContext?.OperationProgress?.Report(percentage);
 
                         if (operationContext?.CancellationToken.IsCancellationRequested ?? false)
                         {
-                            // TODO: Delete copied file there
                             result = SafeWrapperResult.CANCEL;
+
+                            // Delete copied file if it was canceled
+                            await DeleteItem(destination, true);
                             break;
                         }
                     }
-
-                    result = SafeWrapperResult.SUCCESS;
                 }
             }
-            operationContext?.OperationFinished(result);
+            operationContext?.FinishOperation(result);
 
             return result;
         }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
 
 namespace ClipboardCanvas.ValueConverters
@@ -14,6 +10,11 @@ namespace ClipboardCanvas.ValueConverters
             if (value is not bool boolVal)
             {
                 return false;
+            }
+
+            if (parameter is string strParam && strParam.ToLower() == "invert") // For debugging purposes
+            {
+                return boolVal;
             }
 
             return !boolVal;

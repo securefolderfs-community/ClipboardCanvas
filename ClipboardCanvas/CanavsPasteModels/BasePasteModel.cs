@@ -159,7 +159,7 @@ namespace ClipboardCanvas.CanavsPasteModels
                     // Signalize that the file is being pasted
                     RaiseOnTipTextUpdateRequestedEvent(this, new TipTextUpdateRequestedEventArgs("The file is being pasted, please wait.", TimeSpan.FromMilliseconds(Constants.UI.CanvasContent.FILE_PASTING_TIP_DELAY)));
 
-                    this.operationContext = operationContextReceiver.GetOperationContext();
+                    this.operationContext = operationContextReceiver.GetOperationContext("Pasting file", StatusCenterOperationType.Paste);
 
                     // Copy the file data directly when pasting a file and not raw data from clipboard
                     return await FilesystemOperations.CopyFileAsync(pastedFile, associatedFile, operationContext);

@@ -118,6 +118,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return !_isFolder;
         }
 
+        protected override Task OnReferencePasted()
+        {
+            OnPropertyChanged(nameof(FileName));
+            OnPropertyChanged(nameof(FilePath));
+
+            return Task.CompletedTask;
+        }
+
         #endregion
 
         #region Public Helpers

@@ -12,18 +12,31 @@ namespace ClipboardCanvas.Contexts.Operations
 
         public bool IsEventAlreadyHooked { get; set; }
 
-        public bool IsOperationOngoing { get; set; }
+        public bool IsOperationStarted { get; set; }
 
         public CancellationToken CancellationToken { get; set; }
 
-        public Action<float> ProgressDelegate { get; set; }
+        public bool IsOperationFinished { get; private set; }
 
-        public void OperationFinished(SafeWrapperResult result)
+        IProgress<double> IOperationContext.OperationProgress { get; }
+
+        public void FinishOperation(SafeWrapperResult result)
         {
-            IsOperationOngoing = false;
-            ProgressDelegate = null;
+            IsOperationFinished = true;
+            IsOperationStarted = false;
 
             OnOperationFinishedEvent?.Invoke(this, new OperationFinishedEventArgs(result));
+        }
+
+        public void StartOperation()
+        {
+            if (IsOperationFinished)
+            {
+                IsOperationStarted = false;
+                return;
+            }
+
+            IsOperationStarted = true;
         }
     }
 }

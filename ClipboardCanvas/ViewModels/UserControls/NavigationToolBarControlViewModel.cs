@@ -22,6 +22,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
             set => SetProperty(ref _IsSettingsPaneOpened, value);
         }
 
+        private bool _IsStatusCenterButtonVisible;
+        public bool IsStatusCenterButtonVisible
+        {
+            get => _IsStatusCenterButtonVisible;
+            set => SetProperty(ref _IsStatusCenterButtonVisible, value);
+        }
+
         #endregion
 
         #region Commands

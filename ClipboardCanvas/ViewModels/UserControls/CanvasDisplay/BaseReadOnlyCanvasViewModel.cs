@@ -155,7 +155,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 // We don't invoke OnErrorOccurredEvent here because we want to discard this canvas immediately and not show the error
                 return new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "Canvas not found.");
             }
-            else if (collectionItemViewModel?.OperationContext.IsOperationOngoing ?? false) // Check if it's being pasted
+            else if (collectionItemViewModel?.OperationContext.IsOperationStarted ?? false) // Check if it's being pasted
             {
                 // Hook event to operation finished event
                 if (!collectionItemViewModel.OperationContext.IsEventAlreadyHooked)
@@ -163,7 +163,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     collectionItemViewModel.OperationContext.OnOperationFinishedEvent += OperationContext_OnOperationFinishedEvent;
                     collectionItemViewModel.OperationContext.IsEventAlreadyHooked = true;
                 }
-                this.collectionItemViewModel.OperationContext.ProgressDelegate = ReportProgress;
+                //this.collectionItemViewModel.OperationContext.OperationProgress = ReportProgress;
 
                 RaiseOnTipTextUpdateRequestedEvent(this, new TipTextUpdateRequestedEventArgs("The file is being pasted, please wait."));
                 return new SafeWrapperResult(OperationErrorCode.InProgress, "Pasting is still in progress");
@@ -342,18 +342,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return true;
         }
 
-        /// <inheritdoc cref="ReportProgress(float, bool, CanvasPageProgressType)"/>
-        protected virtual void ReportProgress(float value)
-        {
-            ReportProgress(value, false, CanvasPageProgressType.OperationProgressBar);
-        }
-
         /// <summary>
         /// Wrapper for <see cref="pasteProgress"/> that raises <see cref="OnProgressReportedEvent"/>
         /// </summary>
-        protected virtual void ReportProgress(float value, bool isIndeterminate, CanvasPageProgressType progressType)
+        protected virtual void ReportProgress(float value)
         {
-            RaiseOnProgressReportedEvent(this, new ProgressReportedEventArgs(value, isIndeterminate, progressType));
+            RaiseOnProgressReportedEvent(this, new ProgressReportedEventArgs(value));
         }
 
         protected virtual async Task<SafeWrapperResult> SetContentMode()

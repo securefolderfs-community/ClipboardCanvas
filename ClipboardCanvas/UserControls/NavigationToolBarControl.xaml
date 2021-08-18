@@ -75,7 +75,7 @@
                         <!--  Navigation controls  -->
                         <ColumnDefinition Width="Auto" />
 
-                        <!--  Settings  -->
+                        <!--  Settings and status center  -->
                         <ColumnDefinition />
 
                     </Grid.ColumnDefinitions>
@@ -92,37 +92,74 @@
                         Grid.Column="1"
                         ViewModel="{x:Bind NavigationControlModel, Mode=TwoWay, Converter={StaticResource InterfaceToNavigationControlViewModelConverter}}" />
 
-                    <!--  Settings Button  -->
-                    <Button
-                        x:Name="SettingsButton"
+                    <!--  Status Center and Settings  -->
+                    <StackPanel
                         Grid.Column="2"
-                        Height="48"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Command="{x:Bind OpenOrCloseSettingsCommand}">
-                        <StackPanel
-                            HorizontalAlignment="Center"
+                        Orientation="Horizontal"
+                        Spacing="8">
+
+                        <!--  Status Center Button  -->
+                        <Button
+                            x:Name="StatusCenter"
+                            Height="48"
+                            HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            Orientation="Horizontal"
-                            Spacing="10">
-                            <Grid Padding="0,8,0,8">
-                                <muxc:AnimatedIcon x:Name="SettingsAnimatedIcon">
-                                    <muxc:AnimatedIcon.Source>
-                                        <animvis:AnimatedSettingsVisualSource />
-                                    </muxc:AnimatedIcon.Source>
-                                    <muxc:AnimatedIcon.FallbackIconSource>
-                                        <muxc:SymbolIconSource Symbol="Setting" />
-                                    </muxc:AnimatedIcon.FallbackIconSource>
-                                </muxc:AnimatedIcon>
-                            </Grid>
-                            <TextBlock
-                                Margin="0,0,0,2"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Visibility="{x:Bind IsStatusCenterButtonVisible, Mode=OneWay}">
+                            <StackPanel
+                                HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                Text="Settings" />
-                        </StackPanel>
-                    </Button>
+                                Orientation="Horizontal"
+                                Spacing="10">
+                                <Grid Padding="0,8,0,8">
+                                    <FontIcon Glyph="&#xF16A;" />
+                                </Grid>
+                                <TextBlock
+                                    Margin="0,0,0,2"
+                                    VerticalAlignment="Center"
+                                    Text="Status Center" />
+                            </StackPanel>
+                            <Button.Flyout>
+                                <Flyout Placement="Top">
+                                    <uc:StatusCenterControl />
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+
+                        <!--  Settings Button  -->
+                        <Button
+                            x:Name="SettingsButton"
+                            Height="48"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Command="{x:Bind OpenOrCloseSettingsCommand}">
+                            <StackPanel
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal"
+                                Spacing="10">
+                                <Grid Padding="0,8,0,8">
+                                    <muxc:AnimatedIcon x:Name="SettingsAnimatedIcon">
+                                        <muxc:AnimatedIcon.Source>
+                                            <animvis:AnimatedSettingsVisualSource />
+                                        </muxc:AnimatedIcon.Source>
+                                        <muxc:AnimatedIcon.FallbackIconSource>
+                                            <muxc:SymbolIconSource Symbol="Setting" />
+                                        </muxc:AnimatedIcon.FallbackIconSource>
+                                    </muxc:AnimatedIcon>
+                                </Grid>
+                                <TextBlock
+                                    Margin="0,0,0,2"
+                                    VerticalAlignment="Center"
+                                    Text="Settings" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
                 </Grid>
             </DataTemplate>
         </ResourceDictionary>

@@ -162,27 +162,6 @@ namespace ClipboardCanvas.ViewModels.Pages
             set => SetProperty(ref _OverrideReferenceEnabled, value);
         }
 
-        private bool _OperationProgressBarLoad;
-        public bool OperationProgressBarLoad
-        {
-            get => _OperationProgressBarLoad;
-            set => SetProperty(ref _OperationProgressBarLoad, value);
-        }
-
-        private bool _OperationProgressBarIndeterminate;
-        public bool OperationProgressBarIndeterminate
-        {
-            get => _OperationProgressBarIndeterminate;
-            set => SetProperty(ref _OperationProgressBarIndeterminate, value);
-        }
-
-        private float _OperationProgressBarValue;
-        public float OperationProgressBarValue
-        {
-            get => _OperationProgressBarValue;
-            set => SetProperty(ref _OperationProgressBarValue, value);
-        }
-
         #endregion
 
         #region Commands
@@ -397,45 +376,13 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private void PasteCanvasModel_OnProgressReportedEvent(object sender, ProgressReportedEventArgs e)
         {
-            switch (e.progressType)
+            if (e.value == 100.0f)
             {
-                case CanvasPageProgressType.MainCanvasProgressBar:
-                    {
-                        if (e.value == 100.0f)
-                        {
-                            CanvasRingLoad = false;
-                        }
-                        else
-                        {
-                            CanvasRingLoad = true;
-                        }
-                        break;
-                    }
-
-                case CanvasPageProgressType.OperationProgressBar:
-                    {
-                        if (e.value >= 100.0f)
-                        {
-                            OperationProgressBarIndeterminate = false;
-                            OperationProgressBarLoad = false;
-                        }
-                        else
-                        {
-                            OperationProgressBarLoad = true;
-                            OperationProgressBarValue = e.value;
-
-                            if (OperationProgressBarValue == 0.0f || e.isIndeterminate)
-                            {
-                                OperationProgressBarIndeterminate = true;
-                            }
-                            else
-                            {
-                                OperationProgressBarIndeterminate = false;
-                            }
-                        }
-
-                        break;
-                    }
+                CanvasRingLoad = false;
+            }
+            else
+            {
+                CanvasRingLoad = true;
             }
         }
 
@@ -523,7 +470,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             _contentFinishedLoading = false;
             NewCanvasScreenLoad = false;
             TipTextLoad = false;
-            OperationProgressBarLoad = false;
+            CanvasRingLoad = false;
 
             // Await a short delay before showing the loading ring
             await Task.Delay(Constants.UI.CanvasContent.SHOW_LOADING_RING_DELAY);

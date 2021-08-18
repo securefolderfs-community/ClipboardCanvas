@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.Contexts.Operations
 {
     public interface IOperationContextReceiver
     {
-        IOperationContext GetOperationContext();
+        IOperationContext GetOperationContext(string operationName, StatusCenterOperationType operationType);
     }
 }

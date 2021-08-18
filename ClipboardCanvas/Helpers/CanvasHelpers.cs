@@ -106,13 +106,7 @@ namespace ClipboardCanvas.Helpers
 
             IStorageItem savedSourceItem = await canvasItem.SourceItem;
 
-            // Delete reference file
-            SafeWrapperResult deletionResult = await canvasItemReceiverModel.DeleteItem(canvasItem.AssociatedItem, true);
-            if (!deletionResult)
-            {
-                return (null, deletionResult);
-            }
-
+            // Create new empty file
             string fileName = (await canvasItem.SourceItem).Name;
             SafeWrapper<CanvasItem> newCanvasItemResult = await canvasItemReceiverModel.CreateNewCanvasItem(fileName);
             if (!newCanvasItemResult)
@@ -124,12 +118,19 @@ namespace ClipboardCanvas.Helpers
 
             // Copy item
             SafeWrapperResult copyResult;
-            copyResult = await FilesystemOperations.CopyFileAsync(savedSourceItem as StorageFile, newCanvasItem.AssociatedItem as StorageFile, operationContextReceiver.GetOperationContext());
+            copyResult = await FilesystemOperations.CopyFileAsync(savedSourceItem as StorageFile, newCanvasItem.AssociatedItem as StorageFile, operationContextReceiver.GetOperationContext("Overriding Reference", StatusCenterOperationType.OverrideReference));
 
             if (!copyResult)
             {
                 // Failed
-                return (null, copyResult);
+                return (canvasItem, copyResult);
+            }
+
+            // Delete reference file
+            SafeWrapperResult deletionResult = await canvasItemReceiverModel.DeleteItem(canvasItem.AssociatedItem, true);
+            if (!deletionResult)
+            {
+                return (canvasItem, deletionResult);
             }
 
             return (newCanvasItem, SafeWrapperResult.SUCCESS);

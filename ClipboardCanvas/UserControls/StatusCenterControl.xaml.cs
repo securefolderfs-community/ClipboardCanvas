@@ -1,32 +1,32 @@
-﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml.Controls;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
+using ClipboardCanvas.ViewModels.UserControls.StatusCenter;
 using ClipboardCanvas.Services;
-using ClipboardCanvas.ViewModels.UserControls;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace ClipboardCanvas.UserControls
 {
-    public sealed partial class NavigationToolBarControl : UserControl
+    public sealed partial class StatusCenterControl : UserControl
     {
         private IStatusCenterService StatusCenterService { get; } = Ioc.Default.GetService<IStatusCenterService>();
 
-        public NavigationToolBarControlViewModel ViewModel
+        public StatusCenterViewModel ViewModel
         {
-            get => (NavigationToolBarControlViewModel)DataContext;
+            get => (StatusCenterViewModel)DataContext;
             set => DataContext = value;
         }
 
-        public NavigationToolBarControl()
+        public StatusCenterControl()
         {
             this.InitializeComponent();
 
-            this.ViewModel = new NavigationToolBarControlViewModel();
+            this.ViewModel = new StatusCenterViewModel();
 
             if (this.StatusCenterService is Services.Implementation.StatusCenterService statusCenterServiceImpl)
             {
-                statusCenterServiceImpl.NavigationToolBarControlModel = this.ViewModel;
+                statusCenterServiceImpl.StatusCenterViewModel = this.ViewModel;
             }
         }
     }

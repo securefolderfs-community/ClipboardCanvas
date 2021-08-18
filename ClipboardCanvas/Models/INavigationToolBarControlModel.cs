@@ -1,5 +1,4 @@
-﻿using ClipboardCanvas.DataModels.Navigation;
-using ClipboardCanvas.Enums;
+﻿using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.Models
 {
@@ -8,6 +7,8 @@ namespace ClipboardCanvas.Models
         INavigationControlModel NavigationControlModel { get; }
 
         ISuggestedActionsControlModel SuggestedActionsControlModel { get; }
+
+        bool IsStatusCenterButtonVisible { get; set; }
 
         void NotifyCurrentPageChanged(DisplayPageType pageType);
     }

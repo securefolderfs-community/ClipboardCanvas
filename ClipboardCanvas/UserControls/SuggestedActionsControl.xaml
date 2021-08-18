@@ -21,7 +21,7 @@
             <Setter Property="Foreground" Value="{ThemeResource ListViewItemForeground}" />
             <Setter Property="TabNavigation" Value="Local" />
             <Setter Property="IsHoldingEnabled" Value="True" />
-            <Setter Property="Padding" Value="12,0,12,0" />
+            <Setter Property="Padding" Value="16,0,16,0" />
             <Setter Property="Height" Value="48" />
             <Setter Property="HorizontalContentAlignment" Value="Left" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -168,7 +168,7 @@
 
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" Spacing="8" />
+                        <StackPanel Orientation="Horizontal" Spacing="0" />
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
                 <ListView.ItemTemplate>

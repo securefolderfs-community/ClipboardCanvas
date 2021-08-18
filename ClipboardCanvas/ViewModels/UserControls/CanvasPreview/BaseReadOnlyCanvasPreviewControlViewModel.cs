@@ -86,15 +86,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         #region IReadOnlyCanvasPreviewModel
 
-        public virtual async Task<SafeWrapperResult> TryLoadExistingData(CollectionItemViewModel itemData, CancellationToken cancellationToken)
+        public virtual async Task<SafeWrapperResult> TryLoadExistingData(CollectionItemViewModel collectionItem, CancellationToken cancellationToken)
         {
-            this.collectionItemViewModel = itemData;
+            this.collectionItemViewModel = collectionItem;
 
-            SafeWrapperResult result = await InitializeViewModelFromCollectionItem(itemData, itemData.ContentType);
+            SafeWrapper<BaseContentTypeModel> result = await InitializeViewModelFromCollectionItem(collectionItem, collectionItem.ContentType);
+            collectionItem.ContentType = result.Result;
 
             if (result && CanvasViewModel != null)
             {
-                return await CanvasViewModel.TryLoadExistingData(itemData, cancellationToken);
+                return await CanvasViewModel.TryLoadExistingData(collectionItem, cancellationToken);
             }
             else
             {
@@ -164,7 +165,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         #region Protected Helpers
 
-        protected virtual async Task<SafeWrapperResult> InitializeViewModelFromCollectionItem(CanvasItem canvasFile, BaseContentTypeModel contentType)
+        protected virtual async Task<SafeWrapper<BaseContentTypeModel>> InitializeViewModelFromCollectionItem(CanvasItem canvasFile, BaseContentTypeModel contentType)
         {
             // Clear leftover data
             DiscardData();
@@ -177,10 +178,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             // Check if contentType is InvalidContentTypeDataModel
             if (contentType is InvalidContentTypeDataModel invalidContentType)
             {
-                return invalidContentType.error;
+                return (contentType, invalidContentType.error);
             }
 
-            return InitializeViewModelFromContentType(contentType) ? SafeWrapperResult.SUCCESS : new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Couldn't display content for this file");
+            return (contentType, InitializeViewModelFromContentType(contentType) ? SafeWrapperResult.SUCCESS : new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Couldn't display content for this file"));
         }
 
         protected abstract bool InitializeViewModelFromContentType(BaseContentTypeModel contentType);

@@ -70,6 +70,7 @@ namespace ClipboardCanvas
             services
                 .AddSingleton<INavigationService, NavigationService>()
                 .AddSingleton<ITimelineService, TimelineService>()
+                .AddSingleton<IStatusCenterService, StatusCenterService>()
                 .AddSingleton<IDialogService, DefaultDialogService>()
                 .AddSingleton<ILogger, ExceptionToFileLogger>()
 
