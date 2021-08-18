@@ -212,6 +212,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 return;
             }
 
+            OverrideReferenceEnabled = false;
             SafeWrapper<CanvasItem> newCanvasItemResult = await CanvasHelpers.PasteOverrideReference(CanvasItem, _inifinteCanvasFileReceiver, new StatusCenterOperationReceiver());
 
             if (newCanvasItemResult)
@@ -227,6 +228,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
                 await notification.ShowAsync(4000);
             }
+
+            OverrideReferenceEnabled = true;
         }
 
         #endregion

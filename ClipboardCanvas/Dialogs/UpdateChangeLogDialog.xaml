@@ -30,7 +30,7 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 StretchDirection="DownOnly">
-                <Image Source="/Assets/AppIcon/Square150x150Logo.scale-400.png" Stretch="Uniform" />
+                <Image Source="/Assets/AppLogo.png" Stretch="Uniform" />
             </Viewbox>
             <TextBlock
                 VerticalAlignment="Center"
