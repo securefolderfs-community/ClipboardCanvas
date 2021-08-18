@@ -93,7 +93,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return pasteResult;
             }
 
-            isContentAsReference = canvasItem.IsFileAsReference;
+            isContentAsReference = canvasPasteModel.IsContentAsReference;
 
             // Set collectionItemViewModel because it wasn't set before
             this.collectionItemViewModel = associatedCollection.FindCollectionItem(canvasItem);

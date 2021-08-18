@@ -3,16 +3,22 @@ using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using System.Threading;
 
 using ClipboardCanvas.Interfaces.Search;
 using ClipboardCanvas.Models;
-using ClipboardCanvas.ViewModels.Pages;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.ViewModels
 {
     public class CollectionPreviewItemViewModel : ObservableObject, ISearchItem, IDisposable
     {
+        #region Private Members
+
+        private CancellationTokenSource _cancellationTokenSource;
+
+        #endregion
+
         #region Public Properties
 
         private string _DisplayName;
@@ -51,6 +57,15 @@ namespace ClipboardCanvas.ViewModels
 
         #endregion
 
+        #region Constructor
+
+        public CollectionPreviewItemViewModel()
+        {
+            this._cancellationTokenSource = new CancellationTokenSource();
+        }
+
+        #endregion
+
         #region Public Helpers
 
         public async Task RequestCanvasLoad()
@@ -64,11 +79,21 @@ namespace ClipboardCanvas.ViewModels
             }
 
             ReadOnlyCanvasPreviewModel.DiscardData();
-            await ReadOnlyCanvasPreviewModel.TryLoadExistingData(CollectionItemViewModel, CollectionPreviewPageViewModel.LoadCancellationToken.Token);
+            await ReadOnlyCanvasPreviewModel.TryLoadExistingData(CollectionItemViewModel, _cancellationTokenSource.Token);
+
+            //await Task.Delay(3000);
+
+            //ReadOnlyCanvasPreviewModel.DiscardData();
+
+            //await Task.Delay(3000);
+
+            //await ReadOnlyCanvasPreviewModel.TryLoadExistingData(CollectionItemViewModel, _cancellationTokenSource.Token);
         }
 
         public async Task RequestCanvasUnload()
         {
+            _cancellationTokenSource.Cancel();
+
             if (ReadOnlyCanvasPreviewModel == null)
             {
                 // Wait for control to load if we unload too quickly
@@ -81,6 +106,9 @@ namespace ClipboardCanvas.ViewModels
             }
 
             ReadOnlyCanvasPreviewModel.DiscardData();
+
+            _cancellationTokenSource.Dispose();
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
         public static async Task<CollectionPreviewItemViewModel> GetCollectionPreviewItemModel(ICollectionModel collectionModel, CollectionItemViewModel collectionItemViewModel)
@@ -104,6 +132,7 @@ namespace ClipboardCanvas.ViewModels
 
         public void Dispose()
         {
+            _cancellationTokenSource?.Dispose();
             ReadOnlyCanvasPreviewModel?.Dispose();
         }
 

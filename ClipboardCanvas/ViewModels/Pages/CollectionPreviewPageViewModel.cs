@@ -15,7 +15,6 @@ using ClipboardCanvas.Enums;
 using ClipboardCanvas.EventArguments.CollectionPreview;
 using ClipboardCanvas.EventArguments.Collections;
 using ClipboardCanvas.Extensions;
-using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
@@ -30,12 +29,6 @@ namespace ClipboardCanvas.ViewModels.Pages
     {
         #region Private Members
 
-        private ICollectionModel _associatedCollectionModel => _view?.AssociatedCollectionModel;
-
-        private ISearchControlModel _searchControlModel => _view?.SearchControlModel;
-
-        private IUserSettingsService UserSettings { get; } = Ioc.Default.GetService<IUserSettingsService>();
-
         private readonly ICollectionPreviewPageView _view;
 
         private bool _collectionInitializationFinishedEventHooked;
@@ -44,9 +37,15 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         #endregion
 
-        #region Public Properties
+        #region Properties
+
+        private IUserSettingsService UserSettings { get; } = Ioc.Default.GetService<IUserSettingsService>();
 
         private INavigationService NavigationService { get; } = Ioc.Default.GetService<INavigationService>();
+
+        private ICollectionModel AssociatedCollectionModel => _view?.AssociatedCollectionModel;
+
+        private ISearchControlModel SearchControlModel => _view?.SearchControlModel;
 
         public RangeObservableCollection<CollectionPreviewItemViewModel> Items { get; private set; }
 
@@ -66,7 +65,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
                     if (!_suppressIndexReset)
                     {
-                        _searchControlModel.ResetIndex();
+                        SearchControlModel.ResetIndex();
                     }
 
                     if (_SelectedItem != null)
@@ -109,17 +108,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public string SplitButtonMainOptionText
         {
-            get
-            {
-                if (UserSettings.UseInfiniteCanvasAsDefault)
-                {
-                    return "Open new Infinite Canvas";
-                }
-                else
-                {
-                    return "Open new Canvas";
-                }
-            }
+            get => UserSettings.UseInfiniteCanvasAsDefault ? "Open new Infinite Canvas" : "Open new Canvas";
         }
 
         public bool SplitButtonShowInfiniteCanvasOption
@@ -138,8 +127,6 @@ namespace ClipboardCanvas.ViewModels.Pages
                 }
             }
         }
-
-        public static CancellationTokenSource LoadCancellationToken = new CancellationTokenSource();
 
         #endregion
 
@@ -174,8 +161,8 @@ namespace ClipboardCanvas.ViewModels.Pages
             HookEvents();
 
             this.Items = new RangeObservableCollection<CollectionPreviewItemViewModel>();
-            _searchControlModel.SearchItems = this;
-            _searchControlModel.IsKeyboardAcceleratorEnabled = true;
+            SearchControlModel.SearchItems = this;
+            SearchControlModel.IsKeyboardAcceleratorEnabled = true;
 
             // Create commands
             SplitButtonDefaultOptionCommand = new RelayCommand(SplitButtonDefaultOption);
@@ -204,12 +191,12 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private void OpenNewCanvas()
         {
-            NavigationService.OpenNewCanvas(_associatedCollectionModel, canvasType: CanvasType.OneCanvas);
+            NavigationService.OpenNewCanvas(AssociatedCollectionModel, canvasType: CanvasType.OneCanvas);
         }
 
         private void OpenNewInfiniteCanvas()
         {
-            NavigationService.OpenNewCanvas(_associatedCollectionModel, canvasType: CanvasType.InfiniteCanvas);
+            NavigationService.OpenNewCanvas(AssociatedCollectionModel, canvasType: CanvasType.InfiniteCanvas);
         }
 
         private void ShowOrHideSearch()
@@ -268,13 +255,13 @@ namespace ClipboardCanvas.ViewModels.Pages
 
                 case (c: false, s: false, a: false, w: false, k: VirtualKey.F3): // Find next
                     {
-                        _searchControlModel.FindNext();
+                        SearchControlModel.FindNext();
                         break;
                     }
 
                 case (c: false, s: true, a: false, w: false, k: VirtualKey.F3): // Find previous
                     {
-                        _searchControlModel.FindPrevious();
+                        SearchControlModel.FindPrevious();
                         break;
                     }
             }
@@ -317,21 +304,21 @@ namespace ClipboardCanvas.ViewModels.Pages
             _view?.PrepareConnectedAnimation(indexOfSelectedItem);
 
             // Navigate to canvas and suppress transition since we use ConnectedAnimation
-            NavigationService.OpenCanvasPage(_associatedCollectionModel, itemToOpen.CollectionItemViewModel, null, NavigationTransitionType.Suppress);
+            NavigationService.OpenCanvasPage(AssociatedCollectionModel, itemToOpen.CollectionItemViewModel, null, NavigationTransitionType.Suppress);
         }
 
         public void CheckSearchContext()
         {
-            if (_associatedCollectionModel.SearchContext != null)
+            if (AssociatedCollectionModel.SearchContext != null)
             {
                 ShowSearch();
-                _searchControlModel.RestoreSearchContext(_associatedCollectionModel.SearchContext);
+                SearchControlModel.RestoreSearchContext(AssociatedCollectionModel.SearchContext);
             }
         }
 
         public async Task InitializeItems()
         {
-            if (_associatedCollectionModel.IsCollectionInitializing)
+            if (AssociatedCollectionModel.IsCollectionInitializing)
             {
                 // The collection is still initializing, show loading indicator
                 CollectionLoadingIndicatorLoad = true;
@@ -344,9 +331,9 @@ namespace ClipboardCanvas.ViewModels.Pages
             else
             {
                 List<Task<CollectionPreviewItemViewModel>> itemTaskDelegates = new List<Task<CollectionPreviewItemViewModel>>();
-                foreach (var item in _associatedCollectionModel.CollectionItems)
+                foreach (var item in AssociatedCollectionModel.CollectionItems)
                 {
-                    itemTaskDelegates.Add(CollectionPreviewItemViewModel.GetCollectionPreviewItemModel(_associatedCollectionModel, item));
+                    itemTaskDelegates.Add(CollectionPreviewItemViewModel.GetCollectionPreviewItemModel(AssociatedCollectionModel, item));
                 }
 
                 CollectionLoadingIndicatorLoad = true;
@@ -367,9 +354,9 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private void SetSelectedItemAfterInitialization()
         {
-            if (_associatedCollectionModel.CurrentCollectionItemViewModel != null)
+            if (AssociatedCollectionModel.CurrentCollectionItemViewModel != null)
             {
-                SelectedItem = Items.FirstOrDefault((item) => item.CollectionItemViewModel == _associatedCollectionModel.CurrentCollectionItemViewModel);
+                SelectedItem = Items.FirstOrDefault((item) => item.CollectionItemViewModel == AssociatedCollectionModel.CurrentCollectionItemViewModel);
 
                 _view?.ScrollToItemOnInitialization(SelectedItem);
             }
@@ -383,13 +370,13 @@ namespace ClipboardCanvas.ViewModels.Pages
         private void ShowSearch()
         {
             SearchControlVisible = true;
-            _searchControlModel.OnSearchShown();
+            SearchControlModel.OnSearchShown();
         }
 
         private void HideSearch()
         {
             SearchControlVisible = false;
-            _searchControlModel.OnSearchHidden();
+            SearchControlModel.OnSearchHidden();
         }
 
         #endregion
@@ -414,7 +401,7 @@ namespace ClipboardCanvas.ViewModels.Pages
         private async void CollectionsControlViewModel_OnCollectionItemsInitializationFinishedEvent(object sender, CollectionItemsInitializationFinishedEventArgs e)
         {
             // Make sure the event was invoked for correct collection
-            if (_associatedCollectionModel == e.baseCollectionViewModel)
+            if (AssociatedCollectionModel == e.baseCollectionViewModel)
             {
                 // Initialize items again
                 await InitializeItems();
@@ -463,11 +450,11 @@ namespace ClipboardCanvas.ViewModels.Pages
 
             if (SearchControlVisible)
             {
-                _associatedCollectionModel.SearchContext = _searchControlModel.ConstructSearchContext();
+                AssociatedCollectionModel.SearchContext = SearchControlModel.ConstructSearchContext();
             }
             else
             {
-                _associatedCollectionModel.SearchContext = null;
+                AssociatedCollectionModel.SearchContext = null;
             }
         }
 

@@ -64,18 +64,17 @@ namespace ClipboardCanvas.Pages
         public void PrepareConnectedAnimation(int itemIndex)
         {
             // Prevent crash when canvas preview is null
-            if ((!ViewModel.Items[itemIndex].ReadOnlyCanvasPreviewModel?.IsContentLoaded) ?? false)
+            if (ViewModel.Items[itemIndex].ReadOnlyCanvasPreviewModel is IReadOnlyCanvasPreviewModel canvasPreviewModel
+                && canvasPreviewModel.IsContentLoaded)
             {
-                return;
+                UIElement sourceAnimationControl = ((ItemsGrid.ContainerFromIndex(itemIndex) as ContentControl).ContentTemplateRoot as FrameworkElement).FindName("SimpleCanvasPreviewControl") as UIElement;
+
+                ConnectedAnimation connectedAnimation = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(
+                    Constants.UI.Animations.CONNECTED_ANIMATION_COLLECTION_PREVIEW_ITEM_OPEN_REQUESTED_TOKEN,
+                    sourceAnimationControl);
+
+                connectedAnimation.Configuration = new DirectConnectedAnimationConfiguration();
             }
-
-            UIElement sourceAnimationControl = ((ItemsGrid.ContainerFromIndex(itemIndex) as ContentControl).ContentTemplateRoot as FrameworkElement).FindName("SimpleCanvasPreviewControl") as UIElement;
-
-            ConnectedAnimation connectedAnimation = ConnectedAnimationService.GetForCurrentView().PrepareToAnimate(
-                Constants.UI.Animations.CONNECTED_ANIMATION_COLLECTION_PREVIEW_ITEM_OPEN_REQUESTED_TOKEN,
-                sourceAnimationControl);
-
-            connectedAnimation.Configuration = new DirectConnectedAnimationConfiguration();
         }
 
         public void ScrollItemToView(CollectionPreviewItemViewModel itemToScrollTo)

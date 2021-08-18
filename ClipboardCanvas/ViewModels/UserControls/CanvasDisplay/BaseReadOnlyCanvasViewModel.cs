@@ -205,6 +205,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return result;
             }
 
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return SafeWrapperResult.CANCEL;
+            }
+
             IsContentLoaded = true;
             CanPasteReference = CheckCanPasteReference();
 

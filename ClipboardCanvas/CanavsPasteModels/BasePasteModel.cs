@@ -114,6 +114,7 @@ namespace ClipboardCanvas.CanavsPasteModels
             }
             else
             {
+                IsContentAsReference = false;
                 return await SetDataFromDataPackage(dataPackage);
             }
         }
