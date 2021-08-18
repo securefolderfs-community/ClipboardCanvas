@@ -326,7 +326,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void CollectionsControlViewModel_OnCollectionOpenRequestedEvent(object sender, CollectionOpenRequestedEventArgs e)
         {
-            NavigationService.OpenCollectionPreviewPage(_currentCollectionModel);
+            NavigationService.OpenCollectionPreviewPage(e.baseCollectionViewModel);
         }
 
         #endregion

@@ -62,10 +62,35 @@ namespace ClipboardCanvas.UserControls
             else
             {
                 int indexOfItem = this.ViewModel.Items.IndexOf(element.DataContext as InteractableCanvasControlItemViewModel);
-                UIElement container = ItemsHolder.ContainerFromIndex(indexOfItem) as UIElement;
+                FrameworkElement container = ItemsHolder.ContainerFromIndex(indexOfItem) as FrameworkElement;
 
-                Canvas.SetLeft(container, dropPoint.X - _savedClickPosition.X);
-                Canvas.SetTop(container, dropPoint.Y - _savedClickPosition.Y);
+                double dropX = dropPoint.X - _savedClickPosition.X;
+                double dropY = dropPoint.Y - _savedClickPosition.Y;
+
+                double leftMostBound = dropX + container.ActualWidth;
+                double topMostBound = dropY + container.ActualHeight;
+
+                // Align
+                if (leftMostBound > _canvasPanel.ActualWidth)
+                {
+                    dropX = _canvasPanel.ActualWidth - container.ActualWidth;
+                }
+                else if (dropX < 0.0d)
+                {
+                    dropX = 0.0d;
+                }
+
+                if (topMostBound > _canvasPanel.ActualHeight)
+                {
+                    dropY = _canvasPanel.ActualHeight - container.ActualHeight;
+                }
+                else if (dropY < 0.0d)
+                {
+                    dropY = 0.0d;
+                }
+
+                Canvas.SetLeft(container, dropX);
+                Canvas.SetTop(container, dropY);
 
                 element.Opacity = 1.0d;
 
