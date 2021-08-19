@@ -34,7 +34,7 @@ namespace ClipboardCanvas.Helpers.Filesystem
             // Check if path is to .lnk or .url file
             if (FilesystemHelpers.IsPathEqualExtension(path, ".lnk") || FilesystemHelpers.IsPathEqualExtension(path, ".url"))
             {
-                return new SafeWrapper<TRequested>(default, OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Function ToStorageItem<TOut>() does not support converting from .lnk nor .url files.");
+                return new SafeWrapper<TRequested>(default, OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Function ToStorageItem<TRequested>() does not support converting from .lnk nor .url files.");
             }
 
             // Fast get attributes
@@ -49,7 +49,7 @@ namespace ClipboardCanvas.Helpers.Filesystem
             {
                 if (typeof(IStorageFile).IsAssignableFrom(typeof(TRequested))) // Wanted file
                 {
-                    return new SafeWrapper<TRequested>(default, OperationErrorCode.NotAFile, $"The item at path does not match requested type parameter (TOut: {typeof(TRequested)})");
+                    return new SafeWrapper<TRequested>(default, OperationErrorCode.NotAFile, $"The item at path does not match requested type parameter (TRequested: {typeof(TRequested)})");
                 }
                 else // Just get the directory
                 {
@@ -60,7 +60,7 @@ namespace ClipboardCanvas.Helpers.Filesystem
             {
                 if (typeof(IStorageFolder).IsAssignableFrom(typeof(TRequested))) // Wanted directory
                 {
-                    return new SafeWrapper<TRequested>(default, OperationErrorCode.NotAFile, $"The item at path does not match requested type parameter (TOut: {typeof(TRequested)})");
+                    return new SafeWrapper<TRequested>(default, OperationErrorCode.NotAFile, $"The item at path does not match requested type parameter (TRequested: {typeof(TRequested)})");
                 }
                 else // Just get the file
                 {

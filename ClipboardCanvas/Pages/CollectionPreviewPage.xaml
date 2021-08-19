@@ -140,7 +140,7 @@
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Top"
                                     StretchDirection="Both">
-                                    <uc2:SimpleCanvasPreviewControl CollectionModel="{x:Bind CollectionModel, Mode=OneWay}" SimpleCanvasPreviewModel="{x:Bind ReadOnlyCanvasPreviewModel, Mode=TwoWay}" />
+                                    <uc2:SimpleCanvasPreviewControl CollectionModel="{x:Bind CollectionModel, Mode=OneWay}" TwoWayReadOnlyCanvasPreview="{x:Bind TwoWayReadOnlyCanvasPreview, Mode=OneWay}" />
                                 </Viewbox>
                             </Grid>
 

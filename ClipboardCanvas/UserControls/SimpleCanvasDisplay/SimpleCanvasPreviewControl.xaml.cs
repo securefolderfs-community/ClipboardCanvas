@@ -14,10 +14,32 @@ namespace ClipboardCanvas.UserControls.SimpleCanvasDisplay
         public SimpleCanvasPreviewControlViewModel ViewModel
         {
             get => (SimpleCanvasPreviewControlViewModel)DataContext;
-            set => DataContext = value;
+            set
+            {
+                DataContext = value;
+                TwoWayReadOnlyCanvasPreview?.NotifyPropertyValueUpdated(value);
+            }
         }
 
         public ICollectionModel CollectionModel { get; set; }
+
+        private TwoWayPropertyUpdater<IReadOnlyCanvasPreviewModel> _TwoWayReadOnlyCanvasPreview;
+        public TwoWayPropertyUpdater<IReadOnlyCanvasPreviewModel> TwoWayReadOnlyCanvasPreview 
+        {
+            get => _TwoWayReadOnlyCanvasPreview;
+            set
+            {
+                if (_TwoWayReadOnlyCanvasPreview != value)
+                {
+                    _TwoWayReadOnlyCanvasPreview = value;
+
+                    if (ViewModel != null)
+                    {
+                        _TwoWayReadOnlyCanvasPreview.NotifyPropertyValueUpdated(ViewModel);
+                    }
+                }
+            }
+        }
 
 
         public static readonly DependencyProperty SimpleCanvasPreviewModelProperty =

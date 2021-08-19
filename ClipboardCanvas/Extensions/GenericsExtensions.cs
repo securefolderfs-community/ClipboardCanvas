@@ -6,17 +6,17 @@ namespace ClipboardCanvas.Extensions
     public static class GenericsExtensions
     {
         /// <summary>
-        /// Converts given <paramref name="value"/> to provided <typeparamref name="TOut"/>
+        /// Converts given <paramref name="value"/> to provided <typeparamref name="TRequested"/>
         /// </summary>
-        /// <typeparam name="TOut">The generic type to convert to</typeparam>
+        /// <typeparam name="TRequested">The generic type to convert to</typeparam>
         /// <typeparam name="TSource">The type to convert from</typeparam>
         /// <param name="value">The value</param>
         /// <remarks>
-        /// The <typeparamref name="TOut"/> must implement <see cref="IConvertible"/>
+        /// The <typeparamref name="TRequested"/> must implement <see cref="IConvertible"/>
         /// </remarks>
         /// <returns>Converted <paramref name="value"/></returns>
-        public static TOut ConvertValue<TSource, TOut>(this TSource value) =>
-            (TOut)Convert.ChangeType(value, typeof(TOut));
+        public static TRequested ConvertValue<TSource, TRequested>(this TSource value) =>
+            (TRequested)Convert.ChangeType(value, typeof(TRequested));
 
         /// <summary>
         /// Compares two generic types
@@ -39,14 +39,14 @@ namespace ClipboardCanvas.Extensions
         /// <summary>
         /// Tries to cast the given value to new type
         /// </summary>
-        /// <typeparam name="TOut"></typeparam>
+        /// <typeparam name="TRequested"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static TOut As<TOut>(this object obj, TOut defaultValue = default(TOut))
+        public static TRequested As<TRequested>(this object obj, TRequested defaultValue = default(TRequested))
         {
             try
             {
-                return (TOut)obj;
+                return (TRequested)obj;
             }
             catch
             {

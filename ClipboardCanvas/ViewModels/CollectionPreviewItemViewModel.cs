@@ -8,7 +8,7 @@ using System.Threading;
 using ClipboardCanvas.Interfaces.Search;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
-using System.Diagnostics;
+using ClipboardCanvas.Helpers;
 
 namespace ClipboardCanvas.ViewModels
 {
@@ -50,7 +50,9 @@ namespace ClipboardCanvas.ViewModels
             set => SetProperty(ref _IsCanvasPreviewVisible, value);
         }
 
-        public IReadOnlyCanvasPreviewModel ReadOnlyCanvasPreviewModel { get; set; }
+        public TwoWayPropertyUpdater<IReadOnlyCanvasPreviewModel> TwoWayReadOnlyCanvasPreview { get; set; }
+
+        public IReadOnlyCanvasPreviewModel ReadOnlyCanvasPreviewModel { get; private set; }
 
         public ICollectionModel CollectionModel { get; private set; }
 
@@ -63,6 +65,18 @@ namespace ClipboardCanvas.ViewModels
         private CollectionPreviewItemViewModel()
         {
             this._cancellationTokenSource = new CancellationTokenSource();
+
+            this.TwoWayReadOnlyCanvasPreview = new TwoWayPropertyUpdater<IReadOnlyCanvasPreviewModel>();
+            this.TwoWayReadOnlyCanvasPreview.OnPropertyValueUpdatedEvent += TwoWayReadOnlyCanvasPreview_OnPropertyValueUpdatedEvent;
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        private void TwoWayReadOnlyCanvasPreview_OnPropertyValueUpdatedEvent(object sender, IReadOnlyCanvasPreviewModel e)
+        {
+            ReadOnlyCanvasPreviewModel = e;
         }
 
         #endregion
@@ -76,9 +90,7 @@ namespace ClipboardCanvas.ViewModels
 
             if (ReadOnlyCanvasPreviewModel == null)
             {
-                Debug.WriteLine($"Item to load: {CollectionItemViewModel.AssociatedItem.Path} | CollecionModel: {CollectionModel}");
-                Debugger.Break();
-                return; // TODO: This is hit!
+                return;
             }
 
             ReadOnlyCanvasPreviewModel.DiscardData();
@@ -134,6 +146,11 @@ namespace ClipboardCanvas.ViewModels
         {
             _cancellationTokenSource?.Dispose();
             ReadOnlyCanvasPreviewModel?.Dispose();
+            
+            if (TwoWayReadOnlyCanvasPreview != null)
+            {
+                this.TwoWayReadOnlyCanvasPreview.OnPropertyValueUpdatedEvent -= TwoWayReadOnlyCanvasPreview_OnPropertyValueUpdatedEvent;
+            }
         }
 
         #endregion

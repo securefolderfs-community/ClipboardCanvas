@@ -1,5 +1,5 @@
-﻿using ClipboardCanvas.ViewModels;
-using System;
+﻿using System;
+using ClipboardCanvas.ViewModels;
 
 namespace ClipboardCanvas.EventArguments.CollectionPreview
 {

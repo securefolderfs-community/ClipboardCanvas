@@ -23,7 +23,7 @@ namespace ClipboardCanvas.Helpers
         {
             IUserSettingsService userSettingsService = Ioc.Default.GetService<IUserSettingsService>();
 
-            bool deletePermanently = userSettingsService.DeletePermanentlyAsDefault; // TODO: Option for permanent
+            bool deletePermanently = userSettingsService.DeletePermanentlyAsDefault;
             if (userSettingsService.ShowDeleteConfirmationDialog && !hideConfirmation)
             {
                 IDialogService dialogService = Ioc.Default.GetService<IDialogService>();

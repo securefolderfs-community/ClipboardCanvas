@@ -101,11 +101,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             return Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
-        protected override void RefreshContextMenuItems()
-        {
-            return;
-        }
-
         #endregion
 
         #region IDisposable
@@ -117,7 +112,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             _thumbnail?.Dispose();
 
             _thumbnail = null;
-            _FileIcon = null;
+            FileIcon = null;
         }
 
         #endregion
