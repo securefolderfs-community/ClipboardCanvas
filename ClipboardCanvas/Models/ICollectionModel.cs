@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using Windows.Storage;
@@ -8,11 +9,18 @@ using ClipboardCanvas.Contexts;
 using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
+using ClipboardCanvas.EventArguments.Collections;
 
 namespace ClipboardCanvas.Models
 {
     public interface ICollectionModel : ICanvasItemReceiverModel
     {
+        event EventHandler<CollectionItemAddedEventArgs> OnCollectionItemAddedEvent;
+
+        event EventHandler<CollectionItemRemovedEventArgs> OnCollectionItemRemovedEvent;
+
+        event EventHandler<CollectionItemRenamedEventArgs> OnCollectionItemRenamedEvent;
+
         ObservableCollection<CollectionItemViewModel> CollectionItems { get; }
 
         /// <summary>
@@ -41,6 +49,8 @@ namespace ClipboardCanvas.Models
         CollectionItemViewModel FindCollectionItem(CanvasItem canvasItem);
 
         CollectionItemViewModel FindCollectionItem(IStorageItem storageItem);
+
+        CollectionItemViewModel FindCollectionItem(string path);
 
         /// <summary>
         /// Navigates to new canvas

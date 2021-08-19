@@ -8,6 +8,7 @@ using System.Threading;
 using ClipboardCanvas.Interfaces.Search;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
+using System.Diagnostics;
 
 namespace ClipboardCanvas.ViewModels
 {
@@ -53,13 +54,13 @@ namespace ClipboardCanvas.ViewModels
 
         public ICollectionModel CollectionModel { get; private set; }
 
-        public CollectionItemViewModel CollectionItemViewModel { get; private set; }
+        public CollectionItemViewModel CollectionItemViewModel { get; set; }
 
         #endregion
 
         #region Constructor
 
-        public CollectionPreviewItemViewModel()
+        private CollectionPreviewItemViewModel()
         {
             this._cancellationTokenSource = new CancellationTokenSource();
         }
@@ -75,19 +76,13 @@ namespace ClipboardCanvas.ViewModels
 
             if (ReadOnlyCanvasPreviewModel == null)
             {
-                return;
+                Debug.WriteLine($"Item to load: {CollectionItemViewModel.AssociatedItem.Path} | CollecionModel: {CollectionModel}");
+                Debugger.Break();
+                return; // TODO: This is hit!
             }
 
             ReadOnlyCanvasPreviewModel.DiscardData();
             await ReadOnlyCanvasPreviewModel.TryLoadExistingData(CollectionItemViewModel, _cancellationTokenSource.Token);
-
-            //await Task.Delay(3000);
-
-            //ReadOnlyCanvasPreviewModel.DiscardData();
-
-            //await Task.Delay(3000);
-
-            //await ReadOnlyCanvasPreviewModel.TryLoadExistingData(CollectionItemViewModel, _cancellationTokenSource.Token);
         }
 
         public async Task RequestCanvasUnload()
@@ -119,11 +114,16 @@ namespace ClipboardCanvas.ViewModels
                 CollectionItemViewModel = collectionItemViewModel
             };
 
-            IStorageItem sourceItem = await collectionItemViewModel.SourceItem;
-
-            viewModel.DisplayName = Path.GetFileName(sourceItem != null ? sourceItem.Path : collectionItemViewModel.AssociatedItem?.Path);
+            await viewModel.UpdateDisplayName();
 
             return viewModel;
+        }
+
+        public async Task UpdateDisplayName()
+        {
+            IStorageItem sourceItem = await CollectionItemViewModel.SourceItem;
+
+            DisplayName = Path.GetFileName(sourceItem != null ? sourceItem.Path : CollectionItemViewModel.AssociatedItem?.Path);
         }
 
         #endregion

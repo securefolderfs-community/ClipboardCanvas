@@ -15,6 +15,42 @@ namespace ClipboardCanvas.EventArguments.Collections
         }
     }
 
+    public class CollectionItemAddedEventArgs : BaseCollectionEventArgs
+    {
+        public readonly CollectionItemViewModel itemChanged;
+
+        public CollectionItemAddedEventArgs(BaseCollectionViewModel baseCollectionViewModel, CollectionItemViewModel itemChanged)
+            : base(baseCollectionViewModel)
+        {
+            this.itemChanged = itemChanged;
+        }
+    }
+
+    public class CollectionItemRemovedEventArgs : BaseCollectionEventArgs
+    {
+        public readonly CollectionItemViewModel itemChanged;
+
+        public CollectionItemRemovedEventArgs(BaseCollectionViewModel baseCollectionViewModel, CollectionItemViewModel itemChanged)
+            : base(baseCollectionViewModel)
+        {
+            this.itemChanged = itemChanged;
+        }
+    }
+
+    public class CollectionItemRenamedEventArgs : BaseCollectionEventArgs
+    {
+        public readonly CollectionItemViewModel itemChanged;
+
+        public readonly string oldPath;
+
+        public CollectionItemRenamedEventArgs(BaseCollectionViewModel baseCollectionViewModel, CollectionItemViewModel itemChanged, string oldPath)
+            : base(baseCollectionViewModel)
+        {
+            this.itemChanged = itemChanged;
+            this.oldPath = oldPath;
+        }
+    }
+
     public class CollectionRemovedEventArgs : BaseCollectionEventArgs
     {
         public CollectionRemovedEventArgs(BaseCollectionViewModel baseCollectionViewModel)

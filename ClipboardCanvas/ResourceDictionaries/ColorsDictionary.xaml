@@ -12,7 +12,7 @@
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
             <Color x:Key="SolidBackgroundAcrylic">#2E2E2E</Color>
-            <Color x:Key="GradientPrimaryStrongBrush">#171717</Color>
+            <Color x:Key="GradientPrimaryStrongColor">#171717</Color>
             <SolidColorBrush x:Key="TitleBarSeparatorColor">#6FFFFFFF</SolidColorBrush>
             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush">#201F1E</SolidColorBrush>
             <SolidColorBrush x:Key="SubtleBackgroundBrush">#2D2C2B</SolidColorBrush>

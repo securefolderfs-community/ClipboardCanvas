@@ -13,6 +13,8 @@ using ClipboardCanvas.DataModels;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Storage.Streams;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Windows.Storage.Search;
+using System.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 using ClipboardCanvas.EventArguments.CanvasControl;
@@ -28,6 +30,7 @@ using ClipboardCanvas.Contexts;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
+using System.Runtime.CompilerServices;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {
@@ -46,6 +49,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         protected int currentIndex;
 
         protected StorageFile iconFile;
+
+        protected bool isFilesystemWatcherReady;
+
+        protected StorageItemQueryResult filesystemWatcherQuery;
+
+        protected StorageLibraryChangeTracker filesystemChangeTracker;
+
+        protected StorageLibraryChangeReader filesystemChangeReader;
 
         protected IDialogService DialogService { get; } = Ioc.Default.GetService<IDialogService>();
 
@@ -149,6 +160,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         public event EventHandler<CollectionItemsInitializationFinishedEventArgs> OnCollectionItemsInitializationFinishedEvent;
 
         public event EventHandler<TipTextUpdateRequestedEventArgs> OnTipTextUpdateRequestedEvent;
+
+        public event EventHandler<CollectionItemAddedEventArgs> OnCollectionItemAddedEvent;
+
+        public event EventHandler<CollectionItemRemovedEventArgs> OnCollectionItemRemovedEvent;
+
+        public event EventHandler<CollectionItemRenamedEventArgs> OnCollectionItemRenamedEvent;
 
         #endregion
 
@@ -384,12 +401,17 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public CollectionItemViewModel FindCollectionItem(CanvasItem canvasItem)
         {
-            return CollectionItems.FirstOrDefault((item) => item.AssociatedItem.Path == canvasItem.AssociatedItem.Path);
+            return FindCollectionItem(canvasItem.AssociatedItem);
         }
 
         public CollectionItemViewModel FindCollectionItem(IStorageItem storageItem)
         {
-            return CollectionItems.FirstOrDefault((item) => item.AssociatedItem.Path == storageItem.Path);
+            return FindCollectionItem(storageItem.Path);
+        }
+
+        public CollectionItemViewModel FindCollectionItem(string path)
+        {
+            return CollectionItems.FirstOrDefault((item) => item.AssociatedItem.Path == path);
         }
 
         public virtual void NavigateFirst(ICanvasPreviewModel pasteCanvasModel)
@@ -435,11 +457,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public virtual void AddCollectionItem(CollectionItemViewModel collectionItemViewModel)
         {
+            OnCollectionItemAddedEvent?.Invoke(this, new CollectionItemAddedEventArgs(this, collectionItemViewModel));
             CollectionItems.Add(collectionItemViewModel);
         }
 
         public virtual void RemoveCollectionItem(CollectionItemViewModel collectionItemViewModel)
         {
+            OnCollectionItemRemovedEvent?.Invoke(this, new CollectionItemRemovedEventArgs(this, collectionItemViewModel));
             CollectionItems.Remove(collectionItemViewModel);
         }
 
@@ -592,6 +616,93 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             }
         }
 
+        public virtual async Task SetupFilesystemWatcher()
+        {
+            if (!isFilesystemWatcherReady)
+            {
+                isFilesystemWatcherReady = true;
+
+                // 1. Prepare query - listen for changes
+                QueryOptions queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, new List<string>() { "*" });
+                queryOptions.FolderDepth = FolderDepth.Shallow;
+                queryOptions.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
+
+                filesystemWatcherQuery = collectionFolder.CreateItemQueryWithOptions(queryOptions);
+
+                // Indicate to the system the app is ready to change track
+                await filesystemWatcherQuery.GetItemsAsync(0, 1);
+
+                filesystemWatcherQuery.ContentsChanged += FilesystemWatcherQuery_ContentsChanged;
+
+
+                // 2. Get change tracker
+                filesystemChangeTracker = collectionFolder.TryGetChangeTracker();
+                filesystemChangeTracker.Enable();
+
+                filesystemChangeReader = filesystemChangeTracker.GetChangeReader();
+            }
+        }
+
+        private async void FilesystemWatcherQuery_ContentsChanged(IStorageQueryResultBase sender, object args)
+        {
+            // Get changes
+            IEnumerable<StorageLibraryChange> changes = await filesystemChangeReader.ReadBatchAsync();
+
+            // Accept changes
+            await filesystemChangeReader.AcceptChangesAsync();
+
+            // Reflect the changes in collection
+            foreach (var item in changes)
+            {
+                IStorageItem changeditem = await item.GetStorageItemAsync();
+
+                switch (item.ChangeType)
+                {
+                    case StorageLibraryChangeType.ChangeTrackingLost:
+                        {
+                            filesystemChangeTracker.Reset();
+                            break;
+                        }
+
+                    case StorageLibraryChangeType.Created:
+                        {
+                            // Add new collection item
+                            var collectionItem = new CollectionItemViewModel(changeditem);
+                            AddCollectionItem(collectionItem);
+                            break;
+                        }
+
+                    case StorageLibraryChangeType.MovedOutOfLibrary:
+                    case StorageLibraryChangeType.Deleted:
+                        {
+                            // Remove the collection item
+                            RemoveCollectionItem(FindCollectionItem(item.Path));
+                            break;
+                        }
+
+                    case StorageLibraryChangeType.MovedOrRenamed:
+                        {
+                            string oldName = Path.GetFileName(item.PreviousPath);
+                            string newName = Path.GetFileName(item.Path);
+
+                            string oldParentPath = Path.GetDirectoryName(item.PreviousPath);
+                            string newParentPath = Path.GetDirectoryName(item.Path);
+
+                            if ((oldName != newName) && (oldParentPath == newParentPath))
+                            {
+                                // Renamed
+                                var collectionItem = FindCollectionItem(item.PreviousPath);
+                                collectionItem.DangerousUpdateItem(changeditem);
+
+                                OnCollectionItemRenamedEvent?.Invoke(this, new CollectionItemRenamedEventArgs(this, collectionItem, item.PreviousPath));
+                            }
+
+                            break;
+                        }
+                }
+            }
+        }
+
         public virtual async Task<bool> InitializeCollectionItems()
         {
             if (collectionFolder != null)
@@ -600,6 +711,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 OnCollectionItemsInitializationStartedEvent?.Invoke(this, new CollectionItemsInitializationStartedEventArgs(this));
 
                 IEnumerable<IStorageItem> items = await Task.Run(async () => await collectionFolder.GetItemsAsync());
+
+                await SetupFilesystemWatcher();
 
                 CollectionItems.Clear();
                 if (!items.IsEmpty())
@@ -733,7 +846,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public virtual void Dispose()
         {
-
+            if (isFilesystemWatcherReady)
+            {
+                filesystemWatcherQuery.ContentsChanged -= FilesystemWatcherQuery_ContentsChanged;
+            }
         }
 
         #endregion

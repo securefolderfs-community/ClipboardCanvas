@@ -37,7 +37,7 @@ namespace ClipboardCanvas.DataModels
 
         #endregion
 
-        #region Protected Helpers
+        #region Helpers
 
         protected virtual async Task<IStorageItem> GetSourceItem()
         {
@@ -57,6 +57,12 @@ namespace ClipboardCanvas.DataModels
             }
 
             return sourceItem;
+        }
+
+        public virtual void DangerousUpdateItem(IStorageItem newAssociatedItem, IStorageItem sourceItem = null)
+        {
+            this.AssociatedItem = newAssociatedItem;
+            this.sourceItem = sourceItem;
         }
 
         #endregion
