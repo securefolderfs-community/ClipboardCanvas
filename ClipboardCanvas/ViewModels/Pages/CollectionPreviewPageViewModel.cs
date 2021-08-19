@@ -501,9 +501,6 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public async void Dispose()
         {
-            await Task.Delay(1000); // Delay so item preview doesn't disappear instantly for connected animation
-
-            Items?.DisposeClear();
             UnhookEvents();
 
             if (SearchControlVisible)
@@ -514,6 +511,10 @@ namespace ClipboardCanvas.ViewModels.Pages
             {
                 AssociatedCollectionModel.SearchContext = null;
             }
+
+            await Task.Delay(1500); // Delay so item preview doesn't disappear instantly for connected animation
+
+            Items.DisposeClear();
         }
 
         #endregion

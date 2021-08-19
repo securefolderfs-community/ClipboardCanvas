@@ -28,5 +28,13 @@ namespace ClipboardCanvas.UserControls.Widgets
                 this.ViewModel.OpenItem(collectionViewModel);
             }
         }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.SelectedItem != null)
+            {
+                CollectionsGrid.ScrollIntoView(ViewModel.SelectedItem);
+            }
+        }
     }
 }

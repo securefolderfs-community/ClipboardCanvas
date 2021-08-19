@@ -19,6 +19,10 @@ namespace ClipboardCanvas.Models
 
         void RemoveItem(InteractableCanvasControlItemViewModel item);
 
+        bool ContainsItem(InteractableCanvasControlItemViewModel item);
+
+        InteractableCanvasControlItemViewModel FindItem(string path);
+
         InfiniteCanvasConfigurationModel ConstructConfigurationModel();
 
         Task RegenerateCanvasPreview();

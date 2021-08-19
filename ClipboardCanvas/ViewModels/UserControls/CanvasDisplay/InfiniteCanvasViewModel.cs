@@ -23,12 +23,18 @@ using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.EventArguments.InfiniteCanvasEventArgs;
+using Windows.ApplicationModel.Core;
+using Microsoft.Toolkit.Uwp;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
     public class InfiniteCanvasViewModel : BaseCanvasViewModel
     {
         private InfiniteCanvasItem InfiniteCanvasItem => canvasItem as InfiniteCanvasItem;
+
+        private FilesystemChangeWatcher _filesystemChangeWatcher;
+
+        private bool _isFilesystemWatcherReady;
 
         private ICanvasItemReceiverModel _infiniteCanvasFileReceiver;
 
@@ -116,6 +122,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Fetch data to view
             SafeWrapperResult fetchDataToViewResult = await interactableCanvasControlItem.LoadContent();
 
+            // Start filesystem change tracker
+            await StartFilesystemChangeWatcher((await InfiniteCanvasItem.SourceItem) as StorageFolder);
+
             RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, false, false, CanPasteReference, true));
 
             return fetchDataToViewResult;
@@ -186,6 +195,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 loadContentTasks.Add(item.LoadContent(true));
             }
             await Task.WhenAll(loadContentTasks);
+
+            // Start filesystem change tracker
+            await StartFilesystemChangeWatcher((await InfiniteCanvasItem.SourceItem) as StorageFolder);
 
             // Always regenerate canvas preview on load to update it
             await InteractableCanvasControlModel.RegenerateCanvasPreview();
@@ -267,9 +279,106 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             });
         }
 
+        private async void FilesystemChangeWatcher_OnChangeRegisteredEvent(object sender, ChangeRegisteredEventArgs e)
+        {
+            // Get changes
+            IEnumerable<StorageLibraryChange> changes = await e.filesystemChangeReader.ReadBatchAsync();
+
+            // Accept changes
+            await e.filesystemChangeReader.AcceptChangesAsync();
+
+            // Reflect changes
+            foreach (var item in changes)
+            {
+                if (FilesystemHelpers.IsPathEqualExtension(item.Path, Constants.FileSystem.INFINITE_CANVAS_CONFIGURATION_FILE_EXTENSION)
+                    || Path.GetFileName(item.Path) == Constants.FileSystem.INFINITE_CANVAS_PREVIEW_IMAGE_FILENAME)
+                {
+                    continue;
+                }
+
+                IStorageItem changedItem = await item.GetStorageItemAsync();
+
+                switch (item.ChangeType)
+                {
+                    case StorageLibraryChangeType.ChangeTrackingLost:
+                        {
+                            e.filesystemChangeTracker.Reset();
+                            break;
+                        }
+
+                    case StorageLibraryChangeType.Created:
+                        {
+                            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(async () =>
+                            {
+                                if (InteractableCanvasControlModel.ContainsItem(InteractableCanvasControlModel.FindItem(changedItem.Path)))
+                                {
+                                    return;
+                                }
+
+                                BaseContentTypeModel contentType = await BaseContentTypeModel.GetContentType(changedItem, null);
+                                if (contentType != null)
+                                {
+                                    CanvasItem canvasItem = new CanvasItem(changedItem);
+
+                                    var interactableCanvasControlItem = await InteractableCanvasControlModel.AddItem(associatedCollection, contentType, canvasItem, _infiniteCanvasFileReceiver, cancellationToken);
+                                    if (interactableCanvasControlItem != null)
+                                    {
+                                        await interactableCanvasControlItem.LoadContent();
+                                    }
+                                }
+                            });
+                            break;
+                        }
+
+                    case StorageLibraryChangeType.MovedOutOfLibrary:
+                    case StorageLibraryChangeType.Deleted:
+                        {
+                            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(() =>
+                            {
+                                InteractableCanvasControlModel.RemoveItem(InteractableCanvasControlModel.FindItem(item.Path));
+                            });
+                            break;
+                        }
+
+                    case StorageLibraryChangeType.MovedOrRenamed:
+                        {
+                            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(async () =>
+                            {
+                                string oldName = Path.GetFileName(item.PreviousPath);
+                                string newName = Path.GetFileName(item.Path);
+
+                                string oldParentPath = Path.GetDirectoryName(item.PreviousPath);
+                                string newParentPath = Path.GetDirectoryName(item.Path);
+
+                                if ((oldName != newName) && (oldParentPath == newParentPath))
+                                {
+                                    // Renamed
+                                    var interactableCanvasControlItem = InteractableCanvasControlModel.FindItem(item.PreviousPath);
+
+                                    interactableCanvasControlItem.CanvasItem.DangerousUpdateItem(changedItem);
+                                    await interactableCanvasControlItem.InitializeDisplayName();
+                                }
+                            });
+                            break;
+                        }
+                }
+            }
+        }
+
         #endregion
 
         #region Private Helpers
+
+        private async Task StartFilesystemChangeWatcher(StorageFolder infiniteCanvasFolder)
+        {
+            if (!_isFilesystemWatcherReady)
+            {
+                _isFilesystemWatcherReady = true;
+
+                this._filesystemChangeWatcher = await FilesystemChangeWatcher.CreateNew(infiniteCanvasFolder);
+                this._filesystemChangeWatcher.OnChangeRegisteredEvent += FilesystemChangeWatcher_OnChangeRegisteredEvent;
+            }
+        }
 
         private async Task<SafeWrapperResult> InitializeInfiniteCanvasFolder()
         {
@@ -317,6 +426,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         public override void Dispose()
         {
             base.Dispose();
+
+            if (_isFilesystemWatcherReady)
+            {
+                _filesystemChangeWatcher.OnChangeRegisteredEvent -= FilesystemChangeWatcher_OnChangeRegisteredEvent;
+                _filesystemChangeWatcher.Dispose();
+            }
 
             this.InteractableCanvasControlModel?.Dispose();
             this.ControlView = null;

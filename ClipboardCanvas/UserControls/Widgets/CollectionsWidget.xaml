@@ -12,6 +12,7 @@
     xmlns:vm="using:ClipboardCanvas.ViewModels.UserControls.Collections"
     d:DesignHeight="300"
     d:DesignWidth="400"
+    Loaded="UserControl_Loaded"
     mc:Ignorable="d">
 
     <UserControl.Resources>

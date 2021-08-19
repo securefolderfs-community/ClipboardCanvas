@@ -1,8 +1,9 @@
-﻿using ClipboardCanvas.Enums;
-using ClipboardCanvas.Services;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+﻿using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
 using System.Threading;
+
+using ClipboardCanvas.Enums;
+using ClipboardCanvas.Services;
 
 namespace ClipboardCanvas.Contexts.Operations
 {
@@ -10,9 +11,9 @@ namespace ClipboardCanvas.Contexts.Operations
     {
         private IStatusCenterService StatusCenterService { get; } = Ioc.Default.GetService<IStatusCenterService>();
 
-        public IOperationContext GetOperationContext(string operationName, StatusCenterOperationType operationType) // TODO: When StatusCenter is implemented, implement this too!
+        public IOperationContext GetOperationContext(string operationName, StatusCenterOperationType operationType)
         {
-            return StatusCenterService.AppendOperationBanner(operationName, operationType, new CancellationTokenSource(), TimeSpan.FromMilliseconds(1000));
+            return StatusCenterService.AppendOperationBanner(operationName, operationType, new CancellationTokenSource(), TimeSpan.FromMilliseconds(750));
         }
     }
 }

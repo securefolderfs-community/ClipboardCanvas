@@ -165,7 +165,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async Task OpenFile()
         {
-            // TODO:
             await StorageHelpers.OpenFile(await CanvasItem.SourceItem);
         }
 
@@ -234,10 +233,15 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #endregion
 
-        public async Task InitializeItem()
+        public async Task InitializeDisplayName()
         {
             DisplayName = (await CanvasItem.SourceItem)?.Name ?? "Invalid file.";
-            OverrideReferenceEnabled = (await CanvasItem.SourceItem) is not StorageFolder;
+        }
+
+        public async Task InitializeItem()
+        {
+             await InitializeDisplayName();
+             OverrideReferenceEnabled = (await CanvasItem.SourceItem) is not StorageFolder;
         }
 
         public async Task<SafeWrapperResult> LoadContent(bool withLoadDelay = false)

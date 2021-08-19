@@ -7,6 +7,7 @@ using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using System.Numerics;
 using Windows.ApplicationModel.DataTransfer;
+using System.Linq;
 
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
@@ -93,9 +94,15 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Public Helpers
 
-        public async Task<InteractableCanvasControlItemViewModel> AddItem(ICollectionModel collectionModel, BaseContentTypeModel contentType, CanvasItem canvasFile, ICanvasItemReceiverModel inifinteCanvasFileReceiver, CancellationToken cancellationToken)
+        public async Task<InteractableCanvasControlItemViewModel> AddItem(ICollectionModel collectionModel, BaseContentTypeModel contentType, CanvasItem canvasItem, ICanvasItemReceiverModel inifinteCanvasFileReceiver, CancellationToken cancellationToken)
         {
-            var item = new InteractableCanvasControlItemViewModel(_view, collectionModel, contentType, canvasFile, inifinteCanvasFileReceiver, cancellationToken);
+            bool isDuplicate = Items.Any((item) => item.CanvasItem.AssociatedItem == canvasItem.AssociatedItem);
+            if (isDuplicate)
+            {
+                return null;
+            }
+
+            var item = new InteractableCanvasControlItemViewModel(_view, collectionModel, contentType, canvasItem, inifinteCanvasFileReceiver, cancellationToken);
             item.OnInfiniteCanvasItemRemovalRequestedEvent += Item_OnInfiniteCanvasItemRemovalRequestedEvent;
             Items.Add(item);
             await item.InitializeItem();
@@ -108,10 +115,28 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public void RemoveItem(InteractableCanvasControlItemViewModel item)
         {
-            item.OnInfiniteCanvasItemRemovalRequestedEvent -= Item_OnInfiniteCanvasItemRemovalRequestedEvent;
-            Items.Remove(item);
+            if (item != null)
+            {
+                item.OnInfiniteCanvasItemRemovalRequestedEvent -= Item_OnInfiniteCanvasItemRemovalRequestedEvent;
+                Items.Remove(item);
 
-            NoItemsTextLoad = Items.IsEmpty();
+                NoItemsTextLoad = Items.IsEmpty();
+            }
+        }
+
+        public bool ContainsItem(InteractableCanvasControlItemViewModel item)
+        {
+            if (item == null)
+            {
+                return false;
+            }
+
+            return Items.Any((item2) => item2 == item);
+        }
+
+        public InteractableCanvasControlItemViewModel FindItem(string path)
+        {
+            return Items.FirstOrDefault((item) => item.CanvasItem.AssociatedItem.Path == path);
         }
 
         public InfiniteCanvasConfigurationModel ConstructConfigurationModel()

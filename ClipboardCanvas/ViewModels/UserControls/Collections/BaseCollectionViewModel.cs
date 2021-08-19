@@ -13,8 +13,6 @@ using ClipboardCanvas.DataModels;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Storage.Streams;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Windows.Storage.Search;
-using System.Diagnostics;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 using ClipboardCanvas.EventArguments.CanvasControl;
@@ -30,7 +28,6 @@ using ClipboardCanvas.Contexts;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
-using System.Runtime.CompilerServices;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {
@@ -52,11 +49,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         protected bool isFilesystemWatcherReady;
 
-        protected StorageItemQueryResult filesystemWatcherQuery;
-
-        protected StorageLibraryChangeTracker filesystemChangeTracker;
-
-        protected StorageLibraryChangeReader filesystemChangeReader;
+        protected FilesystemChangeWatcher filesystemChangeWatcher;
 
         protected IDialogService DialogService { get; } = Ioc.Default.GetService<IDialogService>();
 
@@ -622,52 +615,36 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             {
                 isFilesystemWatcherReady = true;
 
-                // 1. Prepare query - listen for changes
-                QueryOptions queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, new List<string>() { "*" });
-                queryOptions.FolderDepth = FolderDepth.Shallow;
-                queryOptions.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
-
-                filesystemWatcherQuery = collectionFolder.CreateItemQueryWithOptions(queryOptions);
-
-                // Indicate to the system the app is ready to change track
-                await filesystemWatcherQuery.GetItemsAsync(0, 1);
-
-                filesystemWatcherQuery.ContentsChanged += FilesystemWatcherQuery_ContentsChanged;
-
-
-                // 2. Get change tracker
-                filesystemChangeTracker = collectionFolder.TryGetChangeTracker();
-                filesystemChangeTracker.Enable();
-
-                filesystemChangeReader = filesystemChangeTracker.GetChangeReader();
+                this.filesystemChangeWatcher = await FilesystemChangeWatcher.CreateNew(collectionFolder);
+                this.filesystemChangeWatcher.OnChangeRegisteredEvent += FilesystemChangeWatcher_OnChangeRegisteredEvent;
             }
         }
 
-        private async void FilesystemWatcherQuery_ContentsChanged(IStorageQueryResultBase sender, object args)
+        private async void FilesystemChangeWatcher_OnChangeRegisteredEvent(object sender, ChangeRegisteredEventArgs e)
         {
             // Get changes
-            IEnumerable<StorageLibraryChange> changes = await filesystemChangeReader.ReadBatchAsync();
+            IEnumerable<StorageLibraryChange> changes = await e.filesystemChangeReader.ReadBatchAsync();
 
             // Accept changes
-            await filesystemChangeReader.AcceptChangesAsync();
+            await e.filesystemChangeReader.AcceptChangesAsync();
 
-            // Reflect the changes in collection
+            // Reflect changes in collection
             foreach (var item in changes)
             {
-                IStorageItem changeditem = await item.GetStorageItemAsync();
+                IStorageItem changedItem = await item.GetStorageItemAsync();
 
                 switch (item.ChangeType)
                 {
                     case StorageLibraryChangeType.ChangeTrackingLost:
                         {
-                            filesystemChangeTracker.Reset();
+                            e.filesystemChangeTracker.Reset();
                             break;
                         }
 
                     case StorageLibraryChangeType.Created:
                         {
                             // Add new collection item
-                            var collectionItem = new CollectionItemViewModel(changeditem);
+                            var collectionItem = new CollectionItemViewModel(changedItem);
                             AddCollectionItem(collectionItem);
                             break;
                         }
@@ -692,7 +669,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                             {
                                 // Renamed
                                 var collectionItem = FindCollectionItem(item.PreviousPath);
-                                collectionItem.DangerousUpdateItem(changeditem);
+                                collectionItem.DangerousUpdateItem(changedItem);
 
                                 OnCollectionItemRenamedEvent?.Invoke(this, new CollectionItemRenamedEventArgs(this, collectionItem, item.PreviousPath));
                             }
@@ -848,7 +825,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         {
             if (isFilesystemWatcherReady)
             {
-                filesystemWatcherQuery.ContentsChanged -= FilesystemWatcherQuery_ContentsChanged;
+                filesystemChangeWatcher.OnChangeRegisteredEvent -= FilesystemChangeWatcher_OnChangeRegisteredEvent;
+                filesystemChangeWatcher.Dispose();
             }
         }
 
