@@ -11,7 +11,7 @@
     mc:Ignorable="d">
 
     <ScrollViewer>
-        <Grid Padding="15,10,15,10" RowSpacing="16">
+        <Grid Padding="20,10,20,10" RowSpacing="16">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="2*" />

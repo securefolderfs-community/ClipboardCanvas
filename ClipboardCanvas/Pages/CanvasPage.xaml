@@ -82,14 +82,28 @@
                 </Grid.RowDefinitions>
 
                 <!--  Title  -->
+
                 <Viewbox
                     x:Name="TitleTextViewBox"
+                    MaxWidth="600"
+                    MaxHeight="500"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     x:Load="{x:Bind ViewModel.NewCanvasScreenLoad, Mode=OneWay}"
-                    StretchDirection="Both">
-                    <StackPanel Padding="120" Spacing="8">
+                    Stretch="Uniform">
+                    <Grid
+                        Padding="16"
+                        Background="Transparent"
+                        RowSpacing="8">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
                         <FontIcon
+                            Grid.Row="0"
                             Margin="0,0,0,4"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
@@ -97,19 +111,21 @@
                             Glyph="&#xe77f;"
                             Opacity="0.4" />
                         <TextBlock
+                            Grid.Row="1"
                             HorizontalAlignment="Center"
                             AllowDrop="True"
                             FontSize="24"
                             FontWeight="Bold"
                             Text="{x:Bind ViewModel.TitleText, Mode=OneWay}" />
                         <TextBlock
+                            Grid.Row="2"
                             HorizontalAlignment="Center"
                             AllowDrop="True"
                             FontFamily="Segoe UI Variable Text"
                             FontSize="8"
                             Opacity="0.8"
                             Text="{x:Bind ViewModel.CanvasTypeText, Mode=OneWay}" />
-                    </StackPanel>
+                    </Grid>
                 </Viewbox>
 
                 <!--  Content Loading progress ring  -->

@@ -201,7 +201,7 @@
             x:Load="{x:Bind ViewModel.CollectionLoadingIndicatorLoad, Mode=OneWay}"
             Spacing="8">
             <TextBlock Opacity="0.7" Text="The Collection is being initialized..." />
-            <ProgressBar IsIndeterminate="True" />
+            <muxc:ProgressBar IsIndeterminate="True" />
         </StackPanel>
 
         <!--  Search control  -->

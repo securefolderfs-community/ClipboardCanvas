@@ -264,6 +264,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             OnOpenNewCanvasRequestedEvent?.Invoke(sender, e);
         }
 
+        private static void BaseCollectionViewModel_OnCollectionOpenRequestedEvent(object sender, CollectionOpenRequestedEventArgs e)
+        {
+            OnCollectionOpenRequestedEvent?.Invoke(sender, e);
+        }
+
         #endregion
 
         #region Public Helpers
@@ -376,6 +381,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             }
 
             // Hook events
+            baseCollectionViewModel.OnCollectionOpenRequestedEvent += BaseCollectionViewModel_OnCollectionOpenRequestedEvent;
             baseCollectionViewModel.OnOpenNewCanvasRequestedEvent += BaseCollectionViewModel_OnOpenNewCanvasRequestedEvent;
             baseCollectionViewModel.OnCanvasLoadFailedEvent += BaseCollectionViewModel_OnCanvasLoadFailedEvent;
             baseCollectionViewModel.OnGoToHomepageRequestedEvent += BaseCollectionViewModel_OnGoToHomepageRequestedEvent;
@@ -419,7 +425,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 return;
             }
 
-            // Hook events
+            // Unhook events
+            baseCollectionViewModel.OnCollectionOpenRequestedEvent -= BaseCollectionViewModel_OnCollectionOpenRequestedEvent;
             baseCollectionViewModel.OnOpenNewCanvasRequestedEvent -= BaseCollectionViewModel_OnOpenNewCanvasRequestedEvent;
             baseCollectionViewModel.OnCanvasLoadFailedEvent -= BaseCollectionViewModel_OnCanvasLoadFailedEvent;
             baseCollectionViewModel.OnGoToHomepageRequestedEvent -= BaseCollectionViewModel_OnGoToHomepageRequestedEvent;

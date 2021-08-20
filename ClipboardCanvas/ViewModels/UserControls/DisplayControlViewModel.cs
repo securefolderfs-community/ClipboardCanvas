@@ -211,6 +211,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void NavigationControlModel_OnGoToHomepageRequestedEvent(object sender, EventArgs e)
         {
+            _canvasLoadCancellationTokenSource.Cancel();
+            _canvasLoadCancellationTokenSource.Dispose();
+            _canvasLoadCancellationTokenSource = new CancellationTokenSource();
+
             NavigationService.OpenHomepage();
         }
 

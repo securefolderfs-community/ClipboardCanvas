@@ -86,12 +86,17 @@ namespace ClipboardCanvas
 
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e) => LogException(e.Exception);
 
-        private void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e) => LogException(e.Exception);
+        private void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e) => LogException(e.Exception, () => e.Handled = true);
 
         private void CurrentDomain_FirstChanceException(object sender, FirstChanceExceptionEventArgs e) => LogException(e.Exception);
 
-        private void LogException(Exception e)
+        private void LogException(Exception e, Action tryHandleException = null)
         {
+            if (tryHandleException == null)
+            {
+                tryHandleException = () => { };
+            }
+
 #if DEBUG
             Debug.WriteLine("--------- UNHANDLED EXCEPTION ---------");
             if (e != null)
@@ -131,6 +136,13 @@ namespace ClipboardCanvas
             Debug.WriteLine("---------------------------------------");
 
             Debugger.Break(); // Please check "Output Window" for exception details (View -> Output Window) (CTRL + ALT + O)
+
+            if (false) // Can only step-in manually in debug mode
+            {
+#pragma warning disable CS0162 // Unreachable code detected
+                tryHandleException();
+#pragma warning restore CS0162 // Unreachable code detected
+            }
 #else
             LogExceptionToFile(e);
 #endif

@@ -57,7 +57,7 @@ namespace ClipboardCanvas.Helpers
                 new AsyncRelayCommand(async () =>
                 {
                     await CollectionsWidgetViewModel.AddCollectionViaUi();
-                }), "Add Collection", "\uE710");
+                }), "Add a collection", "\uE710");
 
             actions.Add(action_addCollection);
 

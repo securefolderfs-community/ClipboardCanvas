@@ -8,6 +8,7 @@
     xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:vc="using:ClipboardCanvas.ValueConverters"
     xmlns:vm="using:ClipboardCanvas.ViewModels.UserControls.Collections"
     d:DesignHeight="300"
@@ -18,7 +19,6 @@
     <UserControl.Resources>
         <vc:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <vc:BooleanInvertConverter x:Key="BooleanInvertConverter" />
-        <vc:SelectedItemToBorderThicknessConverter x:Key="SelectedItemToBorderThicknessConverter" />
         <vc:SafeWrapperResultToErrorConverter x:Key="SafeWrapperResultToErrorConverter" />
         <vc:ControlToFocusActionConverter x:Key="ControlToFocusActionConverter" />
     </UserControl.Resources>
@@ -39,19 +39,19 @@
         </Grid.RowDefinitions>
 
         <TextBlock
-            Margin="5,0,5,0"
+            Margin="8,0,8,0"
             FontSize="32"
             FontWeight="Bold"
             Text="Collections" />
 
-        <GridView
-            x:Name="CollectionsGrid"
+        <ListView
+            x:Name="CollectionsItemsHolder"
             Grid.Row="1"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             AllowDrop="True"
             CanReorderItems="True"
-            IsItemClickEnabled="True"
+            IsItemClickEnabled="False"
             ItemsSource="{x:Bind vm:CollectionsWidgetViewModel.Collections}"
             ReorderMode="Enabled"
             ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -61,13 +61,13 @@
             SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
             SelectionMode="Single">
             <!--  Remove Reveal Highlight Effect  -->
-            <GridView.ItemContainerStyle>
-                <Style TargetType="GridViewItem">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
                     <!--  Spacing  -->
-                    <Setter Property="Margin" Value="5,0,5,10" />
+                    <Setter Property="Margin" Value="8,0,8,15" />
                     <Setter Property="Template">
                         <Setter.Value>
-                            <ControlTemplate TargetType="GridViewItem">
+                            <ControlTemplate TargetType="ListViewItem">
                                 <ListViewItemPresenter
                                     x:Name="Root"
                                     RevealBackground="{ThemeResource GridViewItemRevealBackground}"
@@ -77,24 +77,25 @@
                         </Setter.Value>
                     </Setter>
                 </Style>
-            </GridView.ItemContainerStyle>
-            <GridView.ItemsPanel>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsStackPanel MaxHeight="300" Orientation="Horizontal" />
                 </ItemsPanelTemplate>
-            </GridView.ItemsPanel>
-            <GridView.ItemTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
                 <DataTemplate x:DataType="vm:BaseCollectionViewModel">
                     <Grid
                         x:Name="RootGrid"
-                        Width="260"
-                        Height="140"
+                        Width="230"
+                        Height="150"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
                         Background="{ThemeResource SubtleBackgroundBrush}"
-                        BorderBrush="{ThemeResource SystemAccentColor}"
-                        BorderThickness="{x:Bind IsSelected, Mode=OneWay, Converter={StaticResource SelectedItemToBorderThicknessConverter}}"
+                        BorderBrush="{ThemeResource ButtonBorderBrush}"
+                        BorderThickness="1"
                         CornerRadius="8"
-                        DoubleTapped="RootGrid_DoubleTapped"
-                        IsDoubleTapEnabled="True">
+                        Tapped="RootGrid_Tapped">
                         <Grid.RowDefinitions>
                             <!--  Icon  -->
                             <RowDefinition Height="9*" />
@@ -104,11 +105,49 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
+                        <!--  Context menu  -->
+                        <Grid.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Command="{x:Bind OpenCollectionLocationCommand}" Text="Open Collection location">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE838;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Command="{x:Bind ChangeCollectionIconCommand}" Text="Change icon">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE70F;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem
+                                    x:Name="RemoveCollectionIconOption"
+                                    x:Load="{x:Bind UsesCustomIcon, Mode=OneWay}"
+                                    Command="{x:Bind RemoveCollectionIconCommand}"
+                                    Text="Remove icon">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE738;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutSeparator />
+                                <MenuFlyoutItem Command="{x:Bind ReloadCollectionCommand}" Text="Reload Collection">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE72C;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Command="{x:Bind StartRenameCollectionCommand}" Text="Edit name">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8AC;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Command="{x:Bind RemoveCollectionCommand}" Text="Remove Collection">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xECC9;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </Grid.ContextFlyout>
+
                         <!--  Icon  -->
-                        <Grid
-                            Grid.Row="0"
-                            HorizontalAlignment="Stretch"
-                            Background="Transparent">
+                        <Grid Grid.Row="0" HorizontalAlignment="Stretch">
                             <ToolTipService.ToolTip>
                                 <ToolTip>
                                     <StackPanel Spacing="8">
@@ -133,7 +172,8 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 FontSize="48"
-                                Glyph="&#xF12B;"
+                                Foreground="{ThemeResource SystemAccentColor}"
+                                Glyph="&#xF0E2;"
                                 Visibility="{x:Bind UsesCustomIcon, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter='invert'}" />
 
                             <!--  Image icon  -->
@@ -208,55 +248,15 @@
                         </Grid>
 
                         <!--  Progressbar  -->
-                        <ProgressBar
+                        <muxc:ProgressBar
                             Grid.Row="2"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center"
                             IsIndeterminate="True"
                             Visibility="{x:Bind IsCollectionInitializing, Mode=OneWay}" />
-
-                        <Grid.ContextFlyout>
-                            <MenuFlyout>
-                                <MenuFlyoutItem Command="{x:Bind OpenCollectionLocationCommand}" Text="Open Collection location">
-                                    <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="&#xE838;" />
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                                <MenuFlyoutItem Command="{x:Bind ChangeCollectionIconCommand}" Text="Change icon">
-                                    <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="&#xE70F;" />
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                                <MenuFlyoutItem
-                                    x:Name="RemoveCollectionIconOption"
-                                    x:Load="{x:Bind UsesCustomIcon, Mode=OneWay}"
-                                    Command="{x:Bind RemoveCollectionIconCommand}"
-                                    Text="Remove icon">
-                                    <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="&#xE738;" />
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                                <MenuFlyoutSeparator />
-                                <MenuFlyoutItem Command="{x:Bind ReloadCollectionCommand}" Text="Reload Collection">
-                                    <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="&#xE72C;" />
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                                <MenuFlyoutItem Command="{x:Bind StartRenameCollectionCommand}" Text="Edit name">
-                                    <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="&#xE8AC;" />
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                                <MenuFlyoutItem Command="{x:Bind RemoveCollectionCommand}" Text="Remove Collection">
-                                    <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="&#xECC9;" />
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                            </MenuFlyout>
-                        </Grid.ContextFlyout>
                     </Grid>
                 </DataTemplate>
-            </GridView.ItemTemplate>
-        </GridView>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </UserControl>

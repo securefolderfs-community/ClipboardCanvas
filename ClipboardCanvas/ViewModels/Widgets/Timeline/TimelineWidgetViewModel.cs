@@ -106,32 +106,37 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
             ITimelineSettingsService timelineSettingsService = Ioc.Default.GetService<ITimelineSettingsService>();
             TimelineConfigurationModel configurationModel = timelineSettingsService.UserTimeline;
 
-            IEnumerable<TimelineSectionConfigurationModel> sortedSections = configurationModel.sections.OrderBy((x) => x.sectionDateTime);
-
             if (configurationModel != null)
             {
-                foreach (var configurationSection in sortedSections)
+                IEnumerable<TimelineSectionConfigurationModel> sortedSections = configurationModel.sections.OrderBy((x) => x.sectionDateTime);
+
+                if (configurationModel != null)
                 {
-                    var section = AddSection(configurationSection.sectionDateTime, true);
-
-                    foreach (var configurationSectionItem in configurationSection.items)
+                    foreach (var configurationSection in sortedSections)
                     {
-                        BaseCollectionViewModel baseCollectionViewModel = CollectionsWidgetViewModel.FindCollection(configurationSectionItem.collectionConfigurationModel);
-                        SafeWrapper<IStorageItem> item = await StorageHelpers.ToStorageItemWithError<IStorageItem>(configurationSectionItem.collectionItemPath);
+                        var section = AddSection(configurationSection.sectionDateTime, true);
 
-                        if (baseCollectionViewModel != null && item)
+                        foreach (var configurationSectionItem in configurationSection.items)
                         {
-                            CanvasItem canvasItem = new CanvasItem(item.Result);
-                            section.AddItemBack(baseCollectionViewModel, canvasItem, true);
+                            BaseCollectionViewModel baseCollectionViewModel = CollectionsWidgetViewModel.FindCollection(configurationSectionItem.collectionConfigurationModel);
+                            SafeWrapper<IStorageItem> item = await StorageHelpers.ToStorageItemWithError<IStorageItem>(configurationSectionItem.collectionItemPath);
+
+                            if (baseCollectionViewModel != null && item)
+                            {
+                                CanvasItem canvasItem = new CanvasItem(item.Result);
+                                section.AddItemBack(baseCollectionViewModel, canvasItem, true);
+                            }
                         }
                     }
-                }
 
-                RemoveEmptySections();
+                    RemoveEmptySections();
+                }
             }
 
             // Add "Today" section
             GetOrCreateTodaySection();
+
+            RemoveDuplicateSections();
         }
 
         public static TimelineConfigurationModel ConstructConfigurationModel()
@@ -154,6 +159,28 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
                 {
                     Sections.RemoveAt(i);
                 }
+            }
+        }
+
+        private static void RemoveDuplicateSections()
+        {
+            bool anyDuplicates = false;
+
+            for (int i = 0; i < Sections.Count; i++)
+            {
+                for (int j = 0; j < Sections.Count; j++)
+                {
+                    if (Sections[i] == Sections[j])
+                    {
+                        anyDuplicates = true;
+                        Sections.RemoveAt(i);
+                    }
+                }
+            }
+
+            if (anyDuplicates)
+            {
+                SettingsSerializationHelpers.UpdateUserTimelineSetting();
             }
         }
 

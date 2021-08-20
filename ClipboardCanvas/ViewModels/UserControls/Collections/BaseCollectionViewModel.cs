@@ -140,6 +140,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         #region Events
 
+        public event EventHandler<CollectionOpenRequestedEventArgs> OnCollectionOpenRequestedEvent;
+
         public event EventHandler<OpenNewCanvasRequestedEventArgs> OnOpenNewCanvasRequestedEvent;
 
         public event EventHandler<CanvasLoadFailedEventArgs> OnCanvasLoadFailedEvent;
@@ -163,6 +165,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         #endregion
 
         #region Commands
+
+        public ICommand OpenCollectionCommand { get; protected set; }
 
         public ICommand OpenCollectionLocationCommand { get; protected set; }
 
@@ -209,6 +213,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             this.CollectionItems = new ObservableCollection<CollectionItemViewModel>();
 
             // Create commands
+            OpenCollectionCommand = new RelayCommand(OpenCollection);
             OpenCollectionLocationCommand = new AsyncRelayCommand(OpenCollectionLocation);
             ChangeCollectionIconCommand = new AsyncRelayCommand(ChangeCollectionIcon);
             RemoveCollectionIconCommand = new AsyncRelayCommand(RemoveCollectionIcon);
@@ -218,6 +223,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         #endregion
 
         #region Command Implementation
+
+        private void OpenCollection()
+        {
+            OnCollectionOpenRequestedEvent?.Invoke(this, new CollectionOpenRequestedEventArgs(this));
+        }
 
         private async Task OpenCollectionLocation()
         {
