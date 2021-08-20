@@ -128,15 +128,11 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
                             }
                         }
                     }
-
-                    RemoveEmptySections();
                 }
             }
 
             // Add "Today" section
             GetOrCreateTodaySection();
-
-            RemoveDuplicateSections();
         }
 
         public static TimelineConfigurationModel ConstructConfigurationModel()
@@ -149,39 +145,6 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
             }
 
             return configurationModel;
-        }
-
-        private static void RemoveEmptySections()
-        {
-            for (int i = 0; i < Sections.Count; i++)
-            {
-                if (Sections[i].Items.IsEmpty())
-                {
-                    Sections.RemoveAt(i);
-                }
-            }
-        }
-
-        private static void RemoveDuplicateSections()
-        {
-            bool anyDuplicates = false;
-
-            for (int i = 0; i < Sections.Count; i++)
-            {
-                for (int j = 0; j < Sections.Count; j++)
-                {
-                    if (Sections[i] == Sections[j])
-                    {
-                        anyDuplicates = true;
-                        Sections.RemoveAt(i);
-                    }
-                }
-            }
-
-            if (anyDuplicates)
-            {
-                SettingsSerializationHelpers.UpdateUserTimelineSetting();
-            }
         }
 
         public static async Task<bool> CheckIfTimelineEnabled(bool initializeIfNecessary = true)
