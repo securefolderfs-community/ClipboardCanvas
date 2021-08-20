@@ -16,7 +16,7 @@
         <vc:DateTimeToStringConverter x:Key="DateTimeToStringConverter" />
     </UserControl.Resources>
 
-    <Grid RowSpacing="16">
+    <Grid RowSpacing="24">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -25,6 +25,7 @@
 
         <TextBlock
             Margin="5,0,5,0"
+            FontFamily="Segoe UI Variable"
             FontSize="32"
             FontWeight="Bold"
             Text="Timeline" />
@@ -59,15 +60,14 @@
 
                         <!--  Date  -->
                         <TextBlock
-                            FontSize="24"
-                            FontWeight="SemiLight"
+                            FontSize="20"
+                            FontWeight="Medium"
                             Text="{x:Bind FormattedTime, Mode=OneWay}" />
 
                         <!--  Items  -->
                         <ListView
                             Grid.Row="1"
-                            IsItemClickEnabled="True"
-                            ItemClick="ListView_ItemClick"
+                            IsItemClickEnabled="False"
                             ItemsSource="{x:Bind Items}"
                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
                             ScrollViewer.HorizontalScrollMode="Auto"
@@ -99,52 +99,86 @@
                             </ListView.ItemsPanel>
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="vm:TimelineSectionItemViewModel">
-                                    <Grid
-                                        MaxWidth="256"
-                                        MaxHeight="144"
-                                        RowSpacing="8">
-
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition />
-                                        </Grid.RowDefinitions>
-
-                                        <!--  Collection name  -->
-                                        <TextBlock Opacity="0.8" Text="{x:Bind CollectionModel.DisplayName}" />
-
-                                        <!--  The canvas preview  -->
-                                        <Viewbox
-                                            Grid.Row="1"
+                                    <Grid Width="240" Height="160">
+                                        <Button
+                                            Padding="0"
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Stretch"
-                                            StretchDirection="Both">
-                                            <uc:SimpleCanvasPreviewControl CollectionModel="{x:Bind CollectionModel, Mode=OneWay}" SimpleCanvasPreviewModel="{x:Bind ReadOnlyCanvasPreviewModel, Mode=TwoWay}" />
-                                        </Viewbox>
+                                            HorizontalContentAlignment="Stretch"
+                                            VerticalContentAlignment="Stretch"
+                                            Command="{x:Bind OpenCanvasCommand}"
+                                            CornerRadius="8">
+                                            <Grid
+                                                Padding="20"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Stretch"
+                                                RowSpacing="4">
+                                                <Grid.RowDefinitions>
+                                                    <!--  Canvas Preview  -->
+                                                    <RowDefinition />
+                                                    <!--  Filename  -->
+                                                    <RowDefinition Height="Auto" />
+                                                    <!--  Collection name  -->
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
 
-                                        <Grid.ContextFlyout>
-                                            <MenuFlyout>
-                                                <MenuFlyoutItem Command="{x:Bind OpenFileCommand}" Text="Open file">
-                                                    <MenuFlyoutItem.Icon>
-                                                        <FontIcon Glyph="&#xE8E5;" />
-                                                    </MenuFlyoutItem.Icon>
-                                                </MenuFlyoutItem>
-                                                <MenuFlyoutItem Command="{x:Bind OpenCanvasCommand}" Text="Open canvas">
-                                                    <MenuFlyoutItem.Icon>
-                                                        <FontIcon Glyph="&#xE8A7;" />
-                                                    </MenuFlyoutItem.Icon>
-                                                </MenuFlyoutItem>
-                                                <MenuFlyoutItem Command="{x:Bind ShowInCollectionPreviewCommand}" Text="Show in Collection">
-                                                    <MenuFlyoutItem.Icon>
-                                                        <FontIcon Glyph="&#xE8FF;" />
-                                                    </MenuFlyoutItem.Icon>
-                                                </MenuFlyoutItem>
-                                                <MenuFlyoutItem Command="{x:Bind RemoveFromSectionCommand}" Text="Remove from this section">
-                                                    <MenuFlyoutItem.Icon>
-                                                        <FontIcon Glyph="&#xECC9;" />
-                                                    </MenuFlyoutItem.Icon>
-                                                </MenuFlyoutItem>
-                                            </MenuFlyout>
-                                        </Grid.ContextFlyout>
+                                                <!--  Canvas Preview  -->
+                                                <Viewbox
+                                                    Grid.Row="0"
+                                                    Margin="0,0,0,8"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Stretch"
+                                                    StretchDirection="Both">
+                                                    <uc:SimpleCanvasPreviewControl CollectionModel="{x:Bind CollectionModel, Mode=OneWay}" SimpleCanvasPreviewModel="{x:Bind ReadOnlyCanvasPreviewModel, Mode=TwoWay}" />
+                                                </Viewbox>
+
+                                                <!--  File name  -->
+                                                <TextBlock
+                                                    Grid.Row="1"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="13"
+                                                    FontWeight="SemiBold"
+                                                    Text="{x:Bind FileName, Mode=OneWay}"
+                                                    TextTrimming="CharacterEllipsis"
+                                                    ToolTipService.ToolTip="{x:Bind FileName, Mode=OneWay}" />
+
+                                                <!--  Source collection name  -->
+                                                <TextBlock
+                                                    Grid.Row="2"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="12"
+                                                    Opacity="0.8"
+                                                    Text="{x:Bind SourceCollectionName, Mode=OneWay}"
+                                                    TextTrimming="CharacterEllipsis"
+                                                    ToolTipService.ToolTip="{x:Bind SourceCollectionName, Mode=OneWay}" />
+                                            </Grid>
+                                            <Button.ContextFlyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyoutItem Command="{x:Bind OpenFileCommand}" Text="Open file">
+                                                        <MenuFlyoutItem.Icon>
+                                                            <FontIcon Glyph="&#xE8E5;" />
+                                                        </MenuFlyoutItem.Icon>
+                                                    </MenuFlyoutItem>
+                                                    <MenuFlyoutItem Command="{x:Bind OpenCanvasCommand}" Text="Open canvas">
+                                                        <MenuFlyoutItem.Icon>
+                                                            <FontIcon Glyph="&#xE8A7;" />
+                                                        </MenuFlyoutItem.Icon>
+                                                    </MenuFlyoutItem>
+                                                    <MenuFlyoutItem Command="{x:Bind ShowInCollectionPreviewCommand}" Text="Show in Collection">
+                                                        <MenuFlyoutItem.Icon>
+                                                            <FontIcon Glyph="&#xE8FF;" />
+                                                        </MenuFlyoutItem.Icon>
+                                                    </MenuFlyoutItem>
+                                                    <MenuFlyoutItem Command="{x:Bind RemoveFromSectionCommand}" Text="Remove from this section">
+                                                        <MenuFlyoutItem.Icon>
+                                                            <FontIcon Glyph="&#xECC9;" />
+                                                        </MenuFlyoutItem.Icon>
+                                                    </MenuFlyoutItem>
+                                                </MenuFlyout>
+                                            </Button.ContextFlyout>
+                                        </Button>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -154,10 +188,11 @@
                         <TextBlock
                             x:Name="EmptyTimelineText"
                             Grid.Row="1"
+                            Margin="0,16,0,16"
                             HorizontalAlignment="Left"
                             x:Load="{x:Bind IsSectionEmpty, Mode=OneWay}"
                             Opacity="0.8"
-                            Text="Recently pasted items will show up on your Timeline here." />
+                            Text="Recently pasted items will show up on your Timeline here" />
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>

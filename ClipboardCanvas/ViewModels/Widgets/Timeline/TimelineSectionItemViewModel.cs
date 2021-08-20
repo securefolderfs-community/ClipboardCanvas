@@ -29,6 +29,18 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
 
         public CanvasItem CanvasItem { get; private set; }
 
+        private string _FileName;
+        public string FileName
+        {
+            get => _FileName;
+            set => SetProperty(ref _FileName, value);
+        }
+
+        public string SourceCollectionName
+        {
+            get => $"in {CollectionModel.DisplayName}";
+        }
+
         #endregion
 
         #region Events
@@ -105,6 +117,8 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
 
         public async Task<SafeWrapperResult> InitializeSectionItemContent(bool withLoadDelay = true)
         {
+            FileName = await CanvasHelpers.SafeGetCanvasItemName(CanvasItem);
+
             if (withLoadDelay)
             {
                 // Wait for control to load

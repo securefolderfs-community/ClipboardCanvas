@@ -135,5 +135,17 @@ namespace ClipboardCanvas.Helpers
 
             return (newCanvasItem, SafeWrapperResult.SUCCESS);
         }
+
+        public static async Task<string> SafeGetCanvasItemName(CanvasItem canvasItem)
+        {
+            if (canvasItem == null || canvasItem.SourceItem == null)
+            {
+                return "Invalid file";
+            }
+
+            IStorageItem sourceItem = await canvasItem.SourceItem;
+
+            return sourceItem != null ? Path.GetFileName(sourceItem.Path) : (canvasItem.AssociatedItem != null ? Path.GetFileName(canvasItem.AssociatedItem.Path) : "Invalid file");
+        }
     }
 }

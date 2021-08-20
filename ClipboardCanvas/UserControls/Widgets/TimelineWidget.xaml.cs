@@ -19,10 +19,5 @@ namespace ClipboardCanvas.UserControls.Widgets
 
             this.ViewModel = new TimelineWidgetViewModel();
         }
-
-        private void ListView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            (e.ClickedItem as TimelineSectionItemViewModel).OpenFileCommand.Execute(null);
-        }
     }
 }

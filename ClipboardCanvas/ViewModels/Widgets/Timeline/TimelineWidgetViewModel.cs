@@ -15,6 +15,7 @@ using ClipboardCanvas.Helpers;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
+using System.Collections.Generic;
 
 namespace ClipboardCanvas.ViewModels.Widgets.Timeline
 {
@@ -105,11 +106,13 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
             ITimelineSettingsService timelineSettingsService = Ioc.Default.GetService<ITimelineSettingsService>();
             TimelineConfigurationModel configurationModel = timelineSettingsService.UserTimeline;
 
+            IEnumerable<TimelineSectionConfigurationModel> sortedSections = configurationModel.sections.OrderBy((x) => x.sectionDateTime);
+
             if (configurationModel != null)
             {
-                foreach (var configurationSection in configurationModel.sections)
+                foreach (var configurationSection in sortedSections)
                 {
-                    var section = AddSectionBack(configurationSection.sectionDateTime, true);
+                    var section = AddSection(configurationSection.sectionDateTime, true);
 
                     foreach (var configurationSectionItem in configurationSection.items)
                     {

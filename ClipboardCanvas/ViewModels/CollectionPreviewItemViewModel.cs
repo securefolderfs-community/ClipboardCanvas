@@ -133,9 +133,7 @@ namespace ClipboardCanvas.ViewModels
 
         public async Task UpdateDisplayName()
         {
-            IStorageItem sourceItem = await CollectionItemViewModel.SourceItem;
-
-            DisplayName = Path.GetFileName(sourceItem != null ? sourceItem.Path : CollectionItemViewModel.AssociatedItem?.Path);
+            DisplayName = await CanvasHelpers.SafeGetCanvasItemName(CollectionItemViewModel);
         }
 
         #endregion
