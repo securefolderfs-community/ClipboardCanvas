@@ -8,6 +8,8 @@ using Newtonsoft.Json;
 using Microsoft.Toolkit.Mvvm.Input;
 using System.Linq;
 using System.Collections.Generic;
+using Windows.ApplicationModel.Core;
+using Microsoft.Toolkit.Uwp;
 using Windows.Storage.Streams;
 
 using ClipboardCanvas.CanavsPasteModels;
@@ -23,8 +25,6 @@ using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.EventArguments.InfiniteCanvasEventArgs;
-using Windows.ApplicationModel.Core;
-using Microsoft.Toolkit.Uwp;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -84,11 +84,23 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return initializeInfiniteCanvasFolderResult;
             }
 
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return SafeWrapperResult.CANCEL;
+            }
+
             // Get content type from data package
             BaseContentTypeModel contentType = await BaseContentTypeModel.GetContentTypeFromDataPackage(dataPackage);
 
             // Get correct IPasteModel from contentType
             IPasteModel canvasPasteModel = CanvasHelpers.GetPasteModelFromContentType(contentType, _infiniteCanvasFileReceiver, null);
+
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return SafeWrapperResult.CANCEL;
+            }
 
             if (canvasPasteModel == null)
             {
@@ -109,6 +121,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Add new object to Infinite Canvas
             var interactableCanvasControlItem = await InteractableCanvasControlModel.AddItem(associatedCollection, contentType, pastedFile, _infiniteCanvasFileReceiver, cancellationToken);
 
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return SafeWrapperResult.CANCEL;
+            }
+
             // Wait for control to load
             await Task.Delay(Constants.UI.CONTROL_LOAD_DELAY);
 
@@ -117,13 +135,32 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             // Save data after pasting
             SafeWrapperResult saveDataResult = await SaveConfigurationModel();
+
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return SafeWrapperResult.CANCEL;
+            }
+
             AssertNoError(saveDataResult); // Only for notification
 
             // Fetch data to view
             SafeWrapperResult fetchDataToViewResult = await interactableCanvasControlItem.LoadContent();
 
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return SafeWrapperResult.CANCEL;
+            }
+
             // Start filesystem change tracker
             await StartFilesystemChangeWatcher((await InfiniteCanvasItem.SourceItem) as StorageFolder);
+
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return SafeWrapperResult.CANCEL;
+            }
 
             RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, false, false, CanPasteReference, true));
 
@@ -150,10 +187,22 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return initializeInfiniteCanvasFolderResult;
             }
 
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return SafeWrapperResult.CANCEL;
+            }
+
             // Get all items in Infinite Canvas folder
             IEnumerable<IStorageItem> items = await Task.Run(async () => await ((await canvasItem.SourceItem) as StorageFolder).GetItemsAsync());
-            List<Task> loadContentTasks = new List<Task>();
 
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return SafeWrapperResult.CANCEL;
+            }
+
+            List<Task> loadContentTasks = new List<Task>();
             List<InteractableCanvasControlItemViewModel> interactableCanvasList = new List<InteractableCanvasControlItemViewModel>();
 
             foreach (var item in items)
@@ -164,6 +213,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     continue;
                 }
 
+                if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+                {
+                    DiscardData();
+                    return SafeWrapperResult.CANCEL;
+                }
+
                 // Initialize parameters
                 BaseContentTypeModel itemContentType = await BaseContentTypeModel.GetContentType(item, null);
                 CanvasItem itemCanvasItem = new CanvasItem(item);
@@ -171,6 +226,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 if (IsDisposed || InteractableCanvasControlModel == null)
                 {
                     return null;
+                }
+
+                if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+                {
+                    DiscardData();
+                    return SafeWrapperResult.CANCEL;
                 }
 
                 // Add to canvas
@@ -185,6 +246,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return readFile;
             }
 
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return SafeWrapperResult.CANCEL;
+            }
+
             // Set configuration model
             var canvasConfigurationModel = JsonConvert.DeserializeObject<InfiniteCanvasConfigurationModel>(readFile);
             InteractableCanvasControlModel.SetConfigurationModel(canvasConfigurationModel);
@@ -196,11 +263,29 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             await Task.WhenAll(loadContentTasks);
 
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return SafeWrapperResult.CANCEL;
+            }
+
             // Start filesystem change tracker
             await StartFilesystemChangeWatcher((await InfiniteCanvasItem.SourceItem) as StorageFolder);
 
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return SafeWrapperResult.CANCEL;
+            }
+
             // Always regenerate canvas preview on load to update it
             await InteractableCanvasControlModel.RegenerateCanvasPreview();
+
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return SafeWrapperResult.CANCEL;
+            }
 
             RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, IsContentLoaded, isContentAsReference, CanPasteReference, true));
 
@@ -292,6 +377,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 if (FilesystemHelpers.IsPathEqualExtension(item.Path, Constants.FileSystem.INFINITE_CANVAS_CONFIGURATION_FILE_EXTENSION)
                     || Path.GetFileName(item.Path) == Constants.FileSystem.INFINITE_CANVAS_PREVIEW_IMAGE_FILENAME)
+                {
+                    continue;
+                }
+
+                string itemParentFolder = Path.GetDirectoryName(item.Path);
+                string watchedParentFolder = Path.GetDirectoryName((await InfiniteCanvasItem.SourceItem).Path);
+                if (itemParentFolder != watchedParentFolder)
                 {
                     continue;
                 }
@@ -427,7 +519,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             base.Dispose();
 
-            if (_isFilesystemWatcherReady)
+            if (_isFilesystemWatcherReady && _filesystemChangeWatcher != null)
             {
                 _filesystemChangeWatcher.OnChangeRegisteredEvent -= FilesystemChangeWatcher_OnChangeRegisteredEvent;
                 _filesystemChangeWatcher.Dispose();

@@ -633,6 +633,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             {
                 IStorageItem changedItem = await item.GetStorageItemAsync();
 
+                string itemParentFolder = Path.GetDirectoryName(item.Path);
+                string watchedParentFolder = Path.GetDirectoryName(collectionFolder.Path);
+                if (itemParentFolder != watchedParentFolder)
+                {
+                    continue;
+                }
+
                 switch (item.ChangeType)
                 {
                     case StorageLibraryChangeType.ChangeTrackingLost:

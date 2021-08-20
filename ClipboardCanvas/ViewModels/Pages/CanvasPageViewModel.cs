@@ -1,32 +1,25 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Windows.Input;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
+using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using System.Collections.Generic;
+using Windows.Storage;
 
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
-using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
-using System.Threading.Tasks;
 using ClipboardCanvas.EventArguments.CanvasControl;
-using Windows.UI.Xaml;
-using System.Collections.Generic;
-using Windows.Storage;
-using System.Linq;
 using ClipboardCanvas.Enums;
-using ClipboardCanvas.ReferenceItems;
-using System.Runtime.CompilerServices;
 using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.ViewModels.UserControls.CanvasPreview;
-using ClipboardCanvas.Extensions;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {
@@ -94,11 +87,11 @@ namespace ClipboardCanvas.ViewModels.Pages
             get => RequestedCanvasType == CanvasType.OneCanvas ? "Switch to Infinite Canvas" : "Switch to One Canvas";
         }
 
-        private bool _InfiniteCanvasHeaderLoad;
-        public bool InfiniteCanvasHeaderLoad
+        private bool _InfiniteCanvasCaptionLoad;
+        public bool InfiniteCanvasCaptionLoad
         {
-            get => _InfiniteCanvasHeaderLoad;
-            set => SetProperty(ref _InfiniteCanvasHeaderLoad, value);
+            get => _InfiniteCanvasCaptionLoad;
+            set => SetProperty(ref _InfiniteCanvasCaptionLoad, value);
         }
 
         private bool _CanvasRingLoad = false;
@@ -117,7 +110,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public string CanvasTypeText
         {
-            get => RequestedCanvasType == CanvasType.OneCanvas ? "One Canvas" : "Infinite Canvas";
+            get => RequestedCanvasType == CanvasType.OneCanvas ? "You're in One Canvas mode" : "You're in Infinite Canvas mode";
         }
 
         private string _TipText;
@@ -408,7 +401,7 @@ namespace ClipboardCanvas.ViewModels.Pages
         {
             PastedAsReferenceLoad = e.pastedAsReference;
             OverrideReferenceEnabled = e.canPasteReference;
-            InfiniteCanvasHeaderLoad = e.isInfiniteCanvas;
+            InfiniteCanvasCaptionLoad = e.isInfiniteCanvas;
             CanvasRingLoad = false;
             _contentFinishedLoading = true;
             NewCanvasScreenLoad = false;

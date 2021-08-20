@@ -45,6 +45,7 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
+        <!--  Main content  -->
         <Grid
             Grid.Row="0"
             Grid.ColumnSpan="2"
@@ -72,6 +73,7 @@
                 Grid.Row="0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
+                Background="Transparent"
                 RowSpacing="8">
 
                 <Grid.RowDefinitions>
@@ -79,16 +81,21 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <!--  Title text  -->
+                <!--  Title  -->
                 <Viewbox
                     x:Name="TitleTextViewBox"
-                    MaxWidth="680"
-                    MaxHeight="150"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     x:Load="{x:Bind ViewModel.NewCanvasScreenLoad, Mode=OneWay}"
                     StretchDirection="Both">
-                    <StackPanel Padding="20" Spacing="4">
+                    <StackPanel Padding="120" Spacing="8">
+                        <FontIcon
+                            Margin="0,0,0,4"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="48"
+                            Glyph="&#xe77f;"
+                            Opacity="0.4" />
                         <TextBlock
                             HorizontalAlignment="Center"
                             AllowDrop="True"
@@ -98,6 +105,7 @@
                         <TextBlock
                             HorizontalAlignment="Center"
                             AllowDrop="True"
+                            FontFamily="Segoe UI Variable Text"
                             FontSize="8"
                             Opacity="0.8"
                             Text="{x:Bind ViewModel.CanvasTypeText, Mode=OneWay}" />
@@ -143,14 +151,14 @@
         <HyperlinkButton
             x:Name="PastedAsReference"
             Grid.Row="1"
-            Margin="15,0,0,0"
-            HorizontalAlignment="Left"
+            Grid.ColumnSpan="2"
+            HorizontalAlignment="Center"
             VerticalAlignment="Center"
             x:Load="{x:Bind ViewModel.PastedAsReferenceLoad, Mode=OneWay}"
             Click="PastedAsReference_Click"
             Content="File pasted as reference">
             <FlyoutBase.AttachedFlyout>
-                <Flyout x:Name="LinkButtonFlyout" Placement="Right">
+                <Flyout x:Name="LinkButtonFlyout" Placement="Top">
                     <Grid RowSpacing="8">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -191,21 +199,21 @@
         <HyperlinkButton
             x:Name="SwitchCanvasTypeLinkButton"
             Grid.Row="1"
-            Margin="15,0,0,0"
-            HorizontalAlignment="Left"
+            Grid.ColumnSpan="2"
+            HorizontalAlignment="Center"
             VerticalAlignment="Center"
             x:Load="{x:Bind ViewModel.NewCanvasScreenLoad, Mode=OneWay}"
             Command="{x:Bind ViewModel.SwitchCanvasModeCommand}"
             Content="{x:Bind ViewModel.SwitchCanvasModeText, Mode=OneWay}" />
 
-        <!--  Infinite Canvas header  -->
+        <!--  Infinite Canvas caption  -->
         <TextBlock
-            x:Name="InfiniteCanvasHeader"
+            x:Name="InfiniteCanvasCaption"
             Grid.Row="1"
-            Margin="15,0,0,0"
-            HorizontalAlignment="Left"
+            Grid.ColumnSpan="2"
+            HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            x:Load="{x:Bind ViewModel.InfiniteCanvasHeaderLoad, Mode=OneWay}"
+            x:Load="{x:Bind ViewModel.InfiniteCanvasCaptionLoad, Mode=OneWay}"
             Opacity="0.8"
             Text="Infinite Canvas" />
 
@@ -213,8 +221,8 @@
         <TextBlock
             x:Name="ErrorText"
             Grid.Row="1"
-            Grid.ColumnSpan="2"
-            HorizontalAlignment="Center"
+            Margin="15,0,0,0"
+            HorizontalAlignment="Left"
             VerticalAlignment="Center"
             x:Load="{x:Bind ViewModel.ErrorTextLoad, Mode=OneWay}"
             Opacity="0.8"

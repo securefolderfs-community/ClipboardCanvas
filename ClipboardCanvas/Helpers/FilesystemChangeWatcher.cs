@@ -51,7 +51,7 @@ namespace ClipboardCanvas.Helpers
             _isStarted = true;
 
             // 1. Prepare query - listen for changes
-            QueryOptions queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, new List<string>() { "*" });
+            QueryOptions queryOptions = new QueryOptions(CommonFolderQuery.DefaultQuery);
             queryOptions.FolderDepth = FolderDepth.Shallow;
             queryOptions.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
 
