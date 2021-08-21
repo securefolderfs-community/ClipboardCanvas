@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Windows.Storage;
+
 using ClipboardCanvas.Serialization;
 
 namespace ClipboardCanvas.Services
@@ -21,7 +22,13 @@ namespace ClipboardCanvas.Services
         public string LastVersionNumber
         {
             get => Get<string>(null);
-            set => Set(value);
+            set => Set<string>(value);
+        }
+
+        public bool IsUserIntroduced
+        {
+            get => Get<bool>(false);
+            set => Set<bool>(value);
         }
 
         #endregion

@@ -161,6 +161,9 @@
     <Compile Include="Helpers\JsonHelpers.cs" />
     <Compile Include="Helpers\SettingsSerializationHelpers.cs" />
     <Compile Include="Helpers\TwoWayPropertyUpdater.cs" />
+    <Compile Include="Models\IIntroductionScreenPanelModel.cs" />
+    <Compile Include="ModelViews\IIntroductionScreenPaneView.cs" />
+    <Compile Include="ModelViews\ISettingsAboutPageView.cs" />
     <Compile Include="Services\ILogger.cs" />
     <Compile Include="Models\Configuration\CollectionConfigurationModel.cs" />
     <Compile Include="Models\Configuration\InfiniteCanvasConfigurationModel.cs" />
@@ -333,6 +336,27 @@
     <Compile Include="UserControls\InteractableCanvasControl.xaml.cs">
       <DependentUpon>InteractableCanvasControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\OOBE\IntroductionScreenCollectionPreview.xaml.cs">
+      <DependentUpon>IntroductionScreenCollectionPreview.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\OOBE\IntroductionScreenCollections.xaml.cs">
+      <DependentUpon>IntroductionScreenCollections.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\OOBE\IntroductionScreenInfiniteCanvas.xaml.cs">
+      <DependentUpon>IntroductionScreenInfiniteCanvas.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\OOBE\IntroductionScreenOneCanvas.xaml.cs">
+      <DependentUpon>IntroductionScreenOneCanvas.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\OOBE\IntroductionScreenPanel.xaml.cs">
+      <DependentUpon>IntroductionScreenPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\OOBE\IntroductionScreenReferenceFiles.xaml.cs">
+      <DependentUpon>IntroductionScreenReferenceFiles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\OOBE\IntroductionScreenTimeline.xaml.cs">
+      <DependentUpon>IntroductionScreenTimeline.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\SimpleCanvasDisplay\TextSimpleCanvasControl.xaml.cs">
       <DependentUpon>TextSimpleCanvasControl.xaml</DependentUpon>
     </Compile>
@@ -435,6 +459,7 @@
     <Compile Include="ViewModels\UserControls\CanvasPreview\SimpleCanvasPreviewControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\InteractableCanvasControlViewModel.cs" />
     <Compile Include="ViewModels\UserControls\InteractableCanvasControlItemViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\OOBE\IntroductionScreenPanelViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SimpleCanvasDisplay\TextSimpleCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SimpleCanvasDisplay\ThumbnailSimpleCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\StatusCenter\StatusCenterItemViewModel.cs" />
@@ -514,6 +539,12 @@
     <Content Include="Assets\AppIcon\Wide310x150Logo.scale-400.png" />
     <Content Include="Assets\ClipboardCanvasPreviewImage.png" />
     <Content Include="Assets\AppLogo.png" />
+    <Content Include="Assets\OOBE\OOBE_CollectionPreview.png" />
+    <Content Include="Assets\OOBE\OOBE_Collections.png" />
+    <Content Include="Assets\OOBE\OOBE_InfiniteCanvas.png" />
+    <Content Include="Assets\OOBE\OOBE_OneCanvas.png" />
+    <Content Include="Assets\OOBE\OOBE_ReferenceFiles.png" />
+    <Content Include="Assets\OOBE\OOBE_Timeline.png" />
     <Content Include="Resources\MiddleClickScrolling-CursorType.res" />
     <None Include="Package.StoreAssociation.xml" />
   </ItemGroup>
@@ -583,6 +614,34 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\InteractableCanvasControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\OOBE\IntroductionScreenCollectionPreview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\OOBE\IntroductionScreenCollections.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\OOBE\IntroductionScreenInfiniteCanvas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\OOBE\IntroductionScreenOneCanvas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\OOBE\IntroductionScreenPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\OOBE\IntroductionScreenReferenceFiles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\OOBE\IntroductionScreenTimeline.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -705,7 +764,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Dialogs\OOBE\" />
     <Folder Include="Interfaces\Canvas\" />
   </ItemGroup>
   <ItemGroup>

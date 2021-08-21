@@ -16,6 +16,7 @@ using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using System.Collections.Generic;
+using ClipboardCanvas.EventArguments;
 
 namespace ClipboardCanvas.ViewModels.Widgets.Timeline
 {
@@ -43,6 +44,15 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
 
         #endregion
 
+        #region Event Handlers
+
+        private static void Item_OnRemoveSectionRequestedEvent(object sender, RemoveSectionRequestedEventArgs e)
+        {
+            
+        }
+
+        #endregion
+
         #region Helpers
 
         public static TimelineSectionViewModel GetOrCreateTodaySection()
@@ -55,6 +65,19 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
             }
 
             return todaySection;
+        }
+
+        public static void RemoveSection(TimelineSectionViewModel timelineSection, bool suppressSettingsUpdate = false)
+        {
+            timelineSection.OnRemoveSectionRequestedEvent -= Item_OnRemoveSectionRequestedEvent;
+            timelineSection.Dispose();
+
+            Sections.Remove(timelineSection);
+
+            if (!suppressSettingsUpdate)
+            {
+                SettingsSerializationHelpers.UpdateUserTimelineSetting();
+            }
         }
 
         public static TimelineSectionViewModel AddSection(DateTime sectionDate, bool suppressSettingsUpdate = false)
@@ -84,9 +107,11 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
                 Sections.Add(timelineSection);
             }
 
+            timelineSection.OnRemoveSectionRequestedEvent += Item_OnRemoveSectionRequestedEvent;
+
             if (Sections.Count > Constants.UI.Timeline.MAX_SECTIONS)
             {
-                Sections.RemoveBack();
+                RemoveSection(Sections.Last(), suppressSettingsUpdate);
             }    
 
             if (!suppressSettingsUpdate)
@@ -144,7 +169,7 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
             {
                 if (Sections[i].Items.IsEmpty())
                 {
-                    Sections.RemoveAt(i);
+                    RemoveSection(Sections[i]);
                     i--;
                 }
             }
@@ -159,7 +184,7 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
                 {
                     if (Sections[i].SectionDate == Sections[j].SectionDate)
                     {
-                        Sections.RemoveAt(j);
+                        RemoveSection(Sections[i]);
                         j--;
                     }
                 }

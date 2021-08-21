@@ -201,14 +201,12 @@
             <TextBlock
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontFamily="Segoe UI Variable"
                 FontSize="18"
                 Opacity="0.8"
                 Text="Infinite Canvas is empty" />
             <TextBlock
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontFamily="Segoe UI Variable Text"
                 Opacity="0.8"
                 Text="Drag and drop or paste to add content" />
         </StackPanel>

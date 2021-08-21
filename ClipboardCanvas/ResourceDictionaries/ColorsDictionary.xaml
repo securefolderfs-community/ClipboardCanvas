@@ -5,23 +5,27 @@
             <Color x:Key="SolidBackgroundAcrylic">#E0E0E0</Color>
             <Color x:Key="GradientPrimaryStrongColor">#FBFBFB</Color>
             <Color x:Key="GradientPrimaryEndColor">#00FFFFFF</Color>
+            <SolidColorBrush x:Key="SolidContrastingBackground">#FFFFFF</SolidColorBrush>
             <SolidColorBrush x:Key="TitleBarSeparatorColor">#FFc7c7c7</SolidColorBrush>
             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush">#F3F3F3</SolidColorBrush>
             <SolidColorBrush x:Key="SubtleBackgroundBrush">#FBFBFB</SolidColorBrush>
             <SolidColorBrush x:Key="SubtleBorderBrush">#E5E5E5</SolidColorBrush>
             <SolidColorBrush x:Key="NavigationButtonDisabledBackgroundBrush">#20FFFFFF</SolidColorBrush>
             <SolidColorBrush x:Key="NavigationButtonsBorderBrush">#20FFFFFF</SolidColorBrush>
+            <SolidColorBrush x:Key="BackgroundStrongTint">#CCFFFFFF</SolidColorBrush>
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
             <Color x:Key="SolidBackgroundAcrylic">#2E2E2E</Color>
             <Color x:Key="GradientPrimaryStrongColor">#171717</Color>
             <Color x:Key="GradientPrimaryEndColor">#00000000</Color>
+            <SolidColorBrush x:Key="SolidContrastingBackground">#000000</SolidColorBrush>
             <SolidColorBrush x:Key="TitleBarSeparatorColor">#6FFFFFFF</SolidColorBrush>
             <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush">#201F1E</SolidColorBrush>
             <SolidColorBrush x:Key="SubtleBackgroundBrush">#2D2C2B</SolidColorBrush>
             <SolidColorBrush x:Key="SubtleBorderBrush">#302F2E</SolidColorBrush>
             <SolidColorBrush x:Key="NavigationButtonDisabledBackgroundBrush">#0FFFFFFF</SolidColorBrush>
             <SolidColorBrush x:Key="NavigationButtonsBorderBrush">#0FFFFFFF</SolidColorBrush>
+            <SolidColorBrush x:Key="BackgroundStrongTint">#DD000000</SolidColorBrush>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 

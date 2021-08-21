@@ -7,6 +7,7 @@
     xmlns:local="using:ClipboardCanvas"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="using:ClipboardCanvas.UserControls"
+    xmlns:uc2="using:ClipboardCanvas.UserControls.OOBE"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
@@ -35,54 +36,65 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <Border>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-            <uc:WindowTitleBarControl
-                x:Name="WindowTitleBar"
-                Grid.Row="0"
+        <uc:WindowTitleBarControl
+            x:Name="WindowTitleBar"
+            Grid.Row="0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Center"
+            Canvas.ZIndex="10" />
+
+        <!--  Main content  -->
+        <SplitView
+            x:Name="Split"
+            Grid.Row="1"
+            DisplayMode="Overlay"
+            IsPaneOpen="{x:Bind NavigationToolBar.ViewModel.IsSettingsPaneOpened, Mode=TwoWay}"
+            OpenPaneLength="364"
+            PaneBackground="{ThemeResource PanelBackground}"
+            PanePlacement="Right">
+            <SplitView.Pane>
+                <uc:SettingsPanelControl />
+            </SplitView.Pane>
+
+            <uc:DisplayControl
+                x:Name="DisplayControl"
+                Margin="0,10,0,0"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Center" />
+                VerticalAlignment="Stretch"
+                IntroductionScreenPanelModel="{x:Bind IntroductionPanel.ViewModel, Mode=OneWay}"
+                NavigationToolBarControlModel="{x:Bind NavigationToolBar.ViewModel, Mode=OneWay}"
+                WindowTitleBarControlModel="{x:Bind WindowTitleBar.ViewModel, Mode=OneWay}" />
+        </SplitView>
 
-            <SplitView
-                x:Name="Split"
-                Grid.Row="1"
-                DisplayMode="Overlay"
-                IsPaneOpen="{x:Bind NavigationToolBar.ViewModel.IsSettingsPaneOpened, Mode=TwoWay}"
-                OpenPaneLength="364"
-                PaneBackground="{ThemeResource PanelBackground}"
-                PanePlacement="Right">
-                <SplitView.Pane>
-                    <uc:SettingsPanelControl />
-                </SplitView.Pane>
+        <!--  Navigation toolbar  -->
+        <uc:NavigationToolBarControl
+            x:Name="NavigationToolBar"
+            Grid.Row="2"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom" />
 
-                <uc:DisplayControl
-                    x:Name="DisplayControl"
-                    Margin="0,10,0,0"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    NavigationToolBarControlModel="{x:Bind NavigationToolBar.ViewModel, Mode=OneWay}"
-                    WindowTitleBarControlModel="{x:Bind WindowTitleBar.ViewModel, Mode=OneWay}" />
+        <!--  In-app notification  -->
+        <uc:InAppNotificationControl
+            x:Name="MainInAppNotification"
+            Grid.RowSpan="3"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            x:FieldModifier="public" />
 
-            </SplitView>
-
-            <uc:NavigationToolBarControl
-                x:Name="NavigationToolBar"
-                Grid.Row="2"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom" />
-
-            <uc:InAppNotificationControl
-                x:Name="MainInAppNotification"
-                Grid.RowSpan="3"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Bottom"
-                x:FieldModifier="public" />
-        </Grid>
-    </Border>
+        <!--  OOBE  -->
+        <uc2:IntroductionScreenPanel
+            x:Name="IntroductionPanel"
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            x:Load="{x:Bind IntroductionPanelLoad, Mode=OneWay}" />
+    </Grid>
 </Page>

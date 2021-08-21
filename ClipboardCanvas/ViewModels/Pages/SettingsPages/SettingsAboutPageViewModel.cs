@@ -9,11 +9,14 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 using ClipboardCanvas.ViewModels.Dialogs;
 using ClipboardCanvas.Services;
+using ClipboardCanvas.ModelViews;
 
 namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 {
     public class SettingsAboutPageViewModel : ObservableObject
     {
+        private ISettingsAboutPageView _view;
+
         private IDialogService DialogService { get; } = Ioc.Default.GetService<IDialogService>();
 
         public string VersionNumber
@@ -23,16 +26,21 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         public ICommand OpenLogLocationCommand { get; private set; }
 
+        public ICommand ShowIntroductionScreenCommand { get; private set; }
+
         public ICommand ShowChangeLogCommand { get; private set; }
 
         public ICommand SubmitFeedbackCommand { get; private set; }
 
         public ICommand OpenPrivacyPolicyCommand { get; private set; }
 
-        public SettingsAboutPageViewModel()
+        public SettingsAboutPageViewModel(ISettingsAboutPageView view)
         {
+            this._view = view;
+
             // Create commands
             OpenLogLocationCommand = new AsyncRelayCommand(OpenLogLocation);
+            ShowIntroductionScreenCommand = new RelayCommand(ShowIntroductionScreen);
             ShowChangeLogCommand = new AsyncRelayCommand(ShowChangeLog);
             SubmitFeedbackCommand = new AsyncRelayCommand(SubmitFeedback);
             OpenPrivacyPolicyCommand = new AsyncRelayCommand(OpenPrivacyPolicy);
@@ -41,6 +49,11 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
         private async Task OpenPrivacyPolicy()
         {
             await Launcher.LaunchUriAsync(new Uri(@"https://github.com/d2dyno1/ClipboardCanvas/blob/master/Privacy.md"));
+        }
+
+        private void ShowIntroductionScreen()
+        {
+            _view.IntroductionPanelLoad = true;
         }
 
         private async Task SubmitFeedback()

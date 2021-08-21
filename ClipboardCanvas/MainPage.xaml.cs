@@ -1,4 +1,6 @@
 ﻿using ClipboardCanvas.Helpers;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Windows.ApplicationModel.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -11,13 +13,27 @@ namespace ClipboardCanvas
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
         public static ApplicationViewTitleBar TitleBar { get; private set; }
 
         public static CoreApplicationViewTitleBar CoreTitleBar { get; private set; }
 
         public static MainPage Instance => (MainPage)((Frame)Window.Current.Content).Content;
+
+        private bool _IntroductionPanelLoad;
+        public bool IntroductionPanelLoad
+        {
+            get => _IntroductionPanelLoad;
+            set
+            {
+                if (_IntroductionPanelLoad != value)
+                {
+                    _IntroductionPanelLoad = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public MainPage()
         {
@@ -42,6 +58,13 @@ namespace ClipboardCanvas
         private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
         {
             WindowTitleBar.CompactOverlay.Margin = new Thickness(0, 0, sender.SystemOverlayRightInset, 0);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] string caller = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(caller));
         }
     }
 }

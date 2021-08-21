@@ -121,7 +121,6 @@
                             Grid.Row="2"
                             HorizontalAlignment="Center"
                             AllowDrop="True"
-                            FontFamily="Segoe UI Variable Text"
                             FontSize="8"
                             Opacity="0.8"
                             Text="{x:Bind ViewModel.CanvasTypeText, Mode=OneWay}" />

@@ -36,6 +36,12 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
 
         #endregion
 
+        #region Events
+
+        public event EventHandler<RemoveSectionRequestedEventArgs> OnRemoveSectionRequestedEvent;
+
+        #endregion
+
         #region Constructor
 
         public TimelineSectionViewModel(DateTime sectionDate)
@@ -113,7 +119,7 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
 
             if (Items.Count > Constants.UI.Timeline.MAX_ITEMS_PER_SECTION)
             {
-                Items.RemoveBack();
+                RemoveItem(Items.Last(), suppressSettingsUpdate);
             }
 
             IsSectionEmpty = false;
@@ -135,6 +141,7 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
             timelineSectionItem.OnRemoveSectionItemRequestedEvent -= Item_OnRemoveSectionItemRequestedEvent;
 
             IsSectionEmpty = Items.IsEmpty();
+            OnRemoveSectionRequestedEvent?.Invoke(this, new RemoveSectionRequestedEventArgs(this));
 
             if (!suppressSettingsUpdate)
             {
@@ -167,6 +174,11 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
 
         public void Dispose()
         {
+            foreach (var item in Items)
+            {
+                item.OnRemoveSectionItemRequestedEvent -= Item_OnRemoveSectionItemRequestedEvent;
+            }
+
             Items?.DisposeAll();
         }
 

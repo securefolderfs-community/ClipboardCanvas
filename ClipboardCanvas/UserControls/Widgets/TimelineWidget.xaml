@@ -25,7 +25,6 @@
 
         <TextBlock
             Margin="8,0,8,0"
-            FontFamily="Segoe UI Variable"
             FontSize="32"
             FontWeight="Bold"
             Text="Timeline" />

@@ -60,6 +60,11 @@
                 Command="{x:Bind ViewModel.OpenLogLocationCommand}"
                 Content="Open log file location" />
 
+            <Button
+                AutomationProperties.Name="Show introduction screen"
+                Command="{x:Bind ViewModel.ShowIntroductionScreenCommand}"
+                Content="Show introduction screen" />
+
             <!--  External links  -->
             <StackPanel Margin="0,8,0,0" Spacing="4">
                 <HyperlinkButton Command="{x:Bind ViewModel.ShowChangeLogCommand}" Content="Release change log" />

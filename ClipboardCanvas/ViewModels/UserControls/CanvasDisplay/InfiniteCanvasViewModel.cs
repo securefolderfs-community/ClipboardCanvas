@@ -547,6 +547,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     return canvasFolderResult;
                 }
                 canvasItem = new InfiniteCanvasItem(canvasFolderResult.Result.AssociatedItem, await canvasFolderResult.Result.SourceItem);
+                collectionItemViewModel = associatedCollection.FindCollectionItem(canvasItem);
 
                 // Initialize Infinite Canvas
                 SafeWrapperResult canvasInitializationResult = await InfiniteCanvasItem.InitializeCanvasFolder();

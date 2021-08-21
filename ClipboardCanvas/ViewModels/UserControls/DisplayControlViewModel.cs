@@ -35,6 +35,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private IWindowTitleBarControlModel WindowTitleBarControlModel => _view?.WindowTitleBarControlModel;
 
+        private IIntroductionScreenPanelModel IntroductionScreenPanelModel => _view?.IntroductionScreenPanelModel;
+
         private INavigationToolBarControlModel NavigationToolBarControlModel => _view?.NavigationToolBarControlModel;
 
         /// <summary>
@@ -55,11 +57,19 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private DisplayPageType LastPage => NavigationService.LastPage;
 
+        private bool IntroductionPanelLoad
+        {
+            get => _view.IntroductionPanelLoad;
+            set => _view.IntroductionPanelLoad = value;
+        }
+
         #endregion
 
         #region Properties
 
         private INavigationService NavigationService { get; } = Ioc.Default.GetService<INavigationService>();
+
+        private IApplicationSettingsService ApplicationSettingsService { get; } = Ioc.Default.GetService<IApplicationSettingsService>();
 
         #endregion
 
@@ -415,6 +425,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task InitializeAfterLoad()
         {
+            // Check to show OOBE
+            if (!this.ApplicationSettingsService.IsUserIntroduced)
+            {
+                IntroductionPanelLoad = true;
+            }
+
             // Important first-checks
             await InitialApplicationChecksHelpers.HandleFileSystemPermissionDialog(WindowTitleBarControlModel);
             await InitialApplicationChecksHelpers.CheckVersionAndShowDialog();

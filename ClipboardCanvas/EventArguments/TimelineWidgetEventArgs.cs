@@ -13,4 +13,14 @@ namespace ClipboardCanvas.EventArguments
             this.itemViewModel = itemViewModel;
         }
     }
+
+    public class RemoveSectionRequestedEventArgs : EventArgs
+    {
+        public readonly TimelineSectionViewModel sectionViewModel;
+
+        public RemoveSectionRequestedEventArgs(TimelineSectionViewModel sectionViewModel)
+        {
+            this.sectionViewModel = sectionViewModel;
+        }
+    }
 }

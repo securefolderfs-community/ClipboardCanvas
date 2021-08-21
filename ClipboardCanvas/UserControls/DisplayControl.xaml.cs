@@ -1,13 +1,13 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using System.Diagnostics;
 
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.Pages;
 using ClipboardCanvas.ViewModels.UserControls;
 using ClipboardCanvas.Services;
-using System.Diagnostics;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -23,9 +23,17 @@ namespace ClipboardCanvas.UserControls
             set => DataContext = value;
         }
 
+        public bool IntroductionPanelLoad
+        {
+            get => MainPage.Instance.IntroductionPanelLoad;
+            set => MainPage.Instance.IntroductionPanelLoad = value;
+        }
+
         public IWindowTitleBarControlModel WindowTitleBarControlModel { get; set; }
 
         public INavigationToolBarControlModel NavigationToolBarControlModel { get; set; }
+
+        public IIntroductionScreenPanelModel IntroductionScreenPanelModel { get; set; }
 
         public IPasteCanvasPageModel PasteCanvasPageModel
         {
@@ -70,7 +78,7 @@ namespace ClipboardCanvas.UserControls
             }
             else
             {
-                Debugger.Break(); // Shouldn't happen
+                Debugger.Break(); // Shouldn't even happen
             }
 
             // Initialize the rest when the view is loaded
