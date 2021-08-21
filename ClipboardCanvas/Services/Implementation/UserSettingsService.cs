@@ -1,5 +1,7 @@
 ﻿using System.IO;
 using Windows.Storage;
+using Microsoft.AppCenter.Analytics;
+
 using ClipboardCanvas.Serialization;
 
 namespace ClipboardCanvas.Services
@@ -12,6 +14,22 @@ namespace ClipboardCanvas.Services
             : base(Path.Combine(ApplicationData.Current.LocalFolder.Path, Constants.LocalSettings.SETTINGS_FOLDERNAME, Constants.LocalSettings.USER_SETTINGS_FILENAME),
                   isCachingEnabled: true)
         {
+            TrackAppCenterAnalytics();
+        }
+
+        #endregion
+
+        #region Private Helpers
+
+        private void TrackAppCenterAnalytics()
+        {
+            Analytics.TrackEvent($"{nameof(ShowTimelineOnHomepage)} {ShowTimelineOnHomepage}");
+            Analytics.TrackEvent($"{nameof(DeletePermanentlyAsDefault)} {DeletePermanentlyAsDefault}");
+            Analytics.TrackEvent($"{nameof(OpenNewCanvasOnPaste)} {OpenNewCanvasOnPaste}");
+            Analytics.TrackEvent($"{nameof(AlwaysPasteFilesAsReference)} {AlwaysPasteFilesAsReference}");
+            Analytics.TrackEvent($"{nameof(PrioritizeMarkdownOverText)} {PrioritizeMarkdownOverText}");
+            Analytics.TrackEvent($"{nameof(ShowDeleteConfirmationDialog)} {ShowDeleteConfirmationDialog}");
+            Analytics.TrackEvent($"{nameof(UseInfiniteCanvasAsDefault)} {UseInfiniteCanvasAsDefault}");
         }
 
         #endregion
