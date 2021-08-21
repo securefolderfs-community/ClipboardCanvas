@@ -26,9 +26,10 @@ using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.Helpers.Filesystem;
-using ClipboardCanvas.Extensions;
 using ClipboardCanvas.EventArguments.InfiniteCanvasEventArgs;
 using ClipboardCanvas.ViewModels.ContextMenu;
+using ClipboardCanvas.Enums;
+using ClipboardCanvas.ViewModels.UserControls.CanvasPreview;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -322,26 +323,33 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public override async Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions()
         {
-            List<SuggestedActionsControlItemViewModel> actions = (await base.GetSuggestedActions()).ToList();
+            List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
 
             if (associatedItem == null)
             {
                 return actions;
             }
 
-            // Remove open file
-            actions.RemoveFront();
+            // Paste from clipboard
+            var action_paste = new SuggestedActionsControlItemViewModel(
+                new AsyncRelayCommand(async () =>
+                {
+                    SafeWrapper<DataPackageView> dataPackage = await ClipboardHelpers.GetClipboardData();
 
-            // Add open Infinite Canvas folder
+                    await TryPasteData(dataPackage, CanvasPreviewControlViewModel.CanvasPasteCancellationTokenSource.Token);
+                }), "Paste from Clipboard", "\uE77F");
+
+            // Open Infinite Canvas folder
             var action_openInfiniteCanvasFolder = new SuggestedActionsControlItemViewModel(
                 new AsyncRelayCommand(async () =>
                 {
                     await associatedCollection.CurrentCollectionItemViewModel.OpenFile();
                 }), "Open Infinite Canvas folder", "\uE838");
 
-            actions.AddFront(action_openInfiniteCanvasFolder);
+            actions.Add(action_paste);
+            actions.Add(action_openInfiniteCanvasFolder);
 
-            return actions;
+            return await Task.FromResult(actions);
         }
 
         protected override IPasteModel SetCanvasPasteModel()
