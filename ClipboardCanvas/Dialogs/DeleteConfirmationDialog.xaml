@@ -9,6 +9,7 @@
     DefaultButton="Primary"
     PrimaryButtonText="Delete"
     SecondaryButtonText="Cancel"
+    Style="{StaticResource DefaultContentDialogStyle}"
     mc:Ignorable="d">
 
     <StackPanel Spacing="4">

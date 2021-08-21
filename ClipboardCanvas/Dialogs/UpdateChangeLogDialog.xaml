@@ -11,6 +11,7 @@
     DefaultButton="Primary"
     Loaded="ContentDialog_Loaded"
     PrimaryButtonText="Nice!"
+    Style="{StaticResource DefaultContentDialogStyle}"
     mc:Ignorable="d">
 
     <ContentDialog.Resources>

@@ -9,6 +9,7 @@
     DefaultButton="Primary"
     PrimaryButtonText="Restart Application"
     SecondaryButtonText="Continue in Restricted Access"
+    Style="{StaticResource DefaultContentDialogStyle}"
     mc:Ignorable="d">
 
     <StackPanel Spacing="24">
