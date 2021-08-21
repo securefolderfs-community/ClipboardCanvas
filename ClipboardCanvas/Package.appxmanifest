@@ -13,7 +13,7 @@
   <Identity
     Name="3515d2dyno.ClipboardCanvas"
     Publisher="CN=5D7DCD3D-745C-4E03-AC4D-F5BFEB54F40E"
-    Version="1.0.2.0" />
+    Version="2.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="35b56687-e655-46c4-862f-25725278c524" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

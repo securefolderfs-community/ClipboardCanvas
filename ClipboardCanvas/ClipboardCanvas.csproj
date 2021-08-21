@@ -537,8 +537,10 @@
     <Content Include="Assets\AppIcon\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\AppIcon\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\AppIcon\Wide310x150Logo.scale-400.png" />
-    <Content Include="Assets\ClipboardCanvasPreviewImage.png" />
     <Content Include="Assets\AppLogo.png" />
+    <Content Include="Assets\HomepageImage.png" />
+    <Content Include="Assets\InfiniteCanvasImage.png" />
+    <Content Include="Assets\NewCanvasImage.png" />
     <Content Include="Assets\OOBE\OOBE_CollectionPreview.png" />
     <Content Include="Assets\OOBE\OOBE_Collections.png" />
     <Content Include="Assets\OOBE\OOBE_InfiniteCanvas.png" />
