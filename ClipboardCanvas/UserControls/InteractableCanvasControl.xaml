@@ -96,6 +96,7 @@
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 x:Load="{x:Bind IsPastedAsReference, Mode=OneWay}"
+                                AutomationProperties.Name="Item pasted as Reference"
                                 Background="Transparent"
                                 BorderThickness="0"
                                 ToolTipService.ToolTip="Item pasted as Reference">
@@ -130,6 +131,7 @@
                                                 Margin="0,16,0,0"
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Center"
+                                                AutomationProperties.Name="Paste Reference"
                                                 Command="{x:Bind OverrideReferenceCommand}"
                                                 Content="Paste reference"
                                                 IsEnabled="{x:Bind OverrideReferenceEnabled, Mode=OneWay}" />

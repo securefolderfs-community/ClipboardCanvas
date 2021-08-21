@@ -7,6 +7,7 @@
     xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     d:DesignHeight="300"
     d:DesignWidth="400"
     Background="Transparent"
@@ -170,6 +171,7 @@
                 <!--  Navigate back  -->
                 <Grid Grid.Column="0">
                     <Button
+                        AutomationProperties.Name="Navigate back"
                         Command="{x:Bind ViewModel.NavigateBackCommand}"
                         IsEnabled="{x:Bind ViewModel.NavigateBackEnabled, Mode=OneWay}"
                         Style="{StaticResource NavigationButtonStyle}"
@@ -178,7 +180,7 @@
                             <FontIcon Glyph="&#xE76B;" />
                         </Button.Content>
                     </Button>
-                    <ProgressRing
+                    <muxc:ProgressRing
                         x:Name="NavigateBackRing"
                         Margin="12"
                         HorizontalAlignment="Stretch"
@@ -187,9 +189,22 @@
                         IsActive="True" />
                 </Grid>
 
+                <!--  Go to Homepage  -->
+                <Button
+                    Grid.Column="1"
+                    AutomationProperties.Name="Navigate to Homepage"
+                    Command="{x:Bind ViewModel.GoToHomepageCommand}"
+                    Style="{StaticResource NavigationButtonStyle}"
+                    ToolTipService.ToolTip="Navigate Home (Ctrl + Down Arrow)">
+                    <Button.Content>
+                        <FontIcon Glyph="&#xE80F;" />
+                    </Button.Content>
+                </Button>
+
                 <!--  Navigate forward  -->
                 <Grid Grid.Column="2">
                     <Button
+                        AutomationProperties.Name="Navigate forward"
                         Command="{x:Bind ViewModel.NavigateForwardCommand}"
                         IsEnabled="{x:Bind ViewModel.NavigateForwardEnabled, Mode=OneWay}"
                         Style="{StaticResource NavigationButtonStyle}"
@@ -198,7 +213,7 @@
                             <FontIcon Glyph="&#xE76C;" />
                         </Button.Content>
                     </Button>
-                    <ProgressRing
+                    <muxc:ProgressRing
                         x:Name="NavigateForwardRing"
                         Margin="12"
                         HorizontalAlignment="Stretch"
@@ -206,22 +221,12 @@
                         x:Load="{x:Bind ViewModel.NavigateForwardLoading, Mode=OneWay}"
                         IsActive="True" />
                 </Grid>
-
-                <!--  Go to Homepage  -->
-                <Button
-                    Grid.Column="1"
-                    Command="{x:Bind ViewModel.GoToHomepageCommand}"
-                    Style="{StaticResource NavigationButtonStyle}"
-                    ToolTipService.ToolTip="Navigate Home (Ctrl + Down Arrow)">
-                    <Button.Content>
-                        <FontIcon Glyph="&#xE80F;" />
-                    </Button.Content>
-                </Button>
             </Grid>
 
             <Grid x:Name="HomepageLayoutControls" x:Load="{x:Bind ViewModel.HomepageLayoutControlsLoad, Mode=OneWay}">
                 <!--  Go to Canvas  -->
                 <Button
+                    AutomationProperties.Name="Navigate to Canvas"
                     Command="{x:Bind ViewModel.GoToCanvasCommand}"
                     IsEnabled="{x:Bind ViewModel.GoToCanvasEnabled, Mode=OneWay}"
                     Style="{StaticResource NavigationButtonStyle}"
@@ -242,6 +247,7 @@
                 <!--  Go back  -->
                 <Button
                     Grid.Column="0"
+                    AutomationProperties.Name="Go back"
                     Command="{x:Bind ViewModel.CollectionPreviewNavigateBackCommand}"
                     Style="{StaticResource NavigationButtonStyle}"
                     ToolTipService.ToolTip="Go Back (Ctrl + Left Arrow)">
@@ -252,6 +258,7 @@
                 <!--  Go to Homepage  -->
                 <Button
                     Grid.Column="1"
+                    AutomationProperties.Name="Navigate to Homepage"
                     Command="{x:Bind ViewModel.GoToHomepageCommand}"
                     Style="{StaticResource NavigationButtonStyle}"
                     ToolTipService.ToolTip="Navigate Home (Ctrl + Down Arrow)">
@@ -262,6 +269,7 @@
                 <!--  Go to Canvas  -->
                 <Grid Grid.Column="2">
                     <Button
+                        AutomationProperties.Name="Navigate to Canvas"
                         Command="{x:Bind ViewModel.CollectionPreviewGoToCanvasCommand}"
                         IsEnabled="{x:Bind ViewModel.CollectionPreviewGoToCanvasEnabled, Mode=OneWay}"
                         Style="{StaticResource NavigationButtonStyle}"
@@ -270,7 +278,7 @@
                             <FontIcon Glyph="&#xF0E3;" />
                         </Button.Content>
                     </Button>
-                    <ProgressRing
+                    <muxc:ProgressRing
                         x:Name="CollectionPreviewGoToCanvasRing"
                         Margin="12"
                         HorizontalAlignment="Stretch"

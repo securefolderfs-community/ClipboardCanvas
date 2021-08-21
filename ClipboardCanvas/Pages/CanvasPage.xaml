@@ -203,6 +203,7 @@
                             Margin="0,16,0,0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center"
+                            AutomationProperties.Name="Paste Reference"
                             Command="{x:Bind ViewModel.OverrideReferenceCommand}"
                             Content="Paste reference"
                             IsEnabled="{x:Bind ViewModel.OverrideReferenceEnabled, Mode=OneWay}" />

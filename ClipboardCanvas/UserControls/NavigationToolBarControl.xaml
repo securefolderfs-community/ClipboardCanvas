@@ -156,6 +156,7 @@
                             Height="48"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
+                            AutomationProperties.Name="Settings"
                             Background="Transparent"
                             BorderThickness="0"
                             Command="{x:Bind OpenOrCloseSettingsCommand}">

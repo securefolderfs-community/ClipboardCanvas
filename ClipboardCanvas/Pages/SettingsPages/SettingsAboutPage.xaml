@@ -55,7 +55,10 @@
 
             <TextBlock FontSize="15" Text="Created and developed by d2dyno" />
 
-            <Button Command="{x:Bind ViewModel.OpenLogLocationCommand}" Content="Open log file location" />
+            <Button
+                AutomationProperties.Name="Open log file location"
+                Command="{x:Bind ViewModel.OpenLogLocationCommand}"
+                Content="Open log file location" />
 
             <!--  External links  -->
             <StackPanel Margin="0,8,0,0" Spacing="4">

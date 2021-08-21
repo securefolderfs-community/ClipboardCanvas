@@ -56,6 +56,7 @@
                 <!--  General  -->
                 <muxc:NavigationViewItem
                     x:Name="General"
+                    AutomationProperties.Name="General Settings"
                     IsSelected="True"
                     Tag="General"
                     ToolTipService.ToolTip="General Settings">
@@ -66,6 +67,7 @@
                 <!--  Pasting  -->
                 <muxc:NavigationViewItem
                     x:Name="Pasting"
+                    AutomationProperties.Name="Pasting Settings"
                     Tag="Pasting"
                     ToolTipService.ToolTip="Pasting Settings">
                     <muxc:NavigationViewItem.Icon>
@@ -75,6 +77,7 @@
                 <!--  About  -->
                 <muxc:NavigationViewItem
                     x:Name="About"
+                    AutomationProperties.Name="About Clipboard Canvas"
                     Tag="About"
                     ToolTipService.ToolTip="About Clipboard Canvas">
                     <muxc:NavigationViewItem.Icon>
