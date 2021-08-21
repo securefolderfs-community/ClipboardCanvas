@@ -129,7 +129,14 @@
                                                     HorizontalAlignment="Left"
                                                     VerticalAlignment="Stretch"
                                                     StretchDirection="Both">
-                                                    <uc:SimpleCanvasPreviewControl CollectionModel="{x:Bind CollectionModel, Mode=OneWay}" SimpleCanvasPreviewModel="{x:Bind ReadOnlyCanvasPreviewModel, Mode=TwoWay}" />
+                                                    <Grid>
+                                                        <uc:SimpleCanvasPreviewControl CollectionModel="{x:Bind CollectionModel, Mode=OneWay}" SimpleCanvasPreviewModel="{x:Bind ReadOnlyCanvasPreviewModel, Mode=TwoWay}" />
+                                                        <!--  Overlay grid to block interactions with content  -->
+                                                        <Grid
+                                                            HorizontalAlignment="Stretch"
+                                                            VerticalAlignment="Stretch"
+                                                            Background="Transparent" />
+                                                    </Grid>
                                                 </Viewbox>
 
                                                 <!--  File name  -->

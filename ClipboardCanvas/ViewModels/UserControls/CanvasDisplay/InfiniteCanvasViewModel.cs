@@ -11,6 +11,9 @@ using System.Collections.Generic;
 using Windows.ApplicationModel.Core;
 using Microsoft.Toolkit.Uwp;
 using Windows.Storage.Streams;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Graphics.Display;
+using Windows.Graphics.Imaging;
 
 using ClipboardCanvas.CanavsPasteModels;
 using ClipboardCanvas.DataModels;
@@ -378,12 +381,22 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Save canvas image preview
             SafeWrapperResult imagePreviewSaveResult = await SafeWrapperRoutines.SafeWrapAsync(async () =>
             {
-                using (e.canvasImageStream)
+                using (IRandomAccessStream fileStream = await InfiniteCanvasItem.CanvasPreviewImageFile.OpenAsync(FileAccessMode.ReadWrite))
                 {
-                    using (IRandomAccessStream fileStream = await InfiniteCanvasItem.CanvasPreviewImageFile.OpenAsync(FileAccessMode.ReadWrite))
-                    {
-                        await e.canvasImageStream.AsStreamForRead().CopyToAsync(fileStream.AsStreamForWrite());
-                    }
+                    byte[] pixelArray = e.canvasImageBuffer.ToArray();
+
+                    DisplayInformation displayInfo = DisplayInformation.GetForCurrentView();
+
+                    BitmapEncoder bitmapEncoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
+                    bitmapEncoder.SetPixelData(BitmapPixelFormat.Bgra8, // RGB with alpha
+                                         BitmapAlphaMode.Premultiplied,
+                                         (uint)e.pixelWidth,
+                                         (uint)e.pixelHeight,
+                                         displayInfo.RawDpiX,
+                                         displayInfo.RawDpiY,
+                                         pixelArray);
+
+                    await bitmapEncoder.FlushAsync();
                 }
             });
         }

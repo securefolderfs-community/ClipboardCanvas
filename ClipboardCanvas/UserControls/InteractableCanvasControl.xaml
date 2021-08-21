@@ -13,10 +13,11 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid x:Name="RootGrid">
         <ItemsControl
             x:Name="ItemsHolder"
             AllowDrop="True"
+            Background="Transparent"
             ItemsSource="{x:Bind ViewModel.Items}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -38,10 +39,9 @@
                 <DataTemplate x:DataType="vm:InteractableCanvasControlItemViewModel">
                     <Grid
                         x:Name="RootContentGrid"
-                        Padding="2"
-                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                        BorderBrush="{ThemeResource SubtleBackgroundBrush}"
-                        BorderThickness="2"
+                        Background="{ThemeResource SubtleBackgroundBrush}"
+                        BorderBrush="{ThemeResource ButtonBorderBrush}"
+                        BorderThickness="1"
                         CanDrag="True"
                         CornerRadius="8"
                         DoubleTapped="RootContentGrid_DoubleTapped"
@@ -50,10 +50,12 @@
                         RowSpacing="2">
 
                         <Grid.RowDefinitions>
+                            <!--  The canvas preview  -->
                             <RowDefinition />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
+                        <!--  Canvas preview  -->
                         <Viewbox
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Top"
@@ -70,7 +72,9 @@
                             x:Name="InfoBarPanel"
                             Grid.Row="1"
                             Width="{Binding ElementName=ItemPreview, Path=(tui:FrameworkElementExtensions.ActualWidth)}"
-                            MinWidth="60"
+                            Height="40"
+                            MinWidth="100"
+                            Padding="4"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center"
                             ColumnSpacing="8">
@@ -87,7 +91,8 @@
                                 Grid.Column="0"
                                 Width="30"
                                 Height="30"
-                                Padding="4"
+                                Margin="0,0,0,-4"
+                                Padding="0"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 x:Load="{x:Bind IsPastedAsReference, Mode=OneWay}"
@@ -138,7 +143,7 @@
                                 Grid.Column="1"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
-                                Opacity="0.8"
+                                FontWeight="Medium"
                                 Text="{x:Bind DisplayName, Mode=OneWay}"
                                 TextTrimming="CharacterEllipsis"
                                 ToolTipService.ToolTip="{x:Bind DisplayName, Mode=OneWay}" />

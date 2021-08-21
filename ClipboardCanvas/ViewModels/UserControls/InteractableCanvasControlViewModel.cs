@@ -85,9 +85,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async Task SaveCanvas()
         {
-            IRandomAccessStream canvasImageStream = await _view.GetCanvasImageStream();
+            (IBuffer buffer, uint pixelWidth, uint pixelHeight) = await _view.GetCanvasImageBuffer();
 
-            OnInfiniteCanvasSaveRequestedEvent?.Invoke(this, new InfiniteCanvasSaveRequestedEventArgs(canvasImageStream));
+            OnInfiniteCanvasSaveRequestedEvent?.Invoke(this, new InfiniteCanvasSaveRequestedEventArgs(buffer, pixelWidth, pixelHeight));
         }
 
         #endregion

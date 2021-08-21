@@ -12,7 +12,7 @@ namespace ClipboardCanvas.ModelViews
 
         void SetItemPosition(InteractableCanvasControlItemViewModel itemViewModel, Vector2 position);
 
-        Task<IRandomAccessStream> GetCanvasImageStream();
+        Task<(IBuffer buffer, uint pixelWidth, uint pixelHeight)> GetCanvasImageBuffer();
 
         void SetOnTop(InteractableCanvasControlItemViewModel itemViewModel);
 

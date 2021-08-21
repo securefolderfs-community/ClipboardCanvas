@@ -9,9 +9,6 @@ using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 using System.Numerics;
-using Windows.Graphics.Display;
-using Windows.Graphics.Imaging;
-using System.Runtime.InteropServices.WindowsRuntime;
 
 using ClipboardCanvas.ViewModels.UserControls;
 using ClipboardCanvas.ModelViews;
@@ -211,32 +208,14 @@ namespace ClipboardCanvas.UserControls
             }
         }
 
-        public async Task<IRandomAccessStream> GetCanvasImageStream()
+        public async Task<(IBuffer buffer, uint pixelWidth, uint pixelHeight)> GetCanvasImageBuffer()
         {
             RenderTargetBitmap rtb = new RenderTargetBitmap();
-            await rtb.RenderAsync(ItemsHolder);
+            await rtb.RenderAsync(RootGrid);
 
-            IBuffer pixelsBuffer = await rtb.GetPixelsAsync();
-            byte[] pixelArray = pixelsBuffer.ToArray();
+            IBuffer pixelBuffer = await rtb.GetPixelsAsync();
 
-            DisplayInformation displayInfo = DisplayInformation.GetForCurrentView();
-
-            IRandomAccessStream stream = new InMemoryRandomAccessStream();
-            BitmapEncoder bitmapEncoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
-            bitmapEncoder.SetPixelData(BitmapPixelFormat.Bgra8, // RGB with alpha
-                                 BitmapAlphaMode.Premultiplied,
-                                 (uint)rtb.PixelWidth,
-                                 (uint)rtb.PixelHeight,
-                                 displayInfo.RawDpiX,
-                                 displayInfo.RawDpiY,
-                                 pixelArray);
-
-            await bitmapEncoder.FlushAsync();
-            stream.Seek(0);
-
-            Array.Clear(pixelArray, 0, pixelArray.Length);
-
-            return stream;
+            return (pixelBuffer, (uint)rtb.PixelWidth, (uint)rtb.PixelHeight);
         }
 
         public void SetOnTop(InteractableCanvasControlItemViewModel itemViewModel)

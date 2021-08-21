@@ -7,6 +7,8 @@
     xmlns:local="using:ClipboardCanvas.UserControls.SimpleCanvasDisplay"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vc="using:ClipboardCanvas.ValueConverters"
+    HorizontalAlignment="Stretch"
+    VerticalAlignment="Stretch"
     d:DesignHeight="300"
     d:DesignWidth="400"
     Loaded="UserControl_Loaded"
@@ -16,7 +18,7 @@
         <vc:ImplicitDataTemplateConverter x:Key="ImplicitDataTemplateConverter" />
     </UserControl.Resources>
 
-    <Grid>
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <ContentControl
             x:Name="SimpleCanvasPreviewDisplay"
             HorizontalAlignment="Stretch"
@@ -24,11 +26,5 @@
             Content="{x:Bind ViewModel.CanvasViewModel, Mode=OneWay}"
             ContentTemplate="{x:Bind ViewModel.CanvasViewModel, Mode=OneWay, Converter={StaticResource ImplicitDataTemplateConverter}}"
             IsTabStop="False" />
-
-        <!--  Overlay grid to block interactions with content  -->
-        <Grid
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            Background="Transparent" />
     </Grid>
 </h:ObservableUserControl>

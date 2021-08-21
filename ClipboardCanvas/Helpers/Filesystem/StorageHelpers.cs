@@ -11,11 +11,12 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.UnsafeNative;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
 using ClipboardCanvas.Services;
+using Microsoft.Win32.SafeHandles;
 
 namespace ClipboardCanvas.Helpers.Filesystem
 {
     public static class StorageHelpers
-    {
+    { 
         public static async Task<TRequested> ToStorageItem<TRequested>(string path) where TRequested : IStorageItem
         {
             return (await ToStorageItemWithError<TRequested>(path)).Result;
@@ -89,6 +90,14 @@ namespace ClipboardCanvas.Helpers.Filesystem
             {
                 folder = await SafeWrapperRoutines.SafeWrapAsync(() => DangerousStorageFileExtensions.DangerousGetStorageFolder(path));
             }
+        }
+
+        public static FileStream CreateFileStreamh(this IStorageFile file, FileAccess fileAccess = FileAccess.ReadWrite)
+        {
+            SafeFileHandle hFile = file.CreateSafeFileHandle(fileAccess);
+            FileStream fileStream = new FileStream(hFile, fileAccess);
+
+            return fileStream;
         }
 
         public static async Task<long> GetFileSize(this IStorageFile file)

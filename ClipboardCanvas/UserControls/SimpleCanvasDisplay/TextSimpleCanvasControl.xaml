@@ -10,14 +10,17 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <Grid MaxWidth="180" MaxHeight="180">
+    <Grid
+        MaxWidth="280"
+        MaxHeight="180"
+        Padding="8">
         <ScrollViewer
             tui:ScrollViewerExtensions.EnableMiddleClickScrolling="True"
             HorizontalScrollMode="Auto"
             VerticalScrollBarVisibility="Auto">
             <RichTextBlock x:Name="ContentText">
                 <Paragraph>
-                    <Run FontSize="6" Text="{x:Bind ViewModel.ContentText, Mode=OneWay}" />
+                    <Run FontSize="12" Text="{x:Bind ViewModel.ContentText, Mode=OneWay}" />
                 </Paragraph>
             </RichTextBlock>
         </ScrollViewer>

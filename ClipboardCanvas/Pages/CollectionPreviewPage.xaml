@@ -134,13 +134,21 @@
                                 x:Name="SimpleCanvasPreviewControl"
                                 Grid.RowSpan="2"
                                 HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch">
+                                VerticalAlignment="Stretch"
+                                CornerRadius="4">
 
                                 <Viewbox
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Top"
                                     StretchDirection="Both">
-                                    <uc2:SimpleCanvasPreviewControl CollectionModel="{x:Bind CollectionModel, Mode=OneWay}" TwoWayReadOnlyCanvasPreview="{x:Bind TwoWayReadOnlyCanvasPreview, Mode=OneWay}" />
+                                    <Grid CornerRadius="4">
+                                        <uc2:SimpleCanvasPreviewControl CollectionModel="{x:Bind CollectionModel, Mode=OneWay}" TwoWayReadOnlyCanvasPreview="{x:Bind TwoWayReadOnlyCanvasPreview, Mode=OneWay}" />
+                                        <!--  Overlay grid to block interactions with content  -->
+                                        <Grid
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            Background="Transparent" />
+                                    </Grid>
                                 </Viewbox>
                             </Grid>
 
@@ -158,7 +166,7 @@
                                         <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
                                             <LinearGradientBrush.GradientStops>
                                                 <GradientStop Offset="0.0" Color="{ThemeResource GradientPrimaryStrongColor}" />
-                                                <GradientStop Offset="1.0" Color="#00000000" />
+                                                <GradientStop Offset="1.0" Color="{ThemeResource GradientPrimaryEndColor}" />
                                             </LinearGradientBrush.GradientStops>
                                         </LinearGradientBrush>
                                     </Border.Background>

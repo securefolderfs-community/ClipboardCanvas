@@ -6,11 +6,17 @@ namespace ClipboardCanvas.EventArguments.InfiniteCanvasEventArgs
 {
     public class InfiniteCanvasSaveRequestedEventArgs : EventArgs
     {
-        public readonly IRandomAccessStream canvasImageStream;
+        public readonly IBuffer canvasImageBuffer;
 
-        public InfiniteCanvasSaveRequestedEventArgs(IRandomAccessStream canvasImageStream)
+        public readonly uint pixelWidth;
+
+        public readonly uint pixelHeight;
+
+        public InfiniteCanvasSaveRequestedEventArgs(IBuffer canvasImageBuffer, uint pixelWidth, uint pixelHeight)
         {
-            this.canvasImageStream = canvasImageStream;
+            this.canvasImageBuffer = canvasImageBuffer;
+            this.pixelWidth = pixelWidth;
+            this.pixelHeight = pixelHeight;
         }
     }
 

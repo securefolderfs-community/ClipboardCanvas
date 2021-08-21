@@ -9,7 +9,11 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <Grid CornerRadius="{StaticResource ControlCornerRadius}">
-        <Image Source="{x:Bind ViewModel.FileIcon, Mode=OneWay}" Stretch="Uniform" />
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Image
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Source="{x:Bind ViewModel.FileIcon, Mode=OneWay}"
+            Stretch="Uniform" />
     </Grid>
 </UserControl>
