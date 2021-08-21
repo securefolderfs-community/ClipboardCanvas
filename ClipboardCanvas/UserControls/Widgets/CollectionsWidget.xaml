@@ -95,6 +95,9 @@
                         BorderBrush="{ThemeResource ButtonBorderBrush}"
                         BorderThickness="1"
                         CornerRadius="8"
+                        PointerEntered="RootGrid_PointerEntered"
+                        PointerExited="RootGrid_PointerExited"
+                        PointerPressed="RootGrid_PointerPressed"
                         Tapped="RootGrid_Tapped">
                         <Grid.RowDefinitions>
                             <!--  Icon  -->

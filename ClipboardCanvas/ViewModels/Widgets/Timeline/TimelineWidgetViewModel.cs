@@ -131,8 +131,39 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
                 }
             }
 
+            RemoveEmptySections();
+            RemoveDuplicateSections();
+
             // Add "Today" section
             GetOrCreateTodaySection();
+        }
+
+        private static void RemoveEmptySections()
+        {
+            for (int i = 0; i < Sections.Count; i++)
+            {
+                if (Sections[i].Items.IsEmpty())
+                {
+                    Sections.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
+        private static void RemoveDuplicateSections()
+        {
+            for (int i = 0; i < Sections.Count; i++)
+            {
+                // The list is sorted
+                for (int j = i + 1; j < Sections.Count; j++)
+                {
+                    if (Sections[i].SectionDate == Sections[j].SectionDate)
+                    {
+                        Sections.RemoveAt(j);
+                        j--;
+                    }
+                }
+            }
         }
 
         public static TimelineConfigurationModel ConstructConfigurationModel()
