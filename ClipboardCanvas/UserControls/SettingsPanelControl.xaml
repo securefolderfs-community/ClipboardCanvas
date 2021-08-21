@@ -9,6 +9,7 @@
     xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
@@ -39,7 +40,7 @@
     </UserControl.Resources>
 
     <Grid HorizontalAlignment="Stretch">
-        <NavigationView
+        <muxc:NavigationView
             HorizontalAlignment="Stretch"
             IsBackButtonVisible="Collapsed"
             IsPaneOpen="False"
@@ -51,37 +52,37 @@
                     <icore:InvokeCommandAction Command="{x:Bind ViewModel.ItemInvokedCommand}" />
                 </icore:EventTriggerBehavior>
             </i:Interaction.Behaviors>
-            <NavigationView.MenuItems>
+            <muxc:NavigationView.MenuItems>
                 <!--  General  -->
-                <NavigationViewItem
+                <muxc:NavigationViewItem
                     x:Name="General"
                     IsSelected="True"
                     Tag="General"
                     ToolTipService.ToolTip="General Settings">
-                    <NavigationViewItem.Icon>
+                    <muxc:NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE12A;" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
                 <!--  Pasting  -->
-                <NavigationViewItem
+                <muxc:NavigationViewItem
                     x:Name="Pasting"
                     Tag="Pasting"
                     ToolTipService.ToolTip="Pasting Settings">
-                    <NavigationViewItem.Icon>
+                    <muxc:NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE77F;" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
                 <!--  About  -->
-                <NavigationViewItem
+                <muxc:NavigationViewItem
                     x:Name="About"
                     Tag="About"
                     ToolTipService.ToolTip="About Clipboard Canvas">
-                    <NavigationViewItem.Icon>
+                    <muxc:NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE946;" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-            </NavigationView.MenuItems>
-        </NavigationView>
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+            </muxc:NavigationView.MenuItems>
+        </muxc:NavigationView>
 
         <ScrollViewer Margin="0,40,0,0" Background="{ThemeResource PanelBackground}">
             <Frame
