@@ -117,9 +117,7 @@ namespace ClipboardCanvas.Helpers
             CanvasItem newCanvasItem = newCanvasItemResult.Result;
 
             // Copy item
-            SafeWrapperResult copyResult;
-            copyResult = await FilesystemOperations.CopyFileAsync(savedSourceItem as StorageFile, newCanvasItem.AssociatedItem as StorageFile, operationContextReceiver.GetOperationContext("Overriding Reference", StatusCenterOperationType.OverrideReference));
-
+            SafeWrapperResult copyResult = await FilesystemOperations.CopyFileAsync(savedSourceItem as StorageFile, newCanvasItem.AssociatedItem as StorageFile, operationContextReceiver.GetOperationContext("Overriding Reference", StatusCenterOperationType.OverrideReference));
             if (!copyResult)
             {
                 // Failed

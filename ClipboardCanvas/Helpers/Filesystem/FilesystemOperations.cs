@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Win32.SafeHandles;
 using Windows.Storage;
 
 using ClipboardCanvas.Enums;
@@ -15,13 +16,22 @@ namespace ClipboardCanvas.Helpers.Filesystem
         {
             long fileSize = await StorageHelpers.GetFileSize(source);
             byte[] buffer = new byte[Constants.FileSystem.COPY_FILE_BUFFER_SIZE];
+
             SafeWrapperResult result = SafeWrapperResult.SUCCESS;
 
             operationContext?.StartOperation();
 
-            using (Stream sourceStream = (await source.OpenReadAsync()).AsStreamForRead())
+            SafeFileHandle hFileSource = source.CreateSafeFileHandle(FileAccess.Read);
+            SafeFileHandle hFileDestination = destination.CreateSafeFileHandle(FileAccess.ReadWrite);
+
+            if (hFileSource.IsInvalid || hFileDestination.IsInvalid)
             {
-                using (Stream destinationStream = (await destination.OpenAsync(FileAccessMode.ReadWrite)).AsStreamForWrite())
+                return SafeWrapperResult.UNKNOWN_FAIL;
+            }
+
+            using (Stream sourceStream = new FileStream(hFileSource, FileAccess.Read))
+            {
+                using (Stream destinationStream = new FileStream(hFileDestination, FileAccess.ReadWrite))
                 {
                     long bytesTransferred = 0L;
                     int currentBlockSize = 0;
@@ -40,11 +50,13 @@ namespace ClipboardCanvas.Helpers.Filesystem
 
                             // Delete copied file if it was canceled
                             await DeleteItem(destination, true);
+
                             break;
                         }
                     }
                 }
             }
+
             operationContext?.FinishOperation(result);
 
             return result;

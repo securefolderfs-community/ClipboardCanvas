@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32.SafeHandles;
+using System;
 using System.IO;
 using System.Text;
 using static ClipboardCanvas.UnsafeNative.UnsafeNativeDataModels;
@@ -7,6 +8,20 @@ namespace ClipboardCanvas.UnsafeNative
 {
     public static class UnsafeNativeHelpers
     {
+        public static SafeFileHandle CreateFileForWrite(string filePath)
+        {
+            return new SafeFileHandle(
+                UnsafeNativeApis.CreateFileFromApp(filePath, GENERIC_WRITE, 0, IntPtr.Zero, CREATE_ALWAYS, (uint)File_Attributes.BackupSemantics, IntPtr.Zero),
+                true);
+        }
+
+        public static SafeFileHandle CreateFileForRead(string filePath)
+        {
+            return new SafeFileHandle(
+                UnsafeNativeApis.CreateFileFromApp(filePath, GENERIC_READ, 0, IntPtr.Zero, OPEN_EXISTING, (uint)File_Attributes.BackupSemantics, IntPtr.Zero),
+                true);
+        }
+
         public static string ReadStringFromFile(string filePath)
         {
             IntPtr hStream = UnsafeNativeApis.CreateFileFromApp(filePath,
