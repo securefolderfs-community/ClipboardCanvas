@@ -184,6 +184,16 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
         }
 
+        public async Task ResetAllItemPositions()
+        {
+            foreach (var item in Items)
+            {
+                item.ItemPosition = new Vector2(0.0f, 0.0f);
+            }
+
+            await SaveCanvas();
+        }
+
         public async Task RegenerateCanvasPreview()
         {
             await SaveCanvas();

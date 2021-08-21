@@ -30,5 +30,7 @@ namespace ClipboardCanvas.Models
         void SetConfigurationModel(InfiniteCanvasConfigurationModel canvasConfigurationModel);
 
         void UpdateItemPositionFromDataPackage(DataPackageView dataPackage, InteractableCanvasControlItemViewModel interactableCanvasControlItem);
+
+        Task ResetAllItemPositions();
     }
 }

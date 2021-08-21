@@ -25,6 +25,7 @@ using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.EventArguments.InfiniteCanvasEventArgs;
+using ClipboardCanvas.ViewModels.ContextMenu;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -162,6 +163,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return SafeWrapperResult.CANCEL;
             }
 
+            RefreshContextMenuItems();
+
             RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, false, false, CanPasteReference, true));
 
             return fetchDataToViewResult;
@@ -287,7 +290,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return SafeWrapperResult.CANCEL;
             }
 
-            RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, IsContentLoaded, isContentAsReference, CanPasteReference, true));
+            RefreshContextMenuItems();
+
+            RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, IsContentLoaded, false, CanPasteReference, true));
 
             return SafeWrapperResult.SUCCESS;
         }
@@ -339,6 +344,25 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         protected override IPasteModel SetCanvasPasteModel()
         {
             return null;
+        }
+
+        protected override void RefreshContextMenuItems()
+        {
+            // Reset position
+            ContextMenuItems.Add(new MenuFlyoutItemViewModel()
+            {
+                Command = new AsyncRelayCommand(InteractableCanvasControlModel.ResetAllItemPositions),
+                IconGlyph = "\uE72C",
+                Text = "Reset item positions"
+            });
+
+            // Delete Infinite Canvas
+            ContextMenuItems.Add(new MenuFlyoutItemViewModel()
+            {
+                Command = new AsyncRelayCommand(() => TryDeleteData()),
+                IconGlyph = "\uE74D",
+                Text = isContentAsReference ? "Delete reference" : "Delete Infinite Canvas"
+            });
         }
 
         #endregion
@@ -477,6 +501,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             if (InfiniteCanvasItem != null)
             {
                 SafeWrapperResult result = await InfiniteCanvasItem.InitializeCanvasFolder();
+
+                if (!result)
+                {
+                    return result;
+                }
+
+                result = await SetContentMode();
 
                 if (!result)
                 {
