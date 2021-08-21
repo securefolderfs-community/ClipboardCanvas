@@ -161,6 +161,7 @@
     <Compile Include="Helpers\JsonHelpers.cs" />
     <Compile Include="Helpers\SettingsSerializationHelpers.cs" />
     <Compile Include="Helpers\TwoWayPropertyUpdater.cs" />
+    <Compile Include="Services\ILogger.cs" />
     <Compile Include="Models\Configuration\CollectionConfigurationModel.cs" />
     <Compile Include="Models\Configuration\InfiniteCanvasConfigurationModel.cs" />
     <Compile Include="Enums\DragDataType.cs" />

@@ -1,63 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Windows.Storage;
+using System.Diagnostics;
+using System.IO;
+
+using ClipboardCanvas.UnsafeNative;
 
 namespace ClipboardCanvas.Services.Implementation
 {
-    public class ExceptionToFileLogger : ILogger, IDisposable
+    public class ExceptionToFileLogger : ILogger
     {
-        private StorageFile _destinationFile;
-
-        public ExceptionToFileLogger()
+        public void LogToFile(string text)
         {
-            SetFile();
-        }
-
-        private async void SetFile()
-        {
-            _destinationFile = await ApplicationData.Current.LocalFolder.CreateFileAsync("clipboardcanvas_exceptionlog.log", CreationCollisionOption.OpenIfExists);
-        }
-
-        public IDisposable BeginScope<TState>(TState state)
-        {
-            return this;
-        }
-
-        public bool IsEnabled(LogLevel logLevel)
-        {
-            return _destinationFile != null;
-        }
-
-        public async void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
-        {
-            if (!IsEnabled(logLevel))
-            {
-                return;
-            }
-
-            string exceptionString = "\n";
-
-            exceptionString += $"HRESULT {exception.HResult}\n";
-            exceptionString += $"MESSAGE {exception.Message}\n";
-            exceptionString += $"STACKTRACE {exception.StackTrace}\n";
-            exceptionString += $"SOURCE {exception.Source}\n";
-
             try
             {
-                await FileIO.AppendTextAsync(_destinationFile, exceptionString);
-            }
-            catch (Exception)
-            {
-            }
-        }
+                string filePath = Path.Combine(ApplicationData.Current.LocalFolder.Path, Constants.FileSystem.EXCEPTIONLOG_FILENAME);
 
-        public void Dispose()
-        {
-            _destinationFile = null;
+                string existing = UnsafeNativeHelpers.ReadStringFromFile(filePath);
+                existing += text;
+
+                UnsafeNativeHelpers.WriteStringToFile(filePath, existing);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
         }
     }
 }

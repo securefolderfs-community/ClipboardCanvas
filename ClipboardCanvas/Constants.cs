@@ -58,6 +58,8 @@
 
         public static class FileSystem
         {
+            public const string EXCEPTIONLOG_FILENAME = "clipboardcanvas_exceptionlog.log";
+
             public const string COLLECTION_ICONS_FOLDERNAME = "collections_icons";
 
             public const string REFERENCE_FILE_EXTENSION = ".ccvr";

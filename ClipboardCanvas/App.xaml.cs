@@ -2,7 +2,6 @@
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
@@ -152,12 +151,15 @@ namespace ClipboardCanvas
         {
             string exceptionString = "";
 
-            exceptionString += $"HRESULT {e.HResult}\n";
-            exceptionString += $"MESSAGE {e.Message}\n";
-            exceptionString += $"STACKTRACE {e.StackTrace}\n";
-            exceptionString += $"SOURCE {e.Source}\n";
+            exceptionString += DateTime.Now.ToString("dd MM yyyy - HH mm ss");
+            exceptionString += "\n";
+            exceptionString += $">>> HRESULT {e.HResult}\n";
+            exceptionString += $">>> MESSAGE {e.Message}\n";
+            exceptionString += $">>> STACKTRACE {e.StackTrace}\n";
+            exceptionString += $">>> SOURCE {e.Source}\n\n";
 
-            Ioc.Default.GetService<ILogger>().LogError(exceptionString);
+            ILogger logger = Ioc.Default.GetService<ILogger>();
+            logger.LogToFile(exceptionString);
         }
 
         /// <summary>
