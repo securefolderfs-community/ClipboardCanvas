@@ -415,7 +415,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task InitializeAfterLoad()
         {
-            throw new NotImplementedException();
             // Important first-checks
             await InitialApplicationChecksHelpers.HandleFileSystemPermissionDialog(WindowTitleBarControlModel);
             await InitialApplicationChecksHelpers.CheckVersionAndShowDialog();

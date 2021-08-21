@@ -12,7 +12,7 @@
     mc:Ignorable="d">
 
     <Grid>
-        <ScrollViewer tui:ScrollViewerExtensions.EnableMiddleClickScrolling="True">
+        <ScrollViewer Padding="16" tui:ScrollViewerExtensions.EnableMiddleClickScrolling="True">
             <RichTextBlock
                 x:Name="ContentText"
                 ContextMenuOpening="ContentText_ContextMenuOpening"

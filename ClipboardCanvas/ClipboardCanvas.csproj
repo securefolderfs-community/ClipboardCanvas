@@ -705,6 +705,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Dialogs\OOBE\" />
     <Folder Include="Interfaces\Canvas\" />
   </ItemGroup>
   <ItemGroup>
