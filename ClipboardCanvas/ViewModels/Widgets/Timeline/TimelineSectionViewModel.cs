@@ -168,17 +168,20 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
             return configurationModel;
         }
 
+        public void Clean()
+        {
+            foreach (var item in Items)
+            {
+                item.OnRemoveSectionItemRequestedEvent -= Item_OnRemoveSectionItemRequestedEvent;
+            }
+        }
+
         #endregion
 
         #region IDisposable
 
         public void Dispose()
         {
-            foreach (var item in Items)
-            {
-                item.OnRemoveSectionItemRequestedEvent -= Item_OnRemoveSectionItemRequestedEvent;
-            }
-
             Items?.DisposeAll();
         }
 

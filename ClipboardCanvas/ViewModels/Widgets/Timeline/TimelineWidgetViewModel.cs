@@ -70,6 +70,7 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
         public static void RemoveSection(TimelineSectionViewModel timelineSection, bool suppressSettingsUpdate = false)
         {
             timelineSection.OnRemoveSectionRequestedEvent -= Item_OnRemoveSectionRequestedEvent;
+            timelineSection.Clean();
             timelineSection.Dispose();
 
             Sections.Remove(timelineSection);
