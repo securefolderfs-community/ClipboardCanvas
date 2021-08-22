@@ -109,7 +109,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (canvasPasteModel == null)
             {
-                return BaseContentTypeModel.CannotDisplayContentForTypeResult;
+                if (contentType is InvalidContentTypeDataModel invalidContentType && invalidContentType.error != null)
+                {
+                    return invalidContentType.error;
+                }
+                else
+                {
+                    return BaseContentTypeModel.CannotDisplayContentForTypeResult;
+                }
             }
 
             // Paste data

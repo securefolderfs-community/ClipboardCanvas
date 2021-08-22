@@ -98,7 +98,16 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
             }
             else if (item is StorageFolder)
             {
-                return new FallbackContentType();
+                IUserSettingsService userSettingsService = Ioc.Default.GetService<IUserSettingsService>();
+
+                if (userSettingsService.AlwaysPasteFilesAsReference && !App.IsInRestrictedAccessMode)
+                {
+                    return new FallbackContentType();
+                }
+                else
+                {
+                    return new InvalidContentTypeDataModel(new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Cannot paste folders without Reference Files enabled in Settings."));
+                }
             }
             else
             {
@@ -247,12 +256,15 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
                     IStorageItem item = items.First();
 
                     BaseContentTypeModel contentType = await BaseContentTypeModel.GetContentType(item, null);
-                    if (contentType is InvalidContentTypeDataModel)
+
+                    if (contentType is InvalidContentTypeDataModel invalidContentType && invalidContentType.error == null)
                     {
                         return new InvalidContentTypeDataModel(CannotReceiveClipboardDataResult);
                     }
-
-                    return contentType;
+                    else
+                    {
+                        return contentType;
+                    }
                 }
                 else
                 {
