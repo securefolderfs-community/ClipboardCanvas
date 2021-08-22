@@ -30,6 +30,7 @@ using ClipboardCanvas.EventArguments.InfiniteCanvasEventArgs;
 using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.ViewModels.UserControls.CanvasPreview;
+using ClipboardCanvas.Contexts.Operations;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -99,7 +100,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             BaseContentTypeModel contentType = await BaseContentTypeModel.GetContentTypeFromDataPackage(dataPackage);
 
             // Get correct IPasteModel from contentType
-            IPasteModel canvasPasteModel = CanvasHelpers.GetPasteModelFromContentType(contentType, _infiniteCanvasFileReceiver, null);
+            IPasteModel canvasPasteModel = CanvasHelpers.GetPasteModelFromContentType(contentType, _infiniteCanvasFileReceiver, new StatusCenterOperationReceiver());
 
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
@@ -586,7 +587,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             this.InteractableCanvasControlModel?.Dispose();
-            this.ControlView = null;
         }
 
         #endregion
