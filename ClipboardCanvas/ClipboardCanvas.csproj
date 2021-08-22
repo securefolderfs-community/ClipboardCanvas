@@ -547,6 +547,7 @@
     <Content Include="Assets\OOBE\OOBE_OneCanvas.png" />
     <Content Include="Assets\OOBE\OOBE_ReferenceFiles.png" />
     <Content Include="Assets\OOBE\OOBE_Timeline.png" />
+    <Content Include="Properties\Default.rd.xml" />
     <Content Include="Resources\MiddleClickScrolling-CursorType.res" />
     <None Include="Package.StoreAssociation.xml" />
   </ItemGroup>

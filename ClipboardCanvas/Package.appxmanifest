@@ -18,7 +18,7 @@
   <mp:PhoneIdentity PhoneProductId="35b56687-e655-46c4-862f-25725278c524" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Clipboard Canvas - Preview</DisplayName>
+    <DisplayName>Clipboard Canvas</DisplayName>
     <PublisherDisplayName>d2dyno</PublisherDisplayName>
     <Logo>Assets\AppIcon\StoreLogo.png</Logo>
   </Properties>
@@ -38,7 +38,7 @@
       desktop4:SupportsMultipleInstances="true"
 	  iot2:SupportsMultipleInstances="true">
       <uap:VisualElements
-        DisplayName="Clipboard Canvas - Preview"
+        DisplayName="Clipboard Canvas"
         Square150x150Logo="Assets\AppIcon\Square150x150Logo.png"
         Square44x44Logo="Assets\AppIcon\Square44x44Logo.png"
         Description="Clipboard Canvas gives users an enhanced clipboard experience. Clipboard Canvas enables you to paste content worry free increasing your productivity."
