@@ -386,6 +386,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override void RefreshContextMenuItems()
         {
+            ContextMenuItems.Clear();
+
             // Reset position
             ContextMenuItems.Add(new MenuFlyoutItemViewModel()
             {
