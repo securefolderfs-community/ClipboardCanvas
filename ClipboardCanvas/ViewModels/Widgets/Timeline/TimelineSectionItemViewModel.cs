@@ -4,6 +4,7 @@ using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using System.IO;
 
 using ClipboardCanvas.Models;
 using ClipboardCanvas.Helpers.SafetyHelpers;
@@ -117,7 +118,7 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
 
         public async Task<SafeWrapperResult> InitializeSectionItemContent(bool withLoadDelay = true)
         {
-            FileName = await CanvasHelpers.SafeGetCanvasItemName(CanvasItem);
+            FileName = Path.GetFileName(await CanvasHelpers.SafeGetCanvasItemPath(CanvasItem));
 
             if (withLoadDelay)
             {

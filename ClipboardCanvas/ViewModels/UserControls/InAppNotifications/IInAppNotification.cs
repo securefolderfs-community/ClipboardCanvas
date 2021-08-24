@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using ClipboardCanvas.EventArguments;
 
 namespace ClipboardCanvas.ViewModels.UserControls.InAppNotifications
@@ -10,7 +9,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.InAppNotifications
 
         event EventHandler<InAppNotificationDismissedEventArgs> OnInAppNotificationDismissedEvent;
 
-        Task ShowAsync(int milliseconds = 0);
+        void Show(int milliseconds = 0);
 
         void Dismiss();
     }

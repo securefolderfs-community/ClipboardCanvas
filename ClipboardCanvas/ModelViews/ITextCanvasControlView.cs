@@ -4,6 +4,8 @@
     {
         bool IsTextSelected { get; }
 
+        int SelectedTextLength { get; }
+
         void TextSelectAll();
 
         void CopySelectedText();

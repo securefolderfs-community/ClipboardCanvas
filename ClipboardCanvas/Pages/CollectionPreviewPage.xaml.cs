@@ -22,6 +22,8 @@ namespace ClipboardCanvas.Pages
     {
         private CanvasItem _canvasItemToScrollTo;
 
+        private bool _suppressDispose;
+
         public CollectionPreviewPageViewModel ViewModel
         {
             get => (CollectionPreviewPageViewModel)DataContext;
@@ -41,18 +43,25 @@ namespace ClipboardCanvas.Pages
             _canvasItemToScrollTo = navigationParameter.itemToSelect;
         }
 
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-        {
-            this.ViewModel.Dispose();
-
-            base.OnNavigatingFrom(e);
-        }
-
         public CollectionPreviewPage()
         {
             this.InitializeComponent();
 
             this.ViewModel = new CollectionPreviewPageViewModel(this);
+        }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            if (!_suppressDispose)
+            {
+                this.ViewModel.Dispose();
+            }
+            else
+            {
+                this._suppressDispose = false;
+            }
+
+            base.OnNavigatingFrom(e);
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -74,6 +83,7 @@ namespace ClipboardCanvas.Pages
                     sourceAnimationControl);
 
                 connectedAnimation.Configuration = new DirectConnectedAnimationConfiguration();
+                _suppressDispose = true;
             }
         }
 

@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.Dialogs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:tuc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:tui="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:vc="using:ClipboardCanvas.ValueConverters"
@@ -45,7 +46,7 @@
             Grid.Row="1"
             x:Load="{x:Bind ViewModel.IsLoadingData, Mode=OneWay}"
             Spacing="4">
-            <ProgressRing IsActive="True" />
+            <muxc:ProgressRing IsActive="True" />
             <TextBlock
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"

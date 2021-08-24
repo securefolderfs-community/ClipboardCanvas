@@ -14,6 +14,7 @@ using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Contexts.Operations;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
+using ClipboardCanvas.ViewModels.Widgets.Timeline;
 
 namespace ClipboardCanvas.Helpers
 {
@@ -45,11 +46,10 @@ namespace ClipboardCanvas.Helpers
 
             // Also remove it from Timeline
             ITimelineService timelineService = Ioc.Default.GetService<ITimelineService>();
-            var todaySection = await timelineService.GetOrCreateTodaySection();
-            var timelineSectionItem = timelineService.FindTimelineSectionItem(todaySection, canvasItem);
-            if (timelineSectionItem != null)
+            (TimelineSectionViewModel section, TimelineSectionItemViewModel sectionItem) = timelineService.FindTimelineSectionItem(canvasItem);
+            if (section != null && sectionItem != null)
             {
-                timelineService.RemoveItemFromSection(todaySection, timelineSectionItem);
+                timelineService.RemoveItemFromSection(section, sectionItem);
             }
 
             // Delete!
@@ -134,7 +134,7 @@ namespace ClipboardCanvas.Helpers
             return (newCanvasItem, SafeWrapperResult.SUCCESS);
         }
 
-        public static async Task<string> SafeGetCanvasItemName(CanvasItem canvasItem)
+        public static async Task<string> SafeGetCanvasItemPath(CanvasItem canvasItem)
         {
             if (canvasItem == null || canvasItem.SourceItem == null)
             {
@@ -143,7 +143,7 @@ namespace ClipboardCanvas.Helpers
 
             IStorageItem sourceItem = await canvasItem.SourceItem;
 
-            return sourceItem != null ? Path.GetFileName(sourceItem.Path) : (canvasItem.AssociatedItem != null ? Path.GetFileName(canvasItem.AssociatedItem.Path) : "Invalid file");
+            return sourceItem != null ? sourceItem.Path : (canvasItem.AssociatedItem != null ? canvasItem.AssociatedItem.Path : "Invalid file");
         }
     }
 }

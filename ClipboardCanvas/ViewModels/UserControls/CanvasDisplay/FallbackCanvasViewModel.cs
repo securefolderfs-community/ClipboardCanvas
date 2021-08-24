@@ -4,6 +4,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.Storage.FileProperties;
 using System.Threading.Tasks;
 using Windows.Storage;
+using System.IO;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
@@ -11,6 +12,8 @@ using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.CanavsPasteModels;
 using ClipboardCanvas.Contexts.Operations;
+using ClipboardCanvas.Extensions;
+using ClipboardCanvas.Helpers;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -118,12 +121,17 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return !_isFolder;
         }
 
-        protected override Task OnReferencePasted()
+        protected override async Task OnReferencePasted()
         {
+            string newPath = await CanvasHelpers.SafeGetCanvasItemPath(canvasItem);
+
+            this._FilePath = newPath;
+            this._FileName = Path.GetFileName(newPath);
+
+            this.FallbackPasteModel?.UpdatePathProperty(newPath);
+
             OnPropertyChanged(nameof(FileName));
             OnPropertyChanged(nameof(FilePath));
-
-            return Task.CompletedTask;
         }
 
         #endregion
@@ -132,7 +140,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public async Task<IReadOnlyList<IStorageItem>> ProvideDragData()
         {
-            return new List<IStorageItem>() { await sourceFile };
+            return (await sourceItem).ToListSingle();
         }
 
         #endregion

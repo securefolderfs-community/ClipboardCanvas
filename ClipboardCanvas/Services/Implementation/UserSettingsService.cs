@@ -56,7 +56,7 @@ namespace ClipboardCanvas.Services
 
         public bool AlwaysPasteFilesAsReference
         {
-            get => Get<bool>(true);
+            get => App.IsInRestrictedAccessMode ? false : Get<bool>(true);
             set => Set<bool>(value);
         }
 

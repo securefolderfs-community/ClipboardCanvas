@@ -4,6 +4,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;
+using System.IO;
 
 using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.Contexts.Operations;
@@ -77,6 +78,12 @@ namespace ClipboardCanvas.CanavsPasteModels
         protected override bool CheckCanPasteReference()
         {
             return !_isFolder;
+        }
+
+        public void UpdatePathProperty(string newPath)
+        {
+            this.FilePath = newPath;
+            this.FileName = Path.GetFileName(newPath);
         }
 
         #region IDisposable

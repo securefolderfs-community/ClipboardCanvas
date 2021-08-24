@@ -106,7 +106,7 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
                 }
                 else
                 {
-                    return new InvalidContentTypeDataModel(new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Cannot paste folders without Reference Files enabled in Settings."));
+                    return new InvalidContentTypeDataModel(new SafeWrapperResult(OperationErrorCode.InvalidOperation | OperationErrorCode.NotAFile, new InvalidOperationException(), "Cannot paste folders without Reference Files enabled in Settings."));
                 }
             }
             else
@@ -248,11 +248,11 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
 
                 if (items.Count > 1)
                 {
-                    // TODO: More than one item, paste in Boundless Canvas
+                    // TODO: More than one item, paste in Infinite Canvas
                 }
                 else if (items.Count == 1)
                 {
-                    // One item, decide view model for it
+                    // One item, decide contentType for it
                     IStorageItem item = items.First();
 
                     BaseContentTypeModel contentType = await BaseContentTypeModel.GetContentType(item, null);

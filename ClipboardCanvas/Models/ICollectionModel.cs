@@ -10,6 +10,7 @@ using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
 using ClipboardCanvas.EventArguments.Collections;
+using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.Models
 {
@@ -27,6 +28,8 @@ namespace ClipboardCanvas.Models
         /// Saved search data by the Search function
         /// </summary>
         SearchContext SearchContext { get; set; }
+
+        CanvasType AssociatedCanvasType { get; set; }
 
         bool IsCollectionAvailable { get; }
 

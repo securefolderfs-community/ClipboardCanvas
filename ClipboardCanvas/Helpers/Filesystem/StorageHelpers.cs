@@ -143,7 +143,7 @@ namespace ClipboardCanvas.Helpers.Filesystem
                 notification.ViewModel.NotificationText = "UWP cannot open executable (.exe) files";
                 notification.ViewModel.ShownButtons = InAppNotificationButtonType.OkButton;
 
-                await notification.ShowAsync(4000);
+                notification.Show(Constants.UI.Notifications.NOTIFICATION_DEFAULT_SHOW_TIME);
                 return false;
             }
             else

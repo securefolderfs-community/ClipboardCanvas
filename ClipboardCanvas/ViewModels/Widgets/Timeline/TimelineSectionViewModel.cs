@@ -140,8 +140,11 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
             bool result = Items.Remove(timelineSectionItem);
             timelineSectionItem.OnRemoveSectionItemRequestedEvent -= Item_OnRemoveSectionItemRequestedEvent;
 
-            IsSectionEmpty = Items.IsEmpty();
-            OnRemoveSectionRequestedEvent?.Invoke(this, new RemoveSectionRequestedEventArgs(this));
+            if (Items.IsEmpty())
+            {
+                IsSectionEmpty = true;
+                OnRemoveSectionRequestedEvent?.Invoke(this, new RemoveSectionRequestedEventArgs(this)); // This won't remove today section
+            }
 
             if (!suppressSettingsUpdate)
             {

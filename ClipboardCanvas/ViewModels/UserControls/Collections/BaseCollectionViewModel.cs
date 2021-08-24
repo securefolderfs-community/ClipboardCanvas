@@ -61,6 +61,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public SearchContext SearchContext { get; set; }
 
+        public CanvasType AssociatedCanvasType { get; set; }
+
         public bool IsCollectionAvailable { get; protected set; }
 
         public virtual bool IsOnNewCanvas => currentIndex == CollectionItems.Count;
@@ -211,6 +213,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             }
 
             this.CollectionItems = new ObservableCollection<CollectionItemViewModel>();
+            this.AssociatedCanvasType = CanvasHelpers.GetDefaultCanvasType();
 
             // Create commands
             OpenCollectionCommand = new RelayCommand(OpenCollection);
@@ -253,21 +256,21 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
                     if (!result)
                     {
-                        await PushErrorNotification("Current icon could not be deleted.", result);
+                        PushErrorNotification("Current icon could not be deleted.", result);
                     }
                 }
 
                 SafeWrapper<StorageFolder> iconsFolder = await StorageHelpers.GetCollectionIconsFolder();
                 if (!iconsFolder)
                 {
-                    await PushErrorNotification(errorMessage, iconsFolder);
+                    PushErrorNotification(errorMessage, iconsFolder);
                     return;
                 }
 
                 SafeWrapper<StorageFile> iconFile = await FilesystemOperations.CreateFile(iconsFolder, pickedIcon.Name);
                 if (!iconFile)
                 {
-                    await PushErrorNotification(errorMessage, iconFile);
+                    PushErrorNotification(errorMessage, iconFile);
                     return;
                 }
                 this.iconFile = iconFile.Result;
@@ -275,14 +278,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 SafeWrapperResult copyResult = await FilesystemOperations.CopyFileAsync(pickedIcon, this.iconFile, null); // TODO: In the future, add StatusCenter - StatusCenter.CreateNewOperation().OperationContext;
                 if (!copyResult)
                 {
-                    await PushErrorNotification(errorMessage, copyResult);
+                    PushErrorNotification(errorMessage, copyResult);
                     return;
                 }
 
                 SafeWrapperResult setIconResult = await InitializeIconIfSet(this.iconFile);
                 if (!setIconResult)
                 {
-                    await PushErrorNotification(errorMessage, setIconResult);
+                    PushErrorNotification(errorMessage, setIconResult);
                     return;
                 }
 
@@ -301,7 +304,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 {
                     if (result != OperationErrorCode.NotFound) // Only if it wasn't NotFound -- if it was, continue as usual
                     { 
-                        await PushErrorNotification("Couldn't remove icon.", result);
+                        PushErrorNotification("Couldn't remove icon.", result);
                         return;
                     }
                 }
@@ -825,13 +828,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             OnCollectionErrorRaisedEvent?.Invoke(this, new CollectionErrorRaisedEventArgs(safeWrapperResult));
         }
 
-        protected virtual async Task PushErrorNotification(string errorMessage, SafeWrapperResult result)
+        protected virtual void PushErrorNotification(string errorMessage, SafeWrapperResult result)
         {
             IInAppNotification notification = DialogService.GetNotification();
             notification.ViewModel.NotificationText = $"{errorMessage} Error: {result.ErrorCode}";
             notification.ViewModel.ShownButtons = InAppNotificationButtonType.OkButton;
 
-            await notification.ShowAsync(4000);
+            notification.Show(Constants.UI.Notifications.NOTIFICATION_DEFAULT_SHOW_TIME);
         }
 
         #endregion

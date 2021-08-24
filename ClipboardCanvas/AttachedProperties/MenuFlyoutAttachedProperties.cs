@@ -10,7 +10,7 @@ namespace ClipboardCanvas.AttachedProperties
     {
         public override void OnValueChanged(MenuFlyout sender, List<BaseMenuFlyoutItemViewModel> newValue)
         {
-            IList<MenuFlyoutItemBase> flyoutItems = FlyoutHelpers.GetMenuFlyoutItems(newValue);
+            IEnumerable<MenuFlyoutItemBase> flyoutItems = FlyoutHelpers.GetMenuFlyoutItems(newValue);
 
             sender.Items.Clear();
             foreach (var item in flyoutItems)

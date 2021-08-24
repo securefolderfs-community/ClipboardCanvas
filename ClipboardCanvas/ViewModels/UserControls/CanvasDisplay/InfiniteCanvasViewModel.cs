@@ -28,21 +28,27 @@ using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.EventArguments.InfiniteCanvasEventArgs;
 using ClipboardCanvas.ViewModels.ContextMenu;
-using ClipboardCanvas.Enums;
 using ClipboardCanvas.ViewModels.UserControls.CanvasPreview;
 using ClipboardCanvas.Contexts.Operations;
+using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
     public class InfiniteCanvasViewModel : BaseCanvasViewModel
     {
-        private InfiniteCanvasItem InfiniteCanvasItem => canvasItem as InfiniteCanvasItem;
+        #region Private Members
 
         private FilesystemChangeWatcher _filesystemChangeWatcher;
 
         private bool _isFilesystemWatcherReady;
 
         private ICanvasItemReceiverModel _infiniteCanvasFileReceiver;
+
+        #endregion
+
+        #region Properties
+
+        private InfiniteCanvasItem InfiniteCanvasItem => canvasItem as InfiniteCanvasItem;
 
         private IInteractableCanvasControlModel InteractableCanvasControlModel => ControlView?.InteractableCanvasModel;
 
@@ -66,6 +72,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
         }
 
+        #endregion
+
         #region Constructor
 
         public InfiniteCanvasViewModel(IBaseCanvasPreviewControlView view, BaseContentTypeModel contentType)
@@ -80,12 +88,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         public override async Task<SafeWrapperResult> TryPasteData(DataPackageView dataPackage, CancellationToken cancellationToken)
         {
             this.cancellationToken = cancellationToken;
+            SafeWrapperResult fetchDataToViewResult = SafeWrapperResult.SUCCESS;
 
             RaiseOnPasteInitiatedEvent(this, new PasteInitiatedEventArgs(false, null, associatedCollection));
 
             // First, set Infinite Canvas folder
             SafeWrapperResult initializeInfiniteCanvasFolderResult = await InitializeInfiniteCanvasFolder();
-            if (!AssertNoError(initializeInfiniteCanvasFolderResult))
+            if (!AssertNoError(initializeInfiniteCanvasFolderResult)) // Default AssertNoError
             {
                 return initializeInfiniteCanvasFolderResult;
             }
@@ -99,66 +108,76 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Get content type from data package
             BaseContentTypeModel contentType = await BaseContentTypeModel.GetContentTypeFromDataPackage(dataPackage);
 
-            // Get correct IPasteModel from contentType
-            IPasteModel canvasPasteModel = CanvasHelpers.GetPasteModelFromContentType(contentType, _infiniteCanvasFileReceiver, new StatusCenterOperationReceiver());
-
-            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            if (contentType is InvalidContentTypeDataModel invalidContentType)
             {
-                DiscardData();
-                return SafeWrapperResult.CANCEL;
-            }
-
-            if (canvasPasteModel == null)
-            {
-                if (contentType is InvalidContentTypeDataModel invalidContentType && invalidContentType.error != null)
+                if (invalidContentType.error == (OperationErrorCode.InvalidOperation | OperationErrorCode.NotAFile))
                 {
-                    return invalidContentType.error;
+                    // This error code means user tried pasting a folder with Reference Files setting *disabled*
+                    AssertNoErrorInfiniteCanvas(invalidContentType.error); // Only for notification
                 }
                 else
                 {
-                    return BaseContentTypeModel.CannotDisplayContentForTypeResult;
+                    return invalidContentType.error;
                 }
             }
-
-            // Paste data
-            SafeWrapper<CanvasItem> pastedFile = await canvasPasteModel.PasteData(dataPackage, UserSettings.AlwaysPasteFilesAsReference, cancellationToken);
-
-            // We don't need IPasteModel anymore, so dispose it
-            canvasPasteModel.Dispose();
-
-            if (!pastedFile)
+            else
             {
-                return pastedFile;
+
+                // Get correct IPasteModel from contentType
+                IPasteModel canvasPasteModel = CanvasHelpers.GetPasteModelFromContentType(contentType, _infiniteCanvasFileReceiver, new StatusCenterOperationReceiver());
+
+                if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+                {
+                    DiscardData();
+                    return SafeWrapperResult.CANCEL;
+                }
+
+                if (canvasPasteModel == null)
+                {
+                    return BaseContentTypeModel.CannotDisplayContentForTypeResult;
+                }
+
+                // Paste data
+                SafeWrapper<CanvasItem> pastedFile = await canvasPasteModel.PasteData(dataPackage, UserSettings.AlwaysPasteFilesAsReference, cancellationToken);
+
+                // We don't need IPasteModel anymore, so dispose it
+                canvasPasteModel.Dispose();
+
+                if (!pastedFile)
+                {
+                    return pastedFile;
+                }
+
+                // Add new object to Infinite Canvas
+                var interactableCanvasControlItem = await InteractableCanvasControlModel.AddItem(associatedCollection, contentType, pastedFile, _infiniteCanvasFileReceiver, cancellationToken);
+
+                if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+                {
+                    DiscardData();
+                    return SafeWrapperResult.CANCEL;
+                }
+
+                // Wait for control to load
+                await Task.Delay(Constants.UI.CONTROL_LOAD_DELAY);
+
+                // Update item position based on datapackage
+                InteractableCanvasControlModel.UpdateItemPositionFromDataPackage(dataPackage, interactableCanvasControlItem);
+
+
+                // Save data after pasting
+                SafeWrapperResult saveDataResult = await SaveConfigurationModel();
+
+                if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+                {
+                    DiscardData();
+                    return SafeWrapperResult.CANCEL;
+                }
+
+                AssertNoErrorInfiniteCanvas(saveDataResult); // Only for notification
+
+                // Fetch data to view
+                fetchDataToViewResult = await interactableCanvasControlItem.LoadContent();
             }
-
-            // Add new object to Infinite Canvas
-            var interactableCanvasControlItem = await InteractableCanvasControlModel.AddItem(associatedCollection, contentType, pastedFile, _infiniteCanvasFileReceiver, cancellationToken);
-
-            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
-            {
-                DiscardData();
-                return SafeWrapperResult.CANCEL;
-            }
-
-            // Wait for control to load
-            await Task.Delay(Constants.UI.CONTROL_LOAD_DELAY);
-
-            // Update item position based on datapackage
-            InteractableCanvasControlModel.UpdateItemPositionFromDataPackage(dataPackage, interactableCanvasControlItem);
-
-            // Save data after pasting
-            SafeWrapperResult saveDataResult = await SaveConfigurationModel();
-
-            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
-            {
-                DiscardData();
-                return SafeWrapperResult.CANCEL;
-            }
-
-            AssertNoError(saveDataResult); // Only for notification
-
-            // Fetch data to view
-            SafeWrapperResult fetchDataToViewResult = await interactableCanvasControlItem.LoadContent();
 
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
@@ -197,7 +216,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             // First, initialize Infinite Canvas folder
             SafeWrapperResult initializeInfiniteCanvasFolderResult = await InitializeInfiniteCanvasFolder();
-            if (!AssertNoError(initializeInfiniteCanvasFolderResult))
+            if (!AssertNoError(initializeInfiniteCanvasFolderResult)) // Default AssertNoError
             {
                 return initializeInfiniteCanvasFolderResult;
             }
@@ -256,7 +275,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             // Read Infinite Canvas configuration file
             SafeWrapper<string> readFile = await FilesystemOperations.ReadFileText(InfiniteCanvasItem.ConfigurationFile);
-            if (!AssertNoError(readFile))
+            if (!AssertNoErrorInfiniteCanvas(readFile))
             {
                 return readFile;
             }
@@ -342,7 +361,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             var action_paste = new SuggestedActionsControlItemViewModel(
                 new AsyncRelayCommand(async () =>
                 {
-                    SafeWrapper<DataPackageView> dataPackage = await ClipboardHelpers.GetClipboardData();
+                    SafeWrapper<DataPackageView> dataPackage = ClipboardHelpers.GetClipboardData();
 
                     await TryPasteData(dataPackage, CanvasPreviewControlViewModel.CanvasPasteCancellationTokenSource.Token);
                 }), "Paste from Clipboard", "\uE77F");
@@ -392,7 +411,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             // Save configuration
             SafeWrapperResult saveDataResult = await SaveConfigurationModel();
-            AssertNoError(saveDataResult); // Only for notification
+            AssertNoErrorInfiniteCanvas(saveDataResult); // Only for notification
 
             // Save canvas image preview
             SafeWrapperResult imagePreviewSaveResult = await SafeWrapperRoutines.SafeWrapAsync(async () =>
@@ -513,6 +532,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #endregion
 
         #region Private Helpers
+
+        private bool AssertNoErrorInfiniteCanvas(SafeWrapperResult result)
+        {
+            return AssertNoError(result, TimeSpan.FromMilliseconds(Constants.UI.CanvasContent.INFINITE_CANVAS_ERROR_SHOW_TIME), false);
+        }
 
         private async Task StartFilesystemChangeWatcher(StorageFolder infiniteCanvasFolder)
         {

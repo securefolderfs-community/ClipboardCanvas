@@ -8,8 +8,9 @@ using Windows.System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using System.Collections.Generic;
+using Windows.ApplicationModel.Core;
+using Microsoft.Toolkit.Uwp;
 using System.Threading.Tasks;
-using System.Threading;
 
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.EventArguments.CollectionPreview;
@@ -22,9 +23,7 @@ using ClipboardCanvas.Interfaces.Search;
 using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.Serialization;
-using Windows.Storage;
-using Windows.ApplicationModel.Core;
-using Microsoft.Toolkit.Uwp;
+using ClipboardCanvas.DataModels.Navigation;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {
@@ -304,10 +303,17 @@ namespace ClipboardCanvas.ViewModels.Pages
         public void OpenItem(CollectionPreviewItemViewModel itemToOpen)
         {
             int indexOfSelectedItem = Items.IndexOf(itemToOpen);
-            _view?.PrepareConnectedAnimation(indexOfSelectedItem);
+            _view.PrepareConnectedAnimation(indexOfSelectedItem);
 
             // Navigate to canvas and suppress transition since we use ConnectedAnimation
-            NavigationService.OpenCanvasPage(AssociatedCollectionModel, itemToOpen.CollectionItemViewModel, null, NavigationTransitionType.Suppress);
+            NavigationService.OpenCanvasPage(
+                AssociatedCollectionModel,
+                itemToOpen.CollectionItemViewModel,
+                new CanvasPageNavigationParameterModel(AssociatedCollectionModel, AssociatedCollectionModel.AssociatedCanvasType)
+                {
+                    CollectionPreviewIDisposable = this
+                },
+                NavigationTransitionType.Suppress);
         }
 
         public void CheckSearchContext()
@@ -499,7 +505,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         #region IDisposable
 
-        public async void Dispose()
+        public void Dispose()
         {
             UnhookEvents();
 
@@ -511,9 +517,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             {
                 AssociatedCollectionModel.SearchContext = null;
             }
-
-            await Task.Delay(1500); // Delay so item preview doesn't disappear instantly for connected animation
-
+            
             Items.DisposeClear();
         }
 

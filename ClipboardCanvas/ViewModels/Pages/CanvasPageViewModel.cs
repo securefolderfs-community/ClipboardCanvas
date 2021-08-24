@@ -35,6 +35,8 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private bool _contentFinishedLoading;
 
+        private bool _isInTemporaryErrorLoadPhase;
+
         #endregion
 
         #region Public Properties
@@ -56,23 +58,15 @@ namespace ClipboardCanvas.ViewModels.Pages
                     OnPropertyChanged(nameof(SwitchCanvasModeText));
                     OnPropertyChanged(nameof(CanvasTypeText));
                 }
+
+                CollectionModel.AssociatedCanvasType = value;
             }
         }
 
         private List<BaseMenuFlyoutItemViewModel> _CanvasContextMenuItems;
         public List<BaseMenuFlyoutItemViewModel> CanvasContextMenuItems
         {
-            get
-            {
-                if (_contentFinishedLoading)
-                {
-                    return PasteCanvasModel.ContextMenuItems;
-                }
-                else
-                {
-                    return _CanvasContextMenuItems;
-                }
-            }
+            get => _contentFinishedLoading ? PasteCanvasModel.ContextMenuItems : _CanvasContextMenuItems;
         }
 
         private bool _NewCanvasScreenLoad = true;
@@ -182,7 +176,6 @@ namespace ClipboardCanvas.ViewModels.Pages
             this._view = view;
 
             _CanvasContextMenuItems = new List<BaseMenuFlyoutItemViewModel>();
-            RequestedCanvasType = CanvasHelpers.GetDefaultCanvasType();
 
             HookEvents();
 
@@ -379,17 +372,28 @@ namespace ClipboardCanvas.ViewModels.Pages
             }
         }
 
-        private void PasteCanvasModel_OnErrorOccurredEvent(object sender, ErrorOccurredEventArgs e)
+        private async void PasteCanvasModel_OnErrorOccurredEvent(object sender, ErrorOccurredEventArgs e)
         {
             ErrorTextLoad = true;
             ErrorText = e.errorMessage;
+            CanvasRingLoad = false;
 
-            if (e.showErrorImage)
+            if (e.showEmptyCanvas)
             {
                 NewCanvasScreenLoad = false;
                 TipTextLoad = false;
                 PasteCanvasModel?.DiscardData();
             }
+
+            if (e.errorMessageAutoHide != TimeSpan.Zero)
+            {
+                _isInTemporaryErrorLoadPhase = true;
+                await Task.Delay(e.errorMessageAutoHide);
+                ErrorText = null;
+                ErrorTextLoad = false;
+            }
+
+            _isInTemporaryErrorLoadPhase = false;
         }
 
         private async void PasteCanvasModel_OnContentStartedLoadingEvent(object sender, ContentStartedLoadingEventArgs e)
@@ -406,7 +410,8 @@ namespace ClipboardCanvas.ViewModels.Pages
             _contentFinishedLoading = true;
             NewCanvasScreenLoad = false;
             TipTextLoad = false;
-            ErrorTextLoad = false;
+            ErrorTextLoad = _isInTemporaryErrorLoadPhase;
+
             _view?.FinishConnectedAnimation();
         }
 
@@ -482,7 +487,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
             if (dataPackage == null)
             {
-                SafeWrapper<DataPackageView> dataPackageWrapper = await ClipboardHelpers.GetClipboardData();
+                SafeWrapper<DataPackageView> dataPackageWrapper = ClipboardHelpers.GetClipboardData();
 
                 if (dataPackageWrapper)
                 {

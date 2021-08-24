@@ -28,6 +28,11 @@ namespace ClipboardCanvas.UserControls.CanvasDisplay
             get => ContentText.SelectedText.Length > 0;
         }
 
+        public int SelectedTextLength
+        {
+            get => ContentText.SelectedText.Length;
+        }
+
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             this.ViewModel.ControlView = this;

@@ -20,7 +20,7 @@ namespace ClipboardCanvas.Services
 
         bool OpenNewCanvas(ICollectionModel collection, NavigationTransitionType transitionType = NavigationTransitionType.DrillInTransition, CanvasType? canvasType = null);
 
-        bool OpenCanvasPage(ICollectionModel collection, CollectionItemViewModel collectionItem = null, CanvasPageNavigationParameterModel navigationParameter = null, NavigationTransitionType transitionType = NavigationTransitionType.DrillInTransition);
+        bool OpenCanvasPage(ICollectionModel collection, CollectionItemViewModel collectionItem = null, CanvasPageNavigationParameterModel navigationParameter = null, NavigationTransitionType transitionType = NavigationTransitionType.DrillInTransition, CanvasType? canvasType = null);
 
         bool OpenHomepage(HomepageNavigationParameterModel navigationParameter = null, NavigationTransitionType transitionType = NavigationTransitionType.DrillInTransition);
 

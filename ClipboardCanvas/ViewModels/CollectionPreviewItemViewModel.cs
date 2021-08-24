@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System.Threading;
 
@@ -86,14 +85,15 @@ namespace ClipboardCanvas.ViewModels
         public async Task RequestCanvasLoad()
         {
             // Wait for control to load
-            await Task.Delay(Constants.UI.CONTROL_LOAD_DELAY);
-
             if (ReadOnlyCanvasPreviewModel == null)
             {
-                return;
+                await Task.Delay(Constants.UI.CONTROL_LOAD_DELAY);
+                if (ReadOnlyCanvasPreviewModel == null)
+                {
+                    return;
+                }
             }
 
-            ReadOnlyCanvasPreviewModel.DiscardData();
             await ReadOnlyCanvasPreviewModel.TryLoadExistingData(CollectionItemViewModel, _cancellationTokenSource.Token);
         }
 
@@ -133,7 +133,7 @@ namespace ClipboardCanvas.ViewModels
 
         public async Task UpdateDisplayName()
         {
-            DisplayName = await CanvasHelpers.SafeGetCanvasItemName(CollectionItemViewModel);
+            DisplayName = Path.GetFileName(await CanvasHelpers.SafeGetCanvasItemPath(CollectionItemViewModel));
         }
 
         #endregion

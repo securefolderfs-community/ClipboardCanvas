@@ -35,12 +35,16 @@
 
                 public const int INFINITE_CANVAS_SAVE_INTERVAL = 1000;
 
+                public const int INFINITE_CANVAS_ERROR_SHOW_TIME = 2000;
+
                 public const string INFINITE_CANVAS_DRAGGED_OBJECT_ID = "clipboard_canvas__dragged_control_object";
             }
 
             public static class Notifications
             {
                 public const int NOTIFICATION_PROGRESSBAR_REFRESH_INTERVAL = 50;
+
+                public const int NOTIFICATION_DEFAULT_SHOW_TIME = 4000;
             }
 
             public static class Animations

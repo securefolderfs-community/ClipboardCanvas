@@ -13,7 +13,7 @@ namespace ClipboardCanvas.Contexts.Operations
 
         public IOperationContext GetOperationContext(string operationName, StatusCenterOperationType operationType)
         {
-            return StatusCenterService.AppendOperationBanner(operationName, operationType, new CancellationTokenSource(), TimeSpan.FromMilliseconds(750));
+            return StatusCenterService.AppendOperationBanner(operationName, operationType, new CancellationTokenSource(), TimeSpan.FromMilliseconds(850));
         }
     }
 }

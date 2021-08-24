@@ -13,16 +13,16 @@
     mc:Ignorable="d">
 
     <StackPanel Spacing="24">
-        <TextBlock Text="Clipboard Canvas requires permission to access the file system to be able to save items to Collections anywhere on your drive." TextWrapping="WrapWholeWords" />
+        <TextBlock Text="Clipboard Canvas requires permission to access the file system for it to work correctly. Without the permission, some features will be disabled and/or limited." TextWrapping="WrapWholeWords" />
 
-        <StackPanel>
+        <StackPanel Spacing="4">
             <TextBlock Text="You can grant this permission by heading to settings, whereupon the app will be closed." TextWrapping="WrapWholeWords" />
             <HyperlinkButton Command="{x:Bind ViewModel.OpenSettingsCommand}" Content="Open Settings" />
         </StackPanel>
 
         <TextBlock
             Opacity="0.6"
-            Text="You can also continue in Restricted Access mode with access limited to application's directory."
+            Text="You can also continue in Restricted Access mode with limited features."
             TextWrapping="WrapWholeWords" />
     </StackPanel>
 </ContentDialog>

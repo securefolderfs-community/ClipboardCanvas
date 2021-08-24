@@ -210,6 +210,11 @@ namespace ClipboardCanvas.UserControls
 
         public async Task<(IBuffer buffer, uint pixelWidth, uint pixelHeight)> GetCanvasImageBuffer()
         {
+            if (RootGrid == null)
+            {
+                return (null, 0, 0);
+            }
+
             RenderTargetBitmap rtb = new RenderTargetBitmap();
             await rtb.RenderAsync(RootGrid);
 

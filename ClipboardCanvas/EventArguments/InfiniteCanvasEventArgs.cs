@@ -1,5 +1,6 @@
 ﻿using System;
 using Windows.Storage.Streams;
+
 using ClipboardCanvas.ViewModels.UserControls;
 
 namespace ClipboardCanvas.EventArguments.InfiniteCanvasEventArgs

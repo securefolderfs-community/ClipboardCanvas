@@ -16,7 +16,7 @@ namespace ClipboardCanvas.AttachedProperties
         /// <summary>
         /// Fired when the value changes
         /// </summary>
-        public event Action<DependencyObject, DependencyPropertyChangedEventArgs> ValueChanged = (sender, e) => { };
+        public event Action<DependencyObject, DependencyPropertyChangedEventArgs> ValueChanged;
 
         #endregion
 
@@ -53,7 +53,7 @@ namespace ClipboardCanvas.AttachedProperties
             (Instance as BaseGenericAttachedProperty<TParent, TProperty>)?.OnValueChanged(d, e);
 
             // Call event listeners
-            (Instance as BaseGenericAttachedProperty<TParent, TProperty>)?.ValueChanged(d, e);
+            (Instance as BaseGenericAttachedProperty<TParent, TProperty>)?.ValueChanged?.Invoke(d, e);
         }
 
         /// <summary>

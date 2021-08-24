@@ -101,7 +101,7 @@ namespace ClipboardCanvas.Helpers
 
             for (int i = 0; i < items.Count; i++)
             {
-                if (items[i].IsShown)
+                if (items[i].IsShown?.Invoke() ?? false)
                 {
                     filtered.Add(items[i]);
                 }

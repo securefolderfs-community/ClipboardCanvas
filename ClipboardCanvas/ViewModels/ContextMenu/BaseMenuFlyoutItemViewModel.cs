@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using System;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace ClipboardCanvas.ViewModels.ContextMenu
 {
@@ -6,7 +7,7 @@ namespace ClipboardCanvas.ViewModels.ContextMenu
     {
         public object Tag { get; set; }
 
-        public bool IsShown { get; set; } = true;
+        public Func<bool> IsShown { get; set; } = () => true;
 
         public bool IsEnabled { get; set; } = true;
     }

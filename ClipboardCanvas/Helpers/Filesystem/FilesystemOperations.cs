@@ -64,6 +64,11 @@ namespace ClipboardCanvas.Helpers.Filesystem
 
         public static async Task<SafeWrapper<string>> ReadFileText(IStorageFile file)
         {
+            if (file == null)
+            {
+                return (null, new SafeWrapperResult(OperationErrorCode.InvalidArgument, new NullReferenceException(), "Provided file is null."));
+            }
+
             SafeWrapper<string> result = await SafeWrapperRoutines.SafeWrapAsync(() => FileIO.ReadTextAsync(file).AsTask());
 
             return result;
@@ -71,6 +76,11 @@ namespace ClipboardCanvas.Helpers.Filesystem
 
         public static async Task<SafeWrapperResult> WriteFileText(IStorageFile file, string text)
         {
+            if (file == null)
+            {
+                return new SafeWrapperResult(OperationErrorCode.InvalidArgument, new NullReferenceException(), "Provided file is null.");
+            }
+
             SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(() => FileIO.WriteTextAsync(file, text).AsTask());
 
             return result;

@@ -245,10 +245,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         public virtual async Task<bool> SetDataToClipboard()
         {
             DataPackage dataPackage = new DataPackage();
-            dataPackage.SetStorageItems(new List<IStorageItem>() { await sourceItem });
+            dataPackage.SetStorageItems((await sourceItem).ToListSingle());
 
-            Clipboard.SetContent(dataPackage);
-            Clipboard.Flush();
+            ClipboardHelpers.CopyDataPackage(dataPackage);
 
             return true;
         }
@@ -327,11 +326,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         /// Used in critical functions to check if sub-functions returned SUCCESS.
         /// <br/>
         /// <br/>
-        /// This function also calls underlying events to report result of <paramref name="result"/>.
+        /// This function also calls underlying events to report potential error codes from <paramref name="result"/>.
         /// </summary>
         /// <param name="result"></param>
+        /// <param name="errorMessageAutoHide"></param>
+        /// <param name="showEmptyCanvas"></param>
         /// <returns></returns>
-        protected bool AssertNoError(SafeWrapperResult result)
+        protected bool AssertNoError(SafeWrapperResult result, TimeSpan errorMessageAutoHide, bool showEmptyCanvas)
         {
             if (result == null)
             {
@@ -340,12 +341,18 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (!result)
             {
-                RaiseOnErrorOccurredEvent(this, new ErrorOccurredEventArgs(result, result.Message));
+                RaiseOnErrorOccurredEvent(this, new ErrorOccurredEventArgs(result, result.Message, errorMessageAutoHide, showEmptyCanvas));
                 RaiseOnContentLoadFailedEvent(this, new ErrorOccurredEventArgs(result, result.Message));
                 return false;
             }
 
             return true;
+        }
+
+        /// <inheritdoc cref="AssertNoError(SafeWrapperResult, TimeSpan, bool)"/>
+        protected bool AssertNoError(SafeWrapperResult result)
+        {
+            return AssertNoError(result, TimeSpan.Zero, true);
         }
 
         /// <summary>

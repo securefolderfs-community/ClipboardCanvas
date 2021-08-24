@@ -20,6 +20,7 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Interfaces.Collections;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.Models;
+using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {
@@ -162,6 +163,18 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             try
             {
                 deferral = e.GetDeferral();
+
+                if (App.IsInRestrictedAccessMode)
+                {
+                    IDialogService dialogService = Ioc.Default.GetService<IDialogService>();
+
+                    IInAppNotification notification = dialogService.GetNotification();
+                    notification.ViewModel.NotificationText = "Cannot add collections in Restricted Access mode.";
+                    notification.ViewModel.ShownButtons = Enums.InAppNotificationButtonType.OkButton;
+                    notification.Show(Constants.UI.Notifications.NOTIFICATION_DEFAULT_SHOW_TIME);
+
+                    return;
+                }
 
                 SafeWrapper<IReadOnlyList<IStorageItem>> items = await SafeWrapperRoutines.SafeWrapAsync(async () =>
                         await e.DataView.GetStorageItemsAsync());
@@ -462,6 +475,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         public static async Task<bool> AddCollectionViaUi()
         {
             IDialogService dialogService = Ioc.Default.GetService<IDialogService>();
+
+            if (App.IsInRestrictedAccessMode)
+            {
+                IInAppNotification notification = dialogService.GetNotification();
+                notification.ViewModel.NotificationText = "Cannot add collections in Restricted Access mode.";
+                notification.ViewModel.ShownButtons = Enums.InAppNotificationButtonType.OkButton;
+                notification.Show(Constants.UI.Notifications.NOTIFICATION_DEFAULT_SHOW_TIME);
+
+                return false;
+            }
 
             StorageFolder folder = await dialogService.PickSingleFolder();
 

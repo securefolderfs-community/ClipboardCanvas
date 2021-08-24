@@ -78,6 +78,25 @@ namespace ClipboardCanvas.Services.Implementation
             return timelineSection?.FindTimelineSectionItem(canvasItem);
         }
 
+        public (TimelineSectionViewModel section, TimelineSectionItemViewModel sectionItem) FindTimelineSectionItem(CanvasItem canvasItem)
+        {
+            TimelineSectionViewModel section = null;
+            TimelineSectionItemViewModel sectionItem = null;
+
+            foreach (var item in TimelineWidgetViewModel.Sections)
+            {
+                sectionItem = item.FindTimelineSectionItem(canvasItem);
+
+                if (sectionItem != null)
+                {
+                    section = item;
+                    break;
+                }
+            }
+
+            return (section, sectionItem);
+        }
+
         public TimelineConfigurationModel ConstructConfigurationModel()
         {
             return TimelineWidgetViewModel.ConstructConfigurationModel();

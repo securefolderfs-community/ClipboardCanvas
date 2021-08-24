@@ -1,18 +1,28 @@
-﻿using ClipboardCanvas.DataModels;
-using ClipboardCanvas.Enums;
+﻿using Windows.ApplicationModel.DataTransfer;
 using ClipboardCanvas.Helpers.SafetyHelpers;
-using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
 
 namespace ClipboardCanvas.Helpers
 {
     public static class ClipboardHelpers
     {
-        public static async Task<SafeWrapper<DataPackageView>> GetClipboardData()
-        {
-            SafeWrapper<DataPackageView> dataPackage = await SafeWrapperRoutines.SafeWrapAsync(() => Task.FromResult(Clipboard.GetContent()), StaticExceptionReporters.DefaultSafeWrapperExceptionReporter);
+        private static readonly object clipboardLock = new object();
 
+        public static void CopyDataPackage(DataPackage dataPackage)
+        {
+            if (dataPackage != null)
+            {
+                lock (clipboardLock)
+                {
+                    Clipboard.SetContent(dataPackage);
+                    Clipboard.Flush();
+                }
+            }
+        }
+
+        public static SafeWrapper<DataPackageView> GetClipboardData()
+        {
+            SafeWrapper<DataPackageView> dataPackage = SafeWrapperRoutines.SafeWrap(Clipboard.GetContent);
+            
             return dataPackage;
         }
     }

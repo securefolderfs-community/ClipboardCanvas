@@ -15,6 +15,7 @@ using ClipboardCanvas.DataModels.PastedContentDataModels;
 using ClipboardCanvas.CanavsPasteModels;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.Contexts.Operations;
+using ClipboardCanvas.Extensions;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -111,7 +112,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public async Task<IReadOnlyList<IStorageItem>> GetDragData()
         {
-            return new List<IStorageItem>() { await sourceItem };
+            return (await sourceItem).ToListSingle();
         }
 
         #endregion

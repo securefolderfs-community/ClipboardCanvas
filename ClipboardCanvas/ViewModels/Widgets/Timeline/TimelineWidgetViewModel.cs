@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using System.Linq;
+using System.Collections.Generic;
 
 using ClipboardCanvas.Models.Configuration;
 using ClipboardCanvas.Extensions;
@@ -15,7 +16,6 @@ using ClipboardCanvas.Helpers;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
-using System.Collections.Generic;
 using ClipboardCanvas.EventArguments;
 
 namespace ClipboardCanvas.ViewModels.Widgets.Timeline
@@ -48,16 +48,31 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
 
         private static void Item_OnRemoveSectionRequestedEvent(object sender, RemoveSectionRequestedEventArgs e)
         {
-            
+            if (!IsTodaySection(e.sectionViewModel))
+            {
+                RemoveSection(e.sectionViewModel);
+            }
         }
 
         #endregion
 
         #region Helpers
 
+        private static bool IsTodaySection(TimelineSectionViewModel section)
+        {
+            if (section == null)
+            {
+                return false;
+            }
+
+            DateTime now = DateTime.Now;
+
+            return section.SectionDate.DayOfYear == now.DayOfYear && section.SectionDate.Year == now.Year;
+        }
+
         public static TimelineSectionViewModel GetOrCreateTodaySection()
         {
-            TimelineSectionViewModel todaySection = TimelineWidgetViewModel.Sections.FirstOrDefault((item) => item.SectionDate == DateTime.Today);
+            TimelineSectionViewModel todaySection = TimelineWidgetViewModel.Sections.FirstOrDefault((item) => IsTodaySection(item));
 
             if (todaySection == null)
             {
@@ -134,20 +149,20 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
 
             if (configurationModel != null)
             {
-                IEnumerable<TimelineSectionConfigurationModel> sortedSections = configurationModel.sections.OrderBy((x) => x.sectionDateTime);
+                List<TimelineSectionConfigurationModel> sortedSections = configurationModel.sections.OrderBy((x) => x.sectionDateTime).ToList();
 
-                if (configurationModel != null)
+                foreach (var configurationSection in sortedSections)
                 {
-                    foreach (var configurationSection in sortedSections)
-                    {
-                        var section = AddSection(configurationSection.sectionDateTime, true);
+                    var section = AddSection(configurationSection.sectionDateTime, true);
 
-                        foreach (var configurationSectionItem in configurationSection.items)
+                    foreach (var configurationSectionItem in configurationSection.items)
+                    {
+                        SafeWrapper<IStorageItem> item = await StorageHelpers.ToStorageItemWithError<IStorageItem>(configurationSectionItem.collectionItemPath);
+
+                        if (item)
                         {
                             BaseCollectionViewModel baseCollectionViewModel = CollectionsWidgetViewModel.FindCollection(configurationSectionItem.collectionConfigurationModel);
-                            SafeWrapper<IStorageItem> item = await StorageHelpers.ToStorageItemWithError<IStorageItem>(configurationSectionItem.collectionItemPath);
-
-                            if (baseCollectionViewModel != null && item)
+                            if (baseCollectionViewModel != null)
                             {
                                 CanvasItem canvasItem = new CanvasItem(item.Result);
                                 section.AddItemBack(baseCollectionViewModel, canvasItem, true);

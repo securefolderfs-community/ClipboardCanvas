@@ -23,6 +23,7 @@ using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.Enums;
+using ClipboardCanvas.Extensions;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -171,10 +172,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
         private async Task SetDataToClipboard()
         {
             DataPackage dataPackage = new DataPackage();
-            dataPackage.SetStorageItems(new List<IStorageItem>() { await CanvasItem.SourceItem });
+            dataPackage.SetStorageItems((await CanvasItem.SourceItem).ToListSingle());
 
-            Clipboard.SetContent(dataPackage);
-            Clipboard.Flush();
+            ClipboardHelpers.CopyDataPackage(dataPackage);
         }
 
         private async Task OpenContainingFolder()
@@ -225,7 +225,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 notification.ViewModel.NotificationText = $"Error whilst overriding reference. Error: {newCanvasItemResult.ErrorCode}";
                 notification.ViewModel.ShownButtons = InAppNotificationButtonType.OkButton;
 
-                await notification.ShowAsync(4000);
+                notification.Show(Constants.UI.Notifications.NOTIFICATION_DEFAULT_SHOW_TIME);
             }
 
             OverrideReferenceEnabled = true;
@@ -268,7 +268,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task<IReadOnlyList<IStorageItem>> GetDragData()
         {
-            return new List<IStorageItem>() { await CanvasItem.SourceItem };
+            return (await CanvasItem.SourceItem).ToListSingle();
         }
 
         #region IDisposable

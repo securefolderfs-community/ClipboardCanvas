@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace ClipboardCanvas.Extensions
 {
@@ -30,6 +31,8 @@ namespace ClipboardCanvas.Extensions
 
         public static bool CheckNotNull<T>(this IEnumerable<T> enumerable) => !(enumerable == null || enumerable.Any((item) => item.IsNull()));
 
+        public static List<T> ToListSingle<T>(this T element) => new List<T>() { element };
+
         public static void DisposeClear<T>(this ICollection<T> collection)
         {
             if (collection == null)
@@ -41,7 +44,7 @@ namespace ClipboardCanvas.Extensions
             collection.Clear();
         }
 
-        public static void DisposeAll<T>(this IEnumerable<T> enumerable)
+        public static void DisposeAll(this IEnumerable enumerable)
         {
             if (enumerable == null)
             {

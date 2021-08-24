@@ -16,7 +16,7 @@ namespace ClipboardCanvas.Services
 
         IInAppNotification GetNotification(InAppNotificationControlViewModel viewModel = null);
 
-        Task<IInAppNotification> ShowNotification(InAppNotificationControlViewModel viewModel = null, int milliseconds = 0);
+        IInAppNotification ShowNotification(InAppNotificationControlViewModel viewModel = null, int milliseconds = 0);
 
         // TODO: Add FolderPickerSettings
         Task<StorageFolder> PickSingleFolder();

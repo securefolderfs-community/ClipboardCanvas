@@ -25,6 +25,8 @@ namespace ClipboardCanvas.Services
 
         TimelineSectionItemViewModel FindTimelineSectionItem(TimelineSectionViewModel timelineSection, CanvasItem canvasItem);
 
+        (TimelineSectionViewModel section, TimelineSectionItemViewModel sectionItem) FindTimelineSectionItem(CanvasItem canvasItem);
+
         TimelineConfigurationModel ConstructConfigurationModel();
     }
 }

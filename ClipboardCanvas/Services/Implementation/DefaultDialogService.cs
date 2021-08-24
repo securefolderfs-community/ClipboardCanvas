@@ -14,6 +14,8 @@ namespace ClipboardCanvas.Services.Implementation
 {
     public class DefaultDialogService : IDialogService
     {
+        private IInAppNotification _lastInAppNotification;
+
         #region IDialogService
 
         public IDialog<TViewModel> GetDialog<TViewModel>(TViewModel viewModel)
@@ -42,21 +44,25 @@ namespace ClipboardCanvas.Services.Implementation
 
         public IInAppNotification GetNotification(InAppNotificationControlViewModel viewModel = null)
         {
+            _lastInAppNotification?.Dismiss();
+
             IInAppNotification notification = MainPage.Instance.MainInAppNotification;
+            _lastInAppNotification = notification;
 
             if (viewModel != null)
             {
+                notification.ViewModel?.Dispose();
                 notification.ViewModel = viewModel;
             }
 
             return notification;
         }
 
-        public async Task<IInAppNotification> ShowNotification(InAppNotificationControlViewModel viewModel = null, int milliseconds = 0)
+        public IInAppNotification ShowNotification(InAppNotificationControlViewModel viewModel = null, int milliseconds = 0)
         {
             IInAppNotification notification = GetNotification(viewModel);
 
-            await notification.ShowAsync(milliseconds);
+            notification.Show(milliseconds);
             return notification;
         }
 

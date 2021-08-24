@@ -29,7 +29,7 @@ namespace ClipboardCanvas.Services.Implementation
         {
             if (canvasType == null)
             {
-                canvasType = CanvasHelpers.GetDefaultCanvasType();
+                canvasType = collection.AssociatedCanvasType;
             }
 
             OnNavigationStartedEvent?.Invoke(this, new NavigationStartedEventArgs(collection, (CanvasType)canvasType, DisplayPageType.CanvasPage));
@@ -46,27 +46,30 @@ namespace ClipboardCanvas.Services.Implementation
             return true;
         }
 
-        public bool OpenCanvasPage(ICollectionModel collection, CollectionItemViewModel collectionItem = null, CanvasPageNavigationParameterModel navigationParameter = null, NavigationTransitionType transitionType = NavigationTransitionType.DrillInTransition)
+        public bool OpenCanvasPage(ICollectionModel collection, CollectionItemViewModel collectionItem = null, CanvasPageNavigationParameterModel navigationParameter = null, NavigationTransitionType transitionType = NavigationTransitionType.DrillInTransition, CanvasType? canvasType = null)
         {
-            CanvasType canvasType = CanvasHelpers.GetDefaultCanvasType();
+            if (canvasType == null)
+            {
+                canvasType = collection.AssociatedCanvasType;
+            }
 
             if (!CheckCollectionAvailabilityBeforePageNavigation())
             {
-                OnNavigationFinishedEvent?.Invoke(this, new NavigationFinishedEventArgs(false, null, collection, canvasType, DisplayPageType.CanvasPage));
+                OnNavigationFinishedEvent?.Invoke(this, new NavigationFinishedEventArgs(false, null, collection, (CanvasType)canvasType, DisplayPageType.CanvasPage));
                 return false;
             }
 
-            OnNavigationStartedEvent?.Invoke(this, new NavigationStartedEventArgs(collection, canvasType, DisplayPageType.CanvasPage));
+            OnNavigationStartedEvent?.Invoke(this, new NavigationStartedEventArgs(collection, (CanvasType)canvasType, DisplayPageType.CanvasPage));
 
             if (navigationParameter == null)
             {
-                navigationParameter = new CanvasPageNavigationParameterModel(collection, canvasType);
+                navigationParameter = new CanvasPageNavigationParameterModel(collection, (CanvasType)canvasType);
             }
             LastPage = CurrentPage;
             CurrentPage = DisplayPageType.CanvasPage;
             DisplayFrame.Navigate(typeof(CanvasPage), navigationParameter, transitionType.ToNavigationTransition());
 
-            OnNavigationFinishedEvent?.Invoke(this, new NavigationFinishedEventArgs(true, collectionItem ?? collection.CurrentCollectionItemViewModel, collection, canvasType, DisplayPageType.CanvasPage));
+            OnNavigationFinishedEvent?.Invoke(this, new NavigationFinishedEventArgs(true, collectionItem ?? collection.CurrentCollectionItemViewModel, collection, (CanvasType)canvasType, DisplayPageType.CanvasPage));
 
             return true;
         }
@@ -94,7 +97,7 @@ namespace ClipboardCanvas.Services.Implementation
         {
             if (canvasType == null)
             {
-                canvasType = CanvasHelpers.GetDefaultCanvasType();
+                canvasType = collection.AssociatedCanvasType;
             }
 
             OnNavigationStartedEvent?.Invoke(this, new NavigationStartedEventArgs(collection, (CanvasType)canvasType, DisplayPageType.CollectionPreviewPage));

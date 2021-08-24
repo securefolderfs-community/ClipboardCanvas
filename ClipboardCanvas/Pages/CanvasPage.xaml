@@ -8,6 +8,7 @@
     xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
     xmlns:local="using:ClipboardCanvas.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:uc="using:ClipboardCanvas.UserControls.CanvasDisplay"
     xmlns:vc="using:ClipboardCanvas.ValueConverters"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -128,7 +129,7 @@
                 </Viewbox>
 
                 <!--  Content Loading progress ring  -->
-                <ProgressRing
+                <muxc:ProgressRing
                     x:Name="LoadingRing"
                     Grid.Row="0"
                     HorizontalAlignment="Center"

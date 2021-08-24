@@ -91,20 +91,18 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     RefreshContextMenuItems();
                 }),
                 IconGlyph = "\uE8B3",
-                Text = "Select all"
+                Text = "Select all",
+                IsShown = () => (ControlView?.SelectedTextLength ?? 0) < Text.Length
             });
 
-            // TODO: IsTextSelected doesn't seem to work
-            if (ControlView != null && ControlView.IsTextSelected)
+            // Copy selected text
+            ContextMenuItems.AddFront(new MenuFlyoutItemViewModel()
             {
-                // Copy selected text
-                ContextMenuItems.AddFront(new MenuFlyoutItemViewModel()
-                {
-                    Command = new RelayCommand(() => ControlView?.CopySelectedText()),
-                    IconGlyph = "\uE8C8",
-                    Text = "Copy selected text"
-                });
-            }
+                Command = new RelayCommand(() => ControlView?.CopySelectedText()),
+                IconGlyph = "\uE8C8",
+                Text = "Copy selected text",
+                IsShown = () => ControlView?.IsTextSelected ?? false
+            });
         }
 
         #endregion

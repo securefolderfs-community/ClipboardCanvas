@@ -87,7 +87,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             (IBuffer buffer, uint pixelWidth, uint pixelHeight) = await _view.GetCanvasImageBuffer();
 
-            OnInfiniteCanvasSaveRequestedEvent?.Invoke(this, new InfiniteCanvasSaveRequestedEventArgs(buffer, pixelWidth, pixelHeight));
+            if (buffer != null)
+            {
+                OnInfiniteCanvasSaveRequestedEvent?.Invoke(this, new InfiniteCanvasSaveRequestedEventArgs(buffer, pixelWidth, pixelHeight));
+            }
         }
 
         #endregion
@@ -169,6 +172,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
                     }
                 }
             }
+
+            NoItemsTextLoad = Items.IsEmpty();
         }
 
         public void UpdateItemPositionFromDataPackage(DataPackageView dataPackage, InteractableCanvasControlItemViewModel interactableCanvasControlItem)

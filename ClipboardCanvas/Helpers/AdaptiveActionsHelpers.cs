@@ -39,7 +39,7 @@ namespace ClipboardCanvas.Helpers
                     BaseReadOnlyCanvasPreviewControlViewModel<BaseReadOnlyCanvasViewModel>.CanvasPasteCancellationTokenSource.Cancel();
                     BaseReadOnlyCanvasPreviewControlViewModel<BaseReadOnlyCanvasViewModel>.CanvasPasteCancellationTokenSource = new CancellationTokenSource();
 
-                    SafeWrapper<DataPackageView> dataPackage = await ClipboardHelpers.GetClipboardData();
+                    SafeWrapper<DataPackageView> dataPackage = ClipboardHelpers.GetClipboardData();
 
                     await pasteCanvasControlModel.TryPasteData(dataPackage, BaseReadOnlyCanvasPreviewControlViewModel<BaseReadOnlyCanvasViewModel>.CanvasPasteCancellationTokenSource.Token);
                 }), "Paste from Clipboard", "\uE77F");
