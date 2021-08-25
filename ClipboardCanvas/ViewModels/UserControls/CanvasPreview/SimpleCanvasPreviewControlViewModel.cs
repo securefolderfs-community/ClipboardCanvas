@@ -1,4 +1,4 @@
-﻿using ClipboardCanvas.DataModels.PastedContentDataModels;
+﻿using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.Helpers;
@@ -35,43 +35,49 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
         protected override bool InitializeViewModelFromContentType(BaseContentTypeModel contentType)
         {
             // Try for infinite canvas
-            if (InitializeViewModelForType<InfiniteCanvasContentType, ThumbnailSimpleCanvasViewModel>(contentType, () => new ThumbnailSimpleCanvasViewModel(view)))
+            if (InitializeViewModelForType<InfiniteCanvasContentType, ThumbnailSimpleCanvasViewModel>(contentType, () => new ThumbnailSimpleCanvasViewModel(view, contentType)))
             {
                 return true;
             }
 
             // Try for image
-            if (InitializeViewModelForType<ImageContentType, ThumbnailSimpleCanvasViewModel>(contentType, () => new ThumbnailSimpleCanvasViewModel(view)))
+            if (InitializeViewModelForType<ImageContentType, ThumbnailSimpleCanvasViewModel>(contentType, () => new ThumbnailSimpleCanvasViewModel(view, contentType)))
             {
                 return true;
             }
 
             // Try for text
-            if (InitializeViewModelForType<TextContentType, TextSimpleCanvasViewModel>(contentType, () => new TextSimpleCanvasViewModel(view)))
+            if (InitializeViewModelForType<TextContentType, TextSimpleCanvasViewModel>(contentType, () => new TextSimpleCanvasViewModel(view, contentType)))
             {
                 return true;
             }
 
             // Try for media
-            if (InitializeViewModelForType<MediaContentType, ThumbnailSimpleCanvasViewModel>(contentType, () => new ThumbnailSimpleCanvasViewModel(view)))
+            if (InitializeViewModelForType<MediaContentType, ThumbnailSimpleCanvasViewModel>(contentType, () => new ThumbnailSimpleCanvasViewModel(view, contentType)))
             {
                 return true;
             }
 
             // Try for WebView
-            if (InitializeViewModelForType<WebViewContentType, ThumbnailSimpleCanvasViewModel>(contentType, () => new ThumbnailSimpleCanvasViewModel(view)))
+            if (InitializeViewModelForType<WebViewContentType, ThumbnailSimpleCanvasViewModel>(contentType, () => new ThumbnailSimpleCanvasViewModel(view, contentType)))
             {
                 return true;
             }
 
             // Try for markdown // TODO: Add simple markdown
-            if (InitializeViewModelForType<MarkdownContentType, TextSimpleCanvasViewModel>(contentType, () => new TextSimpleCanvasViewModel(view)))
+            if (InitializeViewModelForType<MarkdownContentType, TextSimpleCanvasViewModel>(contentType, () => new TextSimpleCanvasViewModel(view, contentType)))
+            {
+                return true;
+            }
+
+            // Try for url preview
+            if (InitializeViewModelForType<UrlPreviewContentType, UrlSimpleCanvasViewModel>(contentType, () => new UrlSimpleCanvasViewModel(view, contentType)))
             {
                 return true;
             }
 
             // Try fallback
-            if (InitializeViewModelForType<FallbackContentType, ThumbnailSimpleCanvasViewModel>(contentType, () => new ThumbnailSimpleCanvasViewModel(view)))
+            if (InitializeViewModelForType<FallbackContentType, ThumbnailSimpleCanvasViewModel>(contentType, () => new ThumbnailSimpleCanvasViewModel(view, contentType)))
             {
                 return true;
             }

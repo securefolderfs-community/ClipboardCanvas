@@ -8,7 +8,7 @@ using Windows.Storage;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.ModelViews;
-using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.CanavsPasteModels;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Contexts.Operations;

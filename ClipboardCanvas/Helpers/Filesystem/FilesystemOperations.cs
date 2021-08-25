@@ -7,6 +7,7 @@ using Windows.Storage;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Contexts.Operations;
+using ClipboardCanvas.UnsafeNative;
 
 namespace ClipboardCanvas.Helpers.Filesystem
 {
@@ -84,6 +85,16 @@ namespace ClipboardCanvas.Helpers.Filesystem
             SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(() => FileIO.WriteTextAsync(file, text).AsTask());
 
             return result;
+        }
+
+        public static string ReadFileTexth(string path)
+        {
+            return UnsafeNativeHelpers.ReadStringFromFile(path);
+        }
+
+        public static bool WriteFileTexth(string path, string text)
+        {
+            return UnsafeNativeHelpers.WriteStringToFile(path, text);
         }
 
         public static async Task<SafeWrapperResult> RenameItem(IStorageItem item, string newName, NameCollisionOption collision = NameCollisionOption.GenerateUniqueName)

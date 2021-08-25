@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.Helpers;

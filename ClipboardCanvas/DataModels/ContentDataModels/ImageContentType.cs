@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClipboardCanvas.DataModels.PastedContentDataModels
+namespace ClipboardCanvas.DataModels.ContentDataModels
 {
     /// <summary>
     /// Used for images that are directly copied from clipboard

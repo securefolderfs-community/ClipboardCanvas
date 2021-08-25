@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;

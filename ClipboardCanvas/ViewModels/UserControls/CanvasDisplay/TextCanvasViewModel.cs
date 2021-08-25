@@ -5,7 +5,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using System.Collections.Generic;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
-using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Helpers.Filesystem;

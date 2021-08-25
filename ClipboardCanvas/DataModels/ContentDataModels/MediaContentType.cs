@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClipboardCanvas.DataModels.PastedContentDataModels
+namespace ClipboardCanvas.DataModels.ContentDataModels
 {
     public sealed class MediaContentType : BaseContentTypeModel
     {

@@ -10,7 +10,7 @@ using Windows.ApplicationModel.DataTransfer;
 using System.Linq;
 
 using ClipboardCanvas.DataModels;
-using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.EventArguments.InfiniteCanvasEventArgs;

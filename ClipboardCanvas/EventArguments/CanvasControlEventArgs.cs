@@ -3,7 +3,7 @@ using Windows.Storage;
 using Windows.ApplicationModel.DataTransfer;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
-using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Models;

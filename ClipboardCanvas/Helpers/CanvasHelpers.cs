@@ -8,7 +8,7 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.Dialogs;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.CanavsPasteModels;
-using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Helpers.Filesystem;

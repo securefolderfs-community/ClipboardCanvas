@@ -9,7 +9,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
-using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.Extensions;

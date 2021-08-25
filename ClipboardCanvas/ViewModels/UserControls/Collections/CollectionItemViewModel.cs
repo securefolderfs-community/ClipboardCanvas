@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 using ClipboardCanvas.Helpers.Filesystem;
-using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Contexts.Operations;
 

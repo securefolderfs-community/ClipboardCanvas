@@ -92,7 +92,7 @@ namespace ClipboardCanvas.Helpers.Filesystem
             }
         }
 
-        public static FileStream CreateFileStreamh(this IStorageFile file, FileAccess fileAccess = FileAccess.ReadWrite)
+        public static FileStream OpenFileStreamh(this IStorageFile file, FileAccess fileAccess = FileAccess.ReadWrite)
         {
             SafeFileHandle hFile = file.CreateSafeFileHandle(fileAccess);
             FileStream fileStream = new FileStream(hFile, fileAccess);

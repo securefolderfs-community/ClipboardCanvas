@@ -12,7 +12,7 @@ using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.EventArguments.Collections;
-using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.ViewModels.UserControls.Collections;

@@ -51,4 +51,9 @@
         <uc2:TextSimpleCanvasControl />
     </DataTemplate>
 
+    <!--  URL preview view  -->
+    <DataTemplate x:Key="UrlSimpleCanvasViewModel" x:DataType="vm2:UrlSimpleCanvasViewModel">
+        <uc2:UrlSimpleCanvasControl />
+    </DataTemplate>
+
 </ResourceDictionary>

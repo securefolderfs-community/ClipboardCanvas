@@ -1,6 +1,6 @@
 ﻿using ClipboardCanvas.Helpers.SafetyHelpers;
 
-namespace ClipboardCanvas.DataModels.PastedContentDataModels
+namespace ClipboardCanvas.DataModels.ContentDataModels
 {
     public sealed class InvalidContentTypeDataModel : BaseContentTypeModel
     {

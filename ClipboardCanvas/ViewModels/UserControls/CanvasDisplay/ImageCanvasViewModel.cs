@@ -11,7 +11,7 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.ModelViews;
-using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.CanavsPasteModels;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.Contexts.Operations;

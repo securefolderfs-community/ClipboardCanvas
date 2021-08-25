@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Windows.Storage;
 
-using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.ModelViews;
@@ -26,8 +26,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
 
         #region Constructor
 
-        public TextSimpleCanvasViewModel(IBaseCanvasPreviewControlView view)
-            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, new TextContentType(), view)
+        public TextSimpleCanvasViewModel(IBaseCanvasPreviewControlView view, BaseContentTypeModel contentType)
+            : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, contentType, view)
         {
         }
 

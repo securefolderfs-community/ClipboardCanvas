@@ -5,7 +5,7 @@ using Windows.ApplicationModel.DataTransfer;
 
 using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.DataModels;
-using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.EventArguments.InfiniteCanvasEventArgs;
 using ClipboardCanvas.ViewModels.UserControls;
 

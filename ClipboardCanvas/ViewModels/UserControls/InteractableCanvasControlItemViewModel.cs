@@ -11,7 +11,7 @@ using Windows.Storage;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 using ClipboardCanvas.DataModels;
-using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;

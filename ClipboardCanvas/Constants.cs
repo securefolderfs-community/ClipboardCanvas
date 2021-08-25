@@ -47,6 +47,11 @@
                 public const int INFINITE_CANVAS_ERROR_SHOW_TIME = 2000;
 
                 public const string INFINITE_CANVAS_DRAGGED_OBJECT_ID = "clipboard_canvas__dragged_control_object";
+
+                public static class UrlCanvas
+                {
+                    public const int MAX_IMAGES_TO_DISPLAY = 4;
+                }
             }
 
             public static class Notifications
@@ -78,6 +83,8 @@
             public const string REFERENCE_FILE_EXTENSION = ".ccvr";
 
             public const string WEBSITE_LINK_FILE_EXTENSION = ".ccvwl";
+
+            public const string URL_CANVAS_FILE_EXTENSION = ".ccvurl";
 
             public const string INFINITE_CANVAS_EXTENSION = ".ccvic";
 

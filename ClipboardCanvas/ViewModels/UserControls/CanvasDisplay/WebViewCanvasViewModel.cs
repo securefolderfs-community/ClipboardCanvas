@@ -7,7 +7,7 @@ using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Helpers.Filesystem;
-using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.CanavsPasteModels;
 using ClipboardCanvas.Contexts.Operations;
 

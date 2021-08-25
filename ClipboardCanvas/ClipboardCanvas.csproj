@@ -140,6 +140,7 @@
     <Compile Include="CanavsPasteModels\FallbackPasteModel.cs" />
     <Compile Include="CanavsPasteModels\MarkdownPasteModel.cs" />
     <Compile Include="CanavsPasteModels\MediaPasteModel.cs" />
+    <Compile Include="CanavsPasteModels\UrlPasteModel.cs" />
     <Compile Include="CanavsPasteModels\WebViewPasteModel.cs" />
     <Compile Include="CanvasFileReceivers\ICanvasItemReceiverModel.cs" />
     <Compile Include="CanvasFileReceivers\InfiniteCanvasFileReceiver.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Contexts\Operations\IOperationContextReceiver.cs" />
     <Compile Include="Contexts\Operations\StatusCenterOperationReceiver.cs" />
     <Compile Include="DataModels\BaseAdditionalData.cs" />
+    <Compile Include="DataModels\ContentDataModels\UrlPreviewContentType.cs" />
     <Compile Include="DataModels\InfiniteCanvasItem.cs" />
     <Compile Include="DataModels\InteractableCanvasDataPackageComparisionDataModel.cs" />
     <Compile Include="DataModels\Navigation\CanvasPageNavigationParameterModel.cs" />
@@ -254,7 +256,7 @@
     <Compile Include="Helpers\ApplicationHelpers.cs" />
     <Compile Include="Helpers\ObservableUserControl.cs" />
     <Compile Include="Helpers\SafetyHelpers\SafeWrapperResult.cs" />
-    <Compile Include="Helpers\StringHelpers.cs" />
+    <Compile Include="Helpers\WebHelpers.cs" />
     <Compile Include="Helpers\ThemeHelper.cs" />
     <Compile Include="Helpers\VersionHelpers.cs" />
     <Compile Include="Services\Implementation\ExceptionToFileLogger.cs" />
@@ -394,6 +396,9 @@
     <Compile Include="UserControls\SimpleCanvasDisplay\ThumbnailSimpleCanvasControl.xaml.cs">
       <DependentUpon>ThumbnailSimpleCanvasControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\SimpleCanvasDisplay\UrlSimpleCanvasControl.xaml.cs">
+      <DependentUpon>UrlSimpleCanvasControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\StatusCenterControl.xaml.cs">
       <DependentUpon>StatusCenterControl.xaml</DependentUpon>
     </Compile>
@@ -423,9 +428,6 @@
     </Compile>
     <Compile Include="UserControls\NavigationToolBarControl.xaml.cs">
       <DependentUpon>NavigationToolBarControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\SettingsPanelControl.xaml.cs">
-      <DependentUpon>SettingsPanelControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\Widgets\TimelineWidget.xaml.cs">
       <DependentUpon>TimelineWidget.xaml</DependentUpon>
@@ -483,6 +485,7 @@
     <Compile Include="ViewModels\UserControls\OOBE\IntroductionScreenPanelViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SimpleCanvasDisplay\TextSimpleCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SimpleCanvasDisplay\ThumbnailSimpleCanvasViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\SimpleCanvasDisplay\UrlSimpleCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\StatusCenter\StatusCenterItemViewModel.cs" />
     <Compile Include="ViewModels\UserControls\StatusCenter\StatusCenterViewModel.cs" />
     <Compile Include="ViewModels\UserControls\SuggestedActionsControlItemViewModel.cs" />
@@ -721,6 +724,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\SimpleCanvasDisplay\UrlSimpleCanvasControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\StatusCenterControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -758,10 +765,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\NavigationToolBarControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\SettingsPanelControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

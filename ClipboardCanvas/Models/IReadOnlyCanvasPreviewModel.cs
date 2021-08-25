@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using ClipboardCanvas.DataModels;
-using ClipboardCanvas.DataModels.PastedContentDataModels;
+using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.ContextMenu;

@@ -15,8 +15,9 @@ using ClipboardCanvas.ReferenceItems;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 using ClipboardCanvas.Helpers.Filesystem;
+using ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay;
 
-namespace ClipboardCanvas.DataModels.PastedContentDataModels
+namespace ClipboardCanvas.DataModels.ContentDataModels
 {
     public abstract class BaseContentTypeModel
     {
@@ -170,10 +171,15 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
                 return new MarkdownContentType();
             }
 
+            // URL preview
+            if (UrlSimpleCanvasViewModel.Extensions.Contains(ext)) // TODO change this later to UrlCanvasViewModel.Extensions
+            {
+                return new UrlPreviewContentType();
+            }
+
             // Default, try as text
             if (await TextCanvasViewModel.CanLoadAsText(file))
             {
-                // Text
                 return new TextContentType();
             }
 
@@ -204,42 +210,34 @@ namespace ClipboardCanvas.DataModels.PastedContentDataModels
                 }
 
                 // Check if it's url
-                if (StringHelpers.IsUrl(text))
+                if (WebHelpers.IsUrl(text))
                 {
                     // The url may point to file
-                    if (StringHelpers.IsUrlFile(text))
+                    if (WebHelpers.IsUrlFile(text))
                     {
                         // Image
-                        return new SafeWrapper<BaseContentTypeModel>(new ImageContentType(), SafeWrapperResult.SUCCESS);
+                        return new ImageContentType();
                     }
                     else
                     {
-                        // Webpage link
-                        //InitializeViewModel(() => new WebViewCanvasViewModel(_view, WebViewCanvasMode.ReadWebsite, CanvasPreviewMode.InteractionAndPreview));
-                        if (userSettings.PrioritizeMarkdownOverText)
+                        if (WebHelpers.IsValidUrl(text))
                         {
-                            // Markdown
-                            return new MarkdownContentType();
-                        }
-                        else
-                        {
-                            // Normal text
-                            return new TextContentType();
+                            // Url preview
+                            return new UrlPreviewContentType();
                         }
                     }
                 }
+
+                // Fallback to text
+                if (userSettings.PrioritizeMarkdownOverText)
+                {
+                    // Markdown
+                    return new MarkdownContentType();
+                }
                 else
                 {
-                    if (userSettings.PrioritizeMarkdownOverText)
-                    {
-                        // Markdown
-                        return new MarkdownContentType();
-                    }
-                    else
-                    {
-                        // Normal text
-                        return new TextContentType();
-                    }
+                    // Normal text
+                    return new TextContentType();
                 }
             }
             else if (dataPackage.Contains(StandardDataFormats.StorageItems)) // From clipboard storage items
