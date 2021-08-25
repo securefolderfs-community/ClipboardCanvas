@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.Pages.SettingsPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uc="using:ClipboardCanvas.UserControls.Settings"
     Background="Transparent"
     mc:Ignorable="d">
 
@@ -15,14 +16,34 @@
                 FontWeight="SemiBold"
                 Text="General" />
 
-            <StackPanel Spacing="12">
-                <ToggleSwitch Header="Use Infinite Canvas as default" IsOn="{x:Bind ViewModel.UseInfiniteCanvasAsDefault, Mode=TwoWay}" />
+            <StackPanel Spacing="4">
+                <uc:SettingBlockControl Description="Use Infinite Canvas as default">
+                    <uc:SettingBlockControl.Icon>
+                        <FontIcon Glyph="&#xF58D;" />
+                    </uc:SettingBlockControl.Icon>
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.UseInfiniteCanvasAsDefault, Mode=TwoWay}" Style="{StaticResource ToggleSwitchRight}" />
+                </uc:SettingBlockControl>
 
-                <ToggleSwitch Header="Show confirmation dialog when deleting items" IsOn="{x:Bind ViewModel.ShowDeleteConfirmationDialog, Mode=TwoWay}" />
+                <uc:SettingBlockControl Description="Show confirmation dialog when deleting items">
+                    <uc:SettingBlockControl.Icon>
+                        <FontIcon Glyph="&#xE74D;" />
+                    </uc:SettingBlockControl.Icon>
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.ShowDeleteConfirmationDialog, Mode=TwoWay}" Style="{StaticResource ToggleSwitchRight}" />
+                </uc:SettingBlockControl>
 
-                <ToggleSwitch Header="Permanently delete items as default" IsOn="{x:Bind ViewModel.DeletePermanentlyAsDefault, Mode=TwoWay}" />
+                <uc:SettingBlockControl Description="Permanently delete items as default">
+                    <uc:SettingBlockControl.Icon>
+                        <FontIcon Glyph="&#xE74D;" />
+                    </uc:SettingBlockControl.Icon>
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.DeletePermanentlyAsDefault, Mode=TwoWay}" Style="{StaticResource ToggleSwitchRight}" />
+                </uc:SettingBlockControl>
 
-                <ToggleSwitch Header="Show Timeline widget on Homepage" IsOn="{x:Bind ViewModel.ShowTimelineOnHomepage, Mode=TwoWay}" />
+                <uc:SettingBlockControl Description="Show Timeline widget on Homepage">
+                    <uc:SettingBlockControl.Icon>
+                        <FontIcon Glyph="&#xE81C;" />
+                    </uc:SettingBlockControl.Icon>
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.ShowTimelineOnHomepage, Mode=TwoWay}" Style="{StaticResource ToggleSwitchRight}" />
+                </uc:SettingBlockControl>
             </StackPanel>
 
         </StackPanel>

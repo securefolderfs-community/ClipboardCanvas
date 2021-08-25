@@ -52,13 +52,13 @@
 
             <!--  Medium size mode  -->
             <DataTemplate x:Key="ToolBar_Small_SizeMode" x:DataType="vm:NavigationToolBarControlViewModel">
-                <Border>
+                <Grid Background="{StaticResource NavigationBarBackground}">
                     <!--  Navigation  -->
                     <uc:NavigationControl
                         x:Name="NavigationControls"
                         Grid.Column="1"
                         ViewModel="{x:Bind NavigationControlModel, Mode=TwoWay, Converter={StaticResource InterfaceToNavigationControlViewModelConverter}}" />
-                </Border>
+                </Grid>
             </DataTemplate>
 
             <!--  Medium and large size mode  -->
@@ -159,7 +159,7 @@
                             AutomationProperties.Name="Settings"
                             Background="Transparent"
                             BorderThickness="0"
-                            Command="{x:Bind OpenOrCloseSettingsCommand}">
+                            Command="{x:Bind OpenSettingsCommand}">
                             <StackPanel
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"

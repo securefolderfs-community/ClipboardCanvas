@@ -9,51 +9,8 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <Grid CornerRadius="8">
-        <Grid.ColumnDefinitions>
-            <!--  Image  -->
-            <ColumnDefinition />
-            <!--  Content  -->
-            <ColumnDefinition Width="1.2*" />
-        </Grid.ColumnDefinitions>
-
-        <Image
-            Grid.Column="0"
-            Source="/Assets/OOBE/OOBE_OneCanvas.png"
-            Stretch="Uniform" />
-
-        <!--  Content  -->
-        <Grid
-            Grid.Column="1"
-            Padding="32"
-            Background="{ThemeResource SolidContrastingBackground}"
-            RowSpacing="8">
-            <Grid.RowDefinitions>
-                <!--  Title  -->
-                <RowDefinition />
-                <!--  Description  -->
-                <RowDefinition />
-            </Grid.RowDefinitions>
-
-            <!--  Title  -->
-            <TextBlock
-                Grid.Row="0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                FontSize="24"
-                FontWeight="Bold"
-                Text="One Canvas"
-                TextWrapping="Wrap" />
-
-            <!--  Description  -->
-            <TextBlock
-                Grid.Row="1"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                FontSize="14"
-                Opacity="0.8"
-                Text="Quickly paste and interact with your content on One Canvas. One Canvas gives you a fully-sized interactive preview of various files: &#x0a; &#x0a; - Image preview &#x0a; - Media preview &#x0a; - Text preview &#x0a; - Markdown format preview &#x0a; - Folder and file preview"
-                TextWrapping="Wrap" />
-        </Grid>
-    </Grid>
+    <local:IntroductionScreenGenericPreview
+        Title="One Canvas"
+        Description="Quickly paste and interact with your content on One Canvas. One Canvas gives you a fully-sized interactive preview of various files: &#x0a; &#x0a; - Image preview &#x0a; - Media preview &#x0a; - Text preview &#x0a; - Markdown format preview &#x0a; - Folder and file preview"
+        PreviewImage="/Assets/OOBE/OOBE_OneCanvas.png" />
 </UserControl>

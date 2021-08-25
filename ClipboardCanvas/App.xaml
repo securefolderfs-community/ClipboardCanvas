@@ -12,8 +12,9 @@
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
 
                 <!--  Other dictionaries  -->
-                <ResourceDictionary Source="ResourceDictionaries/ColorsDictionary" />
-                <ResourceDictionary Source="ResourceDictionaries/CanvasDictionary" />
+                <ResourceDictionary Source="ResourceDictionaries/ColorsDictionary.xaml" />
+                <ResourceDictionary Source="ResourceDictionaries/CanvasDictionary.xaml" />
+                <ResourceDictionary Source="ResourceDictionaries/ToggleSwitches.xaml" />
 
                 <ResourceDictionary>
                     <!--  Window size thresholds  -->

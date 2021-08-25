@@ -153,6 +153,9 @@
     <Compile Include="DataModels\Navigation\CanvasPageNavigationParameterModel.cs" />
     <Compile Include="DataModels\Navigation\CollectionPreviewPageNavigationParameterModel.cs" />
     <Compile Include="DataModels\Navigation\HomepageNavigationParameterModel.cs" />
+    <Compile Include="Dialogs\SettingsDialog.xaml.cs">
+      <DependentUpon>SettingsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Enums\StatusCenterOperationType.cs" />
     <Compile Include="EventArguments\InfiniteCanvasEventArgs.cs" />
     <Compile Include="EventArguments\TimelineWidgetEventArgs.cs" />
@@ -164,6 +167,7 @@
     <Compile Include="Models\IIntroductionScreenPanelModel.cs" />
     <Compile Include="ModelViews\IIntroductionScreenPaneView.cs" />
     <Compile Include="ModelViews\ISettingsAboutPageView.cs" />
+    <Compile Include="ModelViews\ISettingsDialogView.cs" />
     <Compile Include="Services\ILogger.cs" />
     <Compile Include="Models\Configuration\CollectionConfigurationModel.cs" />
     <Compile Include="Models\Configuration\InfiniteCanvasConfigurationModel.cs" />
@@ -342,6 +346,12 @@
     <Compile Include="UserControls\OOBE\IntroductionScreenCollections.xaml.cs">
       <DependentUpon>IntroductionScreenCollections.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\OOBE\IntroductionScreenFinish.xaml.cs">
+      <DependentUpon>IntroductionScreenFinish.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\OOBE\IntroductionScreenGenericPreview.xaml.cs">
+      <DependentUpon>IntroductionScreenGenericPreview.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\OOBE\IntroductionScreenInfiniteCanvas.xaml.cs">
       <DependentUpon>IntroductionScreenInfiniteCanvas.xaml</DependentUpon>
     </Compile>
@@ -356,6 +366,15 @@
     </Compile>
     <Compile Include="UserControls\OOBE\IntroductionScreenTimeline.xaml.cs">
       <DependentUpon>IntroductionScreenTimeline.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\OOBE\IntroductionScreenWelcome.xaml.cs">
+      <DependentUpon>IntroductionScreenWelcome.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Settings\SettingBlockControl.xaml.cs">
+      <DependentUpon>SettingBlockControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Settings\SettingBlockHeaderContentControl.xaml.cs">
+      <DependentUpon>SettingBlockHeaderContentControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\SimpleCanvasDisplay\TextSimpleCanvasControl.xaml.cs">
       <DependentUpon>TextSimpleCanvasControl.xaml</DependentUpon>
@@ -423,6 +442,7 @@
     <Compile Include="ValueConverters\ImplicitDataTemplateConverter.cs" />
     <Compile Include="ValueConverters\InterfaceToNavigationControlViewModelConverter.cs" />
     <Compile Include="ValueConverters\InterfaceToSuggestedActionsControlViewModelConverter.cs" />
+    <Compile Include="ValueConverters\NullToBooleanConverter.cs" />
     <Compile Include="ValueConverters\SafeWrapperResultToErrorConverter.cs" />
     <Compile Include="ValueConverters\SelectedItemToBorderThicknessConverter.cs" />
     <Compile Include="ViewModels\CollectionPreviewItemViewModel.cs" />
@@ -443,6 +463,7 @@
     <Compile Include="ViewModels\Pages\SettingsPages\SettingsGeneralPageViewModel.cs" />
     <Compile Include="ViewModels\Pages\SettingsPages\SettingsPastingPageViewModel.cs" />
     <Compile Include="ViewModels\SearchControlViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\SettingsDialogViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\BaseReadOnlyCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\FallbackCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\InfiniteCanvasViewModel.cs" />
@@ -564,6 +585,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\SettingsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\UpdateChangeLogDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -604,6 +629,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ResourceDictionaries\ToggleSwitches.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\CanvasDisplay\FallbackCanvasControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -628,6 +657,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\OOBE\IntroductionScreenFinish.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\OOBE\IntroductionScreenGenericPreview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\OOBE\IntroductionScreenInfiniteCanvas.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -645,6 +682,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\OOBE\IntroductionScreenTimeline.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\OOBE\IntroductionScreenWelcome.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\Settings\SettingBlockControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\Settings\SettingBlockHeaderContentControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

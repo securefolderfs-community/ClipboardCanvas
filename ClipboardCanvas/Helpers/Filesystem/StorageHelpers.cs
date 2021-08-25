@@ -126,6 +126,13 @@ namespace ClipboardCanvas.Helpers.Filesystem
             return await FilesystemOperations.CreateFolder(ApplicationData.Current.LocalFolder, Constants.FileSystem.COLLECTION_ICONS_FOLDERNAME, CreationCollisionOption.OpenIfExists);
         }
 
+        public static async Task<SafeWrapper<StorageFile>> GetExceptionLogFile()
+        {
+            string exceptionLogFilePath = Path.Combine(ApplicationData.Current.LocalFolder.Path, Constants.FileSystem.EXCEPTIONLOG_FILENAME);
+
+            return await ToStorageItemWithError<StorageFile>(exceptionLogFilePath);
+        }
+
         public static async Task<bool> OpenFile(IStorageItem item)
         {
             if (item == null)

@@ -9,51 +9,8 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <Grid CornerRadius="8">
-        <Grid.ColumnDefinitions>
-            <!--  Image  -->
-            <ColumnDefinition />
-            <!--  Content  -->
-            <ColumnDefinition Width="1.2*" />
-        </Grid.ColumnDefinitions>
-
-        <Image
-            Grid.Column="0"
-            Source="/Assets/OOBE/OOBE_InfiniteCanvas.png"
-            Stretch="Uniform" />
-
-        <!--  Content  -->
-        <Grid
-            Grid.Column="1"
-            Padding="32"
-            Background="{ThemeResource SolidContrastingBackground}"
-            RowSpacing="8">
-            <Grid.RowDefinitions>
-                <!--  Title  -->
-                <RowDefinition />
-                <!--  Description  -->
-                <RowDefinition />
-            </Grid.RowDefinitions>
-
-            <!--  Title  -->
-            <TextBlock
-                Grid.Row="0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                FontSize="24"
-                FontWeight="Bold"
-                Text="Infinite Canvas"
-                TextWrapping="Wrap" />
-
-            <!--  Description  -->
-            <TextBlock
-                Grid.Row="1"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                FontSize="14"
-                Opacity="0.8"
-                Text="View your files on limit-free canvas. Infinite Canvas is your desktop sticky board of files that allows you to manage your work in flexible fashion. Drag around pasted files and take a full control of them paste, copy, delete."
-                TextWrapping="Wrap" />
-        </Grid>
-    </Grid>
+    <local:IntroductionScreenGenericPreview
+        Title="Infinite Canvas"
+        Description="View your files on limit-free canvas. Infinite Canvas is your desktop sticky board of files that allows you to manage your work in flexible fashion. Drag around pasted files and take a full control of them paste, copy, delete."
+        PreviewImage="/Assets/OOBE/OOBE_InfiniteCanvas.png" />
 </UserControl>

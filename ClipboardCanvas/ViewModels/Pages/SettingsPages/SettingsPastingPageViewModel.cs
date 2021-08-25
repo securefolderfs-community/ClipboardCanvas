@@ -75,7 +75,7 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         private void ShowReferenceFilesTeachingTip()
         {
-            IsReferenceFilesTeachingTipVisible = true;
+            IsReferenceFilesTeachingTipVisible = !IsReferenceFilesTeachingTipVisible;
         }
     }
 }

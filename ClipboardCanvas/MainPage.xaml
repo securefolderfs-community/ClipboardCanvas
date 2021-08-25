@@ -11,31 +11,6 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
-    <Page.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Light">
-                    <AcrylicBrush
-                        x:Key="PanelBackground"
-                        Windows10version1903:TintLuminosityOpacity="0.60"
-                        BackgroundSource="Backdrop"
-                        FallbackColor="{ThemeResource SolidBackgroundAcrylic}"
-                        TintColor="{ThemeResource SolidBackgroundAcrylic}"
-                        TintOpacity="0.60" />
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Dark">
-                    <AcrylicBrush
-                        x:Key="PanelBackground"
-                        Windows10version1903:TintLuminosityOpacity="0.60"
-                        BackgroundSource="Backdrop"
-                        FallbackColor="{ThemeResource SolidBackgroundAcrylic}"
-                        TintColor="{ThemeResource SolidBackgroundAcrylic}"
-                        TintOpacity="0.60" />
-                </ResourceDictionary>
-            </ResourceDictionary.ThemeDictionaries>
-        </ResourceDictionary>
-    </Page.Resources>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -51,27 +26,15 @@
             Canvas.ZIndex="10" />
 
         <!--  Main content  -->
-        <SplitView
-            x:Name="Split"
+        <uc:DisplayControl
+            x:Name="DisplayControl"
             Grid.Row="1"
-            DisplayMode="Overlay"
-            IsPaneOpen="{x:Bind NavigationToolBar.ViewModel.IsSettingsPaneOpened, Mode=TwoWay}"
-            OpenPaneLength="364"
-            PaneBackground="{ThemeResource PanelBackground}"
-            PanePlacement="Right">
-            <SplitView.Pane>
-                <uc:SettingsPanelControl />
-            </SplitView.Pane>
-
-            <uc:DisplayControl
-                x:Name="DisplayControl"
-                Margin="0,10,0,0"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                IntroductionScreenPanelModel="{x:Bind IntroductionPanel.ViewModel, Mode=OneWay}"
-                NavigationToolBarControlModel="{x:Bind NavigationToolBar.ViewModel, Mode=OneWay}"
-                WindowTitleBarControlModel="{x:Bind WindowTitleBar.ViewModel, Mode=OneWay}" />
-        </SplitView>
+            Margin="0,10,0,0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            IntroductionScreenPanelModel="{x:Bind IntroductionPanel.ViewModel, Mode=OneWay}"
+            NavigationToolBarControlModel="{x:Bind NavigationToolBar.ViewModel, Mode=OneWay}"
+            WindowTitleBarControlModel="{x:Bind WindowTitleBar.ViewModel, Mode=OneWay}" />
 
         <!--  Navigation toolbar  -->
         <uc:NavigationToolBarControl

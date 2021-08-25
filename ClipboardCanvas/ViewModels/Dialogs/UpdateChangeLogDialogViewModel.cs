@@ -86,8 +86,8 @@ namespace ClipboardCanvas.ViewModels.Dialogs
 
             try
             {
-                string owner = "d2dyno1";
-                string repositoryName = "ClipboardCanvas";
+                const string owner = Constants.ClipboardCanvasRepository.REPOSITORY_OWNER;
+                const string repositoryName = Constants.ClipboardCanvasRepository.REPOSITORY_NAME;
 
                 // Get all releases
                 GitHubClient client = new GitHubClient(new ProductHeaderValue(owner));

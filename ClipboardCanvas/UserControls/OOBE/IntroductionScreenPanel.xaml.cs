@@ -27,5 +27,10 @@ namespace ClipboardCanvas.UserControls.OOBE
             get => MainPage.Instance.IntroductionPanelLoad;
             set => MainPage.Instance.IntroductionPanelLoad = value;
         }
+
+        public int ItemsCount
+        {
+            get => IntroductionFilpView.Items.Count;
+        }
     }
 }

@@ -9,6 +9,7 @@ using ClipboardCanvas.Enums;
 using ClipboardCanvas.ViewModels.Dialogs;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
 using ClipboardCanvas.Extensions;
+using ClipboardCanvas.Helpers;
 
 namespace ClipboardCanvas.Services.Implementation
 {
@@ -17,6 +18,11 @@ namespace ClipboardCanvas.Services.Implementation
         private IInAppNotification _lastInAppNotification;
 
         #region IDialogService
+
+        public void CloseAllDialogs()
+        {
+            DialogHelpers.CloseCurrentDialog();
+        }
 
         public IDialog<TViewModel> GetDialog<TViewModel>(TViewModel viewModel)
         {

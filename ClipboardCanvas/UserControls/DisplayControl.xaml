@@ -11,19 +11,17 @@
     Loaded="UserControl_Loaded"
     mc:Ignorable="d">
 
-    <Border>
-        <Grid>
-            <!--
-                Display frame, when the value of attached property changes,
-                event is triggered and page is navigated
-            -->
-            <Frame
-                x:Name="DisplayFrame"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Stretch"
-                CacheSize="0" />
-        </Grid>
-    </Border>
+    <Grid>
+        <!--
+            Display frame, when the value of attached property changes,
+            event is triggered and page is navigated
+        -->
+        <Frame
+            x:Name="DisplayFrame"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Stretch"
+            VerticalContentAlignment="Stretch"
+            CacheSize="0" />
+    </Grid>
 </UserControl>

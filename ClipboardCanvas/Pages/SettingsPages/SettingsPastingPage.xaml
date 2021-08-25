@@ -6,6 +6,7 @@
     xmlns:local="using:ClipboardCanvas.Pages.SettingsPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:uc="using:ClipboardCanvas.UserControls.Settings"
     xmlns:vc="using:ClipboardCanvas.ValueConverters"
     Background="Transparent"
     mc:Ignorable="d">
@@ -21,56 +22,72 @@
                 FontWeight="SemiBold"
                 Text="Pasting" />
 
-            <StackPanel Spacing="12">
-                <ToggleSwitch Header="Open new canvas on paste" IsOn="{x:Bind ViewModel.OpenNewCanvasOnPaste, Mode=TwoWay}" />
+            <StackPanel Spacing="4">
+                <uc:SettingBlockControl Description="Open new canvas on paste">
+                    <uc:SettingBlockControl.Icon>
+                        <FontIcon Glyph="&#xE78B;" />
+                    </uc:SettingBlockControl.Icon>
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.OpenNewCanvasOnPaste, Mode=TwoWay}" Style="{StaticResource ToggleSwitchRight}" />
+                </uc:SettingBlockControl>
 
-                <StackPanel>
-                    <!--  TODO: Add teaching tooltip here  -->
-                    <StackPanel Orientation="Horizontal" Spacing="4">
-                        <ToggleSwitch
-                            Header="Paste files as reference"
-                            IsEnabled="{x:Bind ViewModel.IsInRestrictedAccessMode, Converter={StaticResource BooleanInvertConverter}}"
-                            IsOn="{x:Bind ViewModel.AlwaysPasteFilesAsReference, Mode=TwoWay}" />
-                        <Button
-                            x:Name="ShowReferenceFilesTeachingTip"
-                            Width="30"
-                            Height="30"
-                            Padding="0"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Top"
-                            Background="Transparent"
-                            BorderThickness="0"
-                            Command="{x:Bind ViewModel.ShowReferenceFilesTeachingTipCommand}">
-                            <FontIcon
-                                FontSize="14"
-                                Glyph="&#xE946;"
-                                Opacity="0.7" />
-                        </Button>
-                        <!--  TODO: Show with hero video example  -->
-                        <muxc:TeachingTip
-                            x:Name="ReferenceFilesTeachingTip"
-                            Title="Reference Files"
-                            IsLightDismissEnabled="True"
-                            IsOpen="{x:Bind ViewModel.IsReferenceFilesTeachingTipVisible, Mode=TwoWay}"
-                            PreferredPlacement="Bottom"
-                            Subtitle="Reference Files allow you to paste files without creating copies of them. With this setting enabled, every file is pasted as a reference.&#x0a;&#x0a;A reference file is created pointing to the original file which is seamlessly displayed by Clipboard Canvas."
-                            Target="{x:Bind ShowReferenceFilesTeachingTip}">
-                            <muxc:TeachingTip.IconSource>
-                                <muxc:SymbolIconSource Symbol="Link" />
-                            </muxc:TeachingTip.IconSource>
-                        </muxc:TeachingTip>
-                    </StackPanel>
+                <uc:SettingBlockControl Description="Paste files as reference">
+                    <uc:SettingBlockControl.Icon>
+                        <FontIcon Glyph="&#xE71B;" />
+                    </uc:SettingBlockControl.Icon>
+                    <uc:SettingBlockControl.AdditionalDescription>
+                        <Grid>
+                            <TextBlock
+                                x:Name="RestrictedAccessLimitationsInfo"
+                                x:Load="{x:Bind ViewModel.IsInRestrictedAccessMode}"
+                                Foreground="{ThemeResource WarningYellowBrush}"
+                                Text="Cannot enable this setting while in Restricted Access mode."
+                                TextWrapping="WrapWholeWords" />
+                        </Grid>
+                    </uc:SettingBlockControl.AdditionalDescription>
+                    <uc:SettingBlockControl.AdditionalActionElement>
+                        <Grid>
+                            <Button
+                                x:Name="ShowReferenceFilesTeachingTip"
+                                Width="30"
+                                Height="30"
+                                Padding="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Top"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Command="{x:Bind ViewModel.ShowReferenceFilesTeachingTipCommand}">
+                                <FontIcon
+                                    FontSize="14"
+                                    Glyph="&#xE946;"
+                                    Opacity="0.7" />
+                            </Button>
+                            <!--  TODO: Show with hero video example  -->
+                            <muxc:TeachingTip
+                                x:Name="ReferenceFilesTeachingTip"
+                                Title="Reference Files"
+                                IsLightDismissEnabled="True"
+                                IsOpen="{x:Bind ViewModel.IsReferenceFilesTeachingTipVisible, Mode=TwoWay}"
+                                PreferredPlacement="Bottom"
+                                Subtitle="Reference Files allow you to paste files without creating copies of them. With this setting enabled, every file is pasted as a reference.&#x0a;&#x0a;A reference file is created pointing to the original file which is seamlessly displayed by Clipboard Canvas."
+                                Target="{x:Bind ShowReferenceFilesTeachingTip}">
+                                <muxc:TeachingTip.IconSource>
+                                    <muxc:SymbolIconSource Symbol="Link" />
+                                </muxc:TeachingTip.IconSource>
+                            </muxc:TeachingTip>
+                        </Grid>
+                    </uc:SettingBlockControl.AdditionalActionElement>
+                    <ToggleSwitch
+                        IsEnabled="{x:Bind ViewModel.IsInRestrictedAccessMode, Converter={StaticResource BooleanInvertConverter}}"
+                        IsOn="{x:Bind ViewModel.AlwaysPasteFilesAsReference, Mode=TwoWay}"
+                        Style="{StaticResource ToggleSwitchRight}" />
+                </uc:SettingBlockControl>
 
-                    <TextBlock
-                        x:Name="RestrictedAccessLimitationsInfo"
-                        x:Load="{x:Bind ViewModel.IsInRestrictedAccessMode}"
-                        Foreground="Yellow"
-                        Text="Cannot enable this setting while in Restricted Access mode."
-                        TextWrapping="WrapWholeWords" />
-
-                </StackPanel>
-
-                <ToggleSwitch Header="Prioritize markdown format over raw text format" IsOn="{x:Bind ViewModel.PrioritizeMarkdownOverText, Mode=TwoWay}" />
+                <uc:SettingBlockControl Description="Use markdown format instead of text files">
+                    <uc:SettingBlockControl.Icon>
+                        <FontIcon Glyph="&#xE7C3;" />
+                    </uc:SettingBlockControl.Icon>
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.PrioritizeMarkdownOverText, Mode=TwoWay}" Style="{StaticResource ToggleSwitchRight}" />
+                </uc:SettingBlockControl>
             </StackPanel>
 
         </StackPanel>

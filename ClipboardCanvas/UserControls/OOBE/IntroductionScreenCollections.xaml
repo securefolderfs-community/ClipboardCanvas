@@ -9,51 +9,8 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <Grid CornerRadius="8">
-        <Grid.ColumnDefinitions>
-            <!--  Image  -->
-            <ColumnDefinition />
-            <!--  Content  -->
-            <ColumnDefinition Width="0.8*" />
-        </Grid.ColumnDefinitions>
-
-        <Image
-            Grid.Column="0"
-            Source="/Assets/OOBE/OOBE_Collections.png"
-            Stretch="Uniform" />
-
-        <!--  Content  -->
-        <Grid
-            Grid.Column="1"
-            Padding="32"
-            Background="{ThemeResource SolidContrastingBackground}"
-            RowSpacing="8">
-            <Grid.RowDefinitions>
-                <!--  Title  -->
-                <RowDefinition />
-                <!--  Description  -->
-                <RowDefinition />
-            </Grid.RowDefinitions>
-
-            <!--  Title  -->
-            <TextBlock
-                Grid.Row="0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                FontSize="24"
-                FontWeight="Bold"
-                Text="Manage your workspace using Collections"
-                TextWrapping="Wrap" />
-
-            <!--  Description  -->
-            <TextBlock
-                Grid.Row="1"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                FontSize="14"
-                Opacity="0.8"
-                Text="Use Collections to swiftly move around your workspaces. Customize collections to fit your needs. Group your work in separate folders."
-                TextWrapping="Wrap" />
-        </Grid>
-    </Grid>
+    <local:IntroductionScreenGenericPreview
+        Title="Manage your workspace using Collections"
+        Description="Use Collections to swiftly move around your workspaces. Customize collections to fit your needs. Group your work in separate folders."
+        PreviewImage="/Assets/OOBE/OOBE_Collections.png" />
 </UserControl>

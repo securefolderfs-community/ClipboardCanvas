@@ -6,6 +6,7 @@
     xmlns:local="using:ClipboardCanvas.UserControls.OOBE"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:tuc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:vc="using:ClipboardCanvas.ValueConverters"
     d:DesignHeight="300"
     d:DesignWidth="400"
@@ -17,7 +18,7 @@
     </UserControl.Resources>
 
     <Grid
-        Padding="128,64,128,64"
+        Padding="128,128,128,128"
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch"
         Background="{ThemeResource BackgroundStrongTint}">
@@ -29,14 +30,25 @@
         </Grid.RowDefinitions>
 
         <!--  Flipview  -->
-        <FlipView SelectedIndex="{x:Bind ViewModel.SelectedIndex, Mode=TwoWay}">
-            <local:IntroductionScreenCollections />
-            <local:IntroductionScreenCollectionPreview />
-            <local:IntroductionScreenOneCanvas />
-            <local:IntroductionScreenInfiniteCanvas />
-            <local:IntroductionScreenReferenceFiles />
-            <local:IntroductionScreenTimeline />
-        </FlipView>
+        <tuc:DropShadowPanel
+            BlurRadius="8"
+            CornerRadius="8"
+            IsMasked="True"
+            Color="{ThemeResource SubtleDropShadowColorBrush}">
+            <FlipView
+                x:Name="IntroductionFilpView"
+                CornerRadius="8"
+                SelectedIndex="{x:Bind ViewModel.SelectedIndex, Mode=TwoWay}">
+                <local:IntroductionScreenWelcome />
+                <local:IntroductionScreenCollections />
+                <local:IntroductionScreenCollectionPreview />
+                <local:IntroductionScreenOneCanvas />
+                <local:IntroductionScreenInfiniteCanvas />
+                <local:IntroductionScreenReferenceFiles />
+                <local:IntroductionScreenTimeline />
+                <local:IntroductionScreenFinish />
+            </FlipView>
+        </tuc:DropShadowPanel>
 
         <!--  Caption  -->
         <StackPanel
@@ -59,6 +71,7 @@
                 <muxc:ProgressBar Width="60" Value="{x:Bind ViewModel.Progress1, Mode=OneWay}" />
                 <muxc:ProgressBar Width="60" Value="{x:Bind ViewModel.Progress2, Mode=OneWay}" />
                 <muxc:ProgressBar Width="60" Value="{x:Bind ViewModel.Progress3, Mode=OneWay}" />
+                <muxc:ProgressBar Width="60" Value="{x:Bind ViewModel.Progress4, Mode=OneWay}" />
             </StackPanel>
 
             <!--  Step  -->

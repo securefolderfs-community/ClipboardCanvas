@@ -1,26 +1,25 @@
 ﻿using System.Windows.Input;
+using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 using ClipboardCanvas.Models;
 using ClipboardCanvas.Enums;
+using ClipboardCanvas.Services;
+using ClipboardCanvas.ViewModels.Dialogs;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
     public class NavigationToolBarControlViewModel : ObservableObject, INavigationToolBarControlModel
     {
-        #region Public Properties
+        #region Properties
+
+        private IDialogService DialogService { get; } = Ioc.Default.GetService<IDialogService>();
 
         public INavigationControlModel NavigationControlModel { get; set; } = new NavigationControlViewModel();
 
         public ISuggestedActionsControlModel SuggestedActionsControlModel { get; set; } = new SuggestedActionsControlViewModel();
-
-        private bool _IsSettingsPaneOpened;
-        public bool IsSettingsPaneOpened
-        {
-            get => _IsSettingsPaneOpened;
-            set => SetProperty(ref _IsSettingsPaneOpened, value);
-        }
 
         private bool _IsStatusCenterButtonVisible;
         public bool IsStatusCenterButtonVisible
@@ -33,7 +32,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Commands
 
-        public ICommand OpenOrCloseSettingsCommand { get; private set; }
+        public ICommand OpenSettingsCommand { get; private set; }
 
         #endregion
 
@@ -42,16 +41,16 @@ namespace ClipboardCanvas.ViewModels.UserControls
         public NavigationToolBarControlViewModel()
         {
             // Create Commands
-            OpenOrCloseSettingsCommand = new RelayCommand(OpenOrCloseSettings);
+            OpenSettingsCommand = new AsyncRelayCommand(OpenSettings);
         }
 
         #endregion
 
         #region Command Implementation
 
-        private void OpenOrCloseSettings()
+        private async Task OpenSettings()
         {
-            IsSettingsPaneOpened = !IsSettingsPaneOpened;
+            await DialogService.ShowDialog(new SettingsDialogViewModel());
         }
 
         #endregion

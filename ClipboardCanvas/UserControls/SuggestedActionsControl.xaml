@@ -141,79 +141,77 @@
         </KeyboardAccelerator>
     </UserControl.KeyboardAccelerators>
 
-    <Border>
-        <Grid>
-            <ListView
-                HorizontalContentAlignment="Center"
-                VerticalContentAlignment="Center"
-                IsItemClickEnabled="True"
-                ItemContainerStyle="{StaticResource SuggestedActionsContainerStyle}"
-                ItemsSource="{x:Bind ViewModel.Items}"
-                ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                ScrollViewer.HorizontalScrollMode="Auto"
-                ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                ScrollViewer.VerticalScrollMode="Disabled"
-                SelectionMode="None">
-                <i:Interaction.Behaviors>
-                    <icore:EventTriggerBehavior EventName="ItemClick">
-                        <icore:InvokeCommandAction Command="{x:Bind ViewModel.ItemClickCommand}" />
-                    </icore:EventTriggerBehavior>
-                </i:Interaction.Behaviors>
+    <Grid>
+        <ListView
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            IsItemClickEnabled="True"
+            ItemContainerStyle="{StaticResource SuggestedActionsContainerStyle}"
+            ItemsSource="{x:Bind ViewModel.Items}"
+            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+            ScrollViewer.HorizontalScrollMode="Auto"
+            ScrollViewer.VerticalScrollBarVisibility="Disabled"
+            ScrollViewer.VerticalScrollMode="Disabled"
+            SelectionMode="None">
+            <i:Interaction.Behaviors>
+                <icore:EventTriggerBehavior EventName="ItemClick">
+                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.ItemClickCommand}" />
+                </icore:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
 
-                <ListView.ItemContainerTransitions>
-                    <TransitionCollection>
-                        <PopupThemeTransition />
-                    </TransitionCollection>
-                </ListView.ItemContainerTransitions>
+            <ListView.ItemContainerTransitions>
+                <TransitionCollection>
+                    <PopupThemeTransition />
+                </TransitionCollection>
+            </ListView.ItemContainerTransitions>
 
-                <ListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" Spacing="0" />
-                    </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="vm:SuggestedActionsControlItemViewModel">
-                        <StackPanel Orientation="Horizontal" Spacing="15">
-                            <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
-                                <FontIcon
-                                    x:Name="IconGlyph"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    x:Load="{x:Bind GlyphIconLoad, Mode=OneWay}"
-                                    Glyph="{x:Bind GlyphIcon, Mode=OneWay}" />
-                                <Viewbox
-                                    x:Name="IconImage"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    x:Load="{x:Bind IconImageLoad, Mode=OneWay}"
-                                    StretchDirection="DownOnly">
-                                    <Image Source="{Binding IconImage}" Stretch="UniformToFill" />
-                                </Viewbox>
-                            </Grid>
-                            <TextBlock
-                                Margin="0,0,0,2"
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" Spacing="0" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="vm:SuggestedActionsControlItemViewModel">
+                    <StackPanel Orientation="Horizontal" Spacing="15">
+                        <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <FontIcon
+                                x:Name="IconGlyph"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
-                                Text="{x:Bind DisplayText, Mode=OneWay}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                                x:Load="{x:Bind GlyphIconLoad, Mode=OneWay}"
+                                Glyph="{x:Bind GlyphIcon, Mode=OneWay}" />
+                            <Viewbox
+                                x:Name="IconImage"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                x:Load="{x:Bind IconImageLoad, Mode=OneWay}"
+                                StretchDirection="DownOnly">
+                                <Image Source="{Binding IconImage}" Stretch="UniformToFill" />
+                            </Viewbox>
+                        </Grid>
+                        <TextBlock
+                            Margin="0,0,0,2"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Text="{x:Bind DisplayText, Mode=OneWay}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
 
-            <TextBlock
-                x:Name="NoActionsText"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                x:Load="{x:Bind ViewModel.NoActionsAvailableLoad, Mode=OneWay}"
-                Opacity="0.0"
-                Text="No suggestions available">
-                <tua:Implicit.ShowAnimations>
-                    <tua:OpacityAnimation To="0.6" Duration="0:0:0.3" />
-                </tua:Implicit.ShowAnimations>
-                <tua:Implicit.HideAnimations>
-                    <tua:OpacityAnimation To="0" Duration="0:0:0.3" />
-                </tua:Implicit.HideAnimations>
-            </TextBlock>
-        </Grid>
-    </Border>
+        <TextBlock
+            x:Name="NoActionsText"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            x:Load="{x:Bind ViewModel.NoActionsAvailableLoad, Mode=OneWay}"
+            Opacity="0.0"
+            Text="No suggestions available">
+            <tua:Implicit.ShowAnimations>
+                <tua:OpacityAnimation To="0.6" Duration="0:0:0.3" />
+            </tua:Implicit.ShowAnimations>
+            <tua:Implicit.HideAnimations>
+                <tua:OpacityAnimation To="0" Duration="0:0:0.3" />
+            </tua:Implicit.HideAnimations>
+        </TextBlock>
+    </Grid>
 </UserControl>

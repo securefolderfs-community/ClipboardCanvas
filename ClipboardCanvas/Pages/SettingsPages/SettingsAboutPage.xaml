@@ -5,73 +5,177 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.Pages.SettingsPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:tuc="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:tui="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:uc="using:ClipboardCanvas.UserControls.Settings"
+    xmlns:vc="using:ClipboardCanvas.ValueConverters"
     d:DesignWidth="400"
     Background="Transparent"
     mc:Ignorable="d">
 
-    <Grid Padding="20,16,20,20">
-        <StackPanel Spacing="16">
+    <Page.Resources>
+        <vc:BooleanInvertConverter x:Key="BooleanInvertConverter" />
+    </Page.Resources>
 
-            <!--  App Info  -->
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="80" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+    <Grid Padding="20,8,20,20">
+        <StackPanel Spacing="12">
 
-                <Viewbox
-                    Grid.RowSpan="2"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    StretchDirection="DownOnly">
-                    <Image Source="/Assets/AppLogo.png" Stretch="Uniform" />
-                </Viewbox>
-                <TextBlock
-                    Grid.Column="1"
-                    Padding="12,2,0,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    FontSize="20"
-                    FontWeight="SemiBold"
-                    Text="Clipboard Canvas" />
+            <TextBlock
+                FontSize="25"
+                FontWeight="SemiBold"
+                Text="About" />
 
-                <StackPanel
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Padding="12,0,0,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal"
-                    Spacing="4">
-                    <TextBlock Opacity="0.6" Text="Version" />
-                    <TextBlock Opacity="0.6" Text="{x:Bind ViewModel.VersionNumber}" />
-                </StackPanel>
-            </Grid>
+            <StackPanel Spacing="4">
+                <uc:SettingBlockControl Description="Clipboard Canvas">
+                    <uc:SettingBlockControl.Icon>
+                        <muxc:ImageIcon
+                            Width="32"
+                            Height="32"
+                            Margin="-8,0,-4,0"
+                            Source="/Assets/AppLogo.png" />
+                    </uc:SettingBlockControl.Icon>
+                    <uc:SettingBlockControl.ExpanderContent>
+                        <StackPanel Margin="-16" Spacing="0">
+                            <uc:SettingBlockControl Description="{x:Bind ViewModel.AppVersionText}">
+                                <uc:SettingBlockControl.Icon>
+                                    <FontIcon Glyph="&#xE946;" />
+                                </uc:SettingBlockControl.Icon>
+                                <Button
+                                    Width="32"
+                                    Height="32"
+                                    Padding="0"
+                                    Command="{x:Bind ViewModel.CopyVersionCommand}">
+                                    <FontIcon FontSize="14" Glyph="&#xE8C8;" />
+                                </Button>
+                            </uc:SettingBlockControl>
 
-            <TextBlock FontSize="15" Text="Created and developed by d2dyno" />
+                            <uc:SettingBlockControl Description="Submit feedback">
+                                <uc:SettingBlockControl.Icon>
+                                    <FontIcon Glyph="&#xED15;" />
+                                </uc:SettingBlockControl.Icon>
+                                <Button
+                                    Width="32"
+                                    Height="32"
+                                    Padding="0"
+                                    Command="{x:Bind ViewModel.SubmitFeedbackCommand}">
+                                    <FontIcon FontSize="14" Glyph="&#xE2B4;" />
+                                </Button>
+                            </uc:SettingBlockControl>
 
-            <Button
-                AutomationProperties.Name="Open log file location"
-                Command="{x:Bind ViewModel.OpenLogLocationCommand}"
-                Content="Open log file location" />
+                            <uc:SettingBlockControl Description="Star Clipboard Canvas on GitHub">
+                                <uc:SettingBlockControl.Icon>
+                                    <FontIcon Glyph="&#xE735;" />
+                                </uc:SettingBlockControl.Icon>
+                                <Button
+                                    Width="32"
+                                    Height="32"
+                                    Padding="0"
+                                    Command="{x:Bind ViewModel.OpenOnGitHubCommand}">
+                                    <FontIcon FontSize="14" Glyph="&#xE2B4;" />
+                                </Button>
+                            </uc:SettingBlockControl>
 
-            <Button
-                AutomationProperties.Name="Show introduction screen"
-                Command="{x:Bind ViewModel.ShowIntroductionScreenCommand}"
-                Content="Show introduction screen" />
+                            <uc:SettingBlockControl
+                                ButtonCommand="{x:Bind ViewModel.ShowIntroductionScreenCommand}"
+                                Description="View introduction screen"
+                                IsClickable="True">
+                                <uc:SettingBlockControl.Icon>
+                                    <FontIcon Glyph="&#xE786;" />
+                                </uc:SettingBlockControl.Icon>
+                            </uc:SettingBlockControl>
+                        </StackPanel>
+                    </uc:SettingBlockControl.ExpanderContent>
+                </uc:SettingBlockControl>
 
-            <!--  External links  -->
-            <StackPanel Margin="0,8,0,0" Spacing="4">
-                <HyperlinkButton Command="{x:Bind ViewModel.ShowChangeLogCommand}" Content="Release change log" />
-                <HyperlinkButton Command="{x:Bind ViewModel.SubmitFeedbackCommand}" Content="Submit feedback" />
-                <HyperlinkButton Command="{x:Bind ViewModel.OpenPrivacyPolicyCommand}" Content="Privacy Policy" />
+                <uc:SettingBlockControl
+                    ButtonCommand="{x:Bind ViewModel.ShowChangeLogCommand}"
+                    Description="Release notes"
+                    IsClickable="True">
+                    <uc:SettingBlockControl.Icon>
+                        <FontIcon Glyph="&#xF000;" />
+                    </uc:SettingBlockControl.Icon>
+                </uc:SettingBlockControl>
+
+                <uc:SettingBlockControl Description="Privacy Policy" ExpanderExpandingCommand="{x:Bind ViewModel.LoadPrivacyPolicyCommand}">
+                    <uc:SettingBlockControl.Icon>
+                        <FontIcon Glyph="&#xEA18;" />
+                    </uc:SettingBlockControl.Icon>
+                    <uc:SettingBlockControl.ExpanderContent>
+                        <Grid>
+                            <!--  Loading ring  -->
+                            <StackPanel
+                                x:Name="PrivacyPolicyLoading"
+                                x:Load="{x:Bind ViewModel.PrivacyPolicyProgressRingLoad, Mode=OneWay}"
+                                Spacing="8">
+                                <muxc:ProgressRing IsIndeterminate="True" />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="14"
+                                    Opacity="0.8"
+                                    Text="Pulling Clipboard Canvas privacy policy from GitHub"
+                                    TextWrapping="WrapWholeWords" />
+                            </StackPanel>
+
+                            <!--  Privacy policy text  -->
+                            <ScrollViewer
+                                x:Name="PrivacyPolicyTextScrollViewer"
+                                tui:ScrollViewerExtensions.EnableMiddleClickScrolling="True"
+                                x:Load="{x:Bind ViewModel.PrivacyPolicyProgressRingLoad, Mode=OneWay, Converter={StaticResource BooleanInvertConverter}}">
+                                <tuc:MarkdownTextBlock Background="Transparent" Text="{x:Bind ViewModel.PrivacyPolicyText, Mode=OneWay}" />
+                            </ScrollViewer>
+
+                            <!--  Error  -->
+                            <Grid
+                                x:Name="PrivacyPolicError"
+                                HorizontalAlignment="Stretch"
+                                x:Load="{x:Bind ViewModel.PrivacyPolicyLoadError, Mode=OneWay}"
+                                ColumnSpacing="8"
+                                RowSpacing="8">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.ColumnSpan="2" Text="An error occurred while loading Privacy Policy" />
+
+                                <HyperlinkButton
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Command="{x:Bind ViewModel.OpenPrivacyPolicyCommand}"
+                                    Content="View on GitHub" />
+                                <HyperlinkButton
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Command="{x:Bind ViewModel.LoadPrivacyPolicyCommand}"
+                                    Content="Retry" />
+                            </Grid>
+                        </Grid>
+                    </uc:SettingBlockControl.ExpanderContent>
+                </uc:SettingBlockControl>
+
+                <uc:SettingBlockControl Description="Open log file location">
+                    <uc:SettingBlockControl.Icon>
+                        <FontIcon Glyph="&#xE838;" />
+                    </uc:SettingBlockControl.Icon>
+                    <Button
+                        Width="32"
+                        Height="32"
+                        Padding="0"
+                        Command="{x:Bind ViewModel.OpenLogLocationCommand}">
+                        <FontIcon FontSize="14" Glyph="&#xE2B4;" />
+                    </Button>
+                </uc:SettingBlockControl>
             </StackPanel>
-
         </StackPanel>
     </Grid>
 </Page>

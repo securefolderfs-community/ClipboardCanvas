@@ -1,4 +1,6 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using System;
+using System.Linq;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
@@ -20,6 +22,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.OOBE
         #endregion
 
         #region Public Properties
+
+        private int ItemsCount => _view.ItemsCount;
 
         private int _SelectedIndex = 0;
         public int SelectedIndex
@@ -62,6 +66,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.OOBE
             set => SetProperty(ref _Progress3, value);
         }
 
+        private double _Progress4;
+        public double Progress4
+        {
+            get => _Progress4;
+            set => SetProperty(ref _Progress4, value);
+        }
+
         private bool _BeginButtonLoad;
         public bool BeginButtonLoad
         {
@@ -96,63 +107,58 @@ namespace ClipboardCanvas.ViewModels.UserControls.OOBE
 
         #region Helpers
 
+        private void UpdateTwoHalfProgress(int index, int count, params Action<double>[] progress)
+        {
+            int progressIndex = 0;
+            int progressCount = progress.Count();
+            bool progressHalf = false;
+
+            // Fill
+            for (int i = 0; i < count; i++)
+            {
+                if (i <= index)
+                {
+                    if (!progressHalf)
+                    {
+                        progress[progressIndex](50.0d);
+                        progressHalf = true;
+                    }
+                    else
+                    {
+                        progress[progressIndex](100.0d);
+                        progressHalf = false;
+                        progressIndex++;
+                    }
+                }
+                else
+                {
+                    if (!progressHalf)
+                    {
+                        // Unfill
+                        progress[progressIndex](0.0d);
+                        progressHalf = true;
+                    }
+                    else
+                    {
+                        progressHalf = false;
+                        progressIndex++;
+                    }
+                }
+            }
+        }
+
         private void SelectedIndexChanged(int newIndex)
         {
-            switch (newIndex)
-            {
-                default:
-                case 0:
-                    {
-                        Progress1 = 50.0d;
-                        Progress2 = 0.0d;
-                        Progress3 = 0.0d;
-                        break;
-                    }
+            UpdateTwoHalfProgress(newIndex,
+                _view?.ItemsCount ?? 0,
+                (i1) => Progress1 = i1,
+                (i2) => Progress2 = i2,
+                (i3) => Progress3 = i3,
+                (i4) => Progress4 = i4);
 
-                case 1:
-                    {
-                        Progress1 = 100.0d;
-                        Progress2 = 0.0d;
-                        Progress3 = 0.0d;
-                        break;
-                    }
+            CurrentStepText = $"{newIndex + 1}/{ItemsCount}";
 
-                case 2:
-                    {
-                        Progress1 = 100.0d;
-                        Progress2 = 50.0d;
-                        Progress3 = 0.0d;
-                        break;
-                    }
-
-                case 3:
-                    {
-                        Progress1 = 100.0d;
-                        Progress2 = 100.0d;
-                        Progress3 = 0.0d;
-                        break;
-                    }
-
-                case 4:
-                    {
-                        Progress1 = 100.0d;
-                        Progress2 = 100.0d;
-                        Progress3 = 50.0d;
-                        break;
-                    }
-
-                case 5:
-                    {
-                        Progress1 = 100.0d;
-                        Progress2 = 100.0d;
-                        Progress3 = 100.0d;
-                        break;
-                    }
-            }
-
-            CurrentStepText = $"{newIndex + 1}/6";
-
-            if (newIndex == 5)
+            if (newIndex == (ItemsCount - 1))
             {
                 BeginButtonLoad = true;
             }

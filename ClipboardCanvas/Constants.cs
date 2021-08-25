@@ -2,6 +2,15 @@
 {
     public static class Constants
     {
+        public static class ClipboardCanvasRepository
+        {
+            public const string REPOSITORY_OWNER = "d2dyno1";
+
+            public const string REPOSITORY_NAME = "ClipboardCanvas";
+
+            public const string PRIVACY_POLICY_FILENAME = "Privacy.md";
+        }
+
         public static class LocalSettings
         {
             public const string SETTINGS_FOLDERNAME = "app_settings";
