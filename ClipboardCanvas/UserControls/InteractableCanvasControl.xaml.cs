@@ -154,7 +154,7 @@ namespace ClipboardCanvas.UserControls
                 {
                     IReadOnlyList<IStorageItem> dragData = await dragDataProvider.GetDragData();
 
-                    if (dragData.CheckNotNull())
+                    if (dragData.CheckEveryNotNull())
                     {
                         args.Data.SetStorageItems(await dragDataProvider.GetDragData());
                     }

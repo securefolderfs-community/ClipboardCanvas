@@ -20,6 +20,7 @@ using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.ViewModels.UserControls.CanvasPreview;
+using ClipboardCanvas.DataModels.ContentDataModels;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {
@@ -88,11 +89,18 @@ namespace ClipboardCanvas.ViewModels.Pages
             set => SetProperty(ref _InfiniteCanvasCaptionLoad, value);
         }
 
-        private bool _CanvasRingLoad = false;
+        private bool _CanvasRingLoad;
         public bool CanvasRingLoad
         {
             get => _CanvasRingLoad;
             set => SetProperty(ref _CanvasRingLoad, value);
+        }
+
+        private bool _InfiniteCanvasProgressLoad = false;
+        public bool InfiniteCanvasProgressLoad
+        {
+            get => _InfiniteCanvasProgressLoad;
+            set => SetProperty(ref _InfiniteCanvasProgressLoad, value);
         }
 
         private string _TitleText = DEFAULT_TITLE_TEXT;
@@ -364,11 +372,11 @@ namespace ClipboardCanvas.ViewModels.Pages
         {
             if (e.value == 100.0f)
             {
-                CanvasRingLoad = false;
+                ShowOrHideCanvasLoadingProgress(false, e.contentType);
             }
             else
             {
-                CanvasRingLoad = true;
+                ShowOrHideCanvasLoadingProgress(true, e.contentType);
             }
         }
 
@@ -376,7 +384,7 @@ namespace ClipboardCanvas.ViewModels.Pages
         {
             ErrorTextLoad = true;
             ErrorText = e.errorMessage;
-            CanvasRingLoad = false;
+            ShowOrHideCanvasLoadingProgress(false, null);
 
             if (e.showEmptyCanvas)
             {
@@ -398,15 +406,15 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private async void PasteCanvasModel_OnContentStartedLoadingEvent(object sender, ContentStartedLoadingEventArgs e)
         {
-            await PrepareForContentStartLoading();
+            InfiniteCanvasCaptionLoad = e.contentType is InfiniteCanvasContentType;
+            await PrepareForContentStartLoading(e.contentType);
         }
 
         private void PasteCanvasModel_OnContentLoadedEvent(object sender, ContentLoadedEventArgs e)
         {
             PastedAsReferenceLoad = e.pastedAsReference;
             OverrideReferenceEnabled = e.canPasteReference;
-            InfiniteCanvasCaptionLoad = e.isInfiniteCanvas;
-            CanvasRingLoad = false;
+            ShowOrHideCanvasLoadingProgress(false, e.contentType);
             _contentFinishedLoading = true;
             NewCanvasScreenLoad = false;
             TipTextLoad = false;
@@ -418,7 +426,7 @@ namespace ClipboardCanvas.ViewModels.Pages
         private void PasteCanvasModel_OnContentLoadFailedEvent(object sender, ErrorOccurredEventArgs e)
         {
             _contentFinishedLoading = true;
-            CanvasRingLoad = false;
+            ShowOrHideCanvasLoadingProgress(false, null);
             PastedAsReferenceLoad = false;
 
             _view?.FinishConnectedAnimation();
@@ -426,7 +434,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private async void PasteCanvasModel_OnPasteInitiatedEvent(object sender, PasteInitiatedEventArgs e)
         {
-            await PrepareForContentStartLoading();
+            await PrepareForContentStartLoading(e.contentType);
         }
 
         #endregion
@@ -463,19 +471,41 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         #region Private Helpers
 
-        private async Task PrepareForContentStartLoading()
+        private void ShowOrHideCanvasLoadingProgress(bool show, BaseContentTypeModel contentType)
+        {
+            if (show)
+            {
+                if (contentType is InfiniteCanvasContentType)
+                {
+                    InfiniteCanvasProgressLoad = true;
+                    CanvasRingLoad = false;
+                }
+                else
+                {
+                    InfiniteCanvasProgressLoad = false;
+                    CanvasRingLoad = true;
+                }
+            }
+            else
+            {
+                InfiniteCanvasProgressLoad = false;
+                CanvasRingLoad = false;
+            }
+        }
+
+        private async Task PrepareForContentStartLoading(BaseContentTypeModel contentType)
         {
             _contentFinishedLoading = false;
             NewCanvasScreenLoad = false;
             TipTextLoad = false;
-            CanvasRingLoad = false;
+            ShowOrHideCanvasLoadingProgress(false, contentType);
 
             // Await a short delay before showing the loading ring
             await Task.Delay(Constants.UI.CanvasContent.SHOW_LOADING_RING_DELAY);
 
             if (!_contentFinishedLoading) // The value might have changed
             {
-                CanvasRingLoad = true;
+                ShowOrHideCanvasLoadingProgress(true, contentType);
             }
         }
 

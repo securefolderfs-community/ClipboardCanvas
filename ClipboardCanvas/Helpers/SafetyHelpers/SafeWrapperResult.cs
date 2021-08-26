@@ -1,5 +1,6 @@
 ﻿using System;
 using ClipboardCanvas.Enums;
+using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 
 namespace ClipboardCanvas.Helpers.SafetyHelpers
 {
@@ -37,6 +38,16 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
         public SafeWrapperResult(SafeWrapperResultDetails details)
         {
             this.Details = details;
+        }
+
+        public static SafeWrapperResult FromException(Exception exception, ISafeWrapperExceptionReporter exceptionReporter = null)
+        {
+            if (exceptionReporter == null)
+            {
+                exceptionReporter = StaticExceptionReporters.DefaultSafeWrapperExceptionReporter;
+            }
+
+            return exceptionReporter.GetStatusResult(exception);
         }
 
         public static implicit operator OperationErrorCode(SafeWrapperResult wrapperResult) => wrapperResult?.Details?.errorCode ?? OperationErrorCode.InvalidArgument;

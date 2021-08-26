@@ -90,7 +90,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             this.cancellationToken = cancellationToken;
             SafeWrapperResult fetchDataToViewResult = SafeWrapperResult.SUCCESS;
 
-            RaiseOnPasteInitiatedEvent(this, new PasteInitiatedEventArgs(false, null, associatedCollection));
+            RaiseOnPasteInitiatedEvent(this, new PasteInitiatedEventArgs(false, null, contentType, associatedCollection));
 
             // First, set Infinite Canvas folder
             SafeWrapperResult initializeInfiniteCanvasFolderResult = await InitializeInfiniteCanvasFolder();
@@ -106,9 +106,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
 
             // Get content type from data package
-            BaseContentTypeModel contentType = await BaseContentTypeModel.GetContentTypeFromDataPackage(dataPackage);
+            BaseContentTypeModel pastedItemContentType = await BaseContentTypeModel.GetContentTypeFromDataPackage(dataPackage);
 
-            if (contentType is InvalidContentTypeDataModel invalidContentType)
+            if (pastedItemContentType is InvalidContentTypeDataModel invalidContentType)
             {
                 if (invalidContentType.error == (OperationErrorCode.InvalidOperation | OperationErrorCode.NotAFile))
                 {
@@ -124,7 +124,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
 
                 // Get correct IPasteModel from contentType
-                IPasteModel canvasPasteModel = CanvasHelpers.GetPasteModelFromContentType(contentType, _infiniteCanvasFileReceiver, new StatusCenterOperationReceiver());
+                IPasteModel canvasPasteModel = CanvasHelpers.GetPasteModelFromContentType(pastedItemContentType, _infiniteCanvasFileReceiver, new StatusCenterOperationReceiver());
 
                 if (cancellationToken.IsCancellationRequested) // Check if it's canceled
                 {
@@ -149,7 +149,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 }
 
                 // Add new object to Infinite Canvas
-                var interactableCanvasControlItem = await InteractableCanvasControlModel.AddItem(associatedCollection, contentType, pastedFile, _infiniteCanvasFileReceiver, cancellationToken);
+                var interactableCanvasControlItem = await InteractableCanvasControlModel.AddItem(associatedCollection, pastedItemContentType, pastedFile, _infiniteCanvasFileReceiver, cancellationToken);
 
                 if (cancellationToken.IsCancellationRequested) // Check if it's canceled
                 {
@@ -196,7 +196,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             RefreshContextMenuItems();
 
-            RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, false, false, CanPasteReference, true));
+            RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(pastedItemContentType, false, false, CanPasteReference));
 
             return fetchDataToViewResult;
         }
@@ -323,7 +323,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             RefreshContextMenuItems();
 
-            RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, IsContentLoaded, false, CanPasteReference, true));
+            RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, IsContentLoaded, false, CanPasteReference));
 
             return SafeWrapperResult.SUCCESS;
         }

@@ -9,9 +9,18 @@ namespace ClipboardCanvas.Extensions
     {
         public static int IndexFitBounds(int itemsCount, int wantedIndex) => wantedIndex < 0 ? 0 : (wantedIndex >= itemsCount ? (itemsCount == 0 ? 0 : (itemsCount - 1)) : wantedIndex);
 
-        public static bool IsEmpty<T>(this IEnumerable<T> enumerable) => enumerable == null || !enumerable.Any();
-
         public static void AddFront<T>(this IList<T> list, T item) => list.Insert(0, item);
+
+        public static bool AddIfNotThere<T>(this IList<T> list, T item)
+        {
+            if (!list.Contains(item))
+            {
+                list.Add(item);
+                return true;
+            }
+
+            return false;
+        }
 
         public static void RemoveFront<T>(this IList<T> list)
         {
@@ -28,10 +37,6 @@ namespace ClipboardCanvas.Extensions
                 list.RemoveAt(list.Count - 1);
             }
         }
-
-        public static bool CheckNotNull<T>(this IEnumerable<T> enumerable) => !(enumerable == null || enumerable.Any((item) => item.IsNull()));
-
-        public static List<T> ToListSingle<T>(this T element) => new List<T>() { element };
 
         public static void DisposeClear<T>(this ICollection<T> collection)
         {

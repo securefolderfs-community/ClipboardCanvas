@@ -220,7 +220,7 @@ namespace ClipboardCanvas.DataModels.ContentDataModels
                     }
                     else
                     {
-                        if (WebHelpers.IsValidUrl(text))
+                        if (await WebHelpers.IsValidUrl(text))
                         {
                             // Url preview
                             return new UrlPreviewContentType();

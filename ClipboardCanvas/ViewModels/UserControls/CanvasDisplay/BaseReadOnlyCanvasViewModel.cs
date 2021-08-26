@@ -360,7 +360,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         /// </summary>
         protected virtual void ReportProgress(float value)
         {
-            RaiseOnProgressReportedEvent(this, new ProgressReportedEventArgs(value));
+            RaiseOnProgressReportedEvent(this, new ProgressReportedEventArgs(value, contentType));
         }
 
         protected virtual async Task<SafeWrapperResult> SetContentMode()

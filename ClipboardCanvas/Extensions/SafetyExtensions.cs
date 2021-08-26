@@ -9,10 +9,10 @@ namespace ClipboardCanvas.Extensions
         {
             if (element.IsNull()) // Is null
             {
-                if (throwOnNullDefaultValue && defaultValue.IsNull()) // Default value is null
+                if (defaultValue.IsNull() && throwOnNullDefaultValue) // Default value is null
                 {
                     Debugger.Break();
-                    throw new NullReferenceException($"[PreventNull] Provided defautValue was null!");
+                    throw new NullReferenceException($"[PreventNull] Provided defautValue was null! Type: {typeof(T)}");
                 }
                 else
                 {

@@ -57,7 +57,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             this.cancellationToken = cancellationToken;
 
-            RaiseOnPasteInitiatedEvent(this, new PasteInitiatedEventArgs(IsContentLoaded, dataPackage, associatedCollection));
+            RaiseOnPasteInitiatedEvent(this, new PasteInitiatedEventArgs(IsContentLoaded, dataPackage, contentType, associatedCollection));
 
             if (IsDisposed)
             {

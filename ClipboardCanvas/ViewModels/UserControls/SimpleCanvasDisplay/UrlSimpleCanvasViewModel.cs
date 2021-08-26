@@ -17,11 +17,22 @@ using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Extensions;
+using Windows.UI.Xaml.Media.Imaging;
+using ClipboardCanvas.DataModels;
+using System.Net.Http;
+using System.Threading;
 
 namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
 {
     public class UrlSimpleCanvasViewModel : BaseReadOnlyCanvasViewModel
     {
+        private bool _IsLoading;
+        public bool IsLoading
+        {
+            get => _IsLoading;
+            set => SetProperty(ref _IsLoading, value);
+        }
+
         private string _Url;
         public string Url
         {
@@ -36,11 +47,60 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             set => SetProperty(ref _Title, value);
         }
 
+        private string _SiteName;
+        public string SiteName
+        {
+            get => _SiteName;
+            set => SetProperty(ref _SiteName, value);
+        }
+
         private string _Description;
         public string Description
         {
             get => _Description;
             set => SetProperty(ref _Description, value);
+        }
+
+        private BitmapImage _SiteIcon;
+        public BitmapImage SiteIcon
+        {
+            get => _SiteIcon;
+            set => SetProperty(ref _SiteIcon, value);
+        }
+
+        private bool _ContentImageLoad;
+        public bool ContentImageLoad
+        {
+            get => _ContentImageLoad;
+            set => SetProperty(ref _ContentImageLoad, value);
+        }
+
+        private BitmapImage _ContentImage1;
+        public BitmapImage ContentImage1
+        {
+            get => _ContentImage1;
+            set => SetProperty(ref _ContentImage1, value);
+        }
+
+        private BitmapImage _ContentImage2;
+        public BitmapImage ContentImage2
+        {
+            get => _ContentImage2;
+            set => SetProperty(ref _ContentImage2, value);
+        }
+
+        private BitmapImage _ContentImage3;
+        public BitmapImage ContentImage3
+        {
+            get => _ContentImage3;
+            set => SetProperty(ref _ContentImage3, value);
+        }
+
+        private BitmapImage _ContentImage4;
+        public BitmapImage ContentImage4
+        {
+            get => _ContentImage4;
+            set => SetProperty(ref _ContentImage4, value);
         }
 
         public static List<string> Extensions => new List<string>() {
@@ -50,6 +110,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
         public UrlSimpleCanvasViewModel(IBaseCanvasPreviewControlView view, BaseContentTypeModel contentType)
             : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, contentType, view)
         {
+        }
+
+        public override async Task<SafeWrapperResult> TryLoadExistingData(CanvasItem canvasItem, BaseContentTypeModel contentType, CancellationToken cancellationToken)
+        {
+            IsLoading = true;
+            SafeWrapperResult result = await base.TryLoadExistingData(canvasItem, contentType, cancellationToken);
+            IsLoading = false;
+
+            return result;
         }
 
         protected override async Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item)
@@ -64,32 +133,23 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             {
                 return url;
             }
-
-            if (!WebHelpers.IsValidUrl(url.Result))
-            {
-                return new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentException(), "The URL is not valid.");
-            }
             this.Url = url;
 
-            SafeWrapper<string> rawHtml = await DownloadRawHtmlPage(Url);
+            SafeWrapper<string> rawHtml = await WebHelpers.GetRawHtmlPage(Url, cancellationToken);
             if (!rawHtml)
             {
                 return rawHtml;
             }
 
-            (string title, string description, string rawImage) = GetMetadata(rawHtml);
+            SiteMetadata metadata = GetMetadata(rawHtml);
 
-            this.Title = title;
-            this.Description = description;
+            this._Title = metadata.Title;
+            this._Description = metadata.Description;
+            this._SiteName = metadata.SiteName;
 
-            string rawImageLogo = null;
-            List<string> rawImages = new List<string>();
+            string imageLogo = await FormatImageUrl(metadata.RawIcon, url);
 
-            if (!string.IsNullOrEmpty(rawImage))
-            {
-                rawImages.Add(rawImage);
-            }
-            else
+            if (metadata.RawImages.IsEmpty())
             {
                 List<string> rawImagesFromHtml = GetRawImagesFromRawHtml(rawHtml);
 
@@ -97,55 +157,70 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
                 {
                     if (item2.ToLower().Contains("logo"))
                     {
-                        rawImageLogo = item2;
-                        rawImages.AddFront(item2);
+                        imageLogo = await FormatImageUrl(item2, url);
 
                         break;
                     }
                     else
                     {
-                        rawImages.Add(item2);
+                        metadata.RawImages.Add(item2);
                     }
                 }
             }
+            List<string> imageUrls = await FormatImageUrls(metadata.RawImages, Url);
 
-            List<string> imageUrls = await FormatImageUrls(rawImages, Url);
+            if (!string.IsNullOrEmpty(imageLogo))
+            {
+                SiteIcon = new BitmapImage(new Uri(imageLogo));
+            }
 
+            if (!imageUrls.IsEmpty())
+            {
+                ContentImageLoad = true;
+
+                foreach (var imageLink in imageUrls)
+                {
+                    if (this._ContentImage1 == null)
+                    {
+                        _ContentImage1 = new BitmapImage(new Uri(imageLink));
+                    }
+                    else if (this._ContentImage2 == null)
+                    {
+                        _ContentImage2 = new BitmapImage(new Uri(imageLink));
+                    }
+                    else if (this._ContentImage3 == null)
+                    {
+                        _ContentImage3 = new BitmapImage(new Uri(imageLink));
+                    }
+                    else if (this._ContentImage4 == null)
+                    {
+                        _ContentImage4 = new BitmapImage(new Uri(imageLink));
+                    }
+                }
+            }
 
             return SafeWrapperResult.SUCCESS;
         }
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()
         {
+            OnPropertyChanged(nameof(Title));
+            OnPropertyChanged(nameof(SiteName));
+            OnPropertyChanged(nameof(Description));
+
+            OnPropertyChanged(nameof(ContentImage1));
+            OnPropertyChanged(nameof(ContentImage2));
+            OnPropertyChanged(nameof(ContentImage3));
+            OnPropertyChanged(nameof(ContentImage4));
+
             return SafeWrapperResult.SUCCESS;
         }
 
         #region Helpers
 
-        private async Task<SafeWrapper<string>> DownloadRawHtmlPage(string url)
+        private SiteMetadata GetMetadata(string rawHtml)
         {
-            return await SafeWrapperRoutines.SafeWrapAsync(async () =>
-            {
-                WebRequest request = WebRequest.Create(url);
-                WebResponse response = await request.GetResponseAsync();
-
-                string rawHtml = null;
-                using (StreamReader streamReader = new StreamReader(response.GetResponseStream()))
-                {
-                    rawHtml = await streamReader.ReadToEndAsync();
-                }
-
-                return rawHtml;
-            });
-        }
-
-        private (string title, string description, string rawImage) GetMetadata(string rawHtml)
-        {
-            string title = null;
-            string description = null;
-            string rawImage = null;
-
-            title = GetTitleFromRawHtml(rawHtml);
+            SiteMetadata metadata = new SiteMetadata();
 
             Regex metadataRegex = new Regex("<meta[\\s]+[^>]*?content[\\s]?=[\\s\"\']+(.*?)[\"\']+.*?>");
             MatchCollection metadataMatches = metadataRegex.Matches(rawHtml);
@@ -157,35 +232,45 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
                     for (int i = 0; i <= item.Groups.Count; i++)
                     {
                         string groupValue = item.Groups[i].Value.ToString().ToLower();
+                        string value = item.Groups.Next(i)?.Value;
 
                         if (groupValue.Contains("description"))
                         {
-                            description = item.Groups[i + 1].Value;
+                            metadata.Description = value;
+
+                            break;
+                        }
+                        else if (groupValue.Contains("og:site_name") || groupValue.Contains("og:site"))
+                        {
+                            metadata.SiteName = value;
 
                             break;
                         }
                         else if (groupValue.Contains("og:title"))
                         {
-                            title = item.Groups[i + 1].Value;
+                            metadata.Title = value;
 
                             break;
                         }
                         else if (groupValue.Contains("og:image"))
                         {
-                            if (string.IsNullOrEmpty(rawImage)) // Image might be already set!
+                            try
                             {
-                                rawImage = item.Groups[i + 1].Value;
+                                // Sometimes, we may get numbers representing width and height
+                                _ = Convert.ToInt32(value);
+
+                                // Is a number, don't add it to list
+                            }
+                            catch // Not a number
+                            {
+                                metadata.RawImages.AddIfNotThere(value);
                             }
 
                             break;
                         }
-                        else if (groupValue.Contains("image") && groupValue.Contains("itemprop"))
+                        else if (groupValue.Contains("icon"))
                         {
-                            rawImage = item.Groups[i + 1].Value;
-                            if (rawImage.Length < 5)
-                            {
-                                rawImage = null;
-                            }
+                            metadata.RawIcon = value;
 
                             break;
                         }
@@ -193,12 +278,48 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
                 }
             }
 
-            if (!string.IsNullOrEmpty(description))
+            if (string.IsNullOrEmpty(metadata.Title))
             {
-                description = Uri.UnescapeDataString(description);
+                metadata.Title = GetTitleFromRawHtml(rawHtml);
             }
 
-            return (title, description, rawImage);
+            if (!string.IsNullOrEmpty(metadata.Description))
+            {
+                metadata.Description = Uri.UnescapeDataString(metadata.Description);
+            }
+
+            if (string.IsNullOrEmpty(metadata.RawIcon))
+            {
+                metadata.RawIcon = GetRawIcon(rawHtml);
+            }
+
+            return metadata;
+        }
+
+        private string GetRawIcon(string rawHtml)
+        {
+            Regex iconRegex = new Regex("<link .*? href=\"(.*?.)\"");
+            MatchCollection iconMatches = iconRegex.Matches(rawHtml);
+
+            string rawIcon = null;
+            if (!iconMatches.IsEmpty())
+            {
+                foreach (Match item in iconMatches)
+                {
+                    for (int i = 0; i <= item.Groups.Count; i++)
+                    {
+                        string groupValue = item.Groups[i].Value.ToString().ToLower();
+                        string value = item.Groups.Next(i)?.Value;
+
+                        if (groupValue.Contains("icon") && value != null)
+                        {
+                            rawIcon = value;
+                        }
+                    }
+                }
+            }
+
+            return rawIcon;
         }
 
         private string GetTitleFromRawHtml(string rawHtml)
@@ -210,7 +331,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             }
             else
             {
-                return string.Empty;
+                return null;
             }
         }
 
@@ -235,24 +356,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
 
             foreach (string item in rawImages)
             {
-                if (!string.IsNullOrEmpty(item))
+                string formattedUrl = await FormatImageUrl(item, url);
+                if (!string.IsNullOrEmpty(formattedUrl))
                 {
-                    string formattedUrl;
-
-                    if (!item.Contains("http"))
-                    {
-                        formattedUrl = ($"{url}/{item}").PreventNull(string.Empty).Replace("///", "/").Replace("//", "/").Replace("https:/", "https://");
-                    }
-                    else
-                    {
-                        formattedUrl = item;
-                    }
-
-                    if (await CheckImageUrlIfExists(formattedUrl))
-                    {
-                        validImageUrls.Add(formattedUrl);
-                    }
-
+                    validImageUrls.Add(formattedUrl);
                     if (validImageUrls.Count == Constants.UI.CanvasContent.UrlCanvas.MAX_IMAGES_TO_DISPLAY)
                     {
                         break;
@@ -261,6 +368,51 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             }
 
             return validImageUrls;
+        }
+
+        private async Task<string> FormatImageUrl(string rawImageUrl, string url)
+        {
+            if (!string.IsNullOrEmpty(rawImageUrl))
+            {
+                string formattedUrl;
+
+                if (!rawImageUrl.Contains("http"))
+                {
+                    string baseUrl;
+                    if (rawImageUrl.EndsWith(".ico"))
+                    {
+                        string http;
+                        if (url.Contains("https"))
+                        {
+                            http = "https://";
+                        }
+                        else
+                        {
+                            http = "http://";
+                        }
+
+                        var uri = new Uri(url);
+                        baseUrl = $"{http}{uri.Host}";
+                    }
+                    else
+                    {
+                        baseUrl = url;
+                    }
+
+                    formattedUrl = ($"{baseUrl}/{rawImageUrl}").PreventNull(string.Empty).Replace("///", "/").Replace("//", "/").Replace("https:/", "https://");
+                }
+                else
+                {
+                    formattedUrl = rawImageUrl;
+                }
+
+                if (await CheckImageUrlIfExists(formattedUrl))
+                {
+                    return formattedUrl;
+                }
+            }
+
+            return null;
         }
 
         private async Task<bool> CheckImageUrlIfExists(string imageUrl)

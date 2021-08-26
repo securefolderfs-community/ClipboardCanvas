@@ -22,7 +22,7 @@ namespace ClipboardCanvas.EventArguments.CanvasControl
 
     public class ContentLoadedEventArgs : EventArgs
     {
-        public readonly BaseContentTypeModel contentDataModel;
+        public readonly BaseContentTypeModel contentType;
 
         public readonly bool isFilled;
 
@@ -30,25 +30,22 @@ namespace ClipboardCanvas.EventArguments.CanvasControl
 
         public readonly bool canPasteReference;
 
-        public readonly bool isInfiniteCanvas;
-
-        public ContentLoadedEventArgs(BaseContentTypeModel contentDataModel, bool isFilled, bool pastedAsReference, bool canPasteReference, bool isInfiniteCanvas = false)
+        public ContentLoadedEventArgs(BaseContentTypeModel contentType, bool isFilled, bool pastedAsReference, bool canPasteReference)
         {
-            this.contentDataModel = contentDataModel;
+            this.contentType = contentType;
             this.isFilled = isFilled;
             this.pastedAsReference = pastedAsReference;
             this.canPasteReference = canPasteReference;
-            this.isInfiniteCanvas = isInfiniteCanvas;
         }
     }
 
     public class ContentStartedLoadingEventArgs : EventArgs
     {
-        public readonly BaseContentTypeModel contentDataModel;
+        public readonly BaseContentTypeModel contentType;
 
-        public ContentStartedLoadingEventArgs(BaseContentTypeModel contentDataModel)
+        public ContentStartedLoadingEventArgs(BaseContentTypeModel contentType)
         {
-            this.contentDataModel = contentDataModel;
+            this.contentType = contentType;
         }
     }
 
@@ -58,11 +55,14 @@ namespace ClipboardCanvas.EventArguments.CanvasControl
 
         public readonly DataPackageView forwardedDataPackage;
 
-        public PasteInitiatedEventArgs(bool pasteInNewCanvas, DataPackageView forwardedDataPackage, ICollectionModel collectionModel)
+        public readonly BaseContentTypeModel contentType;
+
+        public PasteInitiatedEventArgs(bool pasteInNewCanvas, DataPackageView forwardedDataPackage, BaseContentTypeModel contentType, ICollectionModel collectionModel)
             : base(collectionModel)
         {
             this.pasteInNewCanvas = pasteInNewCanvas;
             this.forwardedDataPackage = forwardedDataPackage;
+            this.contentType = contentType;
         }
     }
 
@@ -128,9 +128,12 @@ namespace ClipboardCanvas.EventArguments.CanvasControl
     {
         public readonly float value;
 
-        public ProgressReportedEventArgs(float value)
+        public readonly BaseContentTypeModel contentType;
+
+        public ProgressReportedEventArgs(float value, BaseContentTypeModel contentType)
         {
             this.value = value;
+            this.contentType = contentType;
         }
     }
 

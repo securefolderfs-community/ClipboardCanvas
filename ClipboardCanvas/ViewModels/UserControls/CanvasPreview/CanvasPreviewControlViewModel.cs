@@ -9,7 +9,6 @@ using System.Linq;
 
 using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.ModelViews;
-using ClipboardCanvas.Enums;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview

@@ -39,6 +39,7 @@
                 <DataTemplate x:DataType="vm:InteractableCanvasControlItemViewModel">
                     <Grid
                         x:Name="RootContentGrid"
+                        MinHeight="100"
                         Background="{ThemeResource SubtleBackgroundBrush}"
                         BorderBrush="{ThemeResource ButtonBorderBrush}"
                         BorderThickness="1"

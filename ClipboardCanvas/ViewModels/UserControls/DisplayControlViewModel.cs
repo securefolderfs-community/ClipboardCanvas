@@ -376,10 +376,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async void PasteCanvasModel_OnContentLoadedEvent(object sender, ContentLoadedEventArgs e)
         {
-            if (!e.isInfiniteCanvas
+            if (e.contentType is not InfiniteCanvasContentType
                 && CurrentPage == DisplayPageType.CanvasPage
-                && (e.contentDataModel is TextContentType
-                || e.contentDataModel is MarkdownContentType))
+                && (e.contentType is TextContentType
+                || e.contentType is MarkdownContentType))
             {
                 WindowTitleBarControlModel.ShowTitleUnderline = true;
             }

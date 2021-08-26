@@ -7,29 +7,12 @@ namespace ClipboardCanvas.ValueConverters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (parameter is string strParam)
+            if (parameter is string strParam && strParam.ToLower() == "invert")
             {
-                if (strParam.ToLower() == "invert")
-                {
-                    if (value is null)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
+                return value is null;
             }
 
-            if (value is null)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return value is not null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

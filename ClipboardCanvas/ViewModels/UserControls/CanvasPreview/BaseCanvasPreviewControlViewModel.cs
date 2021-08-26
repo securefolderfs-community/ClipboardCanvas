@@ -121,9 +121,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
             if (InitializeViewModelFromContentType(contentType))
             {
-                RaiseOnProgressReportedEvent(this, new ProgressReportedEventArgs(0.0f));
+                RaiseOnProgressReportedEvent(this, new ProgressReportedEventArgs(0.0f, contentType));
                 SafeWrapperResult result = await CanvasViewModel.TryPasteData(dataPackage, cancellationToken);
-                RaiseOnProgressReportedEvent(this, new ProgressReportedEventArgs(100.0f));
+                RaiseOnProgressReportedEvent(this, new ProgressReportedEventArgs(100.0f, contentType));
 
                 return result;
             }

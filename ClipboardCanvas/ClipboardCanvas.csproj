@@ -155,12 +155,14 @@
     <Compile Include="DataModels\Navigation\CanvasPageNavigationParameterModel.cs" />
     <Compile Include="DataModels\Navigation\CollectionPreviewPageNavigationParameterModel.cs" />
     <Compile Include="DataModels\Navigation\HomepageNavigationParameterModel.cs" />
+    <Compile Include="DataModels\SiteMetadata.cs" />
     <Compile Include="Dialogs\SettingsDialog.xaml.cs">
       <DependentUpon>SettingsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Enums\StatusCenterOperationType.cs" />
     <Compile Include="EventArguments\InfiniteCanvasEventArgs.cs" />
     <Compile Include="EventArguments\TimelineWidgetEventArgs.cs" />
+    <Compile Include="Extensions\LinqExtensions.cs" />
     <Compile Include="Helpers\FilesystemChangeWatcher.cs" />
     <Compile Include="Helpers\Filesystem\FilesystemHelpers.cs" />
     <Compile Include="Helpers\JsonHelpers.cs" />

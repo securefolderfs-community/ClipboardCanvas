@@ -234,6 +234,18 @@
             Opacity="0.8"
             Text="Infinite Canvas" />
 
+        <!--  Infinite Canvas progress  -->
+        <muxc:ProgressBar
+            x:Name="InfiniteCanvasProgress"
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
+            Width="200"
+            Margin="0,0,0,6"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            x:Load="{x:Bind ViewModel.InfiniteCanvasProgressLoad, Mode=OneWay}"
+            IsIndeterminate="True" />
+
         <!--  Error text  -->
         <TextBlock
             x:Name="ErrorText"
