@@ -330,9 +330,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         /// </summary>
         /// <param name="result"></param>
         /// <param name="errorMessageAutoHide"></param>
-        /// <param name="showEmptyCanvas"></param>
         /// <returns></returns>
-        protected bool AssertNoError(SafeWrapperResult result, TimeSpan errorMessageAutoHide, bool showEmptyCanvas)
+        protected bool AssertNoError(SafeWrapperResult result, TimeSpan errorMessageAutoHide)
         {
             if (result == null)
             {
@@ -341,8 +340,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             if (!result)
             {
-                RaiseOnErrorOccurredEvent(this, new ErrorOccurredEventArgs(result, result.Message, errorMessageAutoHide, showEmptyCanvas));
-                RaiseOnContentLoadFailedEvent(this, new ErrorOccurredEventArgs(result, result.Message));
+                RaiseOnErrorOccurredEvent(this, new ErrorOccurredEventArgs(result, result.Message, ContentType, errorMessageAutoHide));
+                RaiseOnContentLoadFailedEvent(this, new ErrorOccurredEventArgs(result, result.Message, ContentType));
                 return false;
             }
 
@@ -352,7 +351,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         /// <inheritdoc cref="AssertNoError(SafeWrapperResult, TimeSpan, bool)"/>
         protected bool AssertNoError(SafeWrapperResult result)
         {
-            return AssertNoError(result, TimeSpan.Zero, true);
+            return AssertNoError(result, TimeSpan.Zero);
         }
 
         /// <summary>

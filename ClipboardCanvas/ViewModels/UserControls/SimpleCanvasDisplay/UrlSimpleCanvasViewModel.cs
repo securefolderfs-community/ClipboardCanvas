@@ -150,10 +150,22 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
                 return document;
             }
 
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return SafeWrapperResult.CANCEL;
+            }
+
             HtmlNodeCollection metaTags = document.Result.DocumentNode.SelectNodes("//meta");
 
             // Get metadata
             SiteMetadata metadata = WebHelpers.GetMetadata(metaTags);
+
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return SafeWrapperResult.CANCEL;
+            }
 
             this._Title = metadata.Title;
             this._Description = metadata.Description;
@@ -165,12 +177,30 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
                 metadata.IconUrl = WebHelpers.AlternativeGetIcon(linkNodes);
             }
 
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return SafeWrapperResult.CANCEL;
+            }
+
             List<string> imageUrls = await WebHelpers.FormatImageUrls(metadata.ImageUrls, Url);
             string imageLogo = await WebHelpers.FormatImageUrl(metadata.IconUrl, url);
+
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return SafeWrapperResult.CANCEL;
+            }
 
             if (!string.IsNullOrEmpty(imageLogo))
             {
                 _SiteIcon = await ImagingHelpers.ToImageAsync(new Uri(imageLogo));
+            }
+
+            if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+            {
+                DiscardData();
+                return SafeWrapperResult.CANCEL;
             }
 
             if ((Description?.Length ?? 0) > 85)
@@ -208,6 +238,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
                     else
                     {
                         break;
+                    }
+
+                    if (cancellationToken.IsCancellationRequested) // Check if it's canceled
+                    {
+                        DiscardData();
+                        return SafeWrapperResult.CANCEL;
                     }
                 }
             }

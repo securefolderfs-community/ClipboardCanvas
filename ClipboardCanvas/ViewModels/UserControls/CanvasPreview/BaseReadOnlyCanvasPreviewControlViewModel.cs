@@ -103,7 +103,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             }
             else
             {
-                OnErrorOccurredEvent?.Invoke(this, new ErrorOccurredEventArgs(result, result.Message));
+                OnErrorOccurredEvent?.Invoke(this, new ErrorOccurredEventArgs(result, result.Message, result.Result));
                 return result;
             }
         }
@@ -120,7 +120,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             }
             else
             {
-                OnErrorOccurredEvent?.Invoke(this, new ErrorOccurredEventArgs(result, result.Message));
+                OnErrorOccurredEvent?.Invoke(this, new ErrorOccurredEventArgs(result, result.Message, contentType));
                 return result;
             }
         }
@@ -134,7 +134,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
                 if (result != OperationErrorCode.Canceled && !result)
                 {
-                    OnErrorOccurredEvent?.Invoke(this, new ErrorOccurredEventArgs(result, result?.Message));
+                    OnErrorOccurredEvent?.Invoke(this, new ErrorOccurredEventArgs(result, result?.Message, CanvasViewModel.ContentType));
                     return result;
                 }
                 else if (result != OperationErrorCode.Canceled)

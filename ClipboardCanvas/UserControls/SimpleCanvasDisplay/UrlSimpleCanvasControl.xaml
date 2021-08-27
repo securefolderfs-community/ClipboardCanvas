@@ -56,7 +56,8 @@
                 VerticalAlignment="Center"
                 x:Load="{x:Bind ViewModel.SiteIcon, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}"
                 Source="{x:Bind ViewModel.SiteIcon, Mode=OneWay}"
-                Stretch="UniformToFill" />
+                Stretch="UniformToFill"
+                ToolTipService.ToolTip="{x:Bind ViewModel.SiteName, Mode=OneWay}" />
 
             <!--  Title  -->
             <TextBlock
@@ -67,7 +68,8 @@
                 x:Load="{x:Bind ViewModel.Title, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}"
                 FontWeight="Medium"
                 Text="{x:Bind ViewModel.Title, Mode=OneWay}"
-                TextTrimming="CharacterEllipsis" />
+                TextTrimming="CharacterEllipsis"
+                ToolTipService.ToolTip="{x:Bind ViewModel.Title, Mode=OneWay}" />
 
             <!--  Subtitle (website name)  -->
             <TextBlock
@@ -136,7 +138,7 @@
                         <TextBlock
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
-                            Text="Description" />
+                            Text="More info..." />
                     </muxc:Expander.Header>
                     <ScrollViewer>
                         <TextBlock Text="{x:Bind ViewModel.Description, Mode=OneWay}" TextWrapping="WrapWholeWords" />

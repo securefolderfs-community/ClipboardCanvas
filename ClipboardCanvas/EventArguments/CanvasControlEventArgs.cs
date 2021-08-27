@@ -106,21 +106,21 @@ namespace ClipboardCanvas.EventArguments.CanvasControl
 
         public readonly string errorMessage;
 
-        public readonly bool showEmptyCanvas;
+        public readonly BaseContentTypeModel contentType;
 
         public readonly TimeSpan errorMessageAutoHide;
 
-        public ErrorOccurredEventArgs(SafeWrapperResult error, string errorMessage, bool showEmptyCanvas = true)
-            : this(error, errorMessage, TimeSpan.Zero, showEmptyCanvas)
+        public ErrorOccurredEventArgs(SafeWrapperResult error, string errorMessage, BaseContentTypeModel contentType)
+            : this(error, errorMessage, contentType, TimeSpan.Zero)
         {
         }
 
-        public ErrorOccurredEventArgs(SafeWrapperResult error, string errorMessage, TimeSpan errorMessageAutoHide, bool showEmptyCanvas = true)
+        public ErrorOccurredEventArgs(SafeWrapperResult error, string errorMessage, BaseContentTypeModel contentType, TimeSpan errorMessageAutoHide)
         {
             this.error = error;
             this.errorMessage = errorMessage;
+            this.contentType = contentType;
             this.errorMessageAutoHide = errorMessageAutoHide;
-            this.showEmptyCanvas = showEmptyCanvas;
         }
     }
 

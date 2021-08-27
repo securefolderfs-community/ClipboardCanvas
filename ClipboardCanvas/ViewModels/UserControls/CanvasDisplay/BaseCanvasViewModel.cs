@@ -66,7 +66,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             else if (IsContentLoaded)
             {
                 result = new SafeWrapperResult(OperationErrorCode.AlreadyExists, new InvalidOperationException(), "Content has been already pasted.");
-                RaiseOnErrorOccurredEvent(this, new ErrorOccurredEventArgs(result, result.Message));
+                RaiseOnErrorOccurredEvent(this, new ErrorOccurredEventArgs(result, result.Message, ContentType));
 
                 return result;
             }

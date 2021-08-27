@@ -65,7 +65,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
             if (!result)
             {
-                RaiseOnErrorOccurredEvent(this, new ErrorOccurredEventArgs(result, result.Message));
+                RaiseOnErrorOccurredEvent(this, new ErrorOccurredEventArgs(result, result.Message, contentType));
             }
 
             return result;

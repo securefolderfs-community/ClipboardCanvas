@@ -64,6 +64,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
                 return true;
             }
 
+            // Try for url preview // TODO: Make it url canvas view model
+            if (InitializeViewModelForType<UrlPreviewContentType, TextCanvasViewModel>(contentType, () => new TextCanvasViewModel(view, contentType)))
+            {
+                return true;
+            }
+
             // Try fallback
             if (InitializeViewModelForType<FallbackContentType, FallbackCanvasViewModel>(contentType, () => new FallbackCanvasViewModel(view, contentType)))
             {

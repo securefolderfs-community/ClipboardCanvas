@@ -537,7 +537,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         private bool AssertNoErrorInfiniteCanvas(SafeWrapperResult result)
         {
-            return AssertNoError(result, TimeSpan.FromMilliseconds(Constants.UI.CanvasContent.INFINITE_CANVAS_ERROR_SHOW_TIME), false);
+            return AssertNoError(result, TimeSpan.FromMilliseconds(Constants.UI.CanvasContent.INFINITE_CANVAS_ERROR_SHOW_TIME));
         }
 
         private async Task StartFilesystemChangeWatcher(StorageFolder infiniteCanvasFolder)

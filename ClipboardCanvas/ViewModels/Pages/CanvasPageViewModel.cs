@@ -386,17 +386,25 @@ namespace ClipboardCanvas.ViewModels.Pages
             ErrorText = e.errorMessage;
             ShowOrHideCanvasLoadingProgress(false, null);
 
-            if (e.showEmptyCanvas)
+            TimeSpan errorMessageDelay = e.errorMessageAutoHide;
+            if (e.contentType is not InfiniteCanvasContentType)
             {
                 NewCanvasScreenLoad = false;
                 TipTextLoad = false;
                 PasteCanvasModel?.DiscardData();
             }
+            else
+            {
+                if (errorMessageDelay == TimeSpan.Zero)
+                {
+                    errorMessageDelay = TimeSpan.FromMilliseconds(Constants.UI.CanvasContent.INFINITE_CANVAS_ERROR_SHOW_TIME);
+                }
+            }
 
-            if (e.errorMessageAutoHide != TimeSpan.Zero)
+            if (errorMessageDelay != TimeSpan.Zero)
             {
                 _isInTemporaryErrorLoadPhase = true;
-                await Task.Delay(e.errorMessageAutoHide);
+                await Task.Delay(errorMessageDelay);
                 ErrorText = null;
                 ErrorTextLoad = false;
             }
