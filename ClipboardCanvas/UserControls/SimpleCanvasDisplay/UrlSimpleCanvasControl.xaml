@@ -52,10 +52,11 @@
                 Grid.RowSpan="2"
                 Width="24"
                 Height="24"
-                HorizontalAlignment="Left"
+                HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 x:Load="{x:Bind ViewModel.SiteIcon, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}"
-                Source="{x:Bind ViewModel.SiteIcon, Mode=OneWay}" />
+                Source="{x:Bind ViewModel.SiteIcon, Mode=OneWay}"
+                Stretch="UniformToFill" />
 
             <!--  Title  -->
             <TextBlock
@@ -120,13 +121,35 @@
                 </tuc:UniformGrid>
             </Grid>
 
-            <!--  Content text  -->
-            <TextBlock
+            <!--  Description text  -->
+            <Grid
                 x:Name="DescriptionContent"
                 Grid.Row="1"
-                x:Load="{x:Bind ViewModel.Description, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}"
-                Text="{x:Bind ViewModel.Description, Mode=OneWay}"
-                TextWrapping="WrapWholeWords" />
+                x:Load="{x:Bind ViewModel.Description, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}">
+                <!--  With expander  -->
+                <muxc:Expander
+                    x:Name="DescriptionExpander"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    x:Load="{x:Bind ViewModel.DescriptionExpanderLoad, Mode=OneWay}">
+                    <muxc:Expander.Header>
+                        <TextBlock
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Text="Description" />
+                    </muxc:Expander.Header>
+                    <ScrollViewer>
+                        <TextBlock Text="{x:Bind ViewModel.Description, Mode=OneWay}" TextWrapping="WrapWholeWords" />
+                    </ScrollViewer>
+                </muxc:Expander>
+
+                <!--  Without expander  -->
+                <TextBlock
+                    x:Name="DescriptionText"
+                    x:Load="{x:Bind ViewModel.DescriptionExpanderLoad, Mode=OneWay, Converter={StaticResource BooleanInvertConverter}}"
+                    Text="{x:Bind ViewModel.Description, Mode=OneWay}"
+                    TextWrapping="WrapWholeWords" />
+            </Grid>
 
             <!--  No preview available  -->
             <Grid x:Name="NoPreviewAvailable" x:Load="{x:Bind ViewModel.Description, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}, ConverterParameter='invert'}">

@@ -8,19 +8,25 @@ namespace ClipboardCanvas.DataModels
 {
     public sealed class SiteMetadata
     {
-        public string Title { get; set; }
+        public string SiteUrl { get; set; }
 
-        public string SiteName { get; set; }
+        public string Title { get; set; }
 
         public string Description { get; set; }
 
-        public string RawIcon { get; set; }
+        public string Keywords { get; set; }
 
-        public List<string> RawImages { get; set; }
+        public string IconUrl { get; set; }
+
+        public string SiteName { get; set; }
+
+        public List<string> ImageUrls { get; set; }
+
+        public bool HasAnyData { get; set; }
 
         public SiteMetadata()
         {
-            RawImages = new List<string>();
+            ImageUrls = new List<string>();
         }
     }
 }

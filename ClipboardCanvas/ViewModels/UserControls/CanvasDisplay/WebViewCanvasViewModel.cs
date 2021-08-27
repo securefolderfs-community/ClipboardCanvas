@@ -27,7 +27,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         private WebViewPasteModel WebViewPasteModel => canvasPasteModel as WebViewPasteModel;
 
-        private WebViewContentType WebViewContentType => contentType as WebViewContentType;
+        private WebViewContentType WebViewContentType => ContentType as WebViewContentType;
 
         public WebViewCanvasMode Mode => WebViewContentType.mode;
 

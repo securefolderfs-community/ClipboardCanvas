@@ -24,6 +24,7 @@ using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Extensions;
+using ClipboardCanvas.Interfaces.Canvas;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -164,11 +165,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Command Implementation
 
-        private async Task OpenFile()
-        {
-            await StorageHelpers.OpenFile(await CanvasItem.SourceItem);
-        }
-
         private async Task SetDataToClipboard()
         {
             DataPackage dataPackage = new DataPackage();
@@ -232,6 +228,21 @@ namespace ClipboardCanvas.ViewModels.UserControls
         }
 
         #endregion
+
+        public async Task OpenFile()
+        {
+            if (ReadOnlyCanvasPreviewModel is ICanGetSourceCanvas<IReadOnlyCanvasPreviewModel> canGetSourceCanvas)
+            {
+                if (canGetSourceCanvas.DangerousGetSourceCanvas() is ICanOpenFile canOpenFile)
+                {
+                    await canOpenFile.OpenFile();
+                }
+            }
+            else
+            {
+                await StorageHelpers.OpenFile(await CanvasItem.SourceItem);
+            }
+        }
 
         public async Task InitializeDisplayName()
         {

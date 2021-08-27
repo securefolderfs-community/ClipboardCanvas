@@ -178,7 +178,7 @@ namespace ClipboardCanvas.UserControls
         {
             if ((sender as FrameworkElement)?.DataContext is InteractableCanvasControlItemViewModel itemViewModel)
             {
-                await StorageHelpers.OpenFile(await itemViewModel.CanvasItem.SourceItem);
+                await itemViewModel.OpenFile();
             }
         }
 

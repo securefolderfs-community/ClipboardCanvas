@@ -168,6 +168,8 @@
     <Compile Include="Helpers\JsonHelpers.cs" />
     <Compile Include="Helpers\SettingsSerializationHelpers.cs" />
     <Compile Include="Helpers\TwoWayPropertyUpdater.cs" />
+    <Compile Include="Interfaces\Canvas\ICanGetSourceCanvas.cs" />
+    <Compile Include="Interfaces\Canvas\ICanOpenFile.cs" />
     <Compile Include="Models\IIntroductionScreenPanelModel.cs" />
     <Compile Include="ModelViews\IIntroductionScreenPaneView.cs" />
     <Compile Include="ModelViews\ISettingsAboutPageView.cs" />
@@ -780,6 +782,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack">
+      <Version>1.11.36</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
       <Version>4.3.0</Version>
     </PackageReference>
@@ -820,9 +825,7 @@
       <Version>0.50.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Interfaces\Canvas\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Assets\Fonts\CalcMDL2.ttf" />
   </ItemGroup>

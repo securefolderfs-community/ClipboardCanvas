@@ -9,6 +9,7 @@ using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
 using ClipboardCanvas.Helpers.Filesystem;
+using Windows.UI.Xaml.Media;
 
 namespace ClipboardCanvas.Helpers
 {
@@ -71,6 +72,27 @@ namespace ClipboardCanvas.Helpers
             stream.Seek(0);
             BitmapImage image = new BitmapImage();
             await image.SetSourceAsync(stream);
+
+            return image;
+        }
+
+        public static async Task<ImageSource> ToImageAsync(Uri uri)
+        {
+            IRandomAccessStreamReference uriStream = RandomAccessStreamReference.CreateFromUri(uri);
+            ImageSource image = null;
+
+            using (IRandomAccessStream stream = await uriStream.OpenReadAsync())
+            {
+                if (uri.AbsoluteUri.EndsWith(".svg"))
+                {
+                    image = new SvgImageSource(uri);
+                }
+                else
+                {
+                    image = new BitmapImage();
+                    await (image as BitmapImage).SetSourceAsync(stream);
+                }
+            }
 
             return image;
         }

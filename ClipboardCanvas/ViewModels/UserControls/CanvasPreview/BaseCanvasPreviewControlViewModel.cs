@@ -50,10 +50,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
         public async Task<SafeWrapperResult> TryPasteData(DataPackageView dataPackage, CancellationToken cancellationToken)
         {
             BaseContentTypeModel contentType;
-            
-            if (GetRequestedCanvasTypeFunc() == CanvasType.InfiniteCanvas || CanvasViewModel is InfiniteCanvasViewModel)
+
+            InfiniteCanvasViewModel infiniteCanvasViewModel = CanvasViewModel as InfiniteCanvasViewModel;
+            if (GetRequestedCanvasTypeFunc() == CanvasType.InfiniteCanvas || infiniteCanvasViewModel != null)
             {
-                contentType = new InfiniteCanvasContentType();
+                contentType = infiniteCanvasViewModel?.ContentType ?? new InfiniteCanvasContentType();
             }
             else
             {

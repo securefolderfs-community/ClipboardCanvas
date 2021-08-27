@@ -46,8 +46,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected CancellationToken cancellationToken;
 
-        protected BaseContentTypeModel contentType;
-
         /// <inheritdoc cref="associatedItem"/>
         protected StorageFile associatedFile => associatedItem as StorageFile;
 
@@ -92,6 +90,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public static readonly SafeWrapperResult ItemIsNotAFileResult = new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentException(), "The provided item is not a file.");
 
+        public BaseContentTypeModel ContentType { get; protected set; }
+
         public bool IsContentLoaded { get; protected set; }
 
         public bool CanPasteReference { get; protected set; }
@@ -123,7 +123,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         public BaseReadOnlyCanvasViewModel(ISafeWrapperExceptionReporter errorReporter, BaseContentTypeModel contentType, IBaseCanvasPreviewControlView view)
         {
             this.errorReporter = errorReporter;
-            this.contentType = contentType;
+            this.ContentType = contentType;
             this.view = view;
 
             this.ContextMenuItems = new List<BaseMenuFlyoutItemViewModel>();
@@ -145,7 +145,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             SafeWrapperResult result;
 
             this.cancellationToken = cancellationToken;
-            this.contentType = contentType;
+            this.ContentType = contentType;
             this.canvasItem = canvasItem;
 
             RaiseOnContentStartedLoadingEvent(this, new ContentStartedLoadingEventArgs(contentType));
@@ -360,7 +360,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         /// </summary>
         protected virtual void ReportProgress(float value)
         {
-            RaiseOnProgressReportedEvent(this, new ProgressReportedEventArgs(value, contentType));
+            RaiseOnProgressReportedEvent(this, new ProgressReportedEventArgs(value, ContentType));
         }
 
         protected virtual async Task<SafeWrapperResult> SetContentMode()

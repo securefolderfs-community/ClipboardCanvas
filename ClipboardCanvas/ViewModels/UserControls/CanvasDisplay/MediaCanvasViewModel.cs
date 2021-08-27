@@ -19,7 +19,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
     {
         #region Properties
 
-        private MediaContentType MediaContentType => contentType as MediaContentType;
+        private MediaContentType MediaContentType => ContentType as MediaContentType;
 
         private MediaPasteModel MediaPasteModel => canvasPasteModel as MediaPasteModel;
 

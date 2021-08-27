@@ -89,11 +89,12 @@ namespace ClipboardCanvas.Helpers
                 case WebViewContentType webViewContentType:
                     return new WebViewPasteModel(webViewContentType.mode, canvasItemReceiverModel, operationContextReceiver);
 
-                case FallbackContentType:
-                    return new FallbackPasteModel(canvasItemReceiverModel, operationContextReceiver);
+                case UrlPreviewContentType:
+                    return new UrlPasteModel(canvasItemReceiverModel, operationContextReceiver);
 
                 default:
-                    return null;
+                case FallbackContentType:
+                    return new FallbackPasteModel(canvasItemReceiverModel, operationContextReceiver);
             }
         }
 

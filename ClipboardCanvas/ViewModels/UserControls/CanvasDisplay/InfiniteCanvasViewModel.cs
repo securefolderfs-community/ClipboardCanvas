@@ -90,7 +90,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             this.cancellationToken = cancellationToken;
             SafeWrapperResult fetchDataToViewResult = SafeWrapperResult.SUCCESS;
 
-            RaiseOnPasteInitiatedEvent(this, new PasteInitiatedEventArgs(false, null, contentType, associatedCollection));
+            RaiseOnPasteInitiatedEvent(this, new PasteInitiatedEventArgs(false, null, ContentType, associatedCollection));
 
             // First, set Infinite Canvas folder
             SafeWrapperResult initializeInfiniteCanvasFolderResult = await InitializeInfiniteCanvasFolder();
@@ -205,7 +205,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             this.cancellationToken = cancellationToken;
             this.canvasItem = new InfiniteCanvasItem(canvasItem.AssociatedItem, await canvasItem.SourceItem);
-            this.contentType = contentType;
+            this.ContentType = contentType;
 
             if (IsDisposed)
             {

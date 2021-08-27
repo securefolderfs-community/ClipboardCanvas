@@ -30,7 +30,7 @@
             <SolidColorBrush x:Key="SubtleBorderBrush">#302F2E</SolidColorBrush>
             <SolidColorBrush x:Key="NavigationButtonDisabledBackgroundBrush">#0FFFFFFF</SolidColorBrush>
             <SolidColorBrush x:Key="NavigationButtonsBorderBrush">#0FFFFFFF</SolidColorBrush>
-            <SolidColorBrush x:Key="BackgroundStrongTint">#AA000000</SolidColorBrush>
+            <SolidColorBrush x:Key="BackgroundStrongTint">#DF000000</SolidColorBrush>
             <SolidColorBrush x:Key="SecondaryPanelDimmerBrush">#202020</SolidColorBrush>
 
         </ResourceDictionary>

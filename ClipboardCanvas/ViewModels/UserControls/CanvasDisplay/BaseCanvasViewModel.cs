@@ -57,7 +57,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             this.cancellationToken = cancellationToken;
 
-            RaiseOnPasteInitiatedEvent(this, new PasteInitiatedEventArgs(IsContentLoaded, dataPackage, contentType, associatedCollection));
+            RaiseOnPasteInitiatedEvent(this, new PasteInitiatedEventArgs(IsContentLoaded, dataPackage, ContentType, associatedCollection));
 
             if (IsDisposed)
             {
@@ -116,7 +116,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 CanPasteReference = CheckCanPasteReference();
 
                 RefreshContextMenuItems();
-                RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(contentType, IsContentLoaded, canvasPasteModel.IsContentAsReference, CanPasteReference));
+                RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(ContentType, IsContentLoaded, canvasPasteModel.IsContentAsReference, CanPasteReference));
             }
 
             return SafeWrapperResult.SUCCESS;

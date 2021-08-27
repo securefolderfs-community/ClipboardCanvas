@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using System.Net;
-using System.IO;
-using System.Text.RegularExpressions;
+using Windows.UI.Xaml.Media.Imaging;
+using System.Threading;
+using HtmlAgilityPack;
+using Windows.System;
 
 using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
@@ -14,17 +14,15 @@ using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 using ClipboardCanvas.Helpers.Filesystem;
-using ClipboardCanvas.Helpers;
-using ClipboardCanvas.Enums;
 using ClipboardCanvas.Extensions;
-using Windows.UI.Xaml.Media.Imaging;
 using ClipboardCanvas.DataModels;
-using System.Net.Http;
-using System.Threading;
+using ClipboardCanvas.Interfaces.Canvas;
+using ClipboardCanvas.Helpers;
+using Windows.UI.Xaml.Media;
 
 namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
 {
-    public class UrlSimpleCanvasViewModel : BaseReadOnlyCanvasViewModel
+    public class UrlSimpleCanvasViewModel : BaseReadOnlyCanvasViewModel, ICanOpenFile
     {
         private bool _IsLoading;
         public bool IsLoading
@@ -61,8 +59,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             set => SetProperty(ref _Description, value);
         }
 
-        private BitmapImage _SiteIcon;
-        public BitmapImage SiteIcon
+        private bool _DescriptionExpanderLoad;
+        public bool DescriptionExpanderLoad
+        {
+            get => _DescriptionExpanderLoad;
+            set => SetProperty(ref _DescriptionExpanderLoad, value);
+        }
+
+        private ImageSource _SiteIcon;
+        public ImageSource SiteIcon
         {
             get => _SiteIcon;
             set => SetProperty(ref _SiteIcon, value);
@@ -75,29 +80,29 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             set => SetProperty(ref _ContentImageLoad, value);
         }
 
-        private BitmapImage _ContentImage1;
-        public BitmapImage ContentImage1
+        private ImageSource _ContentImage1;
+        public ImageSource ContentImage1
         {
             get => _ContentImage1;
             set => SetProperty(ref _ContentImage1, value);
         }
 
-        private BitmapImage _ContentImage2;
-        public BitmapImage ContentImage2
+        private ImageSource _ContentImage2;
+        public ImageSource ContentImage2
         {
             get => _ContentImage2;
             set => SetProperty(ref _ContentImage2, value);
         }
 
-        private BitmapImage _ContentImage3;
-        public BitmapImage ContentImage3
+        private ImageSource _ContentImage3;
+        public ImageSource ContentImage3
         {
             get => _ContentImage3;
             set => SetProperty(ref _ContentImage3, value);
         }
 
-        private BitmapImage _ContentImage4;
-        public BitmapImage ContentImage4
+        private ImageSource _ContentImage4;
+        public ImageSource ContentImage4
         {
             get => _ContentImage4;
             set => SetProperty(ref _ContentImage4, value);
@@ -111,6 +116,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, contentType, view)
         {
         }
+
+        #region Override
 
         public override async Task<SafeWrapperResult> TryLoadExistingData(CanvasItem canvasItem, BaseContentTypeModel contentType, CancellationToken cancellationToken)
         {
@@ -135,45 +142,47 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             }
             this.Url = url;
 
-            SafeWrapper<string> rawHtml = await WebHelpers.GetRawHtmlPage(Url, cancellationToken);
-            if (!rawHtml)
+            // Set the document
+            var webGet = new HtmlWeb();
+            SafeWrapper<HtmlDocument> document = await SafeWrapperRoutines.SafeWrapAsync(() => webGet.LoadFromWebAsync(Url, cancellationToken));
+            if (!document)
             {
-                return rawHtml;
+                return document;
             }
 
-            SiteMetadata metadata = GetMetadata(rawHtml);
+            HtmlNodeCollection metaTags = document.Result.DocumentNode.SelectNodes("//meta");
+
+            // Get metadata
+            SiteMetadata metadata = WebHelpers.GetMetadata(metaTags);
 
             this._Title = metadata.Title;
             this._Description = metadata.Description;
             this._SiteName = metadata.SiteName;
 
-            string imageLogo = await FormatImageUrl(metadata.RawIcon, url);
-
-            if (metadata.RawImages.IsEmpty())
+            if (string.IsNullOrEmpty(metadata.IconUrl))
             {
-                List<string> rawImagesFromHtml = GetRawImagesFromRawHtml(rawHtml);
-
-                foreach (var item2 in rawImagesFromHtml)
-                {
-                    if (item2.ToLower().Contains("logo"))
-                    {
-                        imageLogo = await FormatImageUrl(item2, url);
-
-                        break;
-                    }
-                    else
-                    {
-                        metadata.RawImages.Add(item2);
-                    }
-                }
+                HtmlNodeCollection linkNodes = document.Result.DocumentNode.SelectNodes("//link");
+                metadata.IconUrl = WebHelpers.AlternativeGetIcon(linkNodes);
             }
-            List<string> imageUrls = await FormatImageUrls(metadata.RawImages, Url);
+
+            List<string> imageUrls = await WebHelpers.FormatImageUrls(metadata.ImageUrls, Url);
+            string imageLogo = await WebHelpers.FormatImageUrl(metadata.IconUrl, url);
 
             if (!string.IsNullOrEmpty(imageLogo))
             {
-                SiteIcon = new BitmapImage(new Uri(imageLogo));
+                _SiteIcon = await ImagingHelpers.ToImageAsync(new Uri(imageLogo));
             }
 
+            if ((Description?.Length ?? 0) > 85)
+            {
+                DescriptionExpanderLoad = true;
+            }
+            else
+            {
+                DescriptionExpanderLoad = false;
+            }
+
+            // Set images
             if (!imageUrls.IsEmpty())
             {
                 ContentImageLoad = true;
@@ -182,262 +191,63 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
                 {
                     if (this._ContentImage1 == null)
                     {
-                        _ContentImage1 = new BitmapImage(new Uri(imageLink));
+                        _ContentImage1 = await ImagingHelpers.ToImageAsync(new Uri(imageLink));
                     }
                     else if (this._ContentImage2 == null)
                     {
-                        _ContentImage2 = new BitmapImage(new Uri(imageLink));
+                        _ContentImage2 = await ImagingHelpers.ToImageAsync(new Uri(imageLink));
                     }
                     else if (this._ContentImage3 == null)
                     {
-                        _ContentImage3 = new BitmapImage(new Uri(imageLink));
+                        _ContentImage3 = await ImagingHelpers.ToImageAsync(new Uri(imageLink));
                     }
                     else if (this._ContentImage4 == null)
                     {
-                        _ContentImage4 = new BitmapImage(new Uri(imageLink));
+                        _ContentImage4 = await ImagingHelpers.ToImageAsync(new Uri(imageLink));
                     }
-                }
-            }
-
-            return SafeWrapperResult.SUCCESS;
-        }
-
-        protected override async Task<SafeWrapperResult> TryFetchDataToView()
-        {
-            OnPropertyChanged(nameof(Title));
-            OnPropertyChanged(nameof(SiteName));
-            OnPropertyChanged(nameof(Description));
-
-            OnPropertyChanged(nameof(ContentImage1));
-            OnPropertyChanged(nameof(ContentImage2));
-            OnPropertyChanged(nameof(ContentImage3));
-            OnPropertyChanged(nameof(ContentImage4));
-
-            return SafeWrapperResult.SUCCESS;
-        }
-
-        #region Helpers
-
-        private SiteMetadata GetMetadata(string rawHtml)
-        {
-            SiteMetadata metadata = new SiteMetadata();
-
-            Regex metadataRegex = new Regex("<meta[\\s]+[^>]*?content[\\s]?=[\\s\"\']+(.*?)[\"\']+.*?>");
-            MatchCollection metadataMatches = metadataRegex.Matches(rawHtml);
-
-            if (!metadataMatches.IsEmpty())
-            {
-                foreach (Match item in metadataMatches)
-                {
-                    for (int i = 0; i <= item.Groups.Count; i++)
-                    {
-                        string groupValue = item.Groups[i].Value.ToString().ToLower();
-                        string value = item.Groups.Next(i)?.Value;
-
-                        if (groupValue.Contains("description"))
-                        {
-                            metadata.Description = value;
-
-                            break;
-                        }
-                        else if (groupValue.Contains("og:site_name") || groupValue.Contains("og:site"))
-                        {
-                            metadata.SiteName = value;
-
-                            break;
-                        }
-                        else if (groupValue.Contains("og:title"))
-                        {
-                            metadata.Title = value;
-
-                            break;
-                        }
-                        else if (groupValue.Contains("og:image"))
-                        {
-                            try
-                            {
-                                // Sometimes, we may get numbers representing width and height
-                                _ = Convert.ToInt32(value);
-
-                                // Is a number, don't add it to list
-                            }
-                            catch // Not a number
-                            {
-                                metadata.RawImages.AddIfNotThere(value);
-                            }
-
-                            break;
-                        }
-                        else if (groupValue.Contains("icon"))
-                        {
-                            metadata.RawIcon = value;
-
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (string.IsNullOrEmpty(metadata.Title))
-            {
-                metadata.Title = GetTitleFromRawHtml(rawHtml);
-            }
-
-            if (!string.IsNullOrEmpty(metadata.Description))
-            {
-                metadata.Description = Uri.UnescapeDataString(metadata.Description);
-            }
-
-            if (string.IsNullOrEmpty(metadata.RawIcon))
-            {
-                metadata.RawIcon = GetRawIcon(rawHtml);
-            }
-
-            return metadata;
-        }
-
-        private string GetRawIcon(string rawHtml)
-        {
-            Regex iconRegex = new Regex("<link .*? href=\"(.*?.)\"");
-            MatchCollection iconMatches = iconRegex.Matches(rawHtml);
-
-            string rawIcon = null;
-            if (!iconMatches.IsEmpty())
-            {
-                foreach (Match item in iconMatches)
-                {
-                    for (int i = 0; i <= item.Groups.Count; i++)
-                    {
-                        string groupValue = item.Groups[i].Value.ToString().ToLower();
-                        string value = item.Groups.Next(i)?.Value;
-
-                        if (groupValue.Contains("icon") && value != null)
-                        {
-                            rawIcon = value;
-                        }
-                    }
-                }
-            }
-
-            return rawIcon;
-        }
-
-        private string GetTitleFromRawHtml(string rawHtml)
-        {
-            Match match = Regex.Match(rawHtml, @"\<title\b[^>]*\>\s*(?<Title>[\s\S]*?)\</title\>");
-            if (match.Success)
-            {
-                return match.Groups[1].Value;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        private List<string> GetRawImagesFromRawHtml(string rawHtml)
-        {
-            List<string> rawImages = new List<string>();
-            Regex rawImagesRegex = new Regex(@"<img\b[^\<\>]+?\bsrc\s*=\s*[""'](?<L>.+?)[""'][^\<\>]*?\>");
-            MatchCollection rawImagesMatches = rawImagesRegex.Matches(rawHtml);
-
-            foreach (Match item in rawImagesMatches)
-            {
-                string imageLink = item.Groups["L"].Value;
-                rawImages.Add(imageLink);
-            }
-
-            return rawImages;
-        }
-
-        private async Task<List<string>> FormatImageUrls(List<string> rawImages, string url)
-        {
-            List<string> validImageUrls = new List<string>();
-
-            foreach (string item in rawImages)
-            {
-                string formattedUrl = await FormatImageUrl(item, url);
-                if (!string.IsNullOrEmpty(formattedUrl))
-                {
-                    validImageUrls.Add(formattedUrl);
-                    if (validImageUrls.Count == Constants.UI.CanvasContent.UrlCanvas.MAX_IMAGES_TO_DISPLAY)
+                    else
                     {
                         break;
                     }
                 }
             }
 
-            return validImageUrls;
+            return SafeWrapperResult.SUCCESS;
         }
 
-        private async Task<string> FormatImageUrl(string rawImageUrl, string url)
+        protected override Task<SafeWrapperResult> TryFetchDataToView()
         {
-            if (!string.IsNullOrEmpty(rawImageUrl))
-            {
-                string formattedUrl;
+            OnPropertyChanged(nameof(Title));
+            OnPropertyChanged(nameof(SiteName));
+            OnPropertyChanged(nameof(Description));
+            OnPropertyChanged(nameof(SiteIcon));
 
-                if (!rawImageUrl.Contains("http"))
-                {
-                    string baseUrl;
-                    if (rawImageUrl.EndsWith(".ico"))
-                    {
-                        string http;
-                        if (url.Contains("https"))
-                        {
-                            http = "https://";
-                        }
-                        else
-                        {
-                            http = "http://";
-                        }
+            OnPropertyChanged(nameof(ContentImage1));
+            OnPropertyChanged(nameof(ContentImage2));
+            OnPropertyChanged(nameof(ContentImage3));
+            OnPropertyChanged(nameof(ContentImage4));
 
-                        var uri = new Uri(url);
-                        baseUrl = $"{http}{uri.Host}";
-                    }
-                    else
-                    {
-                        baseUrl = url;
-                    }
-
-                    formattedUrl = ($"{baseUrl}/{rawImageUrl}").PreventNull(string.Empty).Replace("///", "/").Replace("//", "/").Replace("https:/", "https://");
-                }
-                else
-                {
-                    formattedUrl = rawImageUrl;
-                }
-
-                if (await CheckImageUrlIfExists(formattedUrl))
-                {
-                    return formattedUrl;
-                }
-            }
-
-            return null;
+            return Task.FromResult(SafeWrapperResult.SUCCESS);
         }
 
-        private async Task<bool> CheckImageUrlIfExists(string imageUrl)
+        protected override void RefreshContextMenuItems()
         {
-            SafeWrapper<bool> existsResult = await SafeWrapperRoutines.SafeWrapAsync(async () =>
+            base.RefreshContextMenuItems();
+        }
+
+        #endregion
+
+        #region Helpers
+
+        public async Task OpenFile()
+        {
+            if (!string.IsNullOrEmpty(Url))
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(imageUrl);
-                request.Method = "HEAD";
-
-                request.UseDefaultCredentials = true;
-                request.Accept = "*/*";
-                request.Proxy.Credentials = CredentialCache.DefaultCredentials;
-
-                await request.GetResponseAsync();
-
-                return true;
-            });
-
-            if (existsResult)
-            {
-                return existsResult.Result;
+                await Launcher.LaunchUriAsync(new Uri(Url));
             }
             else
             {
-                return false;
+                await StorageHelpers.OpenFile(await sourceItem);
             }
         }
 
