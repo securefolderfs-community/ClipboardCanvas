@@ -4,6 +4,7 @@
     {
         General = 0,
         Pasting = 1,
-        About = 2
+        Notifications = 2,
+        About = 3
     }
 }

@@ -24,6 +24,12 @@ namespace ClipboardCanvas.AttachedProperties
                         break;
                     }
 
+                case SettingsPageType.Notifications:
+                    {
+                        sender.Navigate(typeof(SettingsNotificationsPage), newValue, newValue.transitionInfo);
+                        break;
+                    }
+
                 case SettingsPageType.About:
                     {
                         sender.Navigate(typeof(SettingsAboutPage), newValue, newValue.transitionInfo);

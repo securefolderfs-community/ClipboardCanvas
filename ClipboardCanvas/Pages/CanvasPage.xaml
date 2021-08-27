@@ -235,6 +235,10 @@
             Text="Infinite Canvas" />
 
         <!--  Infinite Canvas progress  -->
+        <!--
+            TODO: Add smooth showing/hiding attached property >> when hide is requested,
+            hide only when the progress bar is not visible
+        -->
         <muxc:ProgressBar
             x:Name="InfiniteCanvasProgress"
             Grid.Row="1"

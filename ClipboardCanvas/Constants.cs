@@ -59,6 +59,8 @@
                 public const int NOTIFICATION_PROGRESSBAR_REFRESH_INTERVAL = 50;
 
                 public const int NOTIFICATION_DEFAULT_SHOW_TIME = 4000;
+
+                public const string TOAST_NOTIFICATION_ERROR_ARGUMENT = "clipboard_canvas__report_error";
             }
 
             public static class Animations
@@ -95,6 +97,8 @@
             public const string INFINITE_CANVAS_PREVIEW_IMAGE_FILENAME = "infinite_canvas_preview.png";
 
             public const string CANVAS_FILE_FILENAME_DATE_FORMAT = "dd.MM.yyyy HH_mm_ss";
+
+            public const string EXCEPTION_BLOCK_DATE_FORMAT = "dd.MM.yyyy HH_mm_ss";
 
             public const int COPY_FILE_BUFFER_SIZE = 1024 * 1024; // 1mb
         }

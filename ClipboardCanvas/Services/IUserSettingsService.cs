@@ -8,6 +8,11 @@ namespace ClipboardCanvas.Services
         event EventHandler<SettingChangedEventArgs> OnSettingChangedEvent;
 
         /// <summary>
+        /// Determines whether to push a notification when app crashes
+        /// </summary>
+        bool PushErrorNotification { get; set; }
+
+        /// <summary>
         /// Determines whether to show Timeline widget on homepage
         /// </summary>
         bool ShowTimelineOnHomepage { get; set; }

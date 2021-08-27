@@ -54,6 +54,12 @@ namespace ClipboardCanvas.Dialogs
 
                 case 2:
                     {
+                        this.ViewModel.UpdateNavigation(SettingsPageType.Notifications);
+                        break;
+                    }
+
+                case 3:
+                    {
                         this.ViewModel.UpdateNavigation(SettingsPageType.About);
                         break;
                     }

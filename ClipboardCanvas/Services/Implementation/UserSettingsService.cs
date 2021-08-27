@@ -23,6 +23,7 @@ namespace ClipboardCanvas.Services
 
         private void TrackAppCenterAnalytics()
         {
+            Analytics.TrackEvent($"{nameof(PushErrorNotification)} {PushErrorNotification}");
             Analytics.TrackEvent($"{nameof(ShowTimelineOnHomepage)} {ShowTimelineOnHomepage}");
             Analytics.TrackEvent($"{nameof(DeletePermanentlyAsDefault)} {DeletePermanentlyAsDefault}");
             Analytics.TrackEvent($"{nameof(OpenNewCanvasOnPaste)} {OpenNewCanvasOnPaste}");
@@ -35,6 +36,12 @@ namespace ClipboardCanvas.Services
         #endregion
 
         #region IUserSettings
+
+        public bool PushErrorNotification
+        {
+            get => Get<bool>(true);
+            set => Set<bool>(value);
+        }
 
         public bool ShowTimelineOnHomepage
         {

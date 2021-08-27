@@ -61,11 +61,25 @@
                     x:Name="Pasting"
                     AutomationProperties.Name="Pasting Settings"
                     Content="Pasting"
-                    IsSelected="True"
+                    IsSelected="False"
                     Tag="1"
                     ToolTipService.ToolTip="Pasting Settings">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE77F;" />
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+                <!--  Notifications  -->
+                <!--  TODO: When more notification types are added, re-enable this  -->
+                <muxc:NavigationViewItem
+                    x:Name="Notifications"
+                    AutomationProperties.Name="Notifications"
+                    Content="Notifications"
+                    IsSelected="False"
+                    Tag="2"
+                    ToolTipService.ToolTip="Notifications Settings"
+                    Visibility="Collapsed">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE91C;" />
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
             </muxc:NavigationView.MenuItems>
@@ -76,8 +90,8 @@
                     x:Name="About"
                     AutomationProperties.Name="About Clipboard Canvas"
                     Content="About"
-                    IsSelected="True"
-                    Tag="2"
+                    IsSelected="False"
+                    Tag="3"
                     ToolTipService.ToolTip="Pasting Clipboard Canvas">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE946;" />

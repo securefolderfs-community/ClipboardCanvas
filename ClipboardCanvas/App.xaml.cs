@@ -15,6 +15,10 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Toolkit.Uwp.Notifications;
+using Windows.UI.Notifications;
+using Windows.System;
+using Windows.Storage;
 
 using ClipboardCanvas.Services;
 using ClipboardCanvas.Services.Implementation;
@@ -83,6 +87,54 @@ namespace ClipboardCanvas
             return services.BuildServiceProvider();
         }
 
+        protected override async void OnActivated(IActivatedEventArgs e)
+        {
+            var rootFrame = EnsureWindowIsInitialized();
+
+            switch (e.Kind)
+            {
+                case ActivationKind.ToastNotification:
+                    {
+                        var notificationEventArgs = e as ToastNotificationActivatedEventArgs;
+                        switch (notificationEventArgs.Argument)
+                        {
+                            case Constants.UI.Notifications.TOAST_NOTIFICATION_ERROR_ARGUMENT:
+                                {
+                                    await Launcher.LaunchUriAsync(new Uri(ApplicationData.Current.LocalFolder.Path));
+                                    await Launcher.LaunchFolderAsync(ApplicationData.Current.LocalFolder);
+                                    break;
+                                }
+                        }
+
+                        break;
+                    }
+            }
+
+            base.OnActivated(e);
+
+            // Ensure the current window is active.
+            rootFrame.Navigate(typeof(MainPage), null, new SuppressNavigationTransitionInfo());
+            Window.Current.Activate();
+        }
+
+        private Frame EnsureWindowIsInitialized()
+        {
+            // Do not repeat app initialization when the Window already has content,
+            // just ensure that the window is active
+            if (!(Window.Current.Content is Frame rootFrame))
+            {
+                // Create a Frame to act as the navigation context and navigate to the first page
+                rootFrame = new Frame();
+                rootFrame.CacheSize = 1;
+                rootFrame.NavigationFailed += OnNavigationFailed;
+
+                // Place the frame in the current Window
+                Window.Current.Content = rootFrame;
+            }
+
+            return rootFrame;
+        }
+
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e) => LogException(e.Exception);
 
         private void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e) => LogException(e.Exception, () => e.Handled = true);
@@ -91,12 +143,12 @@ namespace ClipboardCanvas
 
         private void LogException(Exception e, Action tryHandleException = null)
         {
+#if DEBUG
             if (tryHandleException == null)
             {
                 tryHandleException = () => { };
             }
 
-#if DEBUG
             Debug.WriteLine("--------- UNHANDLED EXCEPTION ---------");
             if (e != null)
             {
@@ -144,6 +196,20 @@ namespace ClipboardCanvas
             }
 #else
             LogExceptionToFile(e);
+
+            IUserSettingsService userSettingsService = null;
+            try
+            {
+                userSettingsService = Ioc.Default.GetService<IUserSettingsService>();
+            }
+            catch { }
+
+            bool pushErrorNotification = userSettingsService?.PushErrorNotification ?? false;
+
+            if (pushErrorNotification)
+            {
+                PushErrorNotification();
+            }
 #endif
         }
 
@@ -151,15 +217,66 @@ namespace ClipboardCanvas
         {
             string exceptionString = "";
 
-            exceptionString += DateTime.Now.ToString("dd MM yyyy - HH mm ss");
+            exceptionString += DateTime.Now.ToString(Constants.FileSystem.EXCEPTION_BLOCK_DATE_FORMAT);
             exceptionString += "\n";
             exceptionString += $">>> HRESULT {e.HResult}\n";
             exceptionString += $">>> MESSAGE {e.Message}\n";
             exceptionString += $">>> STACKTRACE {e.StackTrace}\n";
+            exceptionString += $">>> INNER {e.InnerException}\n";
             exceptionString += $">>> SOURCE {e.Source}\n\n";
 
-            ILogger logger = Ioc.Default.GetService<ILogger>();
+            ILogger logger;
+            try
+            {
+                logger = Ioc.Default.GetService<ILogger>(); // Try get Ioc logger
+            }
+            catch
+            {
+                logger = new ExceptionToFileLogger(); // Use default logger
+            }
+
             logger.LogToFile(exceptionString);
+        }
+
+        private void PushErrorNotification()
+        {
+            // Create custom notification
+            ToastContent toastContent = new ToastContent()
+            {
+                Visual = new ToastVisual()
+                {
+                    BindingGeneric = new ToastBindingGeneric()
+                    {
+                        Children =
+                        {
+                            new AdaptiveText()
+                            {
+                                Text = "Clipboard Canvas crashed spectacularly!"
+                            },
+                            new AdaptiveText()
+                            {
+                                Text = "We've encountered an issue that we couldn't recover from."
+                            }
+                        }
+                    }
+                },
+                Actions = new ToastActionsCustom()
+                {
+                    Buttons =
+                    {
+                        new ToastButton("Report this issue", Constants.UI.Notifications.TOAST_NOTIFICATION_ERROR_ARGUMENT)
+                        {
+                            ActivationType = ToastActivationType.Foreground
+                        }
+                    }
+                }
+            };
+
+            // Compile the notification to native ToastNotification
+            ToastNotification toastNotificationNative = new ToastNotification(toastContent.GetXml());
+
+            // Push the native ToastNotification
+            ToastNotificationManager.CreateToastNotifier().Show(toastNotificationNative);
         }
 
         /// <summary>
