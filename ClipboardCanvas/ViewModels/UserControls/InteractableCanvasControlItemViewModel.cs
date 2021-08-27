@@ -231,14 +231,17 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task OpenFile()
         {
+            bool fileOpened = false;
             if (ReadOnlyCanvasPreviewModel is ICanGetSourceCanvas<IReadOnlyCanvasPreviewModel> canGetSourceCanvas)
             {
                 if (canGetSourceCanvas.DangerousGetSourceCanvas() is ICanOpenFile canOpenFile)
                 {
                     await canOpenFile.OpenFile();
+                    fileOpened = true;
                 }
             }
-            else
+
+            if (!fileOpened)
             {
                 await StorageHelpers.OpenFile(await CanvasItem.SourceItem);
             }

@@ -41,7 +41,7 @@
         DisplayName="Clipboard Canvas"
         Square150x150Logo="Assets\AppIcon\Square150x150Logo.png"
         Square44x44Logo="Assets\AppIcon\Square44x44Logo.png"
-        Description="Clipboard Canvas gives users an enhanced clipboard experience. Clipboard Canvas enables you to paste content worry free increasing your productivity."
+        Description="A productivity tool for pasting and previewing multiple file types with support of virtual Reference Files."
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\AppIcon\Wide310x150Logo.png" Square71x71Logo="Assets\AppIcon\SmallTile.png" Square310x310Logo="Assets\AppIcon\LargeTile.png"/>
         <uap:SplashScreen Image="Assets\AppIcon\SplashScreen.png" uap5:Optional="true"/>
