@@ -50,19 +50,22 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
             return exceptionReporter.GetStatusResult(exception);
         }
 
-        public static implicit operator OperationErrorCode(SafeWrapperResult wrapperResult) => wrapperResult?.Details?.errorCode ?? OperationErrorCode.InvalidArgument;
+        public static implicit operator OperationErrorCode(SafeWrapperResult wrapperResult)
+            => wrapperResult?.Details?.errorCode ?? OperationErrorCode.InvalidArgument;
 
-        public static implicit operator bool(SafeWrapperResult wrapperResult) => wrapperResult?.Details?.errorCode == OperationErrorCode.Success;
+        public static implicit operator bool(SafeWrapperResult wrapperResult)
+            => (wrapperResult?.Details?.errorCode ?? OperationErrorCode.UnknownFailed) == OperationErrorCode.Success;
 
-        public static implicit operator SafeWrapperResult(SafeWrapperResultDetails details) => new SafeWrapperResult(details);
+        public static implicit operator SafeWrapperResult(SafeWrapperResultDetails details)
+            => new SafeWrapperResult(details);
 
         public static implicit operator SafeWrapperResult((OperationErrorCode errorCode, Exception innerException) details)
-            => new SafeWrapperResultDetails(details.errorCode, details.innerException);
+            => new SafeWrapperResult(details.errorCode, details.innerException);
 
         public static implicit operator SafeWrapperResult((OperationErrorCode errorCode, string message) details)
-            => new SafeWrapperResultDetails(details.errorCode, details.message);
+            => new SafeWrapperResult(details.errorCode, details.message);
 
         public static implicit operator SafeWrapperResult((OperationErrorCode errorCode, Exception innerException, string message) details)
-            => new SafeWrapperResultDetails(details.errorCode, details.innerException, details.message);
+            => new SafeWrapperResult(details.errorCode, details.innerException, details.message);
     }
 }

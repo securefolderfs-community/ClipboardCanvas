@@ -1,12 +1,13 @@
-﻿using ClipboardCanvas.Enums;
-using ClipboardCanvas.Exceptions;
-using ClipboardCanvas.Helpers.Filesystem;
-using ClipboardCanvas.Helpers.SafetyHelpers;
-using Newtonsoft.Json;
-using System;
+﻿using Newtonsoft.Json;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
+
+using ClipboardCanvas.Enums;
+using ClipboardCanvas.Exceptions;
+using ClipboardCanvas.Helpers.Filesystem;
+using ClipboardCanvas.Helpers.SafetyHelpers;
+using System;
 
 namespace ClipboardCanvas.ReferenceItems
 {
@@ -17,11 +18,11 @@ namespace ClipboardCanvas.ReferenceItems
     {
         private readonly StorageFile _innerReferenceFile;
 
+        private ReferenceFileData _referenceFileData;
+
         public SafeWrapperResult LastError { get; private set; } = SafeWrapperResult.SUCCESS;
 
         public IStorageItem ReferencedItem { get; private set; }
-
-        public ReferenceFileData ReferenceFileData { get; private set; }
 
         private ReferenceFile(StorageFile innerFile, IStorageItem referencedItem)
         {
@@ -29,35 +30,34 @@ namespace ClipboardCanvas.ReferenceItems
             this.ReferencedItem = referencedItem;
         }
 
-        public async Task<SafeWrapperResult> UpdateReference(ReferenceFileData referenceFileData)
+        public async Task<SafeWrapperResult> UpdateReference(string newPath)
         {
-            string serialized = JsonConvert.SerializeObject(referenceFileData, Formatting.Indented);
-            SafeWrapperResult result = await FilesystemOperations.WriteFileText(_innerReferenceFile, serialized);
+            _referenceFileData = new ReferenceFileData(newPath);
+            string serialized = JsonConvert.SerializeObject(_referenceFileData, Formatting.Indented);
 
-            return result;
+            return await FilesystemOperations.WriteFileText(_innerReferenceFile, serialized);
         }
 
         private static async Task<SafeWrapper<ReferenceFileData>> ReadData(StorageFile referenceFile)
         {
             SafeWrapper<string> data = await FilesystemOperations.ReadFileText(referenceFile);
-
             if (!data)
             {
-                return new SafeWrapper<ReferenceFileData>(null, data.Details);
+                return (null, data.Details);
             }
 
             ReferenceFileData referenceFileData = JsonConvert.DeserializeObject<ReferenceFileData>(data);
-
-            return new SafeWrapper<ReferenceFileData>(referenceFileData, SafeWrapperResult.SUCCESS);
+            return (referenceFileData, SafeWrapperResult.SUCCESS);
         }
 
-        public static async Task<ReferenceFile> GetFile(StorageFile referenceFile)
+        public static async Task<ReferenceFile> GetReferenceFile(StorageFile referenceFile)
         {
             // The file is not a Reference File
             if (!IsReferenceFile(referenceFile))
             {
                 return null;
             }
+
             // The file does not exist
             if (!StorageHelpers.Existsh(referenceFile.Path))
             {
@@ -74,11 +74,18 @@ namespace ClipboardCanvas.ReferenceItems
 
         private static async Task<ReferenceFile> GetFile(StorageFile referenceFile, SafeWrapper<ReferenceFileData> referenceFileData)
         {
-            if (!referenceFileData || string.IsNullOrEmpty(referenceFileData.Result?.path))
+            if (!referenceFileData)
             {
                 return new ReferenceFile(referenceFile, null)
                 {
                     LastError = referenceFileData
+                };
+            }
+            else if (string.IsNullOrEmpty(referenceFileData?.Result?.path))
+            {
+                return new ReferenceFile(referenceFile, null)
+                {
+                    LastError = new SafeWrapperResult(OperationErrorCode.InvalidArgument, new NullReferenceException(), "Reference File path is null.")
                 };
             }
 
@@ -98,12 +105,15 @@ namespace ClipboardCanvas.ReferenceItems
                 {
                     return new ReferenceFile(referenceFile, null)
                     {
-                        LastError = (SafeWrapperResult)file
+                        LastError = file
                     };
                 }
             }
 
-            return new ReferenceFile(referenceFile, file.Result);
+            return new ReferenceFile(referenceFile, file.Result)
+            {
+                _referenceFileData = referenceFileData.Result
+            };
         }
 
         public static bool IsReferenceFile(StorageFile file)

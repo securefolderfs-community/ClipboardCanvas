@@ -142,6 +142,7 @@ namespace ClipboardCanvas.ViewModels
 
         public void Dispose()
         {
+            _cancellationTokenSource?.Cancel();
             _cancellationTokenSource?.Dispose();
             ReadOnlyCanvasPreviewModel?.Dispose();
             

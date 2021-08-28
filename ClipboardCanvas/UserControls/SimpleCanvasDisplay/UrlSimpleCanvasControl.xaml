@@ -25,7 +25,7 @@
             <!--  Header (Icon + Title)  -->
             <RowDefinition Height="Auto" />
             <!--  Content  -->
-            <RowDefinition />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!--  Header  -->
@@ -103,23 +103,34 @@
                 <tuc:UniformGrid
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
-                    CornerRadius="4">
+                    tuc:UniformGrid.AutoLayout="False"
+                    ColumnSpacing="4"
+                    CornerRadius="4"
+                    RowSpacing="4">
                     <Image
                         x:Name="Img1"
+                        VerticalAlignment="Stretch"
                         x:Load="{x:Bind ViewModel.ContentImage1, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}"
-                        Source="{x:Bind ViewModel.ContentImage1, Mode=OneWay}" />
+                        Source="{x:Bind ViewModel.ContentImage1, Mode=OneWay}"
+                        Stretch="UniformToFill" />
                     <Image
                         x:Name="Img2"
+                        VerticalAlignment="Stretch"
                         x:Load="{x:Bind ViewModel.ContentImage2, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}"
-                        Source="{x:Bind ViewModel.ContentImage2, Mode=OneWay}" />
+                        Source="{x:Bind ViewModel.ContentImage2, Mode=OneWay}"
+                        Stretch="UniformToFill" />
                     <Image
                         x:Name="Img3"
+                        VerticalAlignment="Stretch"
                         x:Load="{x:Bind ViewModel.ContentImage3, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}"
-                        Source="{x:Bind ViewModel.ContentImage3, Mode=OneWay}" />
+                        Source="{x:Bind ViewModel.ContentImage3, Mode=OneWay}"
+                        Stretch="UniformToFill" />
                     <Image
                         x:Name="Img4"
+                        VerticalAlignment="Stretch"
                         x:Load="{x:Bind ViewModel.ContentImage4, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}"
-                        Source="{x:Bind ViewModel.ContentImage4, Mode=OneWay}" />
+                        Source="{x:Bind ViewModel.ContentImage4, Mode=OneWay}"
+                        Stretch="UniformToFill" />
                 </tuc:UniformGrid>
             </Grid>
 

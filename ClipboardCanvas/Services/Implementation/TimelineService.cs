@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Models;
@@ -41,10 +42,13 @@ namespace ClipboardCanvas.Services.Implementation
                 return;
             }
 
+            List<Task> loadItemTasks = new List<Task>();
             foreach (var item in timelineSection.Items)
             {
-                await item.InitializeSectionItemContent();
+                loadItemTasks.Add(item.InitializeSectionItemContent());
             }
+
+            await Task.WhenAll(loadItemTasks);
         }
 
         public async Task LoadAllSectionsAsync()
@@ -54,10 +58,13 @@ namespace ClipboardCanvas.Services.Implementation
                 return;
             }
 
+            List<Task> loadItemTasks = new List<Task>();
             foreach (var item in TimelineWidgetViewModel.Sections)
             {
-                await LoadSectionAsync(item);
+                loadItemTasks.Add(LoadSectionAsync(item));
             }
+
+            await Task.WhenAll(loadItemTasks);
         }
 
         public void UnloadSection(TimelineSectionViewModel timelineSection)

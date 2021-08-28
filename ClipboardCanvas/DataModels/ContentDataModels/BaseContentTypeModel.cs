@@ -85,7 +85,7 @@ namespace ClipboardCanvas.DataModels.ContentDataModels
                 if (ReferenceFile.IsReferenceFile(file))
                 {
                     // Reference File, get the destination file extension
-                    ReferenceFile referenceFile = await ReferenceFile.GetFile(file);
+                    ReferenceFile referenceFile = await ReferenceFile.GetReferenceFile(file);
 
                     if (referenceFile.ReferencedItem == null)
                     {

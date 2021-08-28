@@ -30,9 +30,9 @@ namespace ClipboardCanvas.Helpers
 
         public static bool IsUrlFile(string url)
         {
-            if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
+            if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps) && uri.IsFile)
             {
-                return Path.HasExtension(url);
+                return true;
             }
 
             return false;
@@ -45,7 +45,7 @@ namespace ClipboardCanvas.Helpers
                 return false;
             }
 
-            WebResponse response;
+            WebResponse response = null;
             try
             {
                 WebRequest request = WebRequest.Create(url);
@@ -65,6 +65,10 @@ namespace ClipboardCanvas.Helpers
             catch (Exception ex)
             {
                 return false;
+            }
+            finally
+            {
+                response?.Dispose();
             }
 
             return true;
@@ -207,7 +211,7 @@ namespace ClipboardCanvas.Helpers
             if (!string.IsNullOrEmpty(rawImageUrl))
             {
                 string formattedUrl;
-
+                
                 if (!rawImageUrl.Contains("http"))
                 {
                     string baseUrl;
@@ -223,15 +227,24 @@ namespace ClipboardCanvas.Helpers
                             http = "http://";
                         }
 
-                        var uri = new Uri(url);
-                        baseUrl = $"{http}{uri.Host}";
+                        Uri rawImageUri = new Uri(rawImageUrl);
+                        if (!string.IsNullOrEmpty(rawImageUri.Host))
+                        {
+                            baseUrl = $"{http}{rawImageUri.Host}";
+                            rawImageUrl = rawImageUrl.Replace(rawImageUri.Host, string.Empty);
+                        }
+                        else
+                        {
+                            Uri uri = new Uri(url);
+                            baseUrl = $"{http}{uri.Host}";
+                        }
                     }
                     else
                     {
                         baseUrl = url;
                     }
 
-                    formattedUrl = ($"{baseUrl}/{rawImageUrl}").PreventNull(string.Empty).Replace("///", "/").Replace("//", "/").Replace("https:/", "https://");
+                    formattedUrl = ($"{baseUrl}/{rawImageUrl}").PreventNull(string.Empty).Replace("///", "/").Replace("//", "/").Replace(":/", "://");
                 }
                 else
                 {

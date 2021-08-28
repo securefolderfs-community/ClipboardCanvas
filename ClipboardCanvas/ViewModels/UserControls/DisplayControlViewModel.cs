@@ -372,10 +372,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
         private void PasteCanvasModel_OnContentStartedLoadingEvent(object sender, ContentStartedLoadingEventArgs e)
         {
             NavigationToolBarControlModel.SuggestedActionsControlModel.ShowNoActionsLabelSuppressed = true;
-        }
+            UpdateCanvasPageNavigation();
 
-        private async void PasteCanvasModel_OnContentLoadedEvent(object sender, ContentLoadedEventArgs e)
-        {
             if (e.contentType is not InfiniteCanvasContentType
                 && CurrentPage == DisplayPageType.CanvasPage
                 && (e.contentType is TextContentType
@@ -387,9 +385,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
             {
                 WindowTitleBarControlModel.ShowTitleUnderline = false;
             }
+        }
 
-            UpdateCanvasPageNavigation();
-
+        private async void PasteCanvasModel_OnContentLoadedEvent(object sender, ContentLoadedEventArgs e)
+        {
             await SetSuggestedActions(_currentCollectionModel);
             NavigationToolBarControlModel.SuggestedActionsControlModel.ShowNoActionsLabelSuppressed = false;
         }

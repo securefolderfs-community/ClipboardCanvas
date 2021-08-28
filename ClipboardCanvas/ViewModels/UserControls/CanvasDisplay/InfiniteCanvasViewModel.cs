@@ -122,7 +122,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             else
             {
-
                 // Get correct IPasteModel from contentType
                 IPasteModel canvasPasteModel = CanvasHelpers.GetPasteModelFromContentType(pastedItemContentType, _infiniteCanvasFileReceiver, new StatusCenterOperationReceiver());
 

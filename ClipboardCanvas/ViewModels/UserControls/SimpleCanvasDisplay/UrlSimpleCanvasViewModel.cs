@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage;
-using System.Net;
-using Windows.UI.Xaml.Media.Imaging;
 using System.Threading;
 using HtmlAgilityPack;
 using Windows.System;
+using Windows.UI.Xaml.Media;
 
 using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
@@ -18,7 +17,6 @@ using ClipboardCanvas.Extensions;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Interfaces.Canvas;
 using ClipboardCanvas.Helpers;
-using Windows.UI.Xaml.Media;
 
 namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
 {
@@ -29,6 +27,20 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
         {
             get => _IsLoading;
             set => SetProperty(ref _IsLoading, value);
+        }
+
+        private int _Item1RowSpan;
+        public int Item1RowSpan
+        {
+            get => _Item1RowSpan;
+            set => SetProperty(ref _Item1RowSpan, value);
+        }
+
+        private int _Item2RowSpan;
+        public int Item2RowSpan
+        {
+            get => _Item1RowSpan;
+            set => SetProperty(ref _Item1RowSpan, value);
         }
 
         private string _Url;
@@ -144,6 +156,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
 
             // Set the document
             var webGet = new HtmlWeb();
+            webGet.UserAgent = @"Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
             SafeWrapper<HtmlDocument> document = await SafeWrapperRoutines.SafeWrapAsync(() => webGet.LoadFromWebAsync(Url, cancellationToken));
             if (!document)
             {

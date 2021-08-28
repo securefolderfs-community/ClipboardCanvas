@@ -92,7 +92,7 @@ namespace ClipboardCanvas.UserControls
                 element.Opacity = 1.0d;
 
                 // Update the ZIndex of the element - set it on top
-                SetOnTop(container);
+                SetOnTop(container); // TODO: Fix this - sometimes other item can shown higher
 
                 this.ViewModel.ItemRearranged();
             }

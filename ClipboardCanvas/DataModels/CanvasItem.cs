@@ -48,7 +48,7 @@ namespace ClipboardCanvas.DataModels
 
             if (AssociatedItem is StorageFile file && ReferenceFile.IsReferenceFile(file))
             {
-                ReferenceFile referenceFile = await ReferenceFile.GetFile(file);
+                ReferenceFile referenceFile = await ReferenceFile.GetReferenceFile(file);
                 sourceItem = referenceFile.ReferencedItem;
             }
             else

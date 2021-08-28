@@ -2,6 +2,8 @@
 using Windows.UI.Xaml.Navigation;
 
 using ClipboardCanvas.ViewModels.Pages;
+using ClipboardCanvas.ViewModels.Widgets.Timeline;
+using System.Threading;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -20,6 +22,10 @@ namespace ClipboardCanvas.Pages
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
+            TimelineWidgetViewModel.LoadCancellationToken.Cancel();
+            TimelineWidgetViewModel.LoadCancellationToken.Dispose();
+            TimelineWidgetViewModel.LoadCancellationToken = new CancellationTokenSource();
+
             CollectionsWidget.ViewModel.Dispose();
             this.ViewModel.Dispose();
 
