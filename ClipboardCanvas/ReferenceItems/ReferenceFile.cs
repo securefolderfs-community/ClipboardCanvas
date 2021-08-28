@@ -37,7 +37,7 @@ namespace ClipboardCanvas.ReferenceItems
             return result;
         }
 
-        internal static async Task<SafeWrapper<ReferenceFileData>> ReadData(StorageFile referenceFile)
+        private static async Task<SafeWrapper<ReferenceFileData>> ReadData(StorageFile referenceFile)
         {
             SafeWrapper<string> data = await FilesystemOperations.ReadFileText(referenceFile);
 
@@ -59,7 +59,7 @@ namespace ClipboardCanvas.ReferenceItems
                 return null;
             }
             // The file does not exist
-            if (!StorageHelpers.Exists(referenceFile.Path))
+            if (!StorageHelpers.Existsh(referenceFile.Path))
             {
                 return new ReferenceFile(referenceFile, null)
                 {
@@ -72,7 +72,7 @@ namespace ClipboardCanvas.ReferenceItems
             return await GetFile(referenceFile, referenceFileData);
         }
 
-        public static async Task<ReferenceFile> GetFile(StorageFile referenceFile, SafeWrapper<ReferenceFileData> referenceFileData)
+        private static async Task<ReferenceFile> GetFile(StorageFile referenceFile, SafeWrapper<ReferenceFileData> referenceFileData)
         {
             if (!referenceFileData || string.IsNullOrEmpty(referenceFileData.Result?.path))
             {
@@ -108,7 +108,7 @@ namespace ClipboardCanvas.ReferenceItems
 
         public static bool IsReferenceFile(StorageFile file)
         {
-            return FilesystemHelpers.IsPathEqualExtension(file?.Path, Constants.FileSystem.REFERENCE_FILE_EXTENSION);
+            return FileHelpers.IsPathEqualExtension(file?.Path, Constants.FileSystem.REFERENCE_FILE_EXTENSION);
         }
     }
 }

@@ -10,6 +10,7 @@
     mc:Ignorable="d">
 
     <Grid
+        Padding="60"
         HorizontalAlignment="Center"
         VerticalAlignment="Center"
         RowSpacing="16">
@@ -38,7 +39,7 @@
             Orientation="Horizontal"
             Spacing="12">
             <TextBlock Text="Item name: " />
-            <TextBlock Text="{x:Bind ViewModel.FileName, Mode=OneWay}" />
+            <TextBlock Text="{x:Bind ViewModel.FileName, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind ViewModel.FileName, Mode=OneWay}" />
         </StackPanel>
 
         <!--  File path  -->
@@ -47,7 +48,7 @@
             Orientation="Horizontal"
             Spacing="12">
             <TextBlock Text="Item Path: " />
-            <TextBlock Text="{x:Bind ViewModel.FilePath, Mode=OneWay}" />
+            <TextBlock Text="{x:Bind ViewModel.FilePath, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind ViewModel.FilePath, Mode=OneWay}" />
         </StackPanel>
 
         <!--  Date created  -->

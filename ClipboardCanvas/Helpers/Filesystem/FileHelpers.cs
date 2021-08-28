@@ -3,7 +3,7 @@ using System.IO;
 
 namespace ClipboardCanvas.Helpers.Filesystem
 {
-    public static class FilesystemHelpers
+    public static class FileHelpers
     {
         public static bool IsPathEqualExtension(string path, string extension)
         {

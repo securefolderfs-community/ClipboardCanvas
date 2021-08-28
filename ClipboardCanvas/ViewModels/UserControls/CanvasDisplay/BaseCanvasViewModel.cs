@@ -90,8 +90,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             // Set collectionItemViewModel because it wasn't set before
             this.collectionItemViewModel = associatedCollection.FindCollectionItem(canvasItem);
-            
-            await OnPasteSucceeded();
+
+            // Notify paste succeeded
+            await OnPasteSucceeded(canvasItem);
 
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
@@ -201,11 +202,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Protected Helpers
 
-        protected virtual async Task OnPasteSucceeded()
+        protected virtual async Task OnPasteSucceeded(CanvasItem pastedItem)
         {
             // Add new item on Timeline
             var todaySection = await TimelineService.GetOrCreateTodaySection();
-            await TimelineService.AddItemForSection(todaySection, associatedCollection, collectionItemViewModel);
+            await TimelineService.AddItemForSection(todaySection, associatedCollection, pastedItem);
         }
 
         protected virtual Task OnReferencePasted()

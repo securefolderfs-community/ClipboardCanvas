@@ -5,13 +5,13 @@ using Windows.Storage.FileProperties;
 using System.IO;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Windows.System;
+using Microsoft.Win32.SafeHandles;
 
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.UnsafeNative;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
 using ClipboardCanvas.Services;
-using Microsoft.Win32.SafeHandles;
 
 namespace ClipboardCanvas.Helpers.Filesystem
 {
@@ -33,7 +33,7 @@ namespace ClipboardCanvas.Helpers.Filesystem
             }
 
             // Check if path is to .lnk or .url file
-            if (FilesystemHelpers.IsPathEqualExtension(path, ".lnk") || FilesystemHelpers.IsPathEqualExtension(path, ".url"))
+            if (FileHelpers.IsPathEqualExtension(path, ".lnk") || FileHelpers.IsPathEqualExtension(path, ".url"))
             {
                 return new SafeWrapper<TRequested>(default, OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Function ToStorageItem<TRequested>() does not support converting from .lnk nor .url files.");
             }
@@ -106,7 +106,7 @@ namespace ClipboardCanvas.Helpers.Filesystem
             return (long)properties.Size;
         }
 
-        public static bool Exists(string path)
+        public static bool Existsh(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
             {

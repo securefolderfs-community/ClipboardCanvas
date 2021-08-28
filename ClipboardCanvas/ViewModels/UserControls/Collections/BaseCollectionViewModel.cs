@@ -547,7 +547,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
                 if (result == OperationErrorCode.NotFound && result.Exception is not ReferencedFileNotFoundException) // A canvas is missing, meaning we need to reload all other items
                 {
-                    if (!StorageHelpers.Exists(CollectionPath))
+                    if (!StorageHelpers.Existsh(CollectionPath))
                     {
                         SetCollectionError(CollectionFolderNotFound);
 

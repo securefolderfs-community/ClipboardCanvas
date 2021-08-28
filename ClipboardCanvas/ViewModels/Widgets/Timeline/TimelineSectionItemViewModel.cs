@@ -97,14 +97,35 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
             }
             else if (CollectionModel.IsCollectionInitialized)
             {
-                CollectionModel.UpdateIndex(CollectionModel.FindCollectionItem(CanvasItem));
+                if (InfiniteCanvasItem.IsInfiniteCanvasAsParent(CanvasItem))
+                {
+                    string parentPath = Path.GetDirectoryName(CanvasItem.AssociatedItem.Path);
+                    CollectionModel.UpdateIndex(CollectionModel.FindCollectionItem(parentPath));
+                }
+                else
+                {
+                    CollectionModel.UpdateIndex(CollectionModel.FindCollectionItem(CanvasItem));
+                }
+
                 NavigationService.OpenCanvasPage(CollectionModel);
             }
         }
 
         private void ShowInCollectionPreview()
         {
-            NavigationService.OpenCollectionPreviewPage(CollectionModel, new CollectionPreviewPageNavigationParameterModel(CollectionModel, CanvasHelpers.GetDefaultCanvasType(), CanvasItem));
+            CanvasItem itemToSelect;
+
+            if (InfiniteCanvasItem.IsInfiniteCanvasAsParent(CanvasItem))
+            {
+                string parentPath = Path.GetDirectoryName(CanvasItem.AssociatedItem.Path);
+                itemToSelect = CollectionModel.FindCollectionItem(parentPath);
+            }
+            else
+            {
+                itemToSelect = CanvasItem;
+            }
+
+            NavigationService.OpenCollectionPreviewPage(CollectionModel, new CollectionPreviewPageNavigationParameterModel(CollectionModel, CanvasHelpers.GetDefaultCanvasType(), itemToSelect));
         }
 
         private void RemoveFromSection()

@@ -138,18 +138,18 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 }
 
                 // Paste data
-                SafeWrapper<CanvasItem> pastedFile = await canvasPasteModel.PasteData(dataPackage, UserSettings.AlwaysPasteFilesAsReference, cancellationToken);
+                SafeWrapper<CanvasItem> pastedItem = await canvasPasteModel.PasteData(dataPackage, UserSettings.AlwaysPasteFilesAsReference, cancellationToken);
 
                 // We don't need IPasteModel anymore, so dispose it
                 canvasPasteModel.Dispose();
 
-                if (!pastedFile)
+                if (!pastedItem)
                 {
-                    return pastedFile;
+                    return pastedItem;
                 }
 
                 // Add new object to Infinite Canvas
-                var interactableCanvasControlItem = await InteractableCanvasControlModel.AddItem(associatedCollection, pastedItemContentType, pastedFile, _infiniteCanvasFileReceiver, cancellationToken);
+                var interactableCanvasControlItem = await InteractableCanvasControlModel.AddItem(associatedCollection, pastedItemContentType, pastedItem, _infiniteCanvasFileReceiver, cancellationToken);
 
                 if (cancellationToken.IsCancellationRequested) // Check if it's canceled
                 {
@@ -163,9 +163,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 // Update item position based on datapackage
                 InteractableCanvasControlModel.UpdateItemPositionFromDataPackage(dataPackage, interactableCanvasControlItem);
 
-
                 // Save data after pasting
                 SafeWrapperResult saveDataResult = await SaveConfigurationModel();
+
+                // Notify paste succeeded
+                await OnPasteSucceeded(pastedItem);
 
                 if (cancellationToken.IsCancellationRequested) // Check if it's canceled
                 {
@@ -241,7 +243,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             foreach (var item in items)
             {
-                if (FilesystemHelpers.IsPathEqualExtension(item.Path, Constants.FileSystem.INFINITE_CANVAS_CONFIGURATION_FILE_EXTENSION)
+                if (FileHelpers.IsPathEqualExtension(item.Path, Constants.FileSystem.INFINITE_CANVAS_CONFIGURATION_FILE_EXTENSION)
                     || Path.GetFileName(item.Path) == Constants.FileSystem.INFINITE_CANVAS_PREVIEW_IMAGE_FILENAME)
                 {
                     continue;
@@ -449,7 +451,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Reflect changes
             foreach (var item in changes)
             {
-                if (FilesystemHelpers.IsPathEqualExtension(item.Path, Constants.FileSystem.INFINITE_CANVAS_CONFIGURATION_FILE_EXTENSION)
+                if (FileHelpers.IsPathEqualExtension(item.Path, Constants.FileSystem.INFINITE_CANVAS_CONFIGURATION_FILE_EXTENSION)
                     || Path.GetFileName(item.Path) == Constants.FileSystem.INFINITE_CANVAS_PREVIEW_IMAGE_FILENAME)
                 {
                     continue;

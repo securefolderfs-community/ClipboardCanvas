@@ -42,7 +42,7 @@ namespace ClipboardCanvas.DataModels.ContentDataModels
             
             if ((await canvasFile.SourceItem) is StorageFolder folder)
             {
-                if (FilesystemHelpers.IsPathEqualExtension(folder.Path, Constants.FileSystem.INFINITE_CANVAS_EXTENSION))
+                if (FileHelpers.IsPathEqualExtension(folder.Path, Constants.FileSystem.INFINITE_CANVAS_EXTENSION))
                 {
                     return new InfiniteCanvasContentType();
                 }
@@ -120,7 +120,7 @@ namespace ClipboardCanvas.DataModels.ContentDataModels
         {
             if (item is StorageFolder folder)
             {
-                if (FilesystemHelpers.IsPathEqualExtension(folder.Path, Constants.FileSystem.INFINITE_CANVAS_EXTENSION))
+                if (FileHelpers.IsPathEqualExtension(folder.Path, Constants.FileSystem.INFINITE_CANVAS_EXTENSION))
                 {
                     return new InfiniteCanvasContentType();
                 }

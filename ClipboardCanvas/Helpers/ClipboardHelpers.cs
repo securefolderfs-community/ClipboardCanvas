@@ -13,6 +13,7 @@ namespace ClipboardCanvas.Helpers
             {
                 lock (clipboardLock)
                 {
+                    dataPackage.RequestedOperation = DataPackageOperation.Copy;
                     Clipboard.SetContent(dataPackage);
                     Clipboard.Flush();
                 }

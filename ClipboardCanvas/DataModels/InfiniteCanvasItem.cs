@@ -5,6 +5,7 @@ using Windows.Storage;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Enums;
+using System.IO;
 
 namespace ClipboardCanvas.DataModels
 {
@@ -46,6 +47,12 @@ namespace ClipboardCanvas.DataModels
             CanvasPreviewImageFile = result.Result;
 
             return result;
+        }
+
+        public static bool IsInfiniteCanvasAsParent(CanvasItem canvasItem)
+        {
+            string parentPath = Path.GetDirectoryName(canvasItem.AssociatedItem.Path);
+            return FileHelpers.IsPathEqualExtension(parentPath, Constants.FileSystem.INFINITE_CANVAS_EXTENSION);
         }
     }
 }

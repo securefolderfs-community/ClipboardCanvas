@@ -414,6 +414,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private async void PasteCanvasModel_OnContentStartedLoadingEvent(object sender, ContentStartedLoadingEventArgs e)
         {
+            PastedAsReferenceLoad = false;
             InfiniteCanvasCaptionLoad = e.contentType is InfiniteCanvasContentType;
             await PrepareForContentStartLoading(e.contentType);
         }

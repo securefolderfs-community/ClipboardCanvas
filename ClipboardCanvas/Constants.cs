@@ -42,7 +42,7 @@
 
                 public const uint SIMPLE_CANVAS_THUMBNAIL_SIZE = 128u;
 
-                public const int INFINITE_CANVAS_SAVE_INTERVAL = 1000;
+                public const int INFINITE_CANVAS_SAVE_INTERVAL = 800;
 
                 public const int INFINITE_CANVAS_ERROR_SHOW_TIME = 2000;
 

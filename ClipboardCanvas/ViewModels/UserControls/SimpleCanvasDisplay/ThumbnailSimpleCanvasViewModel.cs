@@ -50,7 +50,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
         {
             // Get thumbnail for Infinite Canvas
             StorageFolder folder = item as StorageFolder;
-            if (folder != null && FilesystemHelpers.IsPathEqualExtension(item.Path, Constants.FileSystem.INFINITE_CANVAS_EXTENSION))
+            if (folder != null && FileHelpers.IsPathEqualExtension(item.Path, Constants.FileSystem.INFINITE_CANVAS_EXTENSION))
             {
                 string canvasPreviewImageFileName = Constants.FileSystem.INFINITE_CANVAS_PREVIEW_IMAGE_FILENAME;
                 string canvasPreviewImageFilePath = Path.Combine(folder.Path, canvasPreviewImageFileName);

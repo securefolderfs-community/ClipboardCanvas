@@ -150,7 +150,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             RaiseOnContentStartedLoadingEvent(this, new ContentStartedLoadingEventArgs(contentType));
 
-            if (!StorageHelpers.Exists(associatedItem.Path))
+            if (!StorageHelpers.Existsh(associatedItem.Path))
             {
                 // We don't invoke OnErrorOccurredEvent here because we want to discard this canvas immediately and not show the error
                 return new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "Canvas not found.");

@@ -17,7 +17,7 @@ namespace ClipboardCanvas.Helpers
     {
         public static async Task<IRandomAccessStream> GetTransparentThumbnail(this StorageFile file, ThumbnailMode mode, uint requestedSize, ThumbnailOptions options = ThumbnailOptions.None)
         {
-            if (FilesystemHelpers.IsPathEqualExtension(file.Path, ".png"))
+            if (FileHelpers.IsPathEqualExtension(file.Path, ".png"))
             {
                 // Try to create a scaled-down version of the PNG with transparency
                 using (IRandomAccessStream fileStream = await file.OpenAsync(FileAccessMode.Read))
