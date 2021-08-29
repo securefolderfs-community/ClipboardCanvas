@@ -11,6 +11,6 @@
 
     <local:IntroductionScreenGenericPreview
         Title="One Canvas"
-        Description="Quickly paste and interact with your content on One Canvas. One Canvas gives you a fully-sized interactive preview of various files: &#x0a; &#x0a; - Image preview &#x0a; - Media preview &#x0a; - Text preview &#x0a; - Markdown format preview &#x0a; - Folder and file preview"
+        Description="Quickly paste and interact with your content on One Canvas. One Canvas gives you a fully-sized interactive preview of various files: &#x0a;&#x0a; - Image preview &#x0a; - Media preview &#x0a; - Text preview &#x0a; - Markdown format preview &#x0a; - Folder and file preview"
         PreviewImage="/Assets/OOBE/OOBE_OneCanvas.png" />
 </UserControl>

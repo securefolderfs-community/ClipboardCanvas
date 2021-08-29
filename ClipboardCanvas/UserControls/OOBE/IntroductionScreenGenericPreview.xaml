@@ -19,8 +19,9 @@
 
         <Image
             Grid.Column="0"
+            HorizontalAlignment="Center"
             Source="{x:Bind PreviewImage, Mode=OneWay}"
-            Stretch="Uniform" />
+            Stretch="UniformToFill" />
 
         <!--  Content  -->
         <Grid

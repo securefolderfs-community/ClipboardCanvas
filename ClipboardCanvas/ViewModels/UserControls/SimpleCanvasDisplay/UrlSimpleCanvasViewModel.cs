@@ -148,7 +148,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             }
 
             SafeWrapper<string> url = await FilesystemOperations.ReadFileText(file);
-            if (!url)
+            if (!AssertNoError(url))
             {
                 return url;
             }
@@ -158,7 +158,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             var webGet = new HtmlWeb();
             webGet.UserAgent = @"Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
             SafeWrapper<HtmlDocument> document = await SafeWrapperRoutines.SafeWrapAsync(() => webGet.LoadFromWebAsync(Url, cancellationToken));
-            if (!document)
+            if (!AssertNoError(document))
             {
                 return document;
             }
@@ -196,8 +196,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
                 return SafeWrapperResult.CANCEL;
             }
 
-            List<string> imageUrls = await WebHelpers.FormatImageUrls(metadata.ImageUrls, Url);
-            string imageLogo = await WebHelpers.FormatImageUrl(metadata.IconUrl, url);
+            SafeWrapper<List<string>> imageUrls = await SafeWrapperRoutines.SafeWrapAsync(() => WebHelpers.FormatImageUrls(metadata.ImageUrls, Url));
+            SafeWrapper<string> imageLogo = await SafeWrapperRoutines.SafeWrapAsync(() => WebHelpers.FormatImageUrl(metadata.IconUrl, url));
 
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
             {
@@ -226,11 +226,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             }
 
             // Set images
-            if (!imageUrls.IsEmpty())
+            if (!imageUrls.Result.IsEmpty())
             {
                 ContentImageLoad = true;
 
-                foreach (var imageLink in imageUrls)
+                foreach (var imageLink in imageUrls.Result)
                 {
                     if (this._ContentImage1 == null)
                     {
@@ -277,6 +277,19 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             OnPropertyChanged(nameof(ContentImage4));
 
             return Task.FromResult(SafeWrapperResult.SUCCESS);
+        }
+
+        protected override bool AssertNoError(SafeWrapperResult result)
+        {
+            bool success = base.AssertNoError(result);
+            if (!success)
+            {
+                Description = null;
+                ContentImageLoad = false;
+                IsLoading = false;
+            }
+
+            return success;
         }
 
         protected override void RefreshContextMenuItems()

@@ -214,7 +214,7 @@ namespace ClipboardCanvas.Helpers
                 
                 if (!rawImageUrl.Contains("http"))
                 {
-                    string baseUrl;
+                    string baseUrl = null;
                     if (rawImageUrl.EndsWith(".ico"))
                     {
                         string http;
@@ -226,14 +226,19 @@ namespace ClipboardCanvas.Helpers
                         {
                             http = "http://";
                         }
-
-                        Uri rawImageUri = new Uri(rawImageUrl);
-                        if (!string.IsNullOrEmpty(rawImageUri.Host))
+                        
+                        try
                         {
-                            baseUrl = $"{http}{rawImageUri.Host}";
-                            rawImageUrl = rawImageUrl.Replace(rawImageUri.Host, string.Empty);
+                            Uri rawImageUri = new Uri(rawImageUrl);
+                            if (!string.IsNullOrEmpty(rawImageUri.Host))
+                            {
+                                baseUrl = $"{http}{rawImageUri.Host}";
+                                rawImageUrl = rawImageUrl.Replace(rawImageUri.Host, string.Empty);
+                            }
                         }
-                        else
+                        catch { }
+
+                        if (string.IsNullOrEmpty(baseUrl))
                         {
                             Uri uri = new Uri(url);
                             baseUrl = $"{http}{uri.Host}";
@@ -271,7 +276,8 @@ namespace ClipboardCanvas.Helpers
                 request.Accept = "*/*";
                 request.Proxy.Credentials = CredentialCache.DefaultCredentials;
 
-                await request.GetResponseAsync();
+                var response = await request.GetResponseAsync();
+                response.Dispose();
 
                 return true;
             });

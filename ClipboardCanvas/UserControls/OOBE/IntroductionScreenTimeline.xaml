@@ -10,7 +10,7 @@
     mc:Ignorable="d">
 
     <local:IntroductionScreenGenericPreview
-        Title="See a run-down of recent activity in Timeline"
-        Description="Never miss a file or folder with Timeline on your homepage. Timeline keeps track of recently pasted items so you don't have to worry about one sliding past unnoticed!"
+        Title="See a run-down of recent activity on your Timeline"
+        Description="Never miss a file or folder with Timeline on your homepage. Timeline keeps track of recently pasted items so you don't have to worry about anything sliding past unnoticed!"
         PreviewImage="/Assets/OOBE/OOBE_Timeline.png" />
 </UserControl>

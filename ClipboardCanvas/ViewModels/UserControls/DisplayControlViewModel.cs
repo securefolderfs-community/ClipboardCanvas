@@ -391,6 +391,20 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             await SetSuggestedActions(_currentCollectionModel);
             NavigationToolBarControlModel.SuggestedActionsControlModel.ShowNoActionsLabelSuppressed = false;
+
+            UpdateCanvasPageNavigation();
+
+            if (e.contentType is not InfiniteCanvasContentType
+                && CurrentPage == DisplayPageType.CanvasPage
+                && (e.contentType is TextContentType
+                || e.contentType is MarkdownContentType))
+            {
+                WindowTitleBarControlModel.ShowTitleUnderline = true;
+            }
+            else
+            {
+                WindowTitleBarControlModel.ShowTitleUnderline = false;
+            }
         }
 
         #endregion
@@ -453,7 +467,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             NavigationService.OpenCanvasPage(_currentCollectionModel);
             NavigationToolBarControlModel.NotifyCurrentPageChanged(CurrentPage);
 
-            //UpdateTitleBar();
+            UpdateTitleBar();
             UpdateCanvasPageNavigation();
         }
 
@@ -686,28 +700,23 @@ namespace ClipboardCanvas.ViewModels.UserControls
                 return;
             }
 
-            switch(CurrentPage)
+            switch (CurrentPage)
             {
                 case DisplayPageType.Homepage:
-                    {
-                        WindowTitleBarControlModel.SetTitleBarForCollectionsView();
-
-                        break;
-                    }
+                    WindowTitleBarControlModel.SetTitleBarForCollectionsView();
+                    break;
 
                 case DisplayPageType.CanvasPage:
-                    {
-                        WindowTitleBarControlModel.SetTitleBarForCanvasView(_currentCollectionModel.DisplayName);
-
-                        break;
-                    }
+                    WindowTitleBarControlModel.SetTitleBarForCanvasView(_currentCollectionModel.DisplayName);
+                    break;
 
                 case DisplayPageType.CollectionPreviewPage:
-                    {
-                        WindowTitleBarControlModel.SetTitleBarForCollectionPreview(_currentCollectionModel.DisplayName);
+                    WindowTitleBarControlModel.SetTitleBarForCollectionPreview(_currentCollectionModel.DisplayName);
+                    break;
 
-                        break;
-                    }
+                default:
+                    WindowTitleBarControlModel.SetTitleBarForDefaultView();
+                    break;
             }
         }
 

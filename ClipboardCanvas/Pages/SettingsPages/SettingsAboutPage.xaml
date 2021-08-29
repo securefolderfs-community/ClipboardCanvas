@@ -27,6 +27,12 @@
                 Text="About" />
 
             <StackPanel Spacing="4">
+                <StackPanel.ChildrenTransitions>
+                    <TransitionCollection>
+                        <ReorderThemeTransition />
+                    </TransitionCollection>
+                </StackPanel.ChildrenTransitions>
+
                 <uc:SettingBlockControl Description="Clipboard Canvas">
                     <uc:SettingBlockControl.Icon>
                         <muxc:ImageIcon

@@ -11,6 +11,6 @@
 
     <local:IntroductionScreenGenericPreview
         Title="Infinite Canvas"
-        Description="View your files on limit-free canvas. Infinite Canvas is your desktop sticky board of files that allows you to manage your work in flexible fashion. Drag around pasted files and take a full control of them paste, copy, delete."
+        Description="View your files on limit-free canvas. Infinite Canvas is your desktop sticky board that allows you to manage your work in a flexible fashion. Drag around pasted files and take a full control of them."
         PreviewImage="/Assets/OOBE/OOBE_InfiniteCanvas.png" />
 </UserControl>

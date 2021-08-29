@@ -21,6 +21,7 @@
         MaxWidth="320"
         Padding="16,8,16,8"
         RowSpacing="4">
+
         <Grid.RowDefinitions>
             <!--  Header (Icon + Title)  -->
             <RowDefinition Height="Auto" />

@@ -1,10 +1,11 @@
-﻿using ClipboardCanvas.Helpers;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Windows.ApplicationModel.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+
+using ClipboardCanvas.Helpers;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -15,11 +16,11 @@ namespace ClipboardCanvas
     /// </summary>
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
+        public static MainPage Instance => (MainPage)((Frame)Window.Current.Content).Content;
+
         public static ApplicationViewTitleBar TitleBar { get; private set; }
 
         public static CoreApplicationViewTitleBar CoreTitleBar { get; private set; }
-
-        public static MainPage Instance => (MainPage)((Frame)Window.Current.Content).Content;
 
         private bool _IntroductionPanelLoad;
         public bool IntroductionPanelLoad

@@ -331,7 +331,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         /// <param name="result"></param>
         /// <param name="errorMessageAutoHide"></param>
         /// <returns></returns>
-        protected bool AssertNoError(SafeWrapperResult result, TimeSpan errorMessageAutoHide)
+        protected virtual bool AssertNoError(SafeWrapperResult result, TimeSpan errorMessageAutoHide)
         {
             if (result == null)
             {
@@ -349,7 +349,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         }
 
         /// <inheritdoc cref="AssertNoError(SafeWrapperResult, TimeSpan, bool)"/>
-        protected bool AssertNoError(SafeWrapperResult result)
+        protected virtual bool AssertNoError(SafeWrapperResult result)
         {
             return AssertNoError(result, TimeSpan.Zero);
         }
