@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32.SafeHandles;
+using System;
 using System.Diagnostics;
 
 namespace ClipboardCanvas.Extensions
@@ -24,5 +25,8 @@ namespace ClipboardCanvas.Extensions
                 return element;
             }
         }
+
+        public static SafeFileHandle ToSafeFileHandle(this IntPtr unsafeHandle) =>
+            new SafeFileHandle(unsafeHandle, true);
     }
 }

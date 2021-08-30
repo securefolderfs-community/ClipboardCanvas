@@ -17,6 +17,21 @@ namespace ClipboardCanvas.UnsafeNative
             public uint nFileSizeLow;
         }
 
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct BY_HANDLE_FILE_INFORMATION
+        {
+            public uint FileAttributes;
+            public FILETIME CreationTime;
+            public FILETIME LastAccessTime;
+            public FILETIME LastWriteTime;
+            public uint VolumeSerialNumber;
+            public uint FileSizeHigh;
+            public uint FileSizeLow;
+            public uint NumberOfLinks;
+            public uint FileIndexHigh;
+            public uint FileIndexLow;
+        }
+
         public enum GET_FILEEX_INFO_LEVELS
         {
             GetFileExInfoStandard,
@@ -49,6 +64,32 @@ namespace ClipboardCanvas.UnsafeNative
             OpenReparsePoint = 0x00200000,
             OpenNoRecall = 0x00100000,
             FirstPipeInstance = 0x00080000
+        }
+
+        public enum FILE_INFO_BY_HANDLE_CLASS
+        {
+            FileBasicInfo = 0,
+            FileStandardInfo = 1,
+            FileNameInfo = 2,
+            FileRenameInfo = 3,
+            FileDispositionInfo = 4,
+            FileAllocationInfo = 5,
+            FileEndOfFileInfo = 6,
+            FileStreamInfo = 7,
+            FileCompressionInfo = 8,
+            FileAttributeTagInfo = 9,
+            FileIdBothDirectoryInfo = 10,
+            FileIdBothDirectoryRestartInfo = 11,
+            FileIoPriorityHintInfo = 12,
+            FileRemoteProtocolInfo = 13,
+            FileFullDirectoryInfo = 14,
+            FileFullDirectoryRestartInfo = 15,
+            FileStorageInfo = 16,
+            FileAlignmentInfo = 17,
+            FileIdInfo = 18,
+            FileIdExtdDirectoryInfo = 19,
+            FileIdExtdDirectoryRestartInfo = 20,
+            MaximumFileInfoByHandlesClass = 21
         }
 
         public const uint GENERIC_READ = 0x80000000;

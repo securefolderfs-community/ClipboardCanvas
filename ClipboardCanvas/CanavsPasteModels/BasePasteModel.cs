@@ -149,8 +149,8 @@ namespace ClipboardCanvas.CanavsPasteModels
             if (IsContentAsReference && await sourceItem == null)
             {
                 // We need to update the reference file because the one we created is empty
-                ReferenceFile referenceFile = await ReferenceFile.GetReferenceFile(associatedFile);
-                return await referenceFile.UpdateReference(_pastedItem.Path);
+                ReferenceFile referenceFile = await ReferenceFile.CreateReferenceFileFromFile(associatedFile, _pastedItem);
+                return referenceFile.LastError;
             } 
             else
             {

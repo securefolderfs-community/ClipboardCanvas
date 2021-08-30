@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -7,7 +8,7 @@ using ClipboardCanvas.Enums;
 using ClipboardCanvas.Exceptions;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
-using System;
+using ClipboardCanvas.UnsafeNative;
 
 namespace ClipboardCanvas.ReferenceItems
 {
@@ -30,12 +31,57 @@ namespace ClipboardCanvas.ReferenceItems
             this.ReferencedItem = referencedItem;
         }
 
-        public async Task<SafeWrapperResult> UpdateReference(string newPath)
+        /// <summary>
+        /// Updates the underlying file and fileData
+        /// </summary>
+        /// <param name="newPath"></param>
+        /// <returns></returns>
+        private async Task<SafeWrapperResult> UpdateReference(string newPath, bool regenerateReferenceItem)
         {
-            _referenceFileData = new ReferenceFileData(newPath);
+            if (!StorageHelpers.Existsh(newPath))
+            {
+                return new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "File does not exist.");
+            }
+
+            long fileId = UnsafeNativeHelpers.GetFileId(newPath);
+            bool isRepairable = fileId != -1;
+
+            _referenceFileData = new ReferenceFileData(newPath, fileId, isRepairable);
             string serialized = JsonConvert.SerializeObject(_referenceFileData, Formatting.Indented);
 
-            return await FilesystemOperations.WriteFileText(_innerReferenceFile, serialized);
+            SafeWrapperResult writeFileTextResult = await FilesystemOperations.WriteFileText(_innerReferenceFile, serialized);
+            if (!writeFileTextResult)
+            {
+                return writeFileTextResult;
+            }
+
+            if (regenerateReferenceItem)
+            {
+                SafeWrapper<IStorageItem> referencedItem = await StorageHelpers.ToStorageItemWithError<IStorageItem>(newPath);
+                this.ReferencedItem = referencedItem.Result;
+
+                return referencedItem;
+            }
+
+            return SafeWrapperResult.SUCCESS;
+        }
+
+        public static async Task<ReferenceFile> CreateReferenceFileFromFile(StorageFile emptyReferenceFile, IStorageItem referencedItem)
+        {
+            if (!FileHelpers.IsPathEqualExtension(emptyReferenceFile.Path, Constants.FileSystem.REFERENCE_FILE_EXTENSION))
+            {
+                return new ReferenceFile(emptyReferenceFile, null)
+                {
+                    LastError = new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentException(), "Empty file uses invalid Reference File extension.")
+                };
+            }
+
+            ReferenceFile referenceFile = new ReferenceFile(emptyReferenceFile, referencedItem);
+
+            SafeWrapperResult result = await referenceFile.UpdateReference(referencedItem.Path, false);
+            referenceFile.LastError = result;
+
+            return referenceFile;
         }
 
         private static async Task<SafeWrapper<ReferenceFileData>> ReadData(StorageFile referenceFile)
@@ -50,26 +96,48 @@ namespace ClipboardCanvas.ReferenceItems
             return (referenceFileData, SafeWrapperResult.SUCCESS);
         }
 
-        public static async Task<ReferenceFile> GetReferenceFile(StorageFile referenceFile)
+        public static async Task<ReferenceFile> GetReferenceFile(StorageFile file)
         {
             // The file is not a Reference File
-            if (!IsReferenceFile(referenceFile))
+            if (!IsReferenceFile(file))
             {
                 return null;
             }
 
-            // The file does not exist
-            if (!StorageHelpers.Existsh(referenceFile.Path))
+            // The referenceFile does not exist
+            if (!StorageHelpers.Existsh(file.Path))
             {
-                return new ReferenceFile(referenceFile, null)
+                return new ReferenceFile(file, null)
                 {
                     LastError = new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "Couldn't resolve item associated with path.")
                 };
             }
 
-            SafeWrapper<ReferenceFileData> referenceFileData = await ReadData(referenceFile);
+            SafeWrapper<ReferenceFileData> referenceFileData = await ReadData(file);
 
-            return await GetFile(referenceFile, referenceFileData);
+            ReferenceFile referenceFile = await GetFile(file, referenceFileData);
+            if (referenceFile.LastError)
+            {
+                if (!referenceFileData.Result.isRepairable) // Bad FileId but the path is correct
+                {
+                    // Repair the FileId
+                    await referenceFile.UpdateReference(referenceFileData.Result.path, false);
+                }
+            }
+            else
+            {
+                if (referenceFile.LastError == OperationErrorCode.InvalidArgument || referenceFile.LastError == OperationErrorCode.NotFound)
+                {
+                    if (referenceFileData.Result?.isRepairable ?? false)
+                    {
+                        // Repair it
+                        SafeWrapperResult result = await RepairReferenceFile(referenceFile, referenceFileData);
+                        referenceFile.LastError = result;
+                    }
+                }
+            }
+
+            return referenceFile;
         }
 
         private static async Task<ReferenceFile> GetFile(StorageFile referenceFile, SafeWrapper<ReferenceFileData> referenceFileData)
@@ -114,6 +182,21 @@ namespace ClipboardCanvas.ReferenceItems
             {
                 _referenceFileData = referenceFileData.Result
             };
+        }
+
+        private static async Task<SafeWrapperResult> RepairReferenceFile(ReferenceFile referenceFile, ReferenceFileData referenceFileData)
+        {
+            if (referenceFileData.fileId == -1)
+            {
+                return referenceFile.LastError;
+            }
+
+            // Get path from FileId...
+
+            // TODO: Implement that when it becomes possible
+
+            // for now, return the error
+            return referenceFile.LastError;
         }
 
         public static bool IsReferenceFile(StorageFile file)
