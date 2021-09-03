@@ -4,8 +4,6 @@ namespace ClipboardCanvas.ViewModels.ContextMenu
 {
     public class MenuFlyoutItemViewModel : BaseMenuFlyoutItemViewModel
     {
-        #region Public Properties
-
         public ICommand Command { get; set; }
 
         public object CommandParameter { get; set; }
@@ -13,7 +11,5 @@ namespace ClipboardCanvas.ViewModels.ContextMenu
         public string IconGlyph { get; set; }
 
         public string Text { get; set; }
-
-        #endregion
     }
 }

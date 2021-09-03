@@ -1,21 +1,47 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Windows.UI.Xaml.Controls;
+using System.Collections.Specialized;
+using System.Collections;
 
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.ViewModels.ContextMenu;
 
 namespace ClipboardCanvas.AttachedProperties
 {
-    public class FlyoutItemsSourceAttachedProperty : BaseAttachedProperty<FlyoutItemsSourceAttachedProperty, List<BaseMenuFlyoutItemViewModel>, MenuFlyout>
+    public class FlyoutItemsSourceAttachedProperty : BaseObservableCollectionAttachedProperty<FlyoutItemsSourceAttachedProperty, BaseMenuFlyoutItemViewModel, MenuFlyout>
     {
-        public override void OnValueChanged(MenuFlyout sender, List<BaseMenuFlyoutItemViewModel> newValue)
+        protected override void ObservableCollection_CollectionChanged(object sender, ObservableCollection<BaseMenuFlyoutItemViewModel> collection, NotifyCollectionChangedEventArgs e)
         {
-            IEnumerable<MenuFlyoutItemBase> flyoutItems = FlyoutHelpers.GetMenuFlyoutItems(newValue);
+            if (sender is not MenuFlyout menuFlyout || collection == null)
+            {
+                return;
+            }
 
-            sender.Items.Clear();
+            UpdateMenuFlyoutItems(menuFlyout, collection, e.NewItems);
+        }
+
+        protected override void OnValueChanged(MenuFlyout sender, ObservableCollection<BaseMenuFlyoutItemViewModel> newValue)
+        {
+            base.OnValueChanged(sender, newValue);
+
+            UpdateMenuFlyoutItems(sender, newValue, newValue);
+        }
+
+        private void UpdateMenuFlyoutItems(MenuFlyout menuFlyout, IList<BaseMenuFlyoutItemViewModel> collection, IList newItems)
+        {
+            if (newItems == null || newItems.Count == 0)
+            {
+                menuFlyout.Items.Clear();
+                return;
+            }
+
+            IEnumerable<MenuFlyoutItemBase> flyoutItems = FlyoutHelpers.GetMenuFlyoutItems(collection);
+
+            menuFlyout.Items.Clear();
             foreach (var item in flyoutItems)
             {
-                sender.Items.Add(item);
+                menuFlyout.Items.Add(item);
             }
         }
     }

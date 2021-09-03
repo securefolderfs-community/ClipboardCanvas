@@ -113,7 +113,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override IPasteModel SetCanvasPasteModel()
         {
-            return new FallbackPasteModel(associatedCollection, new StatusCenterOperationReceiver());
+            return new FallbackPasteModel(AssociatedCollection, new StatusCenterOperationReceiver());
         }
 
         protected override bool CheckCanPasteReference()
@@ -123,6 +123,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task OnReferencePasted()
         {
+            await base.OnReferencePasted();
+
             string newPath = await CanvasHelpers.SafeGetCanvasItemPath(canvasItem);
 
             this._FilePath = newPath;

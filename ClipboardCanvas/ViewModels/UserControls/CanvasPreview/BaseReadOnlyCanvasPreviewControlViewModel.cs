@@ -1,7 +1,7 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System;
-using System.Collections.Generic;
 using System.Threading;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -17,6 +17,7 @@ using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
 using ClipboardCanvas.Interfaces.Canvas;
+using ClipboardCanvas.CanvasFileReceivers;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 {
@@ -51,7 +52,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         public bool IsContentLoaded => CanvasViewModel?.IsContentLoaded ?? false;
 
-        public List<BaseMenuFlyoutItemViewModel> ContextMenuItems => CanvasViewModel?.ContextMenuItems;
+        public ObservableCollection<BaseMenuFlyoutItemViewModel> ContextMenuItems => CanvasViewModel?.ContextMenuItems;
 
         #endregion
 
@@ -125,7 +126,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             }
         }
 
-        public virtual async Task<SafeWrapperResult> TryDeleteData(bool hideConfirmation = false)
+        public virtual async Task<SafeWrapperResult> TryDeleteData(ICanvasItemReceiverModel canvasItemReceiver = null, bool hideConfirmation = false)
         {
             if (CanvasViewModel == null)
             {
@@ -146,7 +147,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             }
             else
             {
-                return await CanvasViewModel.TryDeleteData(hideConfirmation);
+                return await CanvasViewModel.TryDeleteData(canvasItemReceiver, hideConfirmation);
             }
         }
 
@@ -163,6 +164,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             }
 
             return await CanvasViewModel.SetDataToClipboard();
+        }
+
+        public virtual async Task<SafeWrapper<CanvasItem>> PasteOverrideReference()
+        {
+            if (CanvasViewModel == null)
+            {
+                return (null, CanvasNullResult);
+            }
+
+            return await CanvasViewModel.PasteOverrideReference();
         }
 
         #endregion

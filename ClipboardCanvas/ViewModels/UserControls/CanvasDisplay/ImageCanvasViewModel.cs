@@ -103,7 +103,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override IPasteModel SetCanvasPasteModel()
         {
-            return new ImagePasteModel(associatedCollection, new StatusCenterOperationReceiver());
+            return new ImagePasteModel(AssociatedCollection, new StatusCenterOperationReceiver());
         }
 
         #endregion

@@ -8,7 +8,7 @@ namespace ClipboardCanvas.AttachedProperties
 {
     public class SettingsFrameNavigationAttachedProperty : BaseAttachedProperty<SettingsFrameNavigationAttachedProperty, SettingsFrameNavigationDataModel, Frame>
     {
-        public override void OnValueChanged(Frame sender, SettingsFrameNavigationDataModel newValue)
+        protected override void OnValueChanged(Frame sender, SettingsFrameNavigationDataModel newValue)
         {
             switch (newValue.pageType)
             {

@@ -5,15 +5,15 @@ namespace ClipboardCanvas.AttachedProperties
 {
     public class TextBoxFocusAttachedProperty : BaseGenericAttachedProperty<TextBoxFocusAttachedProperty, bool>
     {
-        public override void OnValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        protected override void OnValueChanged(DependencyObject sender, bool e)
         {
-            if (sender is not TextBox textBox || e.NewValue is not bool value)
+            if (sender is not TextBox textBox)
             {
                 return;
             }
 
             // Focus
-            if (value)
+            if (e)
             {
                 textBox.Focus(FocusState.Programmatic);
                 textBox.SelectAll();

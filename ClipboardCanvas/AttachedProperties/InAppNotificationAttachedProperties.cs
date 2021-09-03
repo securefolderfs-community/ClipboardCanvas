@@ -4,7 +4,7 @@ namespace ClipboardCanvas.AttachedProperties
 {
     public class InAppNotificationShowHideControlAttachedProperty : BaseAttachedProperty<InAppNotificationShowHideControlAttachedProperty, bool, InAppNotification>
     {
-        public override void OnValueChanged(InAppNotification sender, bool newValue)
+        protected override void OnValueChanged(InAppNotification sender, bool newValue)
         {
             if (newValue)
             {

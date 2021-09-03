@@ -64,7 +64,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override IPasteModel SetCanvasPasteModel()
         {
-            return new MarkdownPasteModel(associatedCollection, new StatusCenterOperationReceiver());
+            return new MarkdownPasteModel(AssociatedCollection, new StatusCenterOperationReceiver());
         }
 
         #endregion

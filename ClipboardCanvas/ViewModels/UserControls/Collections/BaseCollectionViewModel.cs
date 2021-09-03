@@ -395,7 +395,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public async Task<SafeWrapperResult> DeleteCollectionItem(CollectionItemViewModel itemToDelete, bool permanently = true)
         {
-            SafeWrapperResult result = await FilesystemOperations.DeleteItem(itemToDelete.AssociatedItem, permanently);
+            SafeWrapperResult result = await FilesystemOperations.DeleteItem(itemToDelete?.AssociatedItem, permanently);
 
             if (result)
             {

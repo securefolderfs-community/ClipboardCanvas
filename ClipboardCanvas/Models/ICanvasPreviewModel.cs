@@ -27,12 +27,6 @@ namespace ClipboardCanvas.Models
         Task<SafeWrapperResult> TryPasteData(DataPackageView dataPackage, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Overrides the reference and pastes the file to the collection
-        /// </summary>
-        /// <returns></returns>
-        Task<SafeWrapperResult> PasteOverrideReference();
-
-        /// <summary>
         /// Opens new canvas
         /// </summary>
         void OpenNewCanvas();

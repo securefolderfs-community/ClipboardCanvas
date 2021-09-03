@@ -136,6 +136,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AttachedProperties\BaseObservableCollectionAttachedProperty.cs" />
     <Compile Include="CanavsPasteModels\BasePasteModel.cs" />
     <Compile Include="CanavsPasteModels\FallbackPasteModel.cs" />
     <Compile Include="CanavsPasteModels\MarkdownPasteModel.cs" />

@@ -90,7 +90,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             this.cancellationToken = cancellationToken;
             SafeWrapperResult fetchDataToViewResult = SafeWrapperResult.SUCCESS;
 
-            RaiseOnPasteInitiatedEvent(this, new PasteInitiatedEventArgs(false, null, ContentType, associatedCollection));
+            RaiseOnPasteInitiatedEvent(this, new PasteInitiatedEventArgs(false, null, ContentType, AssociatedCollection));
 
             // First, set Infinite Canvas folder
             SafeWrapperResult initializeInfiniteCanvasFolderResult = await InitializeInfiniteCanvasFolder();
@@ -148,7 +148,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 }
 
                 // Add new object to Infinite Canvas
-                var interactableCanvasControlItem = await InteractableCanvasControlModel.AddItem(associatedCollection, pastedItemContentType, pastedItem, _infiniteCanvasFileReceiver, cancellationToken);
+                var interactableCanvasControlItem = await InteractableCanvasControlModel.AddItem(AssociatedCollection, pastedItemContentType, pastedItem, _infiniteCanvasFileReceiver, cancellationToken);
 
                 if (cancellationToken.IsCancellationRequested) // Check if it's canceled
                 {
@@ -270,7 +270,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 }
 
                 // Add to canvas
-                var interactableCanvasItem = await InteractableCanvasControlModel?.AddItem(associatedCollection, itemContentType, itemCanvasItem, _infiniteCanvasFileReceiver, cancellationToken);
+                var interactableCanvasItem = await InteractableCanvasControlModel?.AddItem(AssociatedCollection, itemContentType, itemCanvasItem, _infiniteCanvasFileReceiver, cancellationToken);
                 interactableCanvasList.Add(interactableCanvasItem);
             }
 
@@ -371,7 +371,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             var action_openInfiniteCanvasFolder = new SuggestedActionsControlItemViewModel(
                 new AsyncRelayCommand(async () =>
                 {
-                    await associatedCollection.CurrentCollectionItemViewModel.OpenFile();
+                    await AssociatedCollection.CurrentCollectionItemViewModel.OpenFile();
                 }), "Open Infinite Canvas folder", "\uE838");
 
             actions.Add(action_paste);
@@ -487,7 +487,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                                 {
                                     CanvasItem canvasItem = new CanvasItem(changedItem);
 
-                                    var interactableCanvasControlItem = await InteractableCanvasControlModel.AddItem(associatedCollection, contentType, canvasItem, _infiniteCanvasFileReceiver, cancellationToken);
+                                    var interactableCanvasControlItem = await InteractableCanvasControlModel.AddItem(AssociatedCollection, contentType, canvasItem, _infiniteCanvasFileReceiver, cancellationToken);
                                     if (interactableCanvasControlItem != null)
                                     {
                                         await interactableCanvasControlItem.LoadContent();
@@ -575,14 +575,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 string folderName = DateTime.Now.ToString(Constants.FileSystem.CANVAS_FILE_FILENAME_DATE_FORMAT);
                 folderName = $"{folderName}{Constants.FileSystem.INFINITE_CANVAS_EXTENSION}";
 
-                SafeWrapper<CanvasItem> canvasFolderResult = await associatedCollection.CreateNewCanvasFolder(folderName);
+                SafeWrapper<CanvasItem> canvasFolderResult = await AssociatedCollection.CreateNewCanvasFolder(folderName);
 
                 if (!canvasFolderResult)
                 {
                     return canvasFolderResult;
                 }
                 canvasItem = new InfiniteCanvasItem(canvasFolderResult.Result.AssociatedItem, await canvasFolderResult.Result.SourceItem);
-                collectionItemViewModel = associatedCollection.FindCollectionItem(canvasItem);
+                collectionItemViewModel = AssociatedCollection.FindCollectionItem(canvasItem);
 
                 // Initialize Infinite Canvas
                 SafeWrapperResult canvasInitializationResult = await InfiniteCanvasItem.InitializeCanvasFolder();

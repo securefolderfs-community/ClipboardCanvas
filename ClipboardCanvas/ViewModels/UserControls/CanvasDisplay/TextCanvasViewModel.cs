@@ -70,7 +70,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override IPasteModel SetCanvasPasteModel()
         {
-            return new TextPasteModel(associatedCollection, new StatusCenterOperationReceiver());
+            return new TextPasteModel(AssociatedCollection, new StatusCenterOperationReceiver());
         }
 
         protected override void RefreshContextMenuItems()

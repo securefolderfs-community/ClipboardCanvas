@@ -1,9 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
-using ClipboardCanvas.Enums;
 using Windows.Storage;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
+using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.Dialogs;
 using ClipboardCanvas.Services;
@@ -22,6 +23,11 @@ namespace ClipboardCanvas.Helpers
     {
         public static async Task<SafeWrapperResult> DeleteCanvasFile(ICanvasItemReceiverModel canvasItemReceiverModel, CanvasItem canvasItem, bool hideConfirmation = false)
         {
+            if (canvasItemReceiverModel == null || canvasItem == null)
+            {
+                return new SafeWrapperResult(OperationErrorCode.InvalidArgument, new NullReferenceException(), $"{nameof(canvasItemReceiverModel)} or/and {nameof(canvasItem)} were null.");
+            }
+
             IUserSettingsService userSettingsService = Ioc.Default.GetService<IUserSettingsService>();
 
             bool deletePermanently = userSettingsService.DeletePermanentlyAsDefault;
@@ -51,7 +57,7 @@ namespace ClipboardCanvas.Helpers
             {
                 timelineService.RemoveItemFromSection(section, sectionItem);
             }
-
+            
             // Delete!
             return await canvasItemReceiverModel.DeleteItem(canvasItem.AssociatedItem, deletePermanently);
         }

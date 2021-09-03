@@ -6,9 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.Input;
 using System.Windows.Input;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using System.Collections.ObjectModel;
 
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.DataModels.ContentDataModels;
@@ -16,15 +16,15 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Helpers.Filesystem;
-using ClipboardCanvas.Helpers;
 using ClipboardCanvas.EventArguments.InfiniteCanvasEventArgs;
-using ClipboardCanvas.Contexts.Operations;
 using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.Interfaces.Canvas;
+using ClipboardCanvas.ViewModels.ContextMenu;
+using ClipboardCanvas.EventArguments.CanvasControl;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -52,17 +52,13 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public CanvasItem CanvasItem { get; private set; }
 
+        public ObservableCollection<BaseMenuFlyoutItemViewModel> CanvasContextMenuItems => ReadOnlyCanvasPreviewModel?.ContextMenuItems;
+
         private bool _IsPastedAsReference;
         public bool IsPastedAsReference
         {
             get => _IsPastedAsReference;
-            set
-            {
-                if (SetProperty(ref _IsPastedAsReference, value))
-                {
-                    OnPropertyChanged(nameof(DeleteItemText));
-                }
-            }
+            set => SetProperty(ref _IsPastedAsReference, value);
         }
 
         private bool _OverrideReferenceEnabled;
@@ -70,11 +66,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             get => _OverrideReferenceEnabled;
             set => SetProperty(ref _OverrideReferenceEnabled, value);
-        }
-
-        public string DeleteItemText
-        {
-            get => IsPastedAsReference ? "Delete reference" : "Delete item";
         }
 
         private string _DisplayName;
@@ -119,27 +110,9 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #endregion
 
-        #region Events
-
         public event EventHandler<InfiniteCanvasItemRemovalRequestedEventArgs> OnInfiniteCanvasItemRemovalRequestedEvent;
 
-        #endregion
-
-        #region Commands
-
-        public ICommand OpenFileCommand { get; private set; }
-
-        public ICommand SetDataToClipboardCommand { get; private set; }
-
-        public ICommand OpenContainingFolderCommand { get; private set; }
-
-        public ICommand OpenReferenceContainingFolderCommand { get; private set; }
-
-        public ICommand DeleteItemCommand { get; private set; }
-
         public ICommand OverrideReferenceCommand { get; private set; }
-
-        #endregion
 
         #region Constructor
 
@@ -153,52 +126,21 @@ namespace ClipboardCanvas.ViewModels.UserControls
             this._cancellationToken = cancellationToken;
 
             // Create commands
-            OpenFileCommand = new AsyncRelayCommand(OpenFile);
-            SetDataToClipboardCommand = new AsyncRelayCommand(SetDataToClipboard);
-            OpenContainingFolderCommand = new AsyncRelayCommand(OpenContainingFolder);
-            OpenReferenceContainingFolderCommand = new AsyncRelayCommand(() => OpenContainingFolder(false));
-            DeleteItemCommand = new AsyncRelayCommand(DeleteItem);
             OverrideReferenceCommand = new AsyncRelayCommand(OverrideReference);
         }
 
         #endregion
 
-        #region Command Implementation
+        #region Event Handlers
 
-        private async Task SetDataToClipboard()
+        private void ReadOnlyCanvasPreviewModel_OnFileDeletedEvent(object sender, FileDeletedEventArgs e)
         {
-            DataPackage dataPackage = new DataPackage();
-            dataPackage.SetStorageItems((await CanvasItem.SourceItem).ToListSingle());
-
-            ClipboardHelpers.CopyDataPackage(dataPackage);
+            OnInfiniteCanvasItemRemovalRequestedEvent?.Invoke(this, new InfiniteCanvasItemRemovalRequestedEventArgs(this));
         }
 
-        private async Task OpenContainingFolder()
-        {
-            await OpenContainingFolder(true);
-        }
+        #endregion
 
-        private async Task OpenContainingFolder(bool checkForReference)
-        {
-            if (checkForReference)
-            {
-                await StorageHelpers.OpenContainingFolder(await CanvasItem.SourceItem);
-            }
-            else
-            {
-                await StorageHelpers.OpenContainingFolder(CanvasItem.AssociatedItem);
-            }
-        }
-
-        private async Task DeleteItem()
-        {
-            SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(_inifinteCanvasFileReceiver, CanvasItem, false);
-
-            if (result)
-            {
-                OnInfiniteCanvasItemRemovalRequestedEvent?.Invoke(this, new InfiniteCanvasItemRemovalRequestedEventArgs(this));
-            }
-        }
+        #region Helpers
 
         private async Task OverrideReference()
         {
@@ -208,7 +150,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
             }
 
             OverrideReferenceEnabled = false;
-            SafeWrapper<CanvasItem> newCanvasItemResult = await CanvasHelpers.PasteOverrideReference(CanvasItem, _inifinteCanvasFileReceiver, new StatusCenterOperationReceiver());
+            SafeWrapper<CanvasItem> newCanvasItemResult = await this.ReadOnlyCanvasPreviewModel.PasteOverrideReference();
+            OverrideReferenceEnabled = true;
 
             if (newCanvasItemResult)
             {
@@ -223,28 +166,20 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
                 notification.Show(Constants.UI.Notifications.NOTIFICATION_DEFAULT_SHOW_TIME);
             }
-
-            OverrideReferenceEnabled = true;
         }
-
-        #endregion
 
         public async Task OpenFile()
         {
-            bool fileOpened = false;
             if (ReadOnlyCanvasPreviewModel is ICanGetSourceCanvas<IReadOnlyCanvasPreviewModel> canGetSourceCanvas)
             {
                 if (canGetSourceCanvas.DangerousGetSourceCanvas() is ICanOpenFile canOpenFile)
                 {
                     await canOpenFile.OpenFile();
-                    fileOpened = true;
+                    return;
                 }
             }
 
-            if (!fileOpened)
-            {
-                await StorageHelpers.OpenFile(await CanvasItem.SourceItem);
-            }
+            await StorageHelpers.OpenFile(await CanvasItem.SourceItem);
         }
 
         public async Task InitializeDisplayName()
@@ -270,7 +205,14 @@ namespace ClipboardCanvas.ViewModels.UserControls
             if (ReadOnlyCanvasPreviewModel != null)
             {
                 result = await ReadOnlyCanvasPreviewModel.TryLoadExistingData(CanvasItem, _contentType, _cancellationToken);
-                IsPastedAsReference = result && CanvasItem.IsFileAsReference;
+
+                if (result)
+                {
+                    OnPropertyChanged(nameof(CanvasContextMenuItems));
+
+                    ReadOnlyCanvasPreviewModel.OnFileDeletedEvent += ReadOnlyCanvasPreviewModel_OnFileDeletedEvent;
+                    IsPastedAsReference = CanvasItem.IsFileAsReference;
+                }
             }
             else
             {
@@ -285,10 +227,17 @@ namespace ClipboardCanvas.ViewModels.UserControls
             return (await CanvasItem.SourceItem).ToListSingle();
         }
 
+        #endregion
+
         #region IDisposable
 
         public void Dispose()
         {
+            if (ReadOnlyCanvasPreviewModel != null)
+            {
+                ReadOnlyCanvasPreviewModel.OnFileDeletedEvent -= ReadOnlyCanvasPreviewModel_OnFileDeletedEvent;
+            }
+
             _view = null;
         }
 

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using System.Collections.Generic;
 using Windows.Storage;
+using System.Collections.ObjectModel;
 
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 using ClipboardCanvas.Helpers;
@@ -64,10 +65,9 @@ namespace ClipboardCanvas.ViewModels.Pages
             }
         }
 
-        private List<BaseMenuFlyoutItemViewModel> _CanvasContextMenuItems;
-        public List<BaseMenuFlyoutItemViewModel> CanvasContextMenuItems
+        public ObservableCollection<BaseMenuFlyoutItemViewModel> CanvasContextMenuItems
         {
-            get => _contentFinishedLoading ? PasteCanvasModel.ContextMenuItems : _CanvasContextMenuItems;
+            get => PasteCanvasModel?.ContextMenuItems;
         }
 
         private bool _NewCanvasScreenLoad = true;
@@ -182,8 +182,6 @@ namespace ClipboardCanvas.ViewModels.Pages
         public CanvasPageViewModel(ICanvasPageView view)
         {
             this._view = view;
-
-            _CanvasContextMenuItems = new List<BaseMenuFlyoutItemViewModel>();
 
             HookEvents();
 

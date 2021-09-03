@@ -104,13 +104,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task OnReferencePasted()
         {
+            await base.OnReferencePasted();
+
             // Change the source
             _ContentMedia = MediaSource.CreateFromStorageFile(await sourceFile);
         }
 
         protected override IPasteModel SetCanvasPasteModel()
         {
-            return new MediaPasteModel(associatedCollection, new StatusCenterOperationReceiver());
+            return new MediaPasteModel(AssociatedCollection, new StatusCenterOperationReceiver());
         }
 
         #endregion

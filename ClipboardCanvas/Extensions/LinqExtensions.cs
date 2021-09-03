@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace ClipboardCanvas.Extensions
 {
@@ -10,7 +11,7 @@ namespace ClipboardCanvas.Extensions
         /// <br/><br/>
         /// Remarks:
         /// <br/>
-        /// This function is faster than enumerable.Count == 0 since it'll only iterate one element instead of all elements.
+        /// This function is faster than enumerable.Count() == 0 since it'll only iterate one element instead of all elements.
         /// <br/>
         /// This function is null-safe.
         /// </summary>

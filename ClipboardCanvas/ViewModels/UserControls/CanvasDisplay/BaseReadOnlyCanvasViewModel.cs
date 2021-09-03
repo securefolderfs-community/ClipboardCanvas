@@ -1,13 +1,13 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using System.Collections.ObjectModel;
 
 using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Enums;
@@ -25,20 +25,14 @@ using ClipboardCanvas.DataModels;
 using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
+using ClipboardCanvas.Contexts.Operations;
+using ClipboardCanvas.CanvasFileReceivers;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
     public abstract class BaseReadOnlyCanvasViewModel : ObservableObject, IReadOnlyCanvasPreviewModel, IDisposable
     {
         #region Protected Members
-
-        protected IUserSettingsService UserSettings { get; } = Ioc.Default.GetService<IUserSettingsService>();
-
-        protected ICanvasSettingsService CanvasSettings { get; } = Ioc.Default.GetService<ICanvasSettingsService>();
-
-        protected INavigationService NavigationService { get; } = Ioc.Default.GetService<INavigationService>();
-
-        protected ITimelineService TimelineService { get; } = Ioc.Default.GetService<ITimelineService>();
 
         protected readonly IBaseCanvasPreviewControlView view;
 
@@ -70,7 +64,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         /// </summary>
         protected bool isContentAsReference;
 
-        protected ICollectionModel associatedCollection => view?.CollectionModel;
+        protected ICollectionModel AssociatedCollection => view?.CollectionModel;
 
         protected CollectionItemViewModel collectionItemViewModel;
 
@@ -78,17 +72,21 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #endregion
 
-        #region Protected Properties
-
-        protected bool IsDisposed { get; private set; }
-
-        #endregion
-
-        #region Public Properties
+        #region Properties
 
         public static readonly SafeWrapperResult ReferencedFileNotFoundResult = new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "The file referenced was not found");
 
         public static readonly SafeWrapperResult ItemIsNotAFileResult = new SafeWrapperResult(OperationErrorCode.InvalidArgument, new ArgumentException(), "The provided item is not a file.");
+        
+        protected IUserSettingsService UserSettings { get; } = Ioc.Default.GetService<IUserSettingsService>();
+
+        protected ICanvasSettingsService CanvasSettings { get; } = Ioc.Default.GetService<ICanvasSettingsService>();
+
+        protected INavigationService NavigationService { get; } = Ioc.Default.GetService<INavigationService>();
+
+        protected ITimelineService TimelineService { get; } = Ioc.Default.GetService<ITimelineService>();
+
+        protected bool IsDisposed { get; private set; }
 
         public BaseContentTypeModel ContentType { get; protected set; }
 
@@ -96,7 +94,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public bool CanPasteReference { get; protected set; }
 
-        public List<BaseMenuFlyoutItemViewModel> ContextMenuItems { get; protected set; }
+        public ObservableCollection<BaseMenuFlyoutItemViewModel> ContextMenuItems { get; protected set; }
 
         #endregion
 
@@ -126,7 +124,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             this.ContentType = contentType;
             this.view = view;
 
-            this.ContextMenuItems = new List<BaseMenuFlyoutItemViewModel>();
+            this.ContextMenuItems = new ObservableCollection<BaseMenuFlyoutItemViewModel>();
         }
 
         #endregion
@@ -220,9 +218,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return result;
         }
 
-        public virtual async Task<SafeWrapperResult> TryDeleteData(bool hideConfirmation = false)
+        public virtual async Task<SafeWrapperResult> TryDeleteData(ICanvasItemReceiverModel canvasItemReceiver = null, bool hideConfirmation = false)
         {
-            SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(associatedCollection, collectionItemViewModel, hideConfirmation);
+            SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(canvasItemReceiver ?? AssociatedCollection, canvasItem, hideConfirmation);
 
             if (result != OperationErrorCode.Canceled && !AssertNoError(result))
             {
@@ -230,7 +228,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             else if (result != OperationErrorCode.Canceled)
             {
-                RaiseOnFileDeletedEvent(this, new FileDeletedEventArgs(associatedItem, associatedCollection));
+                RaiseOnFileDeletedEvent(this, new FileDeletedEventArgs(associatedItem, AssociatedCollection));
             }
 
             return result;
@@ -262,15 +260,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             ContextMenuItems.DisposeClear();
 
             // May occur when quickly switching between canvases
-            if (collectionItemViewModel == null)
-            {
-                return;
-            }
+            //if (collectionItemViewModel == null)
+            //{
+            //    return;
+            //}
 
             // Open item
             ContextMenuItems.Add(new MenuFlyoutItemViewModel()
             {
-                Command = new AsyncRelayCommand(collectionItemViewModel.OpenFile),
+                Command = new AsyncRelayCommand(async () => await StorageHelpers.OpenFile(await sourceItem)),
                 IconGlyph = "\uE8E5",
                 Text = "Open file"
             });
@@ -289,7 +287,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Open containing folder
             ContextMenuItems.Add(new MenuFlyoutItemViewModel()
             {
-                Command = new AsyncRelayCommand(collectionItemViewModel.OpenContainingFolder),
+                Command = new AsyncRelayCommand(async () => await StorageHelpers.OpenContainingFolder(await sourceItem)),
                 IconGlyph = "\uE838",
                 Text = "Open containing folder"
             });
@@ -299,7 +297,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 ContextMenuItems.Add(new MenuFlyoutItemViewModel()
                 {
-                    Command = new AsyncRelayCommand(() => collectionItemViewModel.OpenContainingFolder(checkForReference: false)),
+                    Command = new AsyncRelayCommand(() => StorageHelpers.OpenContainingFolder(associatedItem)),
                     IconGlyph = "\uE838",
                     Text = "Open reference containing folder"
                 });
@@ -308,10 +306,41 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Delete item
             ContextMenuItems.Add(new MenuFlyoutItemViewModel()
             {
-                Command = new AsyncRelayCommand(() => TryDeleteData()),
+                Command = new AsyncRelayCommand<ICanvasItemReceiverModel>((canvasItemReceiverModel) => TryDeleteData(canvasItemReceiverModel)),
                 IconGlyph = "\uE74D",
-                Text = isContentAsReference ? "Delete reference" : "Delete file"
+                Text = isContentAsReference ? "Delete reference" : "Delete file",
             });
+        }
+
+        public virtual async Task<SafeWrapper<CanvasItem>> PasteOverrideReference()
+        {
+            if (!isContentAsReference)
+            {
+                return new (null, OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Cannot paste file that's not a reference");
+            }
+
+            SafeWrapper<CanvasItem> newCanvasItemResult = await CanvasHelpers.PasteOverrideReference(canvasItem, AssociatedCollection, new StatusCenterOperationReceiver());
+
+            if (newCanvasItemResult)
+            {
+                this.canvasItem = newCanvasItemResult;
+                this.collectionItemViewModel = AssociatedCollection.FindCollectionItem(newCanvasItemResult);
+
+                isContentAsReference = false;
+
+                if (newCanvasItemResult)
+                {
+                    RefreshContextMenuItems();
+                    await OnReferencePasted();
+                }
+            }
+
+            return newCanvasItemResult;
+        }
+
+        protected virtual Task OnReferencePasted()
+        {
+            return Task.CompletedTask;
         }
 
         protected abstract Task<SafeWrapperResult> SetDataFromExistingItem(IStorageItem item);
@@ -398,7 +427,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             collectionItemViewModel.OperationContext.IsEventAlreadyHooked = false;
 
             // Load data again when it's finished, and check if we are still on the canvas to load
-            if (e.result && associatedCollection.IsOnOpenedCanvas(collectionItemViewModel))
+            if (e.result && AssociatedCollection.IsOnOpenedCanvas(collectionItemViewModel))
             {
                 await TryLoadExistingData(collectionItemViewModel, cancellationToken);
             }

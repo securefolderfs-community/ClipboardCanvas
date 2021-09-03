@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
 
 using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.EventArguments.CanvasControl;
-using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
+using ClipboardCanvas.DataModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 {
@@ -71,11 +68,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             return result;
         }
 
-        public async Task<SafeWrapperResult> PasteOverrideReference()
+        public async Task<SafeWrapper<CanvasItem>> PasteOverrideReference()
         {
             if (CanvasViewModel == null)
             {
-                return CanvasNullResult;
+                return (null, CanvasNullResult);
             }
 
             return await CanvasViewModel.PasteOverrideReference();

@@ -86,7 +86,7 @@ namespace ClipboardCanvas.AttachedProperties
             this.OnValueChanged((TTarget)sender, (TProperty)e.NewValue);
         }
 
-        public abstract void OnValueChanged(TTarget sender, TProperty newValue);
+        protected abstract void OnValueChanged(TTarget sender, TProperty newValue);
 
         #endregion
     }

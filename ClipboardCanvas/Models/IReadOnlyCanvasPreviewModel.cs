@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
-
+using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.EventArguments.CanvasControl;
@@ -36,7 +36,7 @@ namespace ClipboardCanvas.Models
         /// <summary>
         /// Context menu options available for the canvas
         /// </summary>
-        List<BaseMenuFlyoutItemViewModel> ContextMenuItems { get; }
+        ObservableCollection<BaseMenuFlyoutItemViewModel> ContextMenuItems { get; }
 
         /// <summary>
         /// Attempts to load existing data to display
@@ -52,7 +52,7 @@ namespace ClipboardCanvas.Models
         /// </summary>
         /// <param name="hideConfirmation">Hides the delete confirmation dialog, overrides <see cref="ApplicationSettings.Interfaces.IUserSettingsService.ShowDeleteConfirmationDialog"/> if necessary</param>
         /// <returns></returns>
-        Task<SafeWrapperResult> TryDeleteData(bool hideConfirmation = false);
+        Task<SafeWrapperResult> TryDeleteData(ICanvasItemReceiverModel canvasItemReceiver = null, bool hideConfirmation = false);
 
         /// <summary>
         /// Frees cached data and disposes the instance
@@ -65,5 +65,11 @@ namespace ClipboardCanvas.Models
         /// </summary>
         /// <returns></returns>
         Task<bool> SetDataToClipboard();
+
+        /// <summary>
+        /// Overrides the reference if possible
+        /// </summary>
+        /// <returns></returns>
+        Task<SafeWrapper<CanvasItem>> PasteOverrideReference();
     }
 }

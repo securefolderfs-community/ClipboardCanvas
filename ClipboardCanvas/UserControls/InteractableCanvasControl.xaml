@@ -2,6 +2,7 @@
     x:Class="ClipboardCanvas.UserControls.InteractableCanvasControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ap="using:ClipboardCanvas.AttachedProperties"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -153,38 +154,7 @@
                         </Grid>
 
                         <Grid.ContextFlyout>
-                            <MenuFlyout>
-                                <MenuFlyoutItem Command="{x:Bind OpenFileCommand}" Text="Open file">
-                                    <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="&#xe8e5;" />
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                                <MenuFlyoutSeparator />
-                                <MenuFlyoutItem Command="{x:Bind SetDataToClipboardCommand}" Text="Copy file">
-                                    <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="&#xe8c8;" />
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                                <MenuFlyoutItem Command="{x:Bind OpenContainingFolderCommand}" Text="Open containing folder">
-                                    <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="&#xe838;" />
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                                <MenuFlyoutItem
-                                    x:Name="OpenReferenceContainingFolderOption"
-                                    x:Load="{x:Bind IsPastedAsReference, Mode=OneWay}"
-                                    Command="{x:Bind OpenReferenceContainingFolderCommand}"
-                                    Text="Open reference containing folder">
-                                    <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="&#xe838;" />
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                                <MenuFlyoutItem Command="{x:Bind DeleteItemCommand}" Text="{x:Bind DeleteItemText, Mode=OneWay}">
-                                    <MenuFlyoutItem.Icon>
-                                        <FontIcon Glyph="&#xe74d;" />
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                            </MenuFlyout>
+                            <MenuFlyout ap:FlyoutItemsSourceAttachedProperty.Value="{x:Bind CanvasContextMenuItems, Mode=OneWay}" />
                         </Grid.ContextFlyout>
                     </Grid>
                 </DataTemplate>

@@ -15,8 +15,6 @@ using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.CanavsPasteModels;
 using ClipboardCanvas.DataModels;
-using ClipboardCanvas.Helpers;
-using ClipboardCanvas.Contexts.Operations;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -57,7 +55,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             this.cancellationToken = cancellationToken;
 
-            RaiseOnPasteInitiatedEvent(this, new PasteInitiatedEventArgs(IsContentLoaded, dataPackage, ContentType, associatedCollection));
+            RaiseOnPasteInitiatedEvent(this, new PasteInitiatedEventArgs(IsContentLoaded, dataPackage, ContentType, AssociatedCollection));
 
             if (IsDisposed)
             {
@@ -89,7 +87,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             isContentAsReference = canvasPasteModel.IsContentAsReference;
 
             // Set collectionItemViewModel because it wasn't set before
-            this.collectionItemViewModel = associatedCollection.FindCollectionItem(canvasItem);
+            this.collectionItemViewModel = AssociatedCollection.FindCollectionItem(canvasItem);
 
             // Notify paste succeeded
             await OnPasteSucceeded(canvasItem);
@@ -123,36 +121,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return SafeWrapperResult.SUCCESS;
         }
 
-        public virtual async Task<SafeWrapperResult> PasteOverrideReference()
-        {
-            if (!isContentAsReference)
-            {
-                return new SafeWrapperResult(OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Cannot paste file that's not a reference");
-            }
-
-            SafeWrapper<CanvasItem> newCanvasItemResult = await CanvasHelpers.PasteOverrideReference(canvasItem, associatedCollection, new StatusCenterOperationReceiver());
-
-            if (newCanvasItemResult)
-            {
-                this.canvasItem = newCanvasItemResult;
-                this.collectionItemViewModel = associatedCollection.FindCollectionItem(newCanvasItemResult);
-
-                isContentAsReference = false;
-
-                if (newCanvasItemResult)
-                {
-                    RefreshContextMenuItems();
-                    await OnReferencePasted();
-                }
-            }
-
-            return newCanvasItemResult;
-        }
-
         public virtual void OpenNewCanvas()
         {
             DiscardData();
-            NavigationService.OpenNewCanvas(associatedCollection);
+            NavigationService.OpenNewCanvas(AssociatedCollection);
         }
 
         public virtual async Task<IEnumerable<SuggestedActionsControlItemViewModel>> GetSuggestedActions()
@@ -182,14 +154,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             var action_openFile = new SuggestedActionsControlItemViewModel(
                                     new AsyncRelayCommand(async () =>
                                     {
-                                        await associatedCollection.CurrentCollectionItemViewModel.OpenFile();
+                                        await AssociatedCollection.CurrentCollectionItemViewModel.OpenFile();
                                     }), "Open file", "\uE8E5");
 
             // Open directory
             var action_openContainingFolder = new SuggestedActionsControlItemViewModel(
                 new AsyncRelayCommand(async () =>
                 {
-                    await associatedCollection.CurrentCollectionItemViewModel.OpenContainingFolder();
+                    await AssociatedCollection.CurrentCollectionItemViewModel.OpenContainingFolder();
                 }), "Open containing folder", "\uE838");
 
             actions.Add(action_openFile);
@@ -206,12 +178,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             // Add new item on Timeline
             var todaySection = await TimelineService.GetOrCreateTodaySection();
-            await TimelineService.AddItemForSection(todaySection, associatedCollection, pastedItem);
-        }
-
-        protected virtual Task OnReferencePasted()
-        {
-            return Task.CompletedTask;
+            await TimelineService.AddItemForSection(todaySection, AssociatedCollection, pastedItem);
         }
 
         protected virtual bool CanPasteAsReference()

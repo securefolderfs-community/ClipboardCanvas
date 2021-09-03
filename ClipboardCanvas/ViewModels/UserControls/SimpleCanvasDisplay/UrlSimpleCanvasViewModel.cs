@@ -6,6 +6,7 @@ using System.Threading;
 using HtmlAgilityPack;
 using Windows.System;
 using Windows.UI.Xaml.Media;
+using Microsoft.Toolkit.Mvvm.Input;
 
 using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
@@ -17,6 +18,7 @@ using ClipboardCanvas.Extensions;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Interfaces.Canvas;
 using ClipboardCanvas.Helpers;
+using ClipboardCanvas.ViewModels.ContextMenu;
 
 namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
 {
@@ -39,8 +41,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
         private int _Item2RowSpan;
         public int Item2RowSpan
         {
-            get => _Item1RowSpan;
-            set => SetProperty(ref _Item1RowSpan, value);
+            get => _Item2RowSpan;
+            set => SetProperty(ref _Item2RowSpan, value);
         }
 
         private string _Url;
@@ -295,6 +297,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
         protected override void RefreshContextMenuItems()
         {
             base.RefreshContextMenuItems();
+
+            ContextMenuItems.AddFront(new MenuFlyoutItemViewModel()
+            {
+                Command = new AsyncRelayCommand(OpenFile),
+                IconGlyph = "\uE8A7",
+                Text = "Open link"
+            });
         }
 
         #endregion
