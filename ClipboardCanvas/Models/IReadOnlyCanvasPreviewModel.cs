@@ -38,6 +38,8 @@ namespace ClipboardCanvas.Models
         /// </summary>
         ObservableCollection<BaseMenuFlyoutItemViewModel> ContextMenuItems { get; }
 
+        ICanvasItemReceiverModel CanvasItemReceiver { get; set; }
+
         /// <summary>
         /// Attempts to load existing data to display
         /// </summary>
@@ -52,7 +54,7 @@ namespace ClipboardCanvas.Models
         /// </summary>
         /// <param name="hideConfirmation">Hides the delete confirmation dialog, overrides <see cref="ApplicationSettings.Interfaces.IUserSettingsService.ShowDeleteConfirmationDialog"/> if necessary</param>
         /// <returns></returns>
-        Task<SafeWrapperResult> TryDeleteData(ICanvasItemReceiverModel canvasItemReceiver = null, bool hideConfirmation = false);
+        Task<SafeWrapperResult> TryDeleteData(bool hideConfirmation = false);
 
         /// <summary>
         /// Frees cached data and disposes the instance

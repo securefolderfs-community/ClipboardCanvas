@@ -96,6 +96,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public ObservableCollection<BaseMenuFlyoutItemViewModel> ContextMenuItems { get; protected set; }
 
+        public ICanvasItemReceiverModel CanvasItemReceiver { get; set; }
+
         #endregion
 
         #region Events
@@ -218,9 +220,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return result;
         }
 
-        public virtual async Task<SafeWrapperResult> TryDeleteData(ICanvasItemReceiverModel canvasItemReceiver = null, bool hideConfirmation = false)
+        public virtual async Task<SafeWrapperResult> TryDeleteData(bool hideConfirmation = false)
         {
-            SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(canvasItemReceiver ?? AssociatedCollection, canvasItem, hideConfirmation);
+            SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(CanvasItemReceiver ?? AssociatedCollection, canvasItem, hideConfirmation);
 
             if (result != OperationErrorCode.Canceled && !AssertNoError(result))
             {
@@ -306,7 +308,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Delete item
             ContextMenuItems.Add(new MenuFlyoutItemViewModel()
             {
-                Command = new AsyncRelayCommand<ICanvasItemReceiverModel>((canvasItemReceiverModel) => TryDeleteData(canvasItemReceiverModel)),
+                Command = new AsyncRelayCommand(() => TryDeleteData()),
                 IconGlyph = "\uE74D",
                 Text = isContentAsReference ? "Delete reference" : "Delete file",
             });
@@ -319,12 +321,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return new (null, OperationErrorCode.InvalidOperation, new InvalidOperationException(), "Cannot paste file that's not a reference");
             }
 
-            SafeWrapper<CanvasItem> newCanvasItemResult = await CanvasHelpers.PasteOverrideReference(canvasItem, AssociatedCollection, new StatusCenterOperationReceiver());
+            SafeWrapper<CanvasItem> newCanvasItemResult = await CanvasHelpers.PasteOverrideReference(canvasItem, CanvasItemReceiver ?? AssociatedCollection, new StatusCenterOperationReceiver());
 
             if (newCanvasItemResult)
             {
                 this.canvasItem = newCanvasItemResult;
-                this.collectionItemViewModel = AssociatedCollection.FindCollectionItem(newCanvasItemResult);
+                this.collectionItemViewModel = AssociatedCollection?.FindCollectionItem(newCanvasItemResult);
 
                 isContentAsReference = false;
 

@@ -212,6 +212,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
                     ReadOnlyCanvasPreviewModel.OnFileDeletedEvent += ReadOnlyCanvasPreviewModel_OnFileDeletedEvent;
                     IsPastedAsReference = CanvasItem.IsFileAsReference;
+                    ReadOnlyCanvasPreviewModel.CanvasItemReceiver = _inifinteCanvasFileReceiver;
                 }
             }
             else

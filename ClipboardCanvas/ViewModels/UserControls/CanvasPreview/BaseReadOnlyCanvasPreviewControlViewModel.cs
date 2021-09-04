@@ -52,6 +52,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 
         public bool IsContentLoaded => CanvasViewModel?.IsContentLoaded ?? false;
 
+        public ICanvasItemReceiverModel CanvasItemReceiver
+        {
+            get => CanvasViewModel?.CanvasItemReceiver;
+            set => CanvasViewModel.CanvasItemReceiver = value;
+        }
+
         public ObservableCollection<BaseMenuFlyoutItemViewModel> ContextMenuItems => CanvasViewModel?.ContextMenuItems;
 
         #endregion
@@ -126,12 +132,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             }
         }
 
-        public virtual async Task<SafeWrapperResult> TryDeleteData(ICanvasItemReceiverModel canvasItemReceiver = null, bool hideConfirmation = false)
+        public virtual async Task<SafeWrapperResult> TryDeleteData(bool hideConfirmation = false)
         {
             if (CanvasViewModel == null)
             {
                 // The canvas is null, delete the reference file manually
-                SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(collectionModel, collectionItemViewModel, hideConfirmation);
+                SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(CanvasItemReceiver ?? collectionModel, collectionItemViewModel, hideConfirmation);
 
                 if (result != OperationErrorCode.Canceled && !result)
                 {
@@ -147,7 +153,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             }
             else
             {
-                return await CanvasViewModel.TryDeleteData(canvasItemReceiver, hideConfirmation);
+                return await CanvasViewModel.TryDeleteData(hideConfirmation);
             }
         }
 

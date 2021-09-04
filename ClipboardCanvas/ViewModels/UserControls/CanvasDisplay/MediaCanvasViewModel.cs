@@ -112,7 +112,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override IPasteModel SetCanvasPasteModel()
         {
-            return new MediaPasteModel(AssociatedCollection, new StatusCenterOperationReceiver());
+            return new MediaPasteModel(CanvasItemReceiver ?? AssociatedCollection, new StatusCenterOperationReceiver());
         }
 
         #endregion

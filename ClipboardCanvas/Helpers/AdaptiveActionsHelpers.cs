@@ -21,7 +21,7 @@ namespace ClipboardCanvas.Helpers
             var action_deleteReference = new SuggestedActionsControlItemViewModel(
                 new AsyncRelayCommand(async () =>
                 {
-                    await pasteCanvasModel.TryDeleteData(null, true);
+                    await pasteCanvasModel.TryDeleteData(true);
                 }), "Delete Reference", "\uE738");
 
             actions.Add(action_deleteReference);

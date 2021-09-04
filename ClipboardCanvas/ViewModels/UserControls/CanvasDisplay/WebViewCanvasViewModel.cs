@@ -115,7 +115,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override IPasteModel SetCanvasPasteModel()
         {
-            return new WebViewPasteModel(Mode, AssociatedCollection, new StatusCenterOperationReceiver());
+            return new WebViewPasteModel(Mode, CanvasItemReceiver ?? AssociatedCollection, new StatusCenterOperationReceiver());
         }
 
         #endregion

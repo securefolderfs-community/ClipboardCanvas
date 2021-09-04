@@ -113,7 +113,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override IPasteModel SetCanvasPasteModel()
         {
-            return new FallbackPasteModel(AssociatedCollection, new StatusCenterOperationReceiver());
+            return new FallbackPasteModel(CanvasItemReceiver ?? AssociatedCollection, new StatusCenterOperationReceiver());
         }
 
         protected override bool CheckCanPasteReference()

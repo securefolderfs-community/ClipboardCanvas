@@ -87,7 +87,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             isContentAsReference = canvasPasteModel.IsContentAsReference;
 
             // Set collectionItemViewModel because it wasn't set before
-            this.collectionItemViewModel = AssociatedCollection.FindCollectionItem(canvasItem);
+            this.collectionItemViewModel = AssociatedCollection?.FindCollectionItem(canvasItem);
 
             // Notify paste succeeded
             await OnPasteSucceeded(canvasItem);
