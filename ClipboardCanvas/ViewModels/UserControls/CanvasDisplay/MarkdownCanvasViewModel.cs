@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.ApplicationModel.DataTransfer;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
@@ -65,6 +66,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         protected override IPasteModel SetCanvasPasteModel()
         {
             return new MarkdownPasteModel(CanvasItemReceiver ?? AssociatedCollection, new StatusCenterOperationReceiver());
+        }
+
+        public override Task<bool> SetDataToDataPackage(DataPackage data)
+        {
+            data.SetText(MarkdownText);
+
+            return Task.FromResult(true);
         }
 
         #endregion

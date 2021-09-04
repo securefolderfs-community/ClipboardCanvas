@@ -24,6 +24,9 @@ using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.Serialization;
 using ClipboardCanvas.DataModels.Navigation;
+using ClipboardCanvas.Helpers.SafetyHelpers;
+using Windows.ApplicationModel.DataTransfer;
+using ClipboardCanvas.Helpers;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {
@@ -135,6 +138,8 @@ namespace ClipboardCanvas.ViewModels.Pages
         #region Events
 
         public event EventHandler<CanvasPreviewSelectedItemChangedEventArgs> OnCanvasPreviewSelectedItemChangedEvent;
+
+        public event EventHandler<CanvasPreviewPasteRequestedEventArgs> OnCanvasPreviewPasteRequestedEvent;
 
         #endregion
 
@@ -266,6 +271,22 @@ namespace ClipboardCanvas.ViewModels.Pages
                         SearchControlModel.FindPrevious();
                         break;
                     }
+
+                case (c: false, s: false, a: false, w: false, k: VirtualKey.Enter): // Open
+                    {
+                        this.OpenItem(SelectedItem);
+                        break;
+                    }
+
+                case (c: true, s: false, a: false, w: false, k: VirtualKey.V): // Paste
+                    {
+                        SafeWrapper<DataPackageView> dataPackage = ClipboardHelpers.GetClipboardData();
+                        if (dataPackage)
+                        {
+                            OnCanvasPreviewPasteRequestedEvent?.Invoke(this, new CanvasPreviewPasteRequestedEventArgs(dataPackage, AssociatedCollectionModel));
+                        }
+                        break;
+                    }
             }
         }
 
@@ -302,6 +323,11 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public void OpenItem(CollectionPreviewItemViewModel itemToOpen)
         {
+            if (itemToOpen == null)
+            {
+                return;
+            }
+
             int indexOfSelectedItem = Items.IndexOf(itemToOpen);
             _view.PrepareConnectedAnimation(indexOfSelectedItem);
 

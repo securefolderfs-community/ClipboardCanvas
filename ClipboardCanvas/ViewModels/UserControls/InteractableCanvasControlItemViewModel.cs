@@ -24,6 +24,7 @@ using ClipboardCanvas.Enums;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.EventArguments.CanvasControl;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -213,9 +214,19 @@ namespace ClipboardCanvas.ViewModels.UserControls
             return result;
         }
 
-        public async Task<IReadOnlyList<IStorageItem>> GetDragData()
+        public async Task SetDragData(DataPackage data)
         {
-            return (await CanvasItem.SourceItem).ToListSingle();
+            bool dataSet = false;
+
+            if (ReadOnlyCanvasPreviewModel != null)
+            {
+                dataSet = await ReadOnlyCanvasPreviewModel.SetDataToDataPackage(data);
+            }
+
+            if (!dataSet)
+            {
+                data.SetStorageItems((await CanvasItem.SourceItem).ToListSingle());
+            }
         }
 
         #endregion

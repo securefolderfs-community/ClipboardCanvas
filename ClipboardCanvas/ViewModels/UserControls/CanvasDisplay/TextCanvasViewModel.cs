@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Microsoft.Toolkit.Mvvm.Input;
 using System.Collections.Generic;
+using Windows.ApplicationModel.DataTransfer;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.DataModels.ContentDataModels;
@@ -103,6 +104,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 Text = "Copy selected text",
                 IsShown = () => ControlView?.IsTextSelected ?? false
             });
+        }
+
+        public override Task<bool> SetDataToDataPackage(DataPackage data)
+        {
+            data.SetText(Text);
+
+            return Task.FromResult(true);
         }
 
         #endregion

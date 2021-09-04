@@ -1,4 +1,5 @@
 ﻿using Windows.ApplicationModel.DataTransfer;
+
 using ClipboardCanvas.Helpers.SafetyHelpers;
 
 namespace ClipboardCanvas.Helpers
@@ -7,14 +8,14 @@ namespace ClipboardCanvas.Helpers
     {
         private static readonly object clipboardLock = new object();
 
-        public static void CopyDataPackage(DataPackage dataPackage)
+        public static void CopyDataPackage(DataPackage data)
         {
-            if (dataPackage != null)
+            if (data != null)
             {
                 lock (clipboardLock)
                 {
-                    dataPackage.RequestedOperation = DataPackageOperation.Copy;
-                    Clipboard.SetContent(dataPackage);
+                    data.RequestedOperation = DataPackageOperation.Copy;
+                    Clipboard.SetContent(data);
                     Clipboard.Flush();
                 }
             }

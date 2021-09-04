@@ -52,6 +52,13 @@
                 </icore:EventTriggerBehavior>
             </i:Interaction.Behaviors>
         </KeyboardAccelerator>
+        <KeyboardAccelerator Key="V" Modifiers="Control">
+            <i:Interaction.Behaviors>
+                <icore:EventTriggerBehavior EventName="Invoked">
+                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
+                </icore:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+        </KeyboardAccelerator>
     </Page.KeyboardAccelerators>
 
     <Grid Padding="15,10,15,10">
@@ -82,6 +89,17 @@
                     <icore:InvokeCommandAction Command="{x:Bind ViewModel.ContainerChangingCommand}" />
                 </icore:EventTriggerBehavior>
             </i:Interaction.Behaviors>
+
+            <GridView.KeyboardAccelerators>
+                <KeyboardAccelerator Key="Enter" Modifiers="None">
+                    <i:Interaction.Behaviors>
+                        <icore:EventTriggerBehavior EventName="Invoked">
+                            <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
+                        </icore:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </KeyboardAccelerator>
+            </GridView.KeyboardAccelerators>
+
             <!--  Remove Reveal Highlight Effect  -->
             <GridView.ItemContainerStyle>
                 <Style TargetType="GridViewItem">

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Windows.ApplicationModel.DataTransfer;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -54,6 +54,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             OnPropertyChanged(nameof(ContentText));
 
             return await Task.FromResult(SafeWrapperResult.SUCCESS);
+        }
+
+        public override Task<bool> SetDataToDataPackage(DataPackage data)
+        {
+            data.SetText(ContentText);
+
+            return Task.FromResult(true);
         }
 
         #endregion

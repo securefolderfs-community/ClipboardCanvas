@@ -19,6 +19,7 @@ using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.ViewModels.ContextMenu;
 using System.Windows.Input;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
 {
@@ -307,6 +308,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
                 IconGlyph = "\uE8A7",
                 Text = "Open link"
             });
+        }
+
+        public override Task<bool> SetDataToDataPackage(DataPackage data)
+        {
+            data.SetText(Url);
+
+            return Task.FromResult(true);
         }
 
         #endregion

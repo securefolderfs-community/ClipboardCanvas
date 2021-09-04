@@ -2,6 +2,8 @@
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
+
 using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.DataModels.ContentDataModels;
@@ -63,10 +65,16 @@ namespace ClipboardCanvas.Models
         void DiscardData();
 
         /// <summary>
-        /// Sets the data to clipboard determined
+        /// Sets the <paramref name="data"/> with appropriate Canvas data
         /// </summary>
         /// <returns></returns>
-        Task<bool> SetDataToClipboard();
+        Task<bool> SetDataToDataPackage(DataPackage data);
+
+        /// <summary>
+        /// Copies the Canvas data to clipboard
+        /// </summary>
+        /// <returns></returns>
+        Task<bool> CopyData();
 
         /// <summary>
         /// Overrides the reference if possible

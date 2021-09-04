@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Windows.Storage;
+﻿using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace ClipboardCanvas.Models
 {
     public interface IDragDataProviderModel
     {
-        Task<IReadOnlyList<IStorageItem>> GetDragData();
+        Task SetDragData(DataPackage data);
     }
 }

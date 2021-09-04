@@ -435,6 +435,15 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CheckCollectionPreviewPageNavigation();
         }
 
+        private async void CollectionPreviewPageModel_OnCanvasPreviewPasteRequestedEvent(object sender, CanvasPreviewPasteRequestedEventArgs e)
+        {
+            e.collectionModel.SetIndexOnNewCanvas();
+            NavigationService.OpenCanvasPage(e.collectionModel);
+            await Task.Delay(300);
+
+            await PasteCanvasPageModel.PasteCanvasModel.TryPasteData(e.forwardedDataPackage, _canvasLoadCancellationTokenSource.Token);
+        }
+
         #endregion
 
         #endregion
@@ -853,6 +862,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             if (CollectionPreviewPageModel != null)
             {
                 this.CollectionPreviewPageModel.OnCanvasPreviewSelectedItemChangedEvent += CollectionPreviewPageModel_OnCanvasPreviewSelectedItemChangedEvent;
+                this.CollectionPreviewPageModel.OnCanvasPreviewPasteRequestedEvent += CollectionPreviewPageModel_OnCanvasPreviewPasteRequestedEvent;
             }
         }
 
@@ -861,6 +871,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             if (CollectionPreviewPageModel != null)
             {
                 this.CollectionPreviewPageModel.OnCanvasPreviewSelectedItemChangedEvent -= CollectionPreviewPageModel_OnCanvasPreviewSelectedItemChangedEvent;
+                this.CollectionPreviewPageModel.OnCanvasPreviewPasteRequestedEvent -= CollectionPreviewPageModel_OnCanvasPreviewPasteRequestedEvent;
             }
         }
 

@@ -221,7 +221,10 @@ namespace ClipboardCanvas.ViewModels.Pages
 
                 case (c: true, s: false, a: false, w: false, k: VirtualKey.C):
                     {
-                        PasteCanvasModel?.SetDataToClipboard();
+                        if (PasteCanvasModel != null)
+                        {
+                            await PasteCanvasModel.CopyData();
+                        }
                         break;
                     }
 

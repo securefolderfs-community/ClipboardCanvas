@@ -242,14 +242,20 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             IsDisposed = false;
         }
 
-        public virtual async Task<bool> SetDataToClipboard()
+        public virtual async Task<bool> SetDataToDataPackage(DataPackage data)
         {
-            DataPackage dataPackage = new DataPackage();
-            dataPackage.SetStorageItems((await sourceItem).ToListSingle());
-
-            ClipboardHelpers.CopyDataPackage(dataPackage);
+            data.SetStorageItems((await sourceItem).ToListSingle());
 
             return true;
+        }
+
+        public virtual async Task<bool> CopyData()
+        {
+            DataPackage data = new DataPackage();
+            bool result = await SetDataToDataPackage(data);
+            ClipboardHelpers.CopyDataPackage(data);
+
+            return result;
         }
 
         protected virtual bool CheckCanPasteReference()
@@ -281,7 +287,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Copy item
             ContextMenuItems.Add(new MenuFlyoutItemViewModel()
             {
-                Command = new AsyncRelayCommand(SetDataToClipboard),
+                Command = new AsyncRelayCommand(CopyData),
                 IconGlyph = "\uE8C8",
                 Text = "Copy file"
             });

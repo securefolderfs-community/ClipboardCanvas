@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Windows.Storage;
-using System.IO;
 using Windows.Storage.Streams;
 using System.Collections.Generic;
 using Windows.Graphics.Imaging;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.ApplicationModel.DataTransfer;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
@@ -106,13 +106,23 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             return new ImagePasteModel(CanvasItemReceiver ?? AssociatedCollection, new StatusCenterOperationReceiver());
         }
 
+        public override async Task<bool> SetDataToDataPackage(DataPackage data)
+        {
+            data.SetStorageItems((await sourceItem).ToListSingle());
+
+            var imageRandomAccessStreamReference = RandomAccessStreamReference.CreateFromFile(await sourceFile);
+            data.SetBitmap(imageRandomAccessStreamReference);
+
+            return true;
+        }
+
         #endregion
 
         #region Public Helpers
 
-        public async Task<IReadOnlyList<IStorageItem>> GetDragData()
+        public async Task SetDragData(DataPackage data)
         {
-            return (await sourceItem).ToListSingle();
+            await SetDataToDataPackage(data);
         }
 
         #endregion

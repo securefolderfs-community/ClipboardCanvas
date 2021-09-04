@@ -152,12 +152,7 @@ namespace ClipboardCanvas.UserControls
                 // Also set data associated from the dragged element
                 if (draggedElement.DataContext is IDragDataProviderModel dragDataProvider)
                 {
-                    IReadOnlyList<IStorageItem> dragData = await dragDataProvider.GetDragData();
-
-                    if (dragData.CheckEveryNotNull())
-                    {
-                        args.Data.SetStorageItems(await dragDataProvider.GetDragData());
-                    }
+                    await dragDataProvider.SetDragData(args.Data);
                 }
             }
         }

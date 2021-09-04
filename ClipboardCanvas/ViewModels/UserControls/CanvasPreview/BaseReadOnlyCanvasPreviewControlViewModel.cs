@@ -17,6 +17,7 @@ using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
 using ClipboardCanvas.CanvasFileReceivers;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 {
@@ -160,14 +161,24 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             CanvasViewModel?.DiscardData();
         }
 
-        public virtual async Task<bool> SetDataToClipboard()
+        public virtual async Task<bool> SetDataToDataPackage(DataPackage data)
         {
             if (CanvasViewModel == null)
             {
                 return false;
             }
 
-            return await CanvasViewModel.SetDataToClipboard();
+            return await CanvasViewModel.SetDataToDataPackage(data);
+        }
+
+        public virtual async Task<bool> CopyData()
+        {
+            if (CanvasViewModel == null)
+            {
+                return false;
+            }
+
+            return await CanvasViewModel.CopyData();
         }
 
         public virtual async Task<SafeWrapper<CanvasItem>> PasteOverrideReference()

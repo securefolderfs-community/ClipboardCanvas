@@ -1,5 +1,7 @@
 ﻿using System;
+using ClipboardCanvas.Models;
 using ClipboardCanvas.ViewModels;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace ClipboardCanvas.EventArguments.CollectionPreview
 {
@@ -20,6 +22,19 @@ namespace ClipboardCanvas.EventArguments.CollectionPreview
         public CanvasPreviewSelectedItemChangedEventArgs(CollectionPreviewItemViewModel selectedItem)
         {
             this.selectedItem = selectedItem;
+        }
+    }
+
+    public class CanvasPreviewPasteRequestedEventArgs : EventArgs
+    {
+        public readonly DataPackageView forwardedDataPackage;
+
+        public readonly ICollectionModel collectionModel;
+
+        public CanvasPreviewPasteRequestedEventArgs(DataPackageView forwardedDataPackage, ICollectionModel collectionModel)
+        {
+            this.forwardedDataPackage = forwardedDataPackage;
+            this.collectionModel = collectionModel;
         }
     }
 }
