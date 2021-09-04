@@ -14,7 +14,11 @@
 
     <StackPanel Spacing="4">
         <TextBlock Text="Are you sure you want to delete this item?" />
-        <TextBlock Opacity="0.7" Text="{x:Bind ViewModel.FileName}" />
+        <TextBlock
+            Opacity="0.7"
+            Text="{x:Bind ViewModel.FileName, Mode=OneWay}"
+            TextTrimming="CharacterEllipsis"
+            ToolTipService.ToolTip="{x:Bind ViewModel.FileName, Mode=OneWay}" />
 
         <CheckBox
             Margin="0,12,0,0"

@@ -78,20 +78,26 @@ namespace ClipboardCanvas.Helpers
 
         public static async Task<ImageSource> ToImageAsync(Uri uri)
         {
-            IRandomAccessStreamReference uriStream = RandomAccessStreamReference.CreateFromUri(uri);
             ImageSource image = null;
-
-            using (IRandomAccessStream stream = await uriStream.OpenReadAsync())
+            try
             {
-                if (uri.AbsoluteUri.EndsWith(".svg"))
+                IRandomAccessStreamReference uriStream = RandomAccessStreamReference.CreateFromUri(uri);
+
+                using (IRandomAccessStream stream = await uriStream.OpenReadAsync())
                 {
-                    image = new SvgImageSource(uri);
+                    if (uri.AbsoluteUri.EndsWith(".svg"))
+                    {
+                        image = new SvgImageSource(uri);
+                    }
+                    else
+                    {
+                        image = new BitmapImage();
+                        await (image as BitmapImage).SetSourceAsync(stream);
+                    }
                 }
-                else
-                {
-                    image = new BitmapImage();
-                    await (image as BitmapImage).SetSourceAsync(stream);
-                }
+            }
+            catch
+            {
             }
 
             return image;

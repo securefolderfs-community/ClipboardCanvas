@@ -210,17 +210,24 @@ namespace ClipboardCanvas.UserControls
 
         public async Task<(IBuffer buffer, uint pixelWidth, uint pixelHeight)> GetCanvasImageBuffer()
         {
-            if (RootGrid == null)
+            try
+            {
+                if (RootGrid == null)
+                {
+                    return (null, 0, 0);
+                }
+
+                RenderTargetBitmap rtb = new RenderTargetBitmap();
+                await rtb.RenderAsync(RootGrid);
+
+                IBuffer pixelBuffer = await rtb.GetPixelsAsync();
+
+                return (pixelBuffer, (uint)rtb.PixelWidth, (uint)rtb.PixelHeight);
+            }
+            catch
             {
                 return (null, 0, 0);
             }
-
-            RenderTargetBitmap rtb = new RenderTargetBitmap();
-            await rtb.RenderAsync(RootGrid);
-
-            IBuffer pixelBuffer = await rtb.GetPixelsAsync();
-
-            return (pixelBuffer, (uint)rtb.PixelWidth, (uint)rtb.PixelHeight);
         }
 
         public void SetOnTop(InteractableCanvasControlItemViewModel itemViewModel)

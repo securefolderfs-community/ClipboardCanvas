@@ -46,27 +46,38 @@ namespace ClipboardCanvas.Helpers
             return filesystemChangeWatcher;
         }
 
-        private async Task StartWatching()
+        private async Task<bool> StartWatching()
         {
-            _isStarted = true;
+            try
+            {
+                _isStarted = true;
 
-            // 1. Prepare query - listen for changes
-            QueryOptions queryOptions = new QueryOptions(CommonFolderQuery.DefaultQuery);
-            queryOptions.FolderDepth = FolderDepth.Shallow;
-            queryOptions.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
+                // 1. Prepare query - listen for changes
+                QueryOptions queryOptions = new QueryOptions(CommonFolderQuery.DefaultQuery);
+                queryOptions.FolderDepth = FolderDepth.Shallow;
+                queryOptions.IndexerOption = IndexerOption.UseIndexerWhenAvailable;
 
-            _filesystemWatcherQuery = _watchedFolder.CreateItemQueryWithOptions(queryOptions);
+                _filesystemWatcherQuery = _watchedFolder.CreateItemQueryWithOptions(queryOptions);
 
-            // Indicate to the system the app is ready to change track
-            await _filesystemWatcherQuery.GetItemsAsync(0, 1);
+                // Indicate to the system the app is ready to change track
+                await _filesystemWatcherQuery.GetItemsAsync(0, 1);
 
-            _filesystemWatcherQuery.ContentsChanged += FilesystemWatcherQuery_ContentsChanged;
+                _filesystemWatcherQuery.ContentsChanged += FilesystemWatcherQuery_ContentsChanged;
 
-            // 2. Get change tracker
-            _filesystemChangeTracker = _watchedFolder.TryGetChangeTracker();
-            _filesystemChangeTracker.Enable();
+                // 2. Get change tracker
+                _filesystemChangeTracker = _watchedFolder.TryGetChangeTracker();
+                _filesystemChangeTracker.Enable();
 
-            _filesystemChangeReader = _filesystemChangeTracker.GetChangeReader();
+                _filesystemChangeReader = _filesystemChangeTracker.GetChangeReader();
+
+                return true;
+            }
+            catch
+            {
+                _isStarted = false;
+            }
+
+            return false;
         }
 
         private void FilesystemWatcherQuery_ContentsChanged(IStorageQueryResultBase sender, object args)
