@@ -168,9 +168,8 @@
     <Compile Include="Helpers\Filesystem\FileHelpers.cs" />
     <Compile Include="Helpers\JsonHelpers.cs" />
     <Compile Include="Helpers\SettingsSerializationHelpers.cs" />
+    <Compile Include="Helpers\TaskHelpers.cs" />
     <Compile Include="Helpers\TwoWayPropertyUpdater.cs" />
-    <Compile Include="Interfaces\Canvas\ICanGetSourceCanvas.cs" />
-    <Compile Include="Interfaces\Canvas\ICanOpenFile.cs" />
     <Compile Include="Models\IIntroductionScreenPanelModel.cs" />
     <Compile Include="ModelViews\IIntroductionScreenPaneView.cs" />
     <Compile Include="ModelViews\ISettingsAboutPageView.cs" />
@@ -837,7 +836,9 @@
       <Version>0.50.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Interfaces\Canvas\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Fonts\CalcMDL2.ttf" />
   </ItemGroup>

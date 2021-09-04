@@ -224,6 +224,15 @@ namespace ClipboardCanvas.ViewModels.Pages
                         PasteCanvasModel?.SetDataToClipboard();
                         break;
                     }
+
+                case (c: false, s: _, a: false, w: false, k: VirtualKey.Delete):
+                    {
+                        if (PasteCanvasModel != null)
+                        {
+                            await PasteCanvasModel.TryDeleteData();
+                        }
+                        break;
+                    }
             }
         }
 

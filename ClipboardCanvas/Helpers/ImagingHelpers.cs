@@ -10,6 +10,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 using ClipboardCanvas.Helpers.Filesystem;
 using Windows.UI.Xaml.Media;
+using System.Threading;
 
 namespace ClipboardCanvas.Helpers
 {
@@ -76,31 +77,34 @@ namespace ClipboardCanvas.Helpers
             return image;
         }
 
-        public static async Task<ImageSource> ToImageAsync(Uri uri)
+        public static async Task<ImageSource> ToImageAsync(Uri uri, CancellationToken cancellationToken)
         {
             ImageSource image = null;
-            try
-            {
-                IRandomAccessStreamReference uriStream = RandomAccessStreamReference.CreateFromUri(uri);
 
-                using (IRandomAccessStream stream = await uriStream.OpenReadAsync())
-                {
-                    if (uri.AbsoluteUri.EndsWith(".svg"))
-                    {
-                        image = new SvgImageSource(uri);
-                    }
-                    else
-                    {
-                        image = new BitmapImage();
-                        await (image as BitmapImage).SetSourceAsync(stream);
-                    }
-                }
-            }
-            catch
-            {
-            }
+            await TaskHelpers.RunTaskWithTimeout(GetImage(), TimeSpan.FromMilliseconds(Constants.UI.Imaging.IMAGE_FROM_URI_TIMEOUT), cancellationToken);
 
             return image;
+
+            async Task GetImage()
+            {
+                try
+                {
+                    RandomAccessStreamReference uriStream = RandomAccessStreamReference.CreateFromUri(uri);
+                    using (IRandomAccessStream stream = await uriStream.OpenReadAsync())
+                    {
+                        if (uri.AbsoluteUri.EndsWith(".svg"))
+                        {
+                            image = new SvgImageSource(uri);
+                        }
+                        else
+                        {
+                            image = new BitmapImage();
+                            await (image as BitmapImage).SetSourceAsync(stream);
+                        }
+                    }
+                }
+                catch { }
+            }
         }
 
         public static async Task<byte[]> GetBytesFromSoftwareBitmap(this SoftwareBitmap softwareBitmap, Guid encoderId)

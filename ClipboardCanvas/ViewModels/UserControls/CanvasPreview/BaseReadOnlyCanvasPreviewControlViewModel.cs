@@ -16,14 +16,12 @@ using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
-using ClipboardCanvas.Interfaces.Canvas;
 using ClipboardCanvas.CanvasFileReceivers;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 {
     public abstract class BaseReadOnlyCanvasPreviewControlViewModel<TBaseViewModel> : ObservableObject,
         IReadOnlyCanvasPreviewModel,
-        ICanGetSourceCanvas<IReadOnlyCanvasPreviewModel>,
         IDisposable
         where TBaseViewModel : BaseReadOnlyCanvasViewModel
     {
@@ -180,15 +178,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             }
 
             return await CanvasViewModel.PasteOverrideReference();
-        }
-
-        #endregion
-
-        #region ICanGetSourceCanvas
-
-        public IReadOnlyCanvasPreviewModel DangerousGetSourceCanvas()
-        {
-            return CanvasViewModel;
         }
 
         #endregion

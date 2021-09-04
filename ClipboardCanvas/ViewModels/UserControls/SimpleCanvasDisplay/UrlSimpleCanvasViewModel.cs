@@ -16,13 +16,13 @@ using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.DataModels;
-using ClipboardCanvas.Interfaces.Canvas;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.ViewModels.ContextMenu;
+using System.Windows.Input;
 
 namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
 {
-    public class UrlSimpleCanvasViewModel : BaseReadOnlyCanvasViewModel, ICanOpenFile
+    public class UrlSimpleCanvasViewModel : BaseReadOnlyCanvasViewModel
     {
         private bool _IsLoading;
         public bool IsLoading
@@ -126,9 +126,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             Constants.FileSystem.URL_CANVAS_FILE_EXTENSION
         };
 
+        public ICommand OpenLinkCommand { get; private set; }
+
         public UrlSimpleCanvasViewModel(IBaseCanvasPreviewControlView view, BaseContentTypeModel contentType)
             : base(StaticExceptionReporters.DefaultSafeWrapperExceptionReporter, contentType, view)
         {
+            OpenLinkCommand = new AsyncRelayCommand(OpenLink);
         }
 
         #region Override
@@ -209,7 +212,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
 
             if (!string.IsNullOrEmpty(imageLogo))
             {
-                _SiteIcon = await ImagingHelpers.ToImageAsync(new Uri(imageLogo));
+                _SiteIcon = await ImagingHelpers.ToImageAsync(new Uri(imageLogo), cancellationToken);
             }
 
             if (cancellationToken.IsCancellationRequested) // Check if it's canceled
@@ -236,19 +239,19 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
                 {
                     if (this._ContentImage1 == null)
                     {
-                        _ContentImage1 = await ImagingHelpers.ToImageAsync(new Uri(imageLink));
+                        _ContentImage1 = await ImagingHelpers.ToImageAsync(new Uri(imageLink), cancellationToken);
                     }
                     else if (this._ContentImage2 == null)
                     {
-                        _ContentImage2 = await ImagingHelpers.ToImageAsync(new Uri(imageLink));
+                        _ContentImage2 = await ImagingHelpers.ToImageAsync(new Uri(imageLink), cancellationToken);
                     }
                     else if (this._ContentImage3 == null)
                     {
-                        _ContentImage3 = await ImagingHelpers.ToImageAsync(new Uri(imageLink));
+                        _ContentImage3 = await ImagingHelpers.ToImageAsync(new Uri(imageLink), cancellationToken);
                     }
                     else if (this._ContentImage4 == null)
                     {
-                        _ContentImage4 = await ImagingHelpers.ToImageAsync(new Uri(imageLink));
+                        _ContentImage4 = await ImagingHelpers.ToImageAsync(new Uri(imageLink), cancellationToken);
                     }
                     else
                     {
@@ -310,7 +313,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
 
         #region Helpers
 
-        public async Task OpenFile()
+        private async Task OpenLink()
+        {
+            await Launcher.LaunchUriAsync(new Uri(Url));
+        }
+
+        private async Task OpenFile()
         {
             if (!string.IsNullOrEmpty(Url))
             {

@@ -92,6 +92,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <!--  Content images  -->
@@ -164,6 +165,15 @@
                     Text="{x:Bind ViewModel.Description, Mode=OneWay}"
                     TextWrapping="WrapWholeWords" />
             </Grid>
+
+            <HyperlinkButton
+                x:Name="UrlLink"
+                Grid.Row="2"
+                Padding="0"
+                x:Load="{x:Bind ViewModel.Url, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}"
+                Command="{x:Bind ViewModel.OpenLinkCommand}">
+                <TextBlock Text="{x:Bind ViewModel.Url, Mode=OneWay}" TextTrimming="CharacterEllipsis" />
+            </HyperlinkButton>
 
             <!--  No preview available  -->
             <Grid x:Name="NoPreviewAvailable" x:Load="{x:Bind ViewModel.Description, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}, ConverterParameter='invert'}">

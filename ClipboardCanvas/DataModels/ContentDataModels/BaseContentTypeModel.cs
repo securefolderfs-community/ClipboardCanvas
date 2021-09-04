@@ -16,6 +16,7 @@ using ClipboardCanvas.Services;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay;
+using ClipboardCanvas.Extensions;
 
 namespace ClipboardCanvas.DataModels.ContentDataModels
 {
@@ -244,11 +245,7 @@ namespace ClipboardCanvas.DataModels.ContentDataModels
             {
                 IReadOnlyList<IStorageItem> items = await dataPackage.GetStorageItemsAsync();
 
-                if (items.Count > 1)
-                {
-                    // TODO: More than one item, paste in Infinite Canvas
-                }
-                else if (items.Count == 1)
+                if (!items.IsEmpty())
                 {
                     // One item, decide contentType for it
                     IStorageItem item = items.First();

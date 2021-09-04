@@ -54,6 +54,11 @@
                 }
             }
 
+            public static class Imaging
+            {
+                public const int IMAGE_FROM_URI_TIMEOUT = 5000;
+            }
+
             public static class Notifications
             {
                 public const int NOTIFICATION_PROGRESSBAR_REFRESH_INTERVAL = 50;

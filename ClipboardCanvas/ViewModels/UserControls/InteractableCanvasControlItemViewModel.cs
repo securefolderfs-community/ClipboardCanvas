@@ -22,7 +22,6 @@ using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Extensions;
-using ClipboardCanvas.Interfaces.Canvas;
 using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.EventArguments.CanvasControl;
 
@@ -170,15 +169,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task OpenFile()
         {
-            if (ReadOnlyCanvasPreviewModel is ICanGetSourceCanvas<IReadOnlyCanvasPreviewModel> canGetSourceCanvas)
-            {
-                if (canGetSourceCanvas.DangerousGetSourceCanvas() is ICanOpenFile canOpenFile)
-                {
-                    await canOpenFile.OpenFile();
-                    return;
-                }
-            }
-
             await StorageHelpers.OpenFile(await CanvasItem.SourceItem);
         }
 
