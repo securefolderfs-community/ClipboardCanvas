@@ -131,22 +131,22 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
 
-            if (associatedItem == null)
+            if (AssociatedItem == null)
             {
                 return actions;
             }
 
             // Open file
             IStorageFile file = null;
-            if (isContentAsReference && await sourceFile != null)
+            if (isContentAsReference && await SourceFile != null)
             {
-                file = await sourceFile;
+                file = await SourceFile;
             }
             else
             {
-                if (associatedFile != null)
+                if (AssociatedFile != null)
                 {
-                    file = associatedFile;
+                    file = AssociatedFile;
                 }
             }
 

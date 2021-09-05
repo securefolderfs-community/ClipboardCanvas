@@ -353,7 +353,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             List<SuggestedActionsControlItemViewModel> actions = new List<SuggestedActionsControlItemViewModel>();
 
-            if (associatedItem == null)
+            if (AssociatedItem == null)
             {
                 return actions;
             }

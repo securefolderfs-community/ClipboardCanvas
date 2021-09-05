@@ -28,13 +28,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
     {
         #region Protected Members
 
-        protected ICollectionModel collectionModel => view?.CollectionModel;
+        protected ICollectionModel CollectionModel => view?.CollectionModel;
 
         protected CollectionItemViewModel collectionItemViewModel;
 
         protected readonly IBaseCanvasPreviewControlView view;
 
-        protected IStorageItem associatedItem => collectionItemViewModel.AssociatedItem;
+        protected IStorageItem AssociatedItem => collectionItemViewModel.AssociatedItem;
 
         protected readonly SafeWrapperResult CanvasNullResult = new SafeWrapperResult(OperationErrorCode.InvalidArgument, new NullReferenceException(), "Invalid Canvas.");
 
@@ -136,7 +136,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             if (CanvasViewModel == null)
             {
                 // The canvas is null, delete the reference file manually
-                SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(CanvasItemReceiver ?? collectionModel, collectionItemViewModel, hideConfirmation);
+                SafeWrapperResult result = await CanvasHelpers.DeleteCanvasFile(CanvasItemReceiver ?? CollectionModel, collectionItemViewModel, hideConfirmation);
 
                 if (result != OperationErrorCode.Canceled && !result)
                 {
@@ -145,7 +145,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
                 }
                 else if (result != OperationErrorCode.Canceled)
                 {
-                    OnFileDeletedEvent?.Invoke(this, new FileDeletedEventArgs(associatedItem, collectionModel));
+                    OnFileDeletedEvent?.Invoke(this, new FileDeletedEventArgs(AssociatedItem, CollectionModel));
                 }
 
                 return result;

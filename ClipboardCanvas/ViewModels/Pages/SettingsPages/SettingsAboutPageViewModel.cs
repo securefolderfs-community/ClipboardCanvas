@@ -23,7 +23,7 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
     {
         private bool _privacyPolicyTextLoaded;
 
-        private ISettingsAboutPageView _view;
+        private readonly ISettingsAboutPageView _view;
 
         private IDialogService DialogService { get; } = Ioc.Default.GetService<IDialogService>();
 
@@ -116,7 +116,7 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
                     PrivacyPolicyLoadError = true;
                 }
             }
-            catch (Exception e)
+            catch
             {
                 PrivacyPolicyLoadError = true;
                 _privacyPolicyTextLoaded = false;

@@ -142,7 +142,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public async Task<IReadOnlyList<IStorageItem>> ProvideDragData()
         {
-            return (await sourceItem).ToListSingle();
+            return (await SourceItem).ToListSingle();
         }
 
         #endregion

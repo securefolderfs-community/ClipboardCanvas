@@ -11,7 +11,6 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
-using ClipboardCanvas.DataModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
 {
@@ -66,16 +65,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             }
 
             return result;
-        }
-
-        public async Task<SafeWrapper<CanvasItem>> PasteOverrideReference()
-        {
-            if (CanvasViewModel == null)
-            {
-                return (null, CanvasNullResult);
-            }
-
-            return await CanvasViewModel.PasteOverrideReference();
         }
 
         public void OpenNewCanvas()

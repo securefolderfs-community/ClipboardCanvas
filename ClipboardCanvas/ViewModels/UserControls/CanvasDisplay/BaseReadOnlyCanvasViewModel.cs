@@ -40,31 +40,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected CancellationToken cancellationToken;
 
-        /// <inheritdoc cref="associatedItem"/>
-        protected StorageFile associatedFile => associatedItem as StorageFile;
-
-        /// <inheritdoc cref="sourceItem"/>
-        protected Task<StorageFile> sourceFile => Task.Run(async () => (await sourceItem) as StorageFile);
-
-        /// <inheritdoc cref="sourceItem"/>
-        protected Task<StorageFolder> sourceFolder => Task.Run(async () => (await sourceItem) as StorageFolder);
-
-        /// <summary>
-        /// The item that's associated with the canvas. For guaranteed true file, use <see cref="sourceItem"/> instead.
-        /// </summary>
-        protected IStorageItem associatedItem => canvasItem?.AssociatedItem;
-
-        /// <summary>
-        /// The source item. If not in reference mode, points to <see cref="associatedItem"/>
-        /// </summary>
-        protected Task<IStorageItem> sourceItem => canvasItem?.SourceItem;
-
         /// <summary>
         /// Determines whether content is in reference mode
         /// </summary>
         protected bool isContentAsReference;
-
-        protected ICollectionModel AssociatedCollection => view?.CollectionModel;
 
         protected CollectionItemViewModel collectionItemViewModel;
 
@@ -85,6 +64,27 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         protected INavigationService NavigationService { get; } = Ioc.Default.GetService<INavigationService>();
 
         protected ITimelineService TimelineService { get; } = Ioc.Default.GetService<ITimelineService>();
+
+        protected ICollectionModel AssociatedCollection => view?.CollectionModel;
+
+        /// <inheritdoc cref="AssociatedItem"/>
+        protected StorageFile AssociatedFile => AssociatedItem as StorageFile;
+
+        /// <inheritdoc cref="SourceItem"/>
+        protected Task<StorageFile> SourceFile => Task.Run(async () => (await SourceItem) as StorageFile);
+
+        /// <inheritdoc cref="SourceItem"/>
+        protected Task<StorageFolder> SourceFolder => Task.Run(async () => (await SourceItem) as StorageFolder);
+
+        /// <summary>
+        /// The item that's associated with the canvas. For guaranteed true file, use <see cref="SourceItem"/> instead.
+        /// </summary>
+        protected IStorageItem AssociatedItem => canvasItem?.AssociatedItem;
+
+        /// <summary>
+        /// The source item. If not in reference mode, points to <see cref="AssociatedItem"/>
+        /// </summary>
+        protected Task<IStorageItem> SourceItem => canvasItem?.SourceItem;
 
         protected bool IsDisposed { get; private set; }
 
@@ -150,7 +150,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             RaiseOnContentStartedLoadingEvent(this, new ContentStartedLoadingEventArgs(contentType));
 
-            if (!StorageHelpers.Existsh(associatedItem.Path))
+            if (!StorageHelpers.Existsh(AssociatedItem.Path))
             {
                 // We don't invoke OnErrorOccurredEvent here because we want to discard this canvas immediately and not show the error
                 return new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "Canvas not found.");
@@ -187,7 +187,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 return SafeWrapperResult.CANCEL;
             }
 
-            result = await SetDataFromExistingItem(await sourceItem);
+            result = await SetDataFromExistingItem(await SourceItem);
             if (!AssertNoError(result))
             {
                 return result;
@@ -230,7 +230,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
             else if (result != OperationErrorCode.Canceled)
             {
-                RaiseOnFileDeletedEvent(this, new FileDeletedEventArgs(associatedItem, AssociatedCollection));
+                RaiseOnFileDeletedEvent(this, new FileDeletedEventArgs(AssociatedItem, AssociatedCollection));
             }
 
             return result;
@@ -244,7 +244,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public virtual async Task<bool> SetDataToDataPackage(DataPackage data)
         {
-            data.SetStorageItems((await sourceItem).ToListSingle());
+            data.SetStorageItems((await SourceItem).ToListSingle());
 
             return true;
         }
@@ -267,16 +267,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             ContextMenuItems.DisposeClear();
 
-            // May occur when quickly switching between canvases
-            //if (collectionItemViewModel == null)
-            //{
-            //    return;
-            //}
-
             // Open item
             ContextMenuItems.Add(new MenuFlyoutItemViewModel()
             {
-                Command = new AsyncRelayCommand(async () => await StorageHelpers.OpenFile(await sourceItem)),
+                Command = new AsyncRelayCommand(async () => await StorageHelpers.OpenFile(await SourceItem)),
                 IconGlyph = "\uE8E5",
                 Text = "Open file"
             });
@@ -295,7 +289,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             // Open containing folder
             ContextMenuItems.Add(new MenuFlyoutItemViewModel()
             {
-                Command = new AsyncRelayCommand(async () => await StorageHelpers.OpenContainingFolder(await sourceItem)),
+                Command = new AsyncRelayCommand(async () => await StorageHelpers.OpenContainingFolder(await SourceItem)),
                 IconGlyph = "\uE838",
                 Text = "Open containing folder"
             });
@@ -305,7 +299,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 ContextMenuItems.Add(new MenuFlyoutItemViewModel()
                 {
-                    Command = new AsyncRelayCommand(() => StorageHelpers.OpenContainingFolder(associatedItem)),
+                    Command = new AsyncRelayCommand(() => StorageHelpers.OpenContainingFolder(AssociatedItem)),
                     IconGlyph = "\uE838",
                     Text = "Open reference containing folder"
                 });
@@ -401,13 +395,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected virtual async Task<SafeWrapperResult> SetContentMode()
         {
-            if (ReferenceFile.IsReferenceFile(associatedFile))
+            if (ReferenceFile.IsReferenceFile(AssociatedFile))
             {
                 // Reference file
                 isContentAsReference = true;
 
                 // Check if not null
-                if (await sourceItem == null)
+                if (await SourceItem == null)
                 {
                     return ReferencedFileNotFoundResult;
                 }

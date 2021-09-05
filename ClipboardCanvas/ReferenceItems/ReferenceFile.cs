@@ -196,7 +196,7 @@ namespace ClipboardCanvas.ReferenceItems
             // TODO: Implement that when it becomes possible
 
             // for now, return the error
-            return referenceFile.LastError;
+            return await Task.FromResult(referenceFile.LastError);
         }
 
         public static bool IsReferenceFile(StorageFile file)

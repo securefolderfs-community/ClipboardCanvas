@@ -213,8 +213,8 @@ namespace ClipboardCanvas.DataModels.ContentDataModels
                 // Check if it's url
                 if (WebHelpers.IsUrl(text))
                 {
-                    // The url may point to file
-                    if (WebHelpers.IsUrlFile(text))
+                    // The url may point to image
+                    if (await WebHelpers.IsUrlImage(text))
                     {
                         // Image
                         return new ImageContentType();

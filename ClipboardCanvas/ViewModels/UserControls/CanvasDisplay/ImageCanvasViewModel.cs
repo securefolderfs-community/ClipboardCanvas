@@ -108,9 +108,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public override async Task<bool> SetDataToDataPackage(DataPackage data)
         {
-            data.SetStorageItems((await sourceItem).ToListSingle());
+            data.SetStorageItems((await SourceItem).ToListSingle());
 
-            var imageRandomAccessStreamReference = RandomAccessStreamReference.CreateFromFile(await sourceFile);
+            var imageRandomAccessStreamReference = RandomAccessStreamReference.CreateFromFile(await SourceFile);
             data.SetBitmap(imageRandomAccessStreamReference);
 
             return true;

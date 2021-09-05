@@ -97,7 +97,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         protected override async Task<SafeWrapperResult> TryFetchDataToView()
         {
             ContentMediaLoad = true;
-            ContentMedia = MediaSource.CreateFromStorageFile(await sourceFile);
+            ContentMedia = MediaSource.CreateFromStorageFile(await SourceFile);
 
             return await Task.FromResult(SafeWrapperResult.SUCCESS);
         }
@@ -107,7 +107,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             await base.OnReferencePasted();
 
             // Change the source
-            _ContentMedia = MediaSource.CreateFromStorageFile(await sourceFile);
+            _ContentMedia = MediaSource.CreateFromStorageFile(await SourceFile);
         }
 
         protected override IPasteModel SetCanvasPasteModel()

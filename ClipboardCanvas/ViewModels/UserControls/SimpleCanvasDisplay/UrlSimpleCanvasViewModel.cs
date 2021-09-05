@@ -334,7 +334,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay
             }
             else
             {
-                await StorageHelpers.OpenFile(await sourceItem);
+                await StorageHelpers.OpenFile(await SourceItem);
             }
         }
 

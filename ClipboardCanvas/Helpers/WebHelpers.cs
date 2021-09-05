@@ -1,39 +1,39 @@
-﻿using ClipboardCanvas.DataModels;
-using ClipboardCanvas.Extensions;
-using ClipboardCanvas.Helpers.SafetyHelpers;
-using HtmlAgilityPack;
-using Microsoft.Toolkit.Parsers.Markdown;
+﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
+
+using ClipboardCanvas.DataModels;
+using ClipboardCanvas.Extensions;
+using ClipboardCanvas.Helpers.SafetyHelpers;
 
 namespace ClipboardCanvas.Helpers
 {
     public static class WebHelpers
     {
-        public static bool IsHTML(string str)
-        {
-            return Regex.IsMatch(str, "<(.|\n)*?>");
-        }
-
         public static bool IsUrl(string str)
         {
             return Uri.TryCreate(str, UriKind.Absolute, out Uri uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
         }
 
-        public static bool IsUrlFile(string url)
+        public static async Task<bool> IsUrlImage(string url)
         {
-            if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps) && uri.IsFile)
+            const string urlImageContentType = "image/";
+
+            try
             {
-                return true;
+                HttpWebRequest request = HttpWebRequest.CreateHttp(url);
+                request.Method = "HEAD";
+                using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
+                {
+                    if (response.StatusCode == HttpStatusCode.OK && response.ContentType.ToLowerInvariant().Contains(urlImageContentType))
+                    {
+                        return true;
+                    }
+                }
             }
+            catch { }
 
             return false;
         }
@@ -48,7 +48,7 @@ namespace ClipboardCanvas.Helpers
             WebResponse response = null;
             try
             {
-                WebRequest request = WebRequest.Create(url);
+                WebRequest request = HttpWebRequest.Create(url);
                 response = await request.GetResponseAsync();
             }
             catch (WebException webEx)
@@ -62,7 +62,7 @@ namespace ClipboardCanvas.Helpers
                     return false;
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }
@@ -269,17 +269,17 @@ namespace ClipboardCanvas.Helpers
         {
             SafeWrapper<bool> existsResult = await SafeWrapperRoutines.SafeWrapAsync(async () =>
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(imageUrl);
+                HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(imageUrl);
                 request.Method = "HEAD";
 
                 request.UseDefaultCredentials = true;
                 request.Accept = "*/*";
                 request.Proxy.Credentials = CredentialCache.DefaultCredentials;
 
-                var response = await request.GetResponseAsync();
-                response.Dispose();
-
-                return true;
+                using (WebResponse response = await request.GetResponseAsync())
+                {
+                    return true;
+                }
             });
 
             if (existsResult)
