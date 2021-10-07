@@ -47,8 +47,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Canvas Operations
 
-        protected abstract IPasteModel SetCanvasPasteModel();
-
         public virtual async Task<SafeWrapperResult> TryPasteData(DataPackageView dataPackage, CancellationToken cancellationToken)
         {
             SafeWrapperResult result;
@@ -185,6 +183,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             return UserSettings.AlwaysPasteFilesAsReference;
         }
+
+        protected abstract IPasteModel SetCanvasPasteModel();
 
         #endregion
 
