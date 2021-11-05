@@ -5,7 +5,7 @@ namespace ClipboardCanvas.DataModels.Navigation
 {
     public class HomepageNavigationParameterModel : BaseDisplayFrameParameterDataModel
     {
-        public HomepageNavigationParameterModel(ICollectionModel collectionModel, CanvasType canvasType)
+        public HomepageNavigationParameterModel(CanvasType canvasType, ICollectionModel collectionModel = null)
             : base(collectionModel, canvasType)
         {
         }

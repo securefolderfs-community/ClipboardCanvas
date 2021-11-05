@@ -1,5 +1,5 @@
 ﻿using System;
-using ClipboardCanvas.Serialization;
+using ClipboardCanvas.EventArguments;
 
 namespace ClipboardCanvas.Services
 {

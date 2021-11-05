@@ -4,7 +4,7 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System.Threading.Tasks;
 
 using ClipboardCanvas.Services;
-using ClipboardCanvas.Serialization;
+using ClipboardCanvas.EventArguments;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {
@@ -19,6 +19,13 @@ namespace ClipboardCanvas.ViewModels.Pages
         public bool IsTimelineWidgetEnabled
         {
             get => UserSettingsService.ShowTimelineOnHomepage;
+        }
+
+        private bool _IsAutopasteTeachingTipShown;
+        public bool IsAutopasteTeachingTipShown
+        {
+            get => _IsAutopasteTeachingTipShown;
+            set => SetProperty(ref _IsAutopasteTeachingTipShown, value);
         }
 
         #endregion

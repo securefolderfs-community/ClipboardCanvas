@@ -8,9 +8,9 @@ namespace ClipboardCanvas.UnsafeNative
 {
     public static class UnsafeNativeHelpers
     {
-        public static IntPtr CreateFileForWrite(string filePath)
+        public static IntPtr CreateFileForWrite(string filePath, bool overwrite = true)
         {
-            return UnsafeNativeApis.CreateFileFromApp(filePath, GENERIC_WRITE, 0, IntPtr.Zero, CREATE_ALWAYS, (uint)File_Attributes.BackupSemantics, IntPtr.Zero);
+            return UnsafeNativeApis.CreateFileFromApp(filePath, GENERIC_WRITE, 0, IntPtr.Zero, overwrite ? CREATE_ALWAYS : OPEN_ALWAYS, (uint)File_Attributes.BackupSemantics, IntPtr.Zero);
         }
 
         public static IntPtr CreateFileForRead(string filePath)

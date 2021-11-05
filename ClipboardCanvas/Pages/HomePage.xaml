@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:w="using:ClipboardCanvas.UserControls.Widgets"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     NavigationCacheMode="Disabled"
@@ -28,6 +29,16 @@
                 Grid.Row="1"
                 x:Load="{x:Bind ViewModel.IsTimelineWidgetEnabled, Mode=OneWay}"
                 Loaded="TimelineWidget_Loaded" />
+
+            <muxc:TeachingTip
+                Title="Select autopaste target"
+                IsOpen="{x:Bind ViewModel.IsAutopasteTeachingTipShown, Mode=TwoWay}"
+                Subtitle="Right click desired collection and set it as an autopaste target."
+                Target="{x:Bind CollectionsWidget}">
+                <muxc:TeachingTip.IconSource>
+                    <muxc:SymbolIconSource Symbol="Paste" />
+                </muxc:TeachingTip.IconSource>
+            </muxc:TeachingTip>
         </Grid>
     </ScrollViewer>
 </Page>

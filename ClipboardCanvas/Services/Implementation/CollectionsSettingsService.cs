@@ -2,7 +2,7 @@
 using Windows.Storage;
 using System.Collections.Generic;
 
-using ClipboardCanvas.Serialization;
+using ClipboardCanvas.Models.JsonSettings;
 using ClipboardCanvas.Models;
 
 namespace ClipboardCanvas.Services

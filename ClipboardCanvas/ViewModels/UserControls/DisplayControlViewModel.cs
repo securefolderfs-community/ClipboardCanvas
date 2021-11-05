@@ -462,20 +462,25 @@ namespace ClipboardCanvas.ViewModels.UserControls
             await InitialApplicationChecksHelpers.HandleFileSystemPermissionDialog(WindowTitleBarControlModel);
             await InitialApplicationChecksHelpers.CheckVersionAndShowDialog();
 
+            // Event hooks
             HookCollectionsEvents();
             HookNavigationServiceEvents();
             HookTitleBarEvents();
             HookToolbarEvents();
 
+            // Update navigation buttons
             NavigationToolBarControlModel.NavigationControlModel.NavigateBackEnabled = false;
             NavigationToolBarControlModel.NavigationControlModel.NavigateForwardEnabled = false;
 
+            // Collections and Timeline
             await CollectionsWidgetViewModel.ReloadAllCollections();
             await TimelineWidgetViewModel.ReloadAllSections(); 
 
+            // Navigate
             NavigationService.OpenCanvasPage(_currentCollectionModel);
             NavigationToolBarControlModel.NotifyCurrentPageChanged(CurrentPage);
 
+            // Update navigaion buttons and Titlebar
             UpdateTitleBar();
             UpdateCanvasPageNavigation();
         }

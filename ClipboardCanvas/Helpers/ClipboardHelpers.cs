@@ -24,7 +24,7 @@ namespace ClipboardCanvas.Helpers
         public static SafeWrapper<DataPackageView> GetClipboardData()
         {
             SafeWrapper<DataPackageView> dataPackage = SafeWrapperRoutines.SafeWrap(Clipboard.GetContent);
-            
+
             return dataPackage;
         }
     }

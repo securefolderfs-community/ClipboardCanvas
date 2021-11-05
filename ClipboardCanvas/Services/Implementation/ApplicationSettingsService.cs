@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Windows.Storage;
 
-using ClipboardCanvas.Serialization;
+using ClipboardCanvas.Models.JsonSettings;
 
 namespace ClipboardCanvas.Services
 {

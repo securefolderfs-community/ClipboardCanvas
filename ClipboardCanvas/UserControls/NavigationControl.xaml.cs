@@ -25,8 +25,6 @@ namespace ClipboardCanvas.UserControls
         public NavigationControl()
         {
             this.InitializeComponent();
-
-            // TODO: Use AttachedViewModel and set there DataContext?
         }
     }
 }

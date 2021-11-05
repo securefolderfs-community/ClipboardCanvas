@@ -8,6 +8,7 @@ using ClipboardCanvas.Models;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.ViewModels.Dialogs;
+using ClipboardCanvas.ViewModels.UserControls.Autopaste;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -20,6 +21,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
         public INavigationControlModel NavigationControlModel { get; set; } = new NavigationControlViewModel();
 
         public ISuggestedActionsControlModel SuggestedActionsControlModel { get; set; } = new SuggestedActionsControlViewModel();
+
+        public AutopasteControlViewModel AutopasteControlViewModel { get; set; } = new AutopasteControlViewModel();
 
         private bool _IsStatusCenterButtonVisible;
         public bool IsStatusCenterButtonVisible

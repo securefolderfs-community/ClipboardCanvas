@@ -93,13 +93,41 @@
                         Grid.Column="1"
                         ViewModel="{x:Bind NavigationControlModel, Mode=TwoWay, Converter={StaticResource InterfaceToNavigationControlViewModelConverter}}" />
 
-                    <!--  Status Center and Settings  -->
+                    <!--  Status Center, Autopaste and Settings  -->
                     <StackPanel
                         Grid.Column="2"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         Orientation="Horizontal"
                         Spacing="8">
+
+                        <!--  Autopaste button  -->
+                        <Button
+                            x:Name="Autopaste"
+                            Height="48"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Background="Transparent"
+                            BorderThickness="0">
+                            <StackPanel
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal"
+                                Spacing="10">
+                                <Grid Padding="0,8,0,8">
+                                    <FontIcon Glyph="&#xE77F;" />
+                                </Grid>
+                                <TextBlock
+                                    Margin="0,0,0,2"
+                                    VerticalAlignment="Center"
+                                    Text="Autopaste" />
+                            </StackPanel>
+                            <Button.Flyout>
+                                <Flyout Placement="Top">
+                                    <uc:AutopasteControl ViewModel="{x:Bind AutopasteControlViewModel, Mode=TwoWay}" />
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
 
                         <!--  Status Center Button  -->
                         <Button

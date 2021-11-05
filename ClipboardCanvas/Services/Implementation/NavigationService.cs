@@ -76,13 +76,13 @@ namespace ClipboardCanvas.Services.Implementation
 
         public bool OpenHomepage(HomepageNavigationParameterModel navigationParameter = null, NavigationTransitionType transitionType = NavigationTransitionType.DrillInTransition)
         {
-            CanvasType canvasType = CanvasHelpers.GetDefaultCanvasType();
+            CanvasType canvasType = navigationParameter?.canvasType ?? CanvasHelpers.GetDefaultCanvasType();
 
             OnNavigationStartedEvent?.Invoke(this, new NavigationStartedEventArgs(null, canvasType, DisplayPageType.Homepage));
 
             if (navigationParameter == null)
             {
-                navigationParameter = new HomepageNavigationParameterModel(null, canvasType);
+                navigationParameter = new HomepageNavigationParameterModel(canvasType);
             }
             LastPage = CurrentPage;
             CurrentPage = DisplayPageType.Homepage;

@@ -20,6 +20,15 @@ namespace ClipboardCanvas.UnsafeNative
             IntPtr hTemplateFile
         );
 
+
+        [DllImport("api-ms-win-core-file-fromapp-l1-1-0.dll", CharSet = CharSet.Auto,
+        CallingConvention = CallingConvention.StdCall,
+        SetLastError = true)]
+        public static extern bool CreateDirectoryFromApp(
+            string lpPathName,
+            IntPtr SecurityAttributes
+        );
+
         [DllImport("api-ms-win-core-file-l1-2-1.dll", CharSet = CharSet.Auto,
         CallingConvention = CallingConvention.StdCall,
         SetLastError = true)]

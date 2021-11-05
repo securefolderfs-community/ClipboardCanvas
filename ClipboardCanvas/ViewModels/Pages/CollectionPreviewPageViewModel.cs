@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using Windows.ApplicationModel.Core;
 using Microsoft.Toolkit.Uwp;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.EventArguments.CollectionPreview;
@@ -22,10 +23,8 @@ using ClipboardCanvas.ViewModels.UserControls.Collections;
 using ClipboardCanvas.Interfaces.Search;
 using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Services;
-using ClipboardCanvas.Serialization;
 using ClipboardCanvas.DataModels.Navigation;
 using ClipboardCanvas.Helpers.SafetyHelpers;
-using Windows.ApplicationModel.DataTransfer;
 using ClipboardCanvas.Helpers;
 
 namespace ClipboardCanvas.ViewModels.Pages

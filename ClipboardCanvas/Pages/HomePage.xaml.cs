@@ -1,9 +1,10 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using System.Threading;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
 using ClipboardCanvas.ViewModels.Pages;
 using ClipboardCanvas.ViewModels.Widgets.Timeline;
-using System.Threading;
+using ClipboardCanvas.DataModels.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -18,6 +19,16 @@ namespace ClipboardCanvas.Pages
         {
             get => (HomePageViewModel)DataContext;
             set => DataContext = value;
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (e.Parameter is FromAutopasteHomepageNavigationParameterModel fromAutopasteParameter)
+            {
+                this.ViewModel.IsAutopasteTeachingTipShown = true;
+            }
+
+            base.OnNavigatedTo(e);
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)

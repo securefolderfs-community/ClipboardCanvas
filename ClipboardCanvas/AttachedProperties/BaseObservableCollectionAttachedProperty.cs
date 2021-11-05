@@ -13,14 +13,10 @@ namespace ClipboardCanvas.AttachedProperties
 
         private TTarget _sender;
 
-        private static int hooked = 0;
-        private static int unhooked = 0;
-
         protected override void OnValueChanged(TTarget sender, ObservableCollection<TCollectionProperty> newValue)
         {
             this._collection = newValue;
             this._sender = sender;
-            Debug.WriteLine($"HOOKED: {hooked} | UNHOOKED: {unhooked}");
         }
 
         public override void OnValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
@@ -28,14 +24,12 @@ namespace ClipboardCanvas.AttachedProperties
             if (e.OldValue is INotifyCollectionChanged notifyCollectionChangedOld)
             {
                 notifyCollectionChangedOld.CollectionChanged -= ObservableCollection_CollectionChangedInternal;
-                unhooked++;
             }
 
             if (e.NewValue is INotifyCollectionChanged notifyCollectionChangedNew)
             {
                 notifyCollectionChangedNew.CollectionChanged -= ObservableCollection_CollectionChangedInternal;
                 notifyCollectionChangedNew.CollectionChanged += ObservableCollection_CollectionChangedInternal;
-                hooked++;
             }
 
             base.OnValueChanged(sender, e);

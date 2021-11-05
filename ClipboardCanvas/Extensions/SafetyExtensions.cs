@@ -1,6 +1,8 @@
-﻿using Microsoft.Win32.SafeHandles;
+﻿using ClipboardCanvas.UnsafeNative;
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace ClipboardCanvas.Extensions
 {
@@ -26,7 +28,13 @@ namespace ClipboardCanvas.Extensions
             }
         }
 
-        public static SafeFileHandle ToSafeFileHandle(this IntPtr unsafeHandle) =>
-            new SafeFileHandle(unsafeHandle, true);
+        public static TSafeHandle ToSafeHandle<TSafeHandle>(this IntPtr unsafeHandle, Func<IntPtr, TSafeHandle> createSafeHandle) where TSafeHandle : SafeHandle =>
+            createSafeHandle(unsafeHandle);
+
+        public static SafeFileHandle ToSafeFileHandle(this IntPtr unsafeHandle, bool ownsHandle = true) =>
+            ToSafeHandle(unsafeHandle, (h) => new SafeFileHandle(h, ownsHandle));
+
+        public static bool CloseFileHandle(this IntPtr unsafeFileHandle) =>
+            UnsafeNativeApis.CloseHandle(unsafeFileHandle);
     }
 }
