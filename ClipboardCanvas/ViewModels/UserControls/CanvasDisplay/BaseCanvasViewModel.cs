@@ -113,6 +113,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 CanPasteReference = CheckCanPasteReference();
 
                 RefreshContextMenuItems();
+                AssociatedCollection?.UpdateIndex(collectionItemViewModel);
                 RaiseOnContentLoadedEvent(this, new ContentLoadedEventArgs(ContentType, IsContentLoaded, canvasPasteModel.IsContentAsReference, CanPasteReference));
             }
 

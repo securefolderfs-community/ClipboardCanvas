@@ -16,12 +16,13 @@ using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.Contexts.Operations;
 using ClipboardCanvas.CanvasLoadModels;
+using ClipboardCanvas.Helpers;
 
 namespace ClipboardCanvas.CanavsPasteModels
 {
     public abstract class BasePasteModel : IPasteModel, ILoadModel
     {
-        private IStorageItem _pastedItem;
+        protected IStorageItem pastedItem;
 
         protected ICanvasItemReceiverModel canvasItemReceiver;
 
@@ -59,7 +60,7 @@ namespace ClipboardCanvas.CanavsPasteModels
             this.operationContextReceiver = operationContextReceiver;
         }
 
-        public async Task<SafeWrapper<CanvasItem>> PasteData(DataPackageView dataPackage, bool pasteAsReference, CancellationToken cancellationToken)
+        public virtual async Task<SafeWrapper<CanvasItem>> PasteData(DataPackageView dataPackage, bool pasteAsReference, CancellationToken cancellationToken)
         {
             SafeWrapperResult result;
 
@@ -84,8 +85,6 @@ namespace ClipboardCanvas.CanavsPasteModels
                 return (null, result);
             }
 
-            this.CanPasteReference = CheckCanPasteReference();
-
             return (canvasItem, result);
         }
 
@@ -100,17 +99,16 @@ namespace ClipboardCanvas.CanavsPasteModels
                 && !dataPackage.Contains(StandardDataFormats.UserActivityJsonArray)
                 && !dataPackage.Contains(StandardDataFormats.WebLink))
             {
-                SafeWrapper<IReadOnlyList<IStorageItem>> items = await SafeWrapperRoutines.SafeWrapAsync(
-                    () => dataPackage.GetStorageItemsAsync().AsTask());
+                SafeWrapper<IReadOnlyList<IStorageItem>> items = await dataPackage.SafeGetStorageItemsAsync();
 
                 if (!items)
                 {
                     return items;
                 }
 
-                this._pastedItem = items.Result.First();
+                this.pastedItem = items.Result.First();
 
-                return await SetDataFromExistingItem(_pastedItem);
+                return await SetDataFromExistingItem(pastedItem);
             }
             else
             {
@@ -123,15 +121,15 @@ namespace ClipboardCanvas.CanavsPasteModels
         {
             SafeWrapper<CanvasItem> canvasItem;
 
-            if (IsContentAsReference && _pastedItem != null)
+            if (IsContentAsReference && pastedItem != null)
             {
                 canvasItem = await canvasItemReceiver.CreateNewCanvasItemFromExtension(Constants.FileSystem.REFERENCE_FILE_EXTENSION);
             }
             else
             {
-                if (_pastedItem != null)
+                if (pastedItem != null)
                 {
-                    string pastedItemFileName = Path.GetFileName(_pastedItem.Path);
+                    string pastedItemFileName = Path.GetFileName(pastedItem.Path);
                     canvasItem = await canvasItemReceiver.CreateNewCanvasItem(pastedItemFileName);
                 }
                 else
@@ -149,13 +147,13 @@ namespace ClipboardCanvas.CanavsPasteModels
             if (IsContentAsReference && await sourceItem == null)
             {
                 // We need to update the reference file because the one we created is empty
-                ReferenceFile referenceFile = await ReferenceFile.CreateReferenceFileFromFile(associatedFile, _pastedItem);
+                ReferenceFile referenceFile = await ReferenceFile.CreateReferenceFileFromFile(associatedFile, pastedItem);
                 return referenceFile.LastError;
             } 
             else
             {
                 // If pasting a file and not raw data from clipboard...
-                if (_pastedItem is StorageFile pastedFile && pastedFile.Path != associatedItem.Path)
+                if (pastedItem is StorageFile pastedFile && pastedFile.Path != associatedItem.Path)
                 {
                     // Signalize that the file is being pasted
                     RaiseOnTipTextUpdateRequestedEvent(this, new TipTextUpdateRequestedEventArgs("The file is being pasted, please wait.", TimeSpan.FromMilliseconds(Constants.UI.CanvasContent.FILE_PASTING_TIP_DELAY)));
@@ -172,7 +170,7 @@ namespace ClipboardCanvas.CanavsPasteModels
             }
         }
 
-        protected virtual bool CheckCanPasteReference()
+        public virtual bool CheckCanPasteReference()
         {
             return true;
         }

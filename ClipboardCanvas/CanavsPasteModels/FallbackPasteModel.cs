@@ -75,7 +75,7 @@ namespace ClipboardCanvas.CanavsPasteModels
             return SafeWrapperResult.SUCCESS;
         }
 
-        protected override bool CheckCanPasteReference()
+        public override bool CheckCanPasteReference()
         {
             return !_isFolder;
         }

@@ -1,17 +1,16 @@
-﻿using ClipboardCanvas.Helpers.SafetyHelpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using System.ComponentModel;
+
+using ClipboardCanvas.Helpers.SafetyHelpers;
 
 namespace ClipboardCanvas.Models.Autopaste
 {
-    public interface IAutopasteTarget
+    public interface IAutopasteTarget : INotifyPropertyChanged
     {
-        string Name { get; }
+        string DisplayName { get; }
 
-        Task<SafeWrapperResult> PasteData(DataPackageView dataPackage);
+        Task<SafeWrapperResult> PasteData(DataPackageView dataPackage, CancellationToken cancellationToken);
     }
 }

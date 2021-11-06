@@ -12,8 +12,8 @@ namespace ClipboardCanvas.CanavsPasteModels
     {
         bool IsContentAsReference { get; }
 
-        bool CanPasteReference { get; }
-
         Task<SafeWrapper<CanvasItem>> PasteData(DataPackageView dataPackage, bool pasteAsReference, CancellationToken cancellationToken);
+
+        bool CheckCanPasteReference();
     }
 }

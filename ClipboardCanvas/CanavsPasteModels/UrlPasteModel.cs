@@ -8,6 +8,7 @@ using ClipboardCanvas.Contexts.Operations;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
+using ClipboardCanvas.Helpers;
 
 namespace ClipboardCanvas.CanavsPasteModels
 {
@@ -46,8 +47,7 @@ namespace ClipboardCanvas.CanavsPasteModels
 
         protected override async Task<SafeWrapperResult> SetDataFromDataPackage(DataPackageView dataPackage)
         {
-            SafeWrapper<string> url = await SafeWrapperRoutines.SafeWrapAsync(
-              () => dataPackage.GetTextAsync().AsTask());
+            SafeWrapper<string> url = await dataPackage.SafeGetTextAsync();
 
             Url = url;
 

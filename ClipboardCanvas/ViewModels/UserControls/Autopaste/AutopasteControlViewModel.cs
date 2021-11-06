@@ -1,5 +1,6 @@
 ﻿using ClipboardCanvas.DataModels.Navigation;
 using ClipboardCanvas.Helpers;
+using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.Models.Autopaste;
 using ClipboardCanvas.Services;
@@ -10,15 +11,20 @@ using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 {
     public class AutopasteControlViewModel : ObservableObject
     {
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
         private INavigationService NavigationService { get; } = Ioc.Default.GetService<INavigationService>();
 
         public IAutopasteTarget AutopasteTarget { get; set; }
@@ -38,6 +44,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
         {
             ChangeTargetCommand = new RelayCommand(ChangeTarget);
             AddAllowedTypeCommand = new RelayCommand(AddAllowedType);
+
+            Clipboard.ContentChanged += Clipboard_ContentChanged;
         }
 
         private void ChangeTarget()
@@ -49,6 +57,20 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
         private void AddAllowedType()
         {
 
+        }
+
+        private async void Clipboard_ContentChanged(object sender, object e)
+        {
+            if (AutopasteTarget != null)
+            {
+                SafeWrapper<DataPackageView> clipboardData = ClipboardHelpers.GetClipboardData();
+                if (clipboardData)
+                {
+                    SafeWrapperResult result = await AutopasteTarget.PasteData(clipboardData, _cancellationTokenSource.Token);
+
+                    // Show notification depending on the result
+                }
+            }
         }
     }
 }

@@ -1,6 +1,11 @@
 ﻿using Windows.ApplicationModel.DataTransfer;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
+using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using Windows.Storage;
+using Windows.Storage.Streams;
 
 namespace ClipboardCanvas.Helpers
 {
@@ -23,9 +28,22 @@ namespace ClipboardCanvas.Helpers
 
         public static SafeWrapper<DataPackageView> GetClipboardData()
         {
-            SafeWrapper<DataPackageView> dataPackage = SafeWrapperRoutines.SafeWrap(Clipboard.GetContent);
+            return SafeWrapperRoutines.SafeWrap(Clipboard.GetContent);
+        }
 
-            return dataPackage;
+        public static async Task<SafeWrapper<string>> SafeGetTextAsync(this DataPackageView dataPackage)
+        {
+            return await SafeWrapperRoutines.SafeWrapAsync(() => dataPackage.GetTextAsync().AsTask());
+        }
+
+        public static async Task<SafeWrapper<IReadOnlyList<IStorageItem>>> SafeGetStorageItemsAsync(this DataPackageView dataPackage)
+        {
+            return await SafeWrapperRoutines.SafeWrapAsync(() => dataPackage.GetStorageItemsAsync().AsTask());
+        }
+
+        public static async Task<SafeWrapper<RandomAccessStreamReference>> SafeGetBitmapAsync(this DataPackageView dataPackage)
+        {
+            return await SafeWrapperRoutines.SafeWrapAsync(() => dataPackage.GetBitmapAsync().AsTask());
         }
     }
 }

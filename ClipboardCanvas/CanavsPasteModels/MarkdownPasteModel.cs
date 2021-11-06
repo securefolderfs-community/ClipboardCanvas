@@ -8,6 +8,7 @@ using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Contexts.Operations;
+using ClipboardCanvas.Helpers;
 
 namespace ClipboardCanvas.CanavsPasteModels
 {
@@ -32,8 +33,7 @@ namespace ClipboardCanvas.CanavsPasteModels
 
         protected override async Task<SafeWrapperResult> SetDataFromDataPackage(DataPackageView dataPackage)
         {
-            SafeWrapper<string> text = await SafeWrapperRoutines.SafeWrapAsync(
-                          () => dataPackage.GetTextAsync().AsTask());
+            SafeWrapper<string> text = await dataPackage.SafeGetTextAsync();
 
             MarkdownText = text;
 

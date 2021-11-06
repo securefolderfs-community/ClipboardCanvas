@@ -28,10 +28,15 @@ using ClipboardCanvas.Contexts;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
+using ClipboardCanvas.Models.Autopaste;
+using Windows.ApplicationModel.DataTransfer;
+using ClipboardCanvas.DataModels.ContentDataModels;
+using ClipboardCanvas.Contexts.Operations;
+using ClipboardCanvas.CanavsPasteModels;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {
-    public abstract class BaseCollectionViewModel : ObservableObject, ICollectionModel, IDisposable
+    public abstract class BaseCollectionViewModel : ObservableObject, ICollectionModel, IAutopasteTarget, IDisposable
     {
         #region Protected Members
 
@@ -52,6 +57,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         protected FilesystemChangeWatcher filesystemChangeWatcher;
 
         protected IDialogService DialogService { get; } = Ioc.Default.GetService<IDialogService>();
+
+        protected IUserSettingsService UserSettingsService { get; } = Ioc.Default.GetService<IUserSettingsService>();
 
         #endregion
 
@@ -805,6 +812,24 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                     CustomIcon = await ImagingHelpers.ToBitmapAsync(fileStream);
                 }
             });
+        }
+
+        #endregion
+
+        #region IAutopasteTarget
+
+        public async Task<SafeWrapperResult> PasteData(DataPackageView dataPackage, CancellationToken cancellationToken)
+        {
+            BaseContentTypeModel pastedItemContentType = await BaseContentTypeModel.GetContentTypeFromDataPackage(dataPackage);
+
+            if (pastedItemContentType is InvalidContentTypeDataModel invalidContentType)
+            {
+                return invalidContentType.error;
+            }
+
+            // Get correct IPasteModel from contentType
+            using IPasteModel canvasPasteModel = CanvasHelpers.GetPasteModelFromContentType(pastedItemContentType, this, new StatusCenterOperationReceiver());
+            return await canvasPasteModel.PasteData(dataPackage, UserSettingsService.AlwaysPasteFilesAsReference, cancellationToken);
         }
 
         #endregion

@@ -12,16 +12,26 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.Contexts.Operations;
+using ClipboardCanvas.Helpers;
+using System.Threading;
 
 namespace ClipboardCanvas.CanavsPasteModels
 {
     public class ImagePasteModel : BasePasteModel
     {
+        private bool _wasPastedAsReference;
+
         public SoftwareBitmap SoftwareBitmap { get; private set; }
 
         public ImagePasteModel(ICanvasItemReceiverModel canvasFileReceiver, IOperationContextReceiver operationContextReceiver)
             : base (canvasFileReceiver, operationContextReceiver)
         {
+        }
+
+        public override Task<SafeWrapper<CanvasItem>> PasteData(DataPackageView dataPackage, bool pasteAsReference, CancellationToken cancellationToken)
+        {
+            _wasPastedAsReference = pasteAsReference;
+            return base.PasteData(dataPackage, pasteAsReference, cancellationToken);
         }
 
         protected override async Task<SafeWrapperResult> SetDataFromDataPackage(DataPackageView dataPackage)
@@ -32,8 +42,7 @@ namespace ClipboardCanvas.CanavsPasteModels
             {
                 if (dataPackage.Contains(StandardDataFormats.StorageItems)) // Url to StorageFile
                 {
-                    SafeWrapper<IReadOnlyList<IStorageItem>> items = await SafeWrapperRoutines.SafeWrapAsync(
-                        () => dataPackage.GetStorageItemsAsync().AsTask());
+                    SafeWrapper<IReadOnlyList<IStorageItem>> items = await dataPackage.SafeGetStorageItemsAsync();
 
                     if (!items)
                     {
@@ -47,8 +56,7 @@ namespace ClipboardCanvas.CanavsPasteModels
                 }
                 else // Download from url
                 {
-                    SafeWrapper<string> url = await SafeWrapperRoutines.SafeWrapAsync(
-                        () => dataPackage.GetTextAsync().AsTask());
+                    SafeWrapper<string> url = await dataPackage.SafeGetTextAsync();
 
                     if (!url)
                     {
@@ -61,16 +69,33 @@ namespace ClipboardCanvas.CanavsPasteModels
             }
             else if (dataPackage.Contains(StandardDataFormats.Bitmap))
             {
-                SafeWrapper<RandomAccessStreamReference> bitmap = await SafeWrapperRoutines.SafeWrapAsync(
-                           () => dataPackage.GetBitmapAsync().AsTask());
-
-                if (!bitmap)
+                if (dataPackage.Contains(StandardDataFormats.StorageItems)) // File to image
                 {
-                    return bitmap;
-                }
+                    SafeWrapper<IReadOnlyList<IStorageItem>> items = await dataPackage.SafeGetStorageItemsAsync();
 
-                openedStream = await SafeWrapperRoutines.SafeWrapAsync(
-                    () => bitmap.Result.OpenReadAsync().AsTask());
+                    if (!items)
+                    {
+                        return items;
+                    }
+
+                    IsContentAsReference = _wasPastedAsReference;
+
+                    this.pastedItem = items.Result.First();
+                    return await SetDataFromExistingItem(pastedItem);
+                }
+                else // Just image
+                {
+
+                    SafeWrapper<RandomAccessStreamReference> bitmap = await dataPackage.SafeGetBitmapAsync();
+
+                    if (!bitmap)
+                    {
+                        return bitmap;
+                    }
+
+                    openedStream = await SafeWrapperRoutines.SafeWrapAsync(
+                        () => bitmap.Result.OpenReadAsync().AsTask());
+                }
             }
 
             if (!openedStream)

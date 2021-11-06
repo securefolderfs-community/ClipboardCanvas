@@ -202,7 +202,7 @@ namespace ClipboardCanvas.DataModels.ContentDataModels
             }
             else if (dataPackage.Contains(StandardDataFormats.Text))
             {
-                SafeWrapper<string> text = await SafeWrapperRoutines.SafeWrapAsync(() => dataPackage.GetTextAsync().AsTask());
+                SafeWrapper<string> text = await dataPackage.SafeGetTextAsync();
 
                 if (!text)
                 {
@@ -243,12 +243,12 @@ namespace ClipboardCanvas.DataModels.ContentDataModels
             }
             else if (dataPackage.Contains(StandardDataFormats.StorageItems)) // From clipboard storage items
             {
-                IReadOnlyList<IStorageItem> items = await dataPackage.GetStorageItemsAsync();
+                SafeWrapper<IReadOnlyList<IStorageItem>> items = await dataPackage.SafeGetStorageItemsAsync();
 
-                if (!items.IsEmpty())
+                if (!items && !items.Result.IsEmpty())
                 {
                     // One item, decide contentType for it
-                    IStorageItem item = items.First();
+                    IStorageItem item = items.Result.First();
 
                     BaseContentTypeModel contentType = await BaseContentTypeModel.GetContentType(item, null);
 

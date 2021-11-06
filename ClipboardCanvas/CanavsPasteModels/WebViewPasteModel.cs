@@ -9,6 +9,7 @@ using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers.Filesystem;
+using ClipboardCanvas.Helpers;
 
 namespace ClipboardCanvas.CanavsPasteModels
 {
@@ -82,8 +83,7 @@ namespace ClipboardCanvas.CanavsPasteModels
 
         protected override async Task<SafeWrapperResult> SetDataFromDataPackage(DataPackageView dataPackage)
         {
-            SafeWrapper<string> text = await SafeWrapperRoutines.SafeWrapAsync(() =>
-                dataPackage.GetTextAsync().AsTask());
+            SafeWrapper<string> text = await dataPackage.SafeGetTextAsync();
 
             if (_mode == WebViewCanvasMode.ReadWebsite)
             {

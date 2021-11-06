@@ -90,7 +90,7 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         Opacity="0.8"
-                        Text="{x:Bind ViewModel.AutopasteTarget.Name, Mode=OneWay}"
+                        Text="{x:Bind ViewModel.AutopasteTarget.DisplayName, Mode=OneWay}"
                         TextTrimming="CharacterEllipsis" />
                 </StackPanel>
 
