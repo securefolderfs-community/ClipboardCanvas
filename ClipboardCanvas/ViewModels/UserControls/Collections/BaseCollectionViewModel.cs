@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.Storage.Streams;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Windows.ApplicationModel.DataTransfer;
 
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.EventArguments.Collections;
@@ -29,7 +30,6 @@ using ClipboardCanvas.Services;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
 using ClipboardCanvas.Models.Autopaste;
-using Windows.ApplicationModel.DataTransfer;
 using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Contexts.Operations;
 using ClipboardCanvas.CanavsPasteModels;

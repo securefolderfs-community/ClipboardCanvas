@@ -66,6 +66,9 @@ namespace ClipboardCanvas.UnsafeNative
             out BY_HANDLE_FILE_INFORMATION lpFileInformation,
             uint dwBufferSize);
 
+        [DllImport("api-ms-win-core-errorhandling-l1-1-1.dll")]
+        public static extern uint GetLastError();
+
         [DllImport("api-ms-win-core-handle-l1-1-0.dll")]
         public static extern bool CloseHandle(IntPtr hObject);
     }

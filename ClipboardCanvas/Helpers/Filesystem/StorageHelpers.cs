@@ -42,7 +42,8 @@ namespace ClipboardCanvas.Helpers.Filesystem
             bool exists = UnsafeNativeApis.GetFileAttributesExFromApp(path, UnsafeNativeDataModels.GET_FILEEX_INFO_LEVELS.GetFileExInfoStandard, out UnsafeNativeDataModels.WIN32_FILE_ATTRIBUTE_DATA itemAttributes);
             if (!exists)
             {
-                return new SafeWrapper<TRequested>(default, OperationErrorCode.NotFound, new FileNotFoundException(), "Couldn't resolve item associated with path.");
+                uint hresult = UnsafeNativeApis.GetLastError();
+                return new SafeWrapper<TRequested>(default, OperationErrorCode.NotFound, new FileNotFoundException($"The file was not found. Actual HRESULT:{hresult}"), "Couldn't resolve item associated with path.");
             }
 
             // Directory

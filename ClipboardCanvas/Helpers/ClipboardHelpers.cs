@@ -33,6 +33,7 @@ namespace ClipboardCanvas.Helpers
 
         public static async Task<SafeWrapper<string>> SafeGetTextAsync(this DataPackageView dataPackage)
         {
+            // TODO: Add dataPackage.RequestAccessAsync()
             return await SafeWrapperRoutines.SafeWrapAsync(() => dataPackage.GetTextAsync().AsTask());
         }
 

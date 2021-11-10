@@ -20,7 +20,7 @@ namespace ClipboardCanvas.UnsafeNative
 
         public static string ReadStringFromFile(string filePath)
         {
-            IntPtr hStream = UnsafeNativeApis.CreateFileFromApp(filePath,
+            IntPtr hFile = UnsafeNativeApis.CreateFileFromApp(filePath,
                 GENERIC_READ,
                 0,
                 IntPtr.Zero,
@@ -28,43 +28,60 @@ namespace ClipboardCanvas.UnsafeNative
                 (uint)File_Attributes.BackupSemantics,
                 IntPtr.Zero);
 
-            if (hStream.ToInt64() == -1)
+            if (hFile.ToInt64() == -1)
             {
                 return null;
             }
 
             byte[] buffer = new byte[4096];
             int dwBytesRead;
-            string szRead = null;
+            string szRead = string.Empty;
 
             unsafe
             {
-                fixed (byte* pBuffer = buffer)
+                bool bRead = false;
+
+                using (MemoryStream msBuffer = new MemoryStream(buffer))
                 {
-                    UnsafeNativeApis.ReadFile(hStream, pBuffer, 4096 - 1, &dwBytesRead, IntPtr.Zero);
+                    using (StreamReader reader = new StreamReader(msBuffer, true))
+                    {
+                        do
+                        {
+                            fixed (byte* pBuffer = buffer)
+                            {
+                                Array.Clear(buffer, 0, buffer.Length);
+                                msBuffer.Position = 0;
+
+                                if (bRead = UnsafeNativeApis.ReadFile(hFile, pBuffer, 4096 - 1, &dwBytesRead, IntPtr.Zero) && dwBytesRead > 0)
+                                {
+                                    szRead += reader.ReadToEnd();
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+
+                        } while (bRead);
+                    }
                 }
             }
 
-            using (StreamReader reader = new StreamReader(new MemoryStream(buffer, 0, dwBytesRead), true))
-            {
-                szRead = reader.ReadToEnd();
-            }
-
-            UnsafeNativeApis.CloseHandle(hStream);
+            UnsafeNativeApis.CloseHandle(hFile);
 
             return szRead;
         }
 
         public static bool WriteStringToFile(string filePath, string write)
         {
-            IntPtr hStream = UnsafeNativeApis.CreateFileFromApp(filePath,
+            IntPtr hFile = UnsafeNativeApis.CreateFileFromApp(filePath,
                 GENERIC_WRITE,
                 0,
                 IntPtr.Zero,
                 CREATE_ALWAYS,
                 (uint)File_Attributes.BackupSemantics, IntPtr.Zero);
 
-            if (hStream.ToInt64() == -1)
+            if (hFile.ToInt64() == -1)
             {
                 return false;
             }
@@ -75,11 +92,11 @@ namespace ClipboardCanvas.UnsafeNative
             {
                 fixed (byte* pBuffer = buffer)
                 {
-                    UnsafeNativeApis.WriteFile(hStream, pBuffer, buffer.Length, &dwBytesWritten, IntPtr.Zero);
+                    UnsafeNativeApis.WriteFile(hFile, pBuffer, buffer.Length, &dwBytesWritten, IntPtr.Zero);
                 }
             }
 
-            UnsafeNativeApis.CloseHandle(hStream);
+            UnsafeNativeApis.CloseHandle(hFile);
             return true;
         }
 
