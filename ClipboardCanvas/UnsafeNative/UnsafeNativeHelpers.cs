@@ -33,7 +33,9 @@ namespace ClipboardCanvas.UnsafeNative
                 return null;
             }
 
-            byte[] buffer = new byte[4096];
+            const int BUFFER_LENGTH = 4096;
+
+            byte[] buffer = new byte[BUFFER_LENGTH];
             int dwBytesRead;
             string szRead = string.Empty;
 
@@ -54,7 +56,7 @@ namespace ClipboardCanvas.UnsafeNative
 
                                 if (bRead = UnsafeNativeApis.ReadFile(hFile, pBuffer, 4096 - 1, &dwBytesRead, IntPtr.Zero) && dwBytesRead > 0)
                                 {
-                                    szRead += reader.ReadToEnd();
+                                    szRead += reader.ReadToEnd().Remove(dwBytesRead, BUFFER_LENGTH - dwBytesRead);
                                 }
                                 else
                                 {
