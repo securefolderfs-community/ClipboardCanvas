@@ -83,6 +83,7 @@ namespace ClipboardCanvas
                 .AddSingleton<ICollectionsSettingsService, CollectionsSettingsService>()
                 .AddSingleton<ITimelineSettingsService, TimelineSettingsService>()
                 .AddSingleton<ICanvasSettingsService, CanvasSettingsService>()
+                .AddSingleton<IAutopasteSettingsService, AutopasteSettingsService>()
                 .AddSingleton<IApplicationSettingsService, ApplicationSettingsService>();
 
             return services.BuildServiceProvider();

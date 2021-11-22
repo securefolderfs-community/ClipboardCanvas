@@ -71,6 +71,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private IApplicationSettingsService ApplicationSettingsService { get; } = Ioc.Default.GetService<IApplicationSettingsService>();
 
+        private IAutopasteService AutopasteService { get; } = Ioc.Default.GetService<IAutopasteService>();
+
         #endregion
 
         #region Constructor
@@ -472,9 +474,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
             NavigationToolBarControlModel.NavigationControlModel.NavigateBackEnabled = false;
             NavigationToolBarControlModel.NavigationControlModel.NavigateForwardEnabled = false;
 
-            // Collections and Timeline
+            // Collections, Timeline
             await CollectionsWidgetViewModel.ReloadAllCollections();
-            await TimelineWidgetViewModel.ReloadAllSections(); 
+            await TimelineWidgetViewModel.ReloadAllSections();
+            await AutopasteService.InitializeAutopaste();
 
             // Navigate
             NavigationService.OpenCanvasPage(_currentCollectionModel);

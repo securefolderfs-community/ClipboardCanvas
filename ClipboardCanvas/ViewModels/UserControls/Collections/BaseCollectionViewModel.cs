@@ -60,6 +60,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         protected IUserSettingsService UserSettingsService { get; } = Ioc.Default.GetService<IUserSettingsService>();
 
+        protected IAutopasteService AutopasteService { get; } = Ioc.Default.GetService<IAutopasteService>();
+
         #endregion
 
         #region Public Properties
@@ -79,6 +81,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         public string CollectionPath { get; protected set; }
 
         public string DisplayName => Path.GetFileName(CollectionPath);
+
+        public string TargetPath => CollectionPath;
         
         public bool IsCollectionInitialized { get; protected set; }
 
@@ -135,14 +139,21 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         public bool UsesCustomIcon
         {
             get => usesCustomIcon;
-            set => SetProperty(ref usesCustomIcon, value);
+            protected set => SetProperty(ref usesCustomIcon, value);
+        }
+
+        protected bool canBeSetAsAutopasteTarget;
+        public bool CanBeSetAsAutopasteTarget
+        {
+            get => canBeSetAsAutopasteTarget;
+            protected set => SetProperty(ref canBeSetAsAutopasteTarget, value);
         }
 
         protected BitmapImage customIcon;
         public BitmapImage CustomIcon
         {
             get => customIcon;
-            set => SetProperty(ref customIcon, value);
+            protected set => SetProperty(ref customIcon, value);
         }
 
         #endregion
@@ -178,6 +189,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         public ICommand OpenCollectionCommand { get; protected set; }
 
         public ICommand OpenCollectionLocationCommand { get; protected set; }
+
+        public ICommand SetAsAutopasteTargetCommand { get; private set; }
 
         public ICommand ChangeCollectionIconCommand { get; protected set; }
 
@@ -225,6 +238,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             // Create commands
             OpenCollectionCommand = new RelayCommand(OpenCollection);
             OpenCollectionLocationCommand = new AsyncRelayCommand(OpenCollectionLocation);
+            SetAsAutopasteTargetCommand = new RelayCommand(SetAsAutopasteTarget);
             ChangeCollectionIconCommand = new AsyncRelayCommand(ChangeCollectionIcon);
             RemoveCollectionIconCommand = new AsyncRelayCommand(RemoveCollectionIcon);
             ReloadCollectionCommand = new AsyncRelayCommand(ReloadCollection);
@@ -247,6 +261,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             }
 
             await Launcher.LaunchFolderAsync(collectionFolder);
+        }
+
+        private void SetAsAutopasteTarget()
+        {
+            AutopasteService.UpdateAutopasteTarget(this);
         }
 
         private async Task ChangeCollectionIcon()
@@ -829,7 +848,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
             // Get correct IPasteModel from contentType
             using IPasteModel canvasPasteModel = CanvasHelpers.GetPasteModelFromContentType(pastedItemContentType, this, new StatusCenterOperationReceiver());
-            return await canvasPasteModel.PasteData(dataPackage, UserSettingsService.AlwaysPasteFilesAsReference, cancellationToken);
+            SafeWrapper<CanvasItem> canvasItemResult = await canvasPasteModel.PasteData(dataPackage, UserSettingsService.AlwaysPasteFilesAsReference, cancellationToken);
+            if (canvasItemResult && currentIndex == CollectionItems.Count - 1) // Was on new canvas, item was pasted and is now one behind - set to new canvas
+            {
+                SetIndexOnNewCanvas();
+            }
+
+            return canvasItemResult;
         }
 
         #endregion

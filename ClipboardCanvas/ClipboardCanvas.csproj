@@ -190,6 +190,7 @@
       <DependentUpon>SettingsNotificationsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\IAutopasteService.cs" />
+    <Compile Include="Services\IAutopasteSettingsService.cs" />
     <Compile Include="Services\ILogger.cs" />
     <Compile Include="Models\Configuration\CollectionConfigurationModel.cs" />
     <Compile Include="Models\Configuration\InfiniteCanvasConfigurationModel.cs" />
@@ -203,6 +204,7 @@
     <Compile Include="Models\IInteractableCanvasControlItemModel.cs" />
     <Compile Include="ModelViews\IInfiniteCanvasControlView.cs" />
     <Compile Include="Services\Implementation\AutopasteService.cs" />
+    <Compile Include="Services\Implementation\AutopasteSettingsService.cs" />
     <Compile Include="Services\Implementation\NavigationService.cs" />
     <Compile Include="Services\Implementation\StatusCenterService.cs" />
     <Compile Include="Services\Implementation\TimelineService.cs" />

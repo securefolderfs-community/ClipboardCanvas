@@ -385,6 +385,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             return Collections.FirstOrDefault((item) => item.ConstructConfigurationModel().collectionPath == collectionConfigurationModel.collectionPath);
         }
 
+        public static BaseCollectionViewModel FindCollection(string collectionPath)
+        {
+            return Collections.FirstOrDefault((item) => item.CollectionPath == collectionPath);
+        }
+
         public static async Task<bool> AddCollection(BaseCollectionViewModel baseCollectionViewModel, CollectionConfigurationModel configurationModel, bool suppressSettingsUpdate = false)
         {
             // If collections already contain a collection with the same path

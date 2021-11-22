@@ -23,6 +23,8 @@
 
             public const string CANVAS_SETTINGS_FILENAME = "canvas_settings.json";
 
+            public const string AUTOPASTE_SETTINGS_FILENAME = "autopaste_settings.json";
+
             public const string APPLICATION_SETTINGS_FILENAME = "application_settings.json";
         }
 

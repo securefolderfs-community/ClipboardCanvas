@@ -50,5 +50,10 @@ namespace ClipboardCanvas.Services
         /// Determines whether to use Infinite Canvas as default when opening new Canvas
         /// </summary>
         bool UseInfiniteCanvasAsDefault { get; set; }
+
+        /// <summary>
+        /// Determines whether to use autopasting functionality
+        /// </summary>
+        bool IsAutopasteEnabled { get; set; }
     }
 }

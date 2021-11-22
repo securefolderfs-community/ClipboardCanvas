@@ -39,6 +39,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         public StandardCollectionViewModel(StorageFolder collectionFolder, string collectionPath)
             : base(collectionFolder, collectionPath)
         {
+            canBeSetAsAutopasteTarget = true;
+
             // Create commands
             StartRenameCollectionCommand = new RelayCommand(StartRename);
             RenameBoxKeyDownCommand = new AsyncRelayCommand<KeyRoutedEventArgs>(RenameBoxKeyDown);

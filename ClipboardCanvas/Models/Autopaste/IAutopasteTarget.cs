@@ -11,6 +11,8 @@ namespace ClipboardCanvas.Models.Autopaste
     {
         string DisplayName { get; }
 
+        string TargetPath { get; }
+
         Task<SafeWrapperResult> PasteData(DataPackageView dataPackage, CancellationToken cancellationToken);
     }
 }

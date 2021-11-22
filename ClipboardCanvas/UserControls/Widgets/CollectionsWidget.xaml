@@ -116,6 +116,15 @@
                                         <FontIcon Glyph="&#xE838;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
+                                <MenuFlyoutItem
+                                    x:Name="SetAsAutopasteTargetOption"
+                                    x:Load="{x:Bind CanBeSetAsAutopasteTarget, Mode=OneWay}"
+                                    Command="{x:Bind SetAsAutopasteTargetCommand}"
+                                    Text="Set as Autopaste target">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE77F;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
                                 <MenuFlyoutItem Command="{x:Bind ChangeCollectionIconCommand}" Text="Change icon">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE70F;" />

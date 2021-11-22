@@ -11,6 +11,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         public DefaultCollectionViewModel(StorageFolder collectionFolder)
             : base(collectionFolder)
         {
+            canBeSetAsAutopasteTarget = true;
         }
 
         #endregion

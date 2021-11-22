@@ -1,5 +1,6 @@
 ﻿using ClipboardCanvas.Models.Autopaste;
 using ClipboardCanvas.ViewModels.UserControls.Autopaste;
+using System.Threading.Tasks;
 
 namespace ClipboardCanvas.Services.Implementation
 {
@@ -7,9 +8,17 @@ namespace ClipboardCanvas.Services.Implementation
     {
         public AutopasteControlViewModel AutopasteControlViewModel { get; set; }
 
+        public async Task InitializeAutopaste()
+        {
+            if (AutopasteControlViewModel != null)
+            {
+                await AutopasteControlViewModel.Initialize();
+            }
+        }
+
         public void UpdateAutopasteTarget(IAutopasteTarget autopasteTarget)
         {
-            AutopasteControlViewModel.AutopasteTarget = autopasteTarget;
+            AutopasteControlViewModel?.UpdateTarget(autopasteTarget);
         }
     }
 }

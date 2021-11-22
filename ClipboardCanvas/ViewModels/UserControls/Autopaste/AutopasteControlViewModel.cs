@@ -18,6 +18,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 {
@@ -27,13 +28,28 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 
         private INavigationService NavigationService { get; } = Ioc.Default.GetService<INavigationService>();
 
-        public IAutopasteTarget AutopasteTarget { get; set; }
+        private IAutopasteSettingsService AutopasteSettingsService { get; } = Ioc.Default.GetService<IAutopasteSettingsService>();
 
-        private bool _EnableAutopaste;
+        private IUserSettingsService UserSettingsService { get; } = Ioc.Default.GetService<IUserSettingsService>();
+
+        public IAutopasteTarget AutopasteTarget { get; private set; }
+
+        public string AutopasteTargetName
+        {
+            get => AutopasteTarget?.DisplayName ?? "No target";
+        }
+
         public bool EnableAutopaste
         {
-            get => _EnableAutopaste;
-            set => SetProperty(ref _EnableAutopaste, value);
+            get => UserSettingsService.IsAutopasteEnabled;
+            set
+            {
+                if (value != UserSettingsService.IsAutopasteEnabled)
+                {
+                    UserSettingsService.IsAutopasteEnabled = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         public ICommand ChangeTargetCommand { get; private set; }
@@ -54,11 +70,22 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
                 CanvasHelpers.GetDefaultCanvasType()));
         }
 
+        public Task Initialize()
+        {
+            if (UserSettingsService.IsAutopasteEnabled && !string.IsNullOrEmpty(AutopasteSettingsService.AutopastePath))
+            {
+                IAutopasteTarget autopasteTarget = CollectionsWidgetViewModel.FindCollection(AutopasteSettingsService.AutopastePath);
+                UpdateTarget(autopasteTarget);
+            }
+
+            return Task.CompletedTask;
+        }
+
         private void AddAllowedType()
         {
 
         }
-
+        
         private async void Clipboard_ContentChanged(object sender, object e)
         {
             if (AutopasteTarget != null)
@@ -71,6 +98,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
                     // Show notification depending on the result
                 }
             }
+        }
+
+        public void UpdateTarget(IAutopasteTarget autopasteTarget)
+        {
+            this.AutopasteTarget = autopasteTarget;
+            OnPropertyChanged(nameof(AutopasteTargetName));
+
+            AutopasteSettingsService.AutopastePath = autopasteTarget?.TargetPath;
         }
     }
 }

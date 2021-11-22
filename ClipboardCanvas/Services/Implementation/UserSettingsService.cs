@@ -85,6 +85,12 @@ namespace ClipboardCanvas.Services
             set => Set<bool>(value);
         }
 
+        public bool IsAutopasteEnabled
+        {
+            get => Get(false);
+            set => Set(value);
+        }
+
         #endregion
     }
 }

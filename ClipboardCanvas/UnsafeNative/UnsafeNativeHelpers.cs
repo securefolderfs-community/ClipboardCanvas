@@ -22,7 +22,7 @@ namespace ClipboardCanvas.UnsafeNative
         {
             IntPtr hFile = UnsafeNativeApis.CreateFileFromApp(filePath,
                 GENERIC_READ,
-                0,
+                FILE_SHARE_READ,
                 IntPtr.Zero,
                 OPEN_EXISTING,
                 (uint)File_Attributes.BackupSemantics,
@@ -54,9 +54,9 @@ namespace ClipboardCanvas.UnsafeNative
                                 Array.Clear(buffer, 0, buffer.Length);
                                 msBuffer.Position = 0;
 
-                                if (bRead = UnsafeNativeApis.ReadFile(hFile, pBuffer, 4096 - 1, &dwBytesRead, IntPtr.Zero) && dwBytesRead > 0)
+                                if (bRead = UnsafeNativeApis.ReadFile(hFile, pBuffer, BUFFER_LENGTH - 1, &dwBytesRead, IntPtr.Zero) && dwBytesRead > 0)
                                 {
-                                    szRead += reader.ReadToEnd().Remove(dwBytesRead, BUFFER_LENGTH - dwBytesRead);
+                                    szRead += reader.ReadToEnd().Substring(0, dwBytesRead);
                                 }
                                 else
                                 {
