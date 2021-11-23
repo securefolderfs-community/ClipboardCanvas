@@ -1,9 +1,13 @@
-﻿using ClipboardCanvas.DataModels.Navigation;
+﻿using ClipboardCanvas.DataModels;
+using ClipboardCanvas.DataModels.Navigation;
+using ClipboardCanvas.Enums;
+using ClipboardCanvas.Extensions;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.Models.Autopaste;
 using ClipboardCanvas.Services;
+using ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
@@ -13,6 +17,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,11 +31,19 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
     {
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
+        private bool _autopasteRoutineStarted = false;
+
+        private List<DataPackageView> _autopasteDataQueue = new List<DataPackageView>();
+
         private INavigationService NavigationService { get; } = Ioc.Default.GetService<INavigationService>();
 
         private IAutopasteSettingsService AutopasteSettingsService { get; } = Ioc.Default.GetService<IAutopasteSettingsService>();
 
+        private ITimelineService TimelineService { get; } = Ioc.Default.GetService<ITimelineService>();
+
         private IUserSettingsService UserSettingsService { get; } = Ioc.Default.GetService<IUserSettingsService>();
+
+        public ObservableCollection<BaseAutopasteRuleViewModel> AutopasteRules { get; } = new ObservableCollection<BaseAutopasteRuleViewModel>();
 
         public IAutopasteTarget AutopasteTarget { get; private set; }
 
@@ -52,23 +65,37 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
             }
         }
 
+        #region Commands
+
         public ICommand ChangeTargetCommand { get; private set; }
 
-        public ICommand AddAllowedTypeCommand { get; private set; }
+        public ICommand AddFileSizeRuleCommand { get; private set; }
+
+        #endregion
 
         public AutopasteControlViewModel()
         {
             ChangeTargetCommand = new RelayCommand(ChangeTarget);
-            AddAllowedTypeCommand = new RelayCommand(AddAllowedType);
+            AddFileSizeRuleCommand = new RelayCommand(AddFileSizeRule);
 
+            Clipboard.ContentChanged -= Clipboard_ContentChanged;
             Clipboard.ContentChanged += Clipboard_ContentChanged;
         }
+
+        #region Command Implementation
 
         private void ChangeTarget()
         {
             NavigationService.OpenHomepage(new FromAutopasteHomepageNavigationParameterModel(
                 CanvasHelpers.GetDefaultCanvasType()));
         }
+
+        private void AddFileSizeRule()
+        {
+            AutopasteRules.Add(new FileSizeRuleViewModel());
+        }
+
+        #endregion
 
         public Task Initialize()
         {
@@ -81,11 +108,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
             return Task.CompletedTask;
         }
 
-        private void AddAllowedType()
-        {
-
-        }
-        
         private async void Clipboard_ContentChanged(object sender, object e)
         {
             if (AutopasteTarget != null)
@@ -93,9 +115,47 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
                 SafeWrapper<DataPackageView> clipboardData = ClipboardHelpers.GetClipboardData();
                 if (clipboardData)
                 {
-                    SafeWrapperResult result = await AutopasteTarget.PasteData(clipboardData, _cancellationTokenSource.Token);
+                    SafeWrapper<CanvasItem> pasteResult = (null, SafeWrapperResult.UNKNOWN_FAIL);
 
-                    // Show notification depending on the result
+                    try
+                    {
+                        if (_autopasteRoutineStarted && _autopasteDataQueue.Any((item) => item.Properties.SequenceEqual(clipboardData.Result.Properties)))
+                        {
+                            return; // Avoid duplicates where the event is called twice
+                        }
+
+                        // Start and add the operation to queue
+                        _autopasteRoutineStarted = true;
+                        _autopasteDataQueue.Add(clipboardData);
+
+                        // Check filters
+                        foreach (var item in AutopasteRules)
+                        {
+                            if (!await item.PassesRule(clipboardData))
+                            {
+                                return;
+                            }
+                        }
+
+                        pasteResult = await AutopasteTarget.PasteData(clipboardData, _cancellationTokenSource.Token);
+                    }
+                    catch { }
+                    finally
+                    {
+                        // Remove the completed operation from queue
+                        _autopasteDataQueue.Remove(clipboardData);
+                        _autopasteRoutineStarted = _autopasteDataQueue.IsEmpty();
+                    }
+
+                    if (pasteResult)
+                    {
+                        var todaySection = await TimelineService.GetOrCreateTodaySection();
+                        var item = await TimelineService.AddItemForSection(todaySection, AutopasteTarget.CollectionModel, pasteResult);
+                    }
+                    else
+                    {
+                        // Show notification if failed
+                    }
                 }
             }
         }

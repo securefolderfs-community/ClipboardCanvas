@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using ClipboardCanvas.DataModels;
+using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.Models.Configuration;
 using ClipboardCanvas.ViewModels.Widgets.Timeline;
@@ -9,7 +10,7 @@ namespace ClipboardCanvas.Services
 {
     public interface ITimelineService
     {
-        Task<TimelineSectionItemViewModel> AddItemForSection(TimelineSectionViewModel timelineSection, ICollectionModel collectionModel, CanvasItem canvasItem);
+        Task<SafeWrapper<TimelineSectionItemViewModel>> AddItemForSection(TimelineSectionViewModel timelineSection, ICollectionModel collectionModel, CanvasItem canvasItem);
 
         bool RemoveItemFromSection(TimelineSectionViewModel timelineSection, TimelineSectionItemViewModel timelineSectionItem);
 

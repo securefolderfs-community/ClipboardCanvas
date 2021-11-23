@@ -4,15 +4,18 @@ using Windows.ApplicationModel.DataTransfer;
 using System.ComponentModel;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
+using ClipboardCanvas.DataModels;
 
 namespace ClipboardCanvas.Models.Autopaste
 {
     public interface IAutopasteTarget : INotifyPropertyChanged
     {
+        ICollectionModel CollectionModel { get; }
+
         string DisplayName { get; }
 
         string TargetPath { get; }
 
-        Task<SafeWrapperResult> PasteData(DataPackageView dataPackage, CancellationToken cancellationToken);
+        Task<SafeWrapper<CanvasItem>> PasteData(DataPackageView dataPackage, CancellationToken cancellationToken);
     }
 }

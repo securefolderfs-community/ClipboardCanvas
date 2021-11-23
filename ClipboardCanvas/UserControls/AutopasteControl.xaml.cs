@@ -4,6 +4,7 @@ using ClipboardCanvas.ViewModels.UserControls.Autopaste;
 using Windows.UI.Xaml;
 using ClipboardCanvas.Services;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Windows.UI.Xaml.Controls.Primitives;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -36,6 +37,11 @@ namespace ClipboardCanvas.UserControls
         public AutopasteControl()
         {
             this.InitializeComponent();
+        }
+
+        private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
+        {
+            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
     }
 }

@@ -2,6 +2,8 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using System.Threading.Tasks;
 
 using ClipboardCanvas.Models;
 using ClipboardCanvas.Extensions;
@@ -9,12 +11,17 @@ using ClipboardCanvas.Models.Configuration;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.EventArguments;
+using ClipboardCanvas.Services;
+using ClipboardCanvas.Enums;
+using ClipboardCanvas.Helpers.SafetyHelpers;
 
 namespace ClipboardCanvas.ViewModels.Widgets.Timeline
 {
     public class TimelineSectionViewModel : ObservableObject, IDisposable
     {
         #region Properties
+
+        private INavigationService NavigationService { get; } = Ioc.Default.GetService<INavigationService>();
 
         public ObservableCollection<TimelineSectionItemViewModel> Items { get; private set; }
 
@@ -89,23 +96,19 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
             }
         }
 
-        public TimelineSectionItemViewModel AddItem(ICollectionModel collectionModel, CanvasItem canvasItem, bool suppressSettingsUpdate = false)
+        public async Task<SafeWrapper<TimelineSectionItemViewModel>> AddItem(ICollectionModel collectionModel, CanvasItem canvasItem, bool suppressSettingsUpdate = false)
         {
             var item = new TimelineSectionItemViewModel(collectionModel, canvasItem);
-            AddItemMode(item, true, suppressSettingsUpdate);
-
-            return item;
+            return (item, await AddItemMode(item, true, suppressSettingsUpdate));
         }
 
-        public TimelineSectionItemViewModel AddItemBack(ICollectionModel collectionModel, CanvasItem canvasItem, bool suppressSettingsUpdate = false)
+        public async Task<SafeWrapper<TimelineSectionItemViewModel>> AddItemBack(ICollectionModel collectionModel, CanvasItem canvasItem, bool suppressSettingsUpdate = false)
         {
             var item = new TimelineSectionItemViewModel(collectionModel, canvasItem);
-            AddItemMode(item, false, suppressSettingsUpdate);
-
-            return item;
+            return (item, await AddItemMode(item, false, suppressSettingsUpdate));
         }
 
-        private void AddItemMode(TimelineSectionItemViewModel timelineSectionItem, bool front, bool suppressSettingsUpdate = false)
+        private async Task<SafeWrapperResult> AddItemMode(TimelineSectionItemViewModel timelineSectionItem, bool front, bool suppressSettingsUpdate = false)
         {
             if (front)
             {
@@ -127,6 +130,14 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
             if (!suppressSettingsUpdate)
             {
                 SettingsSerializationHelpers.UpdateUserTimelineSetting();
+            }
+            if (NavigationService.CurrentPage == DisplayPageType.Homepage)
+            {
+                return await timelineSectionItem.InitializeSectionItemContent();
+            }
+            else
+            {
+                return SafeWrapperResult.SUCCESS;
             }
         }
 

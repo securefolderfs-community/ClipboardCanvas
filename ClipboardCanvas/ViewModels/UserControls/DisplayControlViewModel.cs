@@ -474,7 +474,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             NavigationToolBarControlModel.NavigationControlModel.NavigateBackEnabled = false;
             NavigationToolBarControlModel.NavigationControlModel.NavigateForwardEnabled = false;
 
-            // Collections, Timeline
+            // Collections, Timeline and Autopaste
             await CollectionsWidgetViewModel.ReloadAllCollections();
             await TimelineWidgetViewModel.ReloadAllSections();
             await AutopasteService.InitializeAutopaste();

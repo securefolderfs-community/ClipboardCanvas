@@ -56,6 +56,9 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
         public static implicit operator bool(SafeWrapperResult wrapperResult)
             => (wrapperResult?.Details?.errorCode ?? OperationErrorCode.UnknownFailed) == OperationErrorCode.Success;
 
+        public static implicit operator SafeWrapperResult(bool result)
+            => result ? SafeWrapperResult.SUCCESS : new SafeWrapperResult(OperationErrorCode.UnknownFailed, innerException: null);
+
         public static implicit operator SafeWrapperResult(SafeWrapperResultDetails details)
             => new SafeWrapperResult(details);
 

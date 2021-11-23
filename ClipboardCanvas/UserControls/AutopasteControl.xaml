@@ -5,6 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rvm="using:ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules"
+    xmlns:ts="using:ClipboardCanvas.TemplateSelectors"
     xmlns:tua="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:vc="using:ClipboardCanvas.ValueConverters"
     xmlns:vm="using:ClipboardCanvas.ViewModels.UserControls.Autopaste"
@@ -13,7 +15,42 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
+        <!--  FileSize rule  -->
+        <DataTemplate x:Key="RuleHeaderTemplate" x:DataType="rvm:BaseAutopasteRuleViewModel">
+            <Grid HorizontalAlignment="Stretch">
+                <Button
+                    Width="24"
+                    Height="24"
+                    Padding="1"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    Command="{x:Bind RemoveRuleCommand, Mode=OneWay}">
+                    <Button.Content>
+                        <FontIcon Glyph="&#xE711;" />
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="FileSizeRuleTemplate" x:DataType="rvm:FileSizeRuleViewModel">
+            <Grid RowSpacing="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+
+                <ContentControl ContentTemplate="{StaticResource RuleHeaderTemplate}" />
+                <Button Grid.Row="1" Content="Test" />
+            </Grid>
+        </DataTemplate>
+
         <vc:BooleanInvertConverter x:Key="BooleanInvertConverter" />
+        <ts:AutopasteTemplateSelector x:Key="AutopasteTemplateSelector" FileSizeDataTemplate="{StaticResource FileSizeRuleTemplate}" />
     </UserControl.Resources>
 
     <Grid
@@ -49,7 +86,7 @@
         <Grid
             Grid.Row="1"
             Padding="4"
-            RowSpacing="6">
+            RowSpacing="4">
 
             <Grid.ChildrenTransitions>
                 <TransitionCollection>
@@ -70,10 +107,10 @@
                 Height="60"
                 Padding="14,8,14,8"
                 VerticalAlignment="Top"
-                x:Load="{x:Bind ViewModel.EnableAutopaste, Mode=OneWay}"
                 Background="{ThemeResource ControlFillColorDefault}"
                 CornerRadius="4"
-                RowSpacing="4">
+                RowSpacing="4"
+                Visibility="{x:Bind ViewModel.EnableAutopaste, Mode=OneWay}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
@@ -98,47 +135,67 @@
                     Grid.Column="2"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
-                    Command="{x:Bind ViewModel.ChangeTargetCommand}"
-                    Content="Change..." />
+                    Command="{x:Bind ViewModel.ChangeTargetCommand}">
+                    <HyperlinkButton.Content>
+                        <FontIcon
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            Glyph="&#xE70F;" />
+                    </HyperlinkButton.Content>
+                </HyperlinkButton>
             </Grid>
 
-            <!--  Allowed types  -->
+            <!--  Exceptions  -->
             <Grid
                 x:Name="AllowedTypesBlock"
                 Grid.Row="1"
-                Height="60"
                 Padding="14,8,14,8"
                 VerticalAlignment="Top"
-                x:Load="{x:Bind ViewModel.EnableAutopaste, Mode=OneWay}"
                 Background="{ThemeResource ControlFillColorDefault}"
                 CornerRadius="4"
-                RowSpacing="4">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
+                RowSpacing="4"
+                Visibility="{x:Bind ViewModel.EnableAutopaste, Mode=OneWay}">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    FontWeight="SemiBold"
-                    Text="Allowed types" />
+                <Grid MinHeight="44">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
 
-                <HyperlinkButton
-                    Grid.Column="2"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Command="{x:Bind ViewModel.AddAllowedTypeCommand}"
-                    Content="Add..." />
+                    <TextBlock
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        FontWeight="SemiBold"
+                        Text="Rule set" />
+
+                    <HyperlinkButton
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Click="HyperlinkButton_Click">
+                        <HyperlinkButton.Content>
+                            <FontIcon
+                                VerticalAlignment="Center"
+                                FontSize="14"
+                                Glyph="&#xE710;" />
+                        </HyperlinkButton.Content>
+                        <FlyoutBase.AttachedFlyout>
+                            <MenuFlyout Placement="Bottom">
+                                <MenuFlyoutItem Command="{x:Bind ViewModel.AddFileSizeRuleCommand}" Text="File size..." />
+                            </MenuFlyout>
+                        </FlyoutBase.AttachedFlyout>
+                    </HyperlinkButton>
+                </Grid>
 
                 <!--  Sections  -->
-                <Grid Grid.Row="1">
-                    <!--  Creation wizard  -->
-                </Grid>
+                <ListView
+                    Grid.Row="1"
+                    ItemTemplateSelector="{StaticResource AutopasteTemplateSelector}"
+                    ItemsSource="{x:Bind ViewModel.AutopasteRules}" />
             </Grid>
 
             <!--  Autopaste disabled text  -->

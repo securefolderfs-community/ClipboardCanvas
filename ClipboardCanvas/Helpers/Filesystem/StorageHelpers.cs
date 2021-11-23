@@ -103,6 +103,11 @@ namespace ClipboardCanvas.Helpers.Filesystem
 
         public static async Task<long> GetFileSize(this IStorageFile file)
         {
+            if (file == null)
+            {
+                return -1L;
+            }
+
             BasicProperties properties = await file.GetBasicPropertiesAsync();
             return (long)properties.Size;
         }

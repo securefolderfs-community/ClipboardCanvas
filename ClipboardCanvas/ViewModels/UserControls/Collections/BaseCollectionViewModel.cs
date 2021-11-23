@@ -68,6 +68,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public ObservableCollection<CollectionItemViewModel> CollectionItems { get; protected set; }
 
+        public ICollectionModel CollectionModel => this;
+
         public SearchContext SearchContext { get; set; }
 
         public CanvasType AssociatedCanvasType { get; set; }
@@ -837,13 +839,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         #region IAutopasteTarget
 
-        public async Task<SafeWrapperResult> PasteData(DataPackageView dataPackage, CancellationToken cancellationToken)
+        public async Task<SafeWrapper<CanvasItem>> PasteData(DataPackageView dataPackage, CancellationToken cancellationToken)
         {
             BaseContentTypeModel pastedItemContentType = await BaseContentTypeModel.GetContentTypeFromDataPackage(dataPackage);
 
             if (pastedItemContentType is InvalidContentTypeDataModel invalidContentType)
             {
-                return invalidContentType.error;
+                return (null, invalidContentType.error);
             }
 
             // Get correct IPasteModel from contentType

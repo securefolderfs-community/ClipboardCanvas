@@ -319,6 +319,7 @@
       <DependentUpon>SettingsPastingPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="CanavsPasteModels\ImagePasteModel.cs" />
+    <Compile Include="TemplateSelectors\AutopasteTemplateSelector.cs" />
     <Compile Include="UnsafeNative\UnsafeNativeDataModels.cs" />
     <Compile Include="Enums\DisplayPageType.cs" />
     <Compile Include="Enums\OperationStatus.cs" />
@@ -493,6 +494,8 @@
     <Compile Include="ViewModels\SearchControlViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SettingsDialogViewModel.cs" />
     <Compile Include="ViewModels\UserControls\Autopaste\AutopasteControlViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\Autopaste\Rules\BaseAutopasteRuleViewModel.cs" />
+    <Compile Include="ViewModels\UserControls\Autopaste\Rules\FileSizeRuleViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\BaseReadOnlyCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\FallbackCanvasViewModel.cs" />
     <Compile Include="ViewModels\UserControls\CanvasDisplay\InfiniteCanvasViewModel.cs" />
