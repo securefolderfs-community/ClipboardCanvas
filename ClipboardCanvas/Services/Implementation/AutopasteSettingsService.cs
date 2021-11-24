@@ -1,11 +1,13 @@
-﻿using ClipboardCanvas.Models.JsonSettings;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Storage;
+using Newtonsoft.Json.Serialization;
+using System;
+using System.Linq;
+
+using ClipboardCanvas.Models.JsonSettings;
+using ClipboardCanvas.Models.JsonSettings.Implementation;
+using ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules;
 
 namespace ClipboardCanvas.Services.Implementation
 {
@@ -13,7 +15,8 @@ namespace ClipboardCanvas.Services.Implementation
     {
         public AutopasteSettingsService()
             : base (Path.Combine(ApplicationData.Current.LocalFolder.Path, Constants.LocalSettings.SETTINGS_FOLDERNAME, Constants.LocalSettings.AUTOPASTE_SETTINGS_FILENAME),
-                  isCachingEnabled: true)
+                  isCachingEnabled: true,
+                  jsonSettingsSerializer: new DerivedTypesJsonSettingsSerializer(new AutopasteSerializationBinder(typeof(Dictionary<string, object>))))
         {
         }
 
@@ -21,6 +24,41 @@ namespace ClipboardCanvas.Services.Implementation
         {
             get => Get<string>(null);
             set => Set(value);
+        }
+
+        public List<BaseAutopasteRuleViewModel> SavedRules
+        {
+            get => Get<List<BaseAutopasteRuleViewModel>>(null);
+            set => Set(value);
+        }
+    }
+
+    public sealed class AutopasteSerializationBinder : ISerializationBinder
+    {
+        private readonly List<Type> _knownTypes;
+
+        public AutopasteSerializationBinder(Type dataBaseObjectType)
+        {
+            _knownTypes = new List<Type>()
+            {
+                dataBaseObjectType,
+                typeof(string),
+                typeof(double),
+                typeof(BaseAutopasteRuleViewModel),
+                typeof(FileSizeRuleViewModel),
+                typeof(List<BaseAutopasteRuleViewModel>)
+            };
+        }
+
+        public Type BindToType(string assemblyName, string typeName)
+        {
+            return _knownTypes.SingleOrDefault(t => t.Name == typeName);
+        }
+
+        public void BindToName(Type serializedType, out string assemblyName, out string typeName)
+        {
+            assemblyName = null;
+            typeName = serializedType.Name;
         }
     }
 }

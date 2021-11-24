@@ -1,20 +1,17 @@
-﻿using ClipboardCanvas.Helpers;
-using ClipboardCanvas.ViewModels.UserControls;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Octokit;
 using System;
-using ClipboardCanvas.Extensions;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.System;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
+using ClipboardCanvas.Helpers;
+using ClipboardCanvas.Extensions;
+using ClipboardCanvas.Services;
 
 namespace ClipboardCanvas.ViewModels.Dialogs
 {
@@ -26,7 +23,9 @@ namespace ClipboardCanvas.ViewModels.Dialogs
 
         #endregion
 
-        #region Public Properties
+        #region Properties
+
+        private IApplicationService ApplicationService { get; } = Ioc.Default.GetService<IApplicationService>();
 
         private bool _IsLoadingData;
         public bool IsLoadingData
@@ -81,7 +80,7 @@ namespace ClipboardCanvas.ViewModels.Dialogs
         public async Task LoadUpdateDataFromGitHub(bool onlyCompareCurrent = false)
         {
             IsLoadingData = true;
-            string currentVersion = App.AppVersion;
+            string currentVersion = ApplicationService.AppVersion;
             List<(string Name, string Body)> preparedReleases = null;
 
             try
@@ -146,7 +145,7 @@ namespace ClipboardCanvas.ViewModels.Dialogs
             }
             catch (Exception e)
             {
-                ILogger exceptionLogger = Ioc.Default.GetService<ILogger>();
+                Microsoft.Extensions.Logging.ILogger exceptionLogger = Ioc.Default.GetService<Microsoft.Extensions.Logging.ILogger>();
                 exceptionLogger.LogInformation(e.Message);
             }
 

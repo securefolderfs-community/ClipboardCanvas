@@ -1,31 +1,48 @@
-﻿using ClipboardCanvas.Helpers;
-using ClipboardCanvas.Helpers.SafetyHelpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
+
+using ClipboardCanvas.Helpers;
+using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.Filesystem;
-using ClipboardCanvas.Extensions;
+using ClipboardCanvas.Models.Autopaste;
+using ByteSizeLib;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules
 {
     public sealed class FileSizeRuleViewModel : BaseAutopasteRuleViewModel
     {
-        private long _MaxFileSize;
-        public long MaxFileSize
+        private double _MaxFileSize;
+        public double MaxFileSize
         {
             get => _MaxFileSize;
-            set => SetProperty(ref _MaxFileSize, value);
+            set
+            {
+                if (SetProperty(ref _MaxFileSize, value))
+                {
+                    RuleActions?.SerializeRules();
+                }
+            }
         }
 
-        private long _MinFileSize;
-        public long MinFileSize
+        private double _MinFileSize;
+        public double MinFileSize
         {
             get => _MinFileSize;
-            set => SetProperty(ref _MinFileSize, value);
+            set
+            {
+                if (SetProperty(ref _MinFileSize, value))
+                {
+                    RuleActions?.SerializeRules();
+                }
+            }
+        }
+
+        public FileSizeRuleViewModel(IRuleActions ruleActions)
+            : base(ruleActions)
+        {
+            ruleName = "File size";
         }
 
         public override async Task<bool> PassesRule(DataPackageView dataPackage)
@@ -44,7 +61,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules
                     if (item is IStorageFile storageFile)
                     {
                         long fileSize = await storageFile.GetFileSize();
-                        return fileSize >= MinFileSize && fileSize <= MaxFileSize;
+                        return fileSize >= ByteSize.FromMegaBytes(MinFileSize).Bytes && fileSize <= ByteSize.FromMegaBytes(MaxFileSize).Bytes;
                     }
                     else
                     {

@@ -101,8 +101,9 @@ namespace ClipboardCanvas.DataModels.ContentDataModels
             else if (item is StorageFolder)
             {
                 IUserSettingsService userSettingsService = Ioc.Default.GetService<IUserSettingsService>();
+                IApplicationService applicationService = Ioc.Default.GetService<IApplicationService>();
 
-                if (userSettingsService.AlwaysPasteFilesAsReference && !App.IsInRestrictedAccessMode)
+                if (userSettingsService.AlwaysPasteFilesAsReference && !applicationService.IsInRestrictedAccessMode)
                 {
                     return new FallbackContentType();
                 }
@@ -245,7 +246,7 @@ namespace ClipboardCanvas.DataModels.ContentDataModels
             {
                 SafeWrapper<IReadOnlyList<IStorageItem>> items = await dataPackage.SafeGetStorageItemsAsync();
 
-                if (!items && !items.Result.IsEmpty())
+                if (items && !items.Result.IsEmpty())
                 {
                     // One item, decide contentType for it
                     IStorageItem item = items.Result.First();

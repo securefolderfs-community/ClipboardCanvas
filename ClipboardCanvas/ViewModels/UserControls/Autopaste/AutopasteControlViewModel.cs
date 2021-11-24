@@ -1,39 +1,33 @@
-﻿using ClipboardCanvas.DataModels;
-using ClipboardCanvas.DataModels.Navigation;
-using ClipboardCanvas.Enums;
-using ClipboardCanvas.Extensions;
-using ClipboardCanvas.Helpers;
-using ClipboardCanvas.Helpers.SafetyHelpers;
-using ClipboardCanvas.Models;
-using ClipboardCanvas.Models.Autopaste;
-using ClipboardCanvas.Services;
-using ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules;
-using ClipboardCanvas.ViewModels.UserControls.Collections;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
+
+using ClipboardCanvas.DataModels;
+using ClipboardCanvas.DataModels.Navigation;
+using ClipboardCanvas.Extensions;
+using ClipboardCanvas.Helpers;
+using ClipboardCanvas.Helpers.SafetyHelpers;
+using ClipboardCanvas.Models.Autopaste;
+using ClipboardCanvas.Services;
+using ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules;
+using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 {
-    public class AutopasteControlViewModel : ObservableObject
+    public class AutopasteControlViewModel : ObservableObject, IRuleActions
     {
-        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
+        private readonly List<DataPackageView> _autopasteDataQueue = new List<DataPackageView>();
 
         private bool _autopasteRoutineStarted = false;
-
-        private List<DataPackageView> _autopasteDataQueue = new List<DataPackageView>();
 
         private INavigationService NavigationService { get; } = Ioc.Default.GetService<INavigationService>();
 
@@ -43,7 +37,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 
         private IUserSettingsService UserSettingsService { get; } = Ioc.Default.GetService<IUserSettingsService>();
 
-        public ObservableCollection<BaseAutopasteRuleViewModel> AutopasteRules { get; } = new ObservableCollection<BaseAutopasteRuleViewModel>();
+        private IApplicationService ApplicationService { get; } = Ioc.Default.GetService<IApplicationService>();
+
+        public RangeObservableCollection<BaseAutopasteRuleViewModel> AutopasteRules { get; } = new RangeObservableCollection<BaseAutopasteRuleViewModel>();
 
         public IAutopasteTarget AutopasteTarget { get; private set; }
 
@@ -78,6 +74,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
             ChangeTargetCommand = new RelayCommand(ChangeTarget);
             AddFileSizeRuleCommand = new RelayCommand(AddFileSizeRule);
 
+            AutopasteSettingsService.SavedRules ??= new List<BaseAutopasteRuleViewModel>();
+
             Clipboard.ContentChanged -= Clipboard_ContentChanged;
             Clipboard.ContentChanged += Clipboard_ContentChanged;
         }
@@ -92,25 +90,43 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 
         private void AddFileSizeRule()
         {
-            AutopasteRules.Add(new FileSizeRuleViewModel());
+            AddRuleToRuleset(new FileSizeRuleViewModel(this));
         }
 
         #endregion
 
+        #region Helpers
+
         public Task Initialize()
         {
-            if (UserSettingsService.IsAutopasteEnabled && !string.IsNullOrEmpty(AutopasteSettingsService.AutopastePath))
+            if (!string.IsNullOrEmpty(AutopasteSettingsService.AutopastePath))
             {
                 IAutopasteTarget autopasteTarget = CollectionsWidgetViewModel.FindCollection(AutopasteSettingsService.AutopastePath);
                 UpdateTarget(autopasteTarget);
+            }
+            
+            // Get rules
+            if (!AutopasteSettingsService.SavedRules.IsEmpty())
+            {
+                AutopasteRules.AddRange(AutopasteSettingsService.SavedRules);
+                foreach (var item in AutopasteRules)
+                {
+                    item.RuleActions = this; // Initialize Rule Actions when deserializing
+                }
             }
 
             return Task.CompletedTask;
         }
 
+        private void AddRuleToRuleset(BaseAutopasteRuleViewModel ruleViewModel)
+        {
+            AutopasteRules.Add(ruleViewModel);
+            AutopasteSettingsService.GuaranteeAddToList(AutopasteSettingsService.SavedRules, ruleViewModel, nameof(AutopasteSettingsService.SavedRules));
+        }
+
         private async void Clipboard_ContentChanged(object sender, object e)
         {
-            if (AutopasteTarget != null)
+            if (AutopasteTarget != null && !ApplicationService.IsWindowActivated)
             {
                 SafeWrapper<DataPackageView> clipboardData = ClipboardHelpers.GetClipboardData();
                 if (clipboardData)
@@ -167,5 +183,19 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 
             AutopasteSettingsService.AutopastePath = autopasteTarget?.TargetPath;
         }
+
+        public void SerializeRules()
+        {
+            AutopasteSettingsService.SavedRules = AutopasteRules.ToList();
+            AutopasteSettingsService.FlushSettings();
+        }
+
+        public void RemoveRule(BaseAutopasteRuleViewModel ruleViewModel)
+        {
+            AutopasteRules.Remove(ruleViewModel);
+            AutopasteSettingsService.GuaranteeRemoveFromList(AutopasteSettingsService.SavedRules, ruleViewModel, nameof(AutopasteSettingsService.SavedRules));
+        }
+
+        #endregion
     }
 }

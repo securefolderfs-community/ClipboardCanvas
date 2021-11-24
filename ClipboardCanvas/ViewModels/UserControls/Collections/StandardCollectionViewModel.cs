@@ -89,7 +89,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public override bool CheckCollectionAvailability()
         {
-            if (App.IsInRestrictedAccessMode)
+            if (ApplicationService.IsInRestrictedAccessMode)
             {
                 SetCollectionError(RestrictedAccessUnauthorized);
                 return false;

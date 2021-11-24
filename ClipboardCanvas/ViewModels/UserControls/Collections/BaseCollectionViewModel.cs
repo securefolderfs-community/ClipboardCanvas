@@ -62,6 +62,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         protected IAutopasteService AutopasteService { get; } = Ioc.Default.GetService<IAutopasteService>();
 
+        protected IApplicationService ApplicationService { get; } = Ioc.Default.GetService<IApplicationService>();
+
         #endregion
 
         #region Public Properties

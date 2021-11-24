@@ -27,9 +27,11 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         private IDialogService DialogService { get; } = Ioc.Default.GetService<IDialogService>();
 
+        private IApplicationService ApplicationService { get; } = Ioc.Default.GetService<IApplicationService>();
+
         public string AppVersionText
         {
-            get => $"Version: {App.AppVersion}";
+            get => $"Version: {ApplicationService.AppVersion}";
         }
 
         private bool _PrivacyPolicyProgressRingLoad;

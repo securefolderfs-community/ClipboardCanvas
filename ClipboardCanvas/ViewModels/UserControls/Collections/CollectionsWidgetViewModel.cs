@@ -34,7 +34,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         #endregion
 
-        #region Public Properties
+        #region Properties
+
+        private IApplicationService ApplicationService { get; } = Ioc.Default.GetService<IApplicationService>();
 
         public static ObservableCollection<BaseCollectionViewModel> Collections { get; private set; } = new ObservableCollection<BaseCollectionViewModel>();
 
@@ -164,7 +166,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             {
                 deferral = e.GetDeferral();
 
-                if (App.IsInRestrictedAccessMode)
+                if (ApplicationService.IsInRestrictedAccessMode)
                 {
                     IDialogService dialogService = Ioc.Default.GetService<IDialogService>();
 
@@ -480,8 +482,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         public static async Task<bool> AddCollectionViaUi()
         {
             IDialogService dialogService = Ioc.Default.GetService<IDialogService>();
+            IApplicationService applicationService = Ioc.Default.GetService<IApplicationService>();
 
-            if (App.IsInRestrictedAccessMode)
+            if (applicationService.IsInRestrictedAccessMode)
             {
                 IInAppNotification notification = dialogService.GetNotification();
                 notification.ViewModel.NotificationText = "Cannot add collections in Restricted Access mode.";

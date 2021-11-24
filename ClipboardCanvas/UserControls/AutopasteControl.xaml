@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:rvm="using:ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules"
     xmlns:ts="using:ClipboardCanvas.TemplateSelectors"
     xmlns:tua="using:Microsoft.Toolkit.Uwp.UI.Animations"
@@ -17,7 +18,20 @@
     <UserControl.Resources>
         <!--  FileSize rule  -->
         <DataTemplate x:Key="RuleHeaderTemplate" x:DataType="rvm:BaseAutopasteRuleViewModel">
-            <Grid HorizontalAlignment="Stretch">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!--  Title  -->
+                <TextBlock
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Opacity="0.8"
+                    Text="{x:Bind RuleName, Mode=OneWay}" />
+
+                <!--  Close  -->
                 <Button
                     Width="24"
                     Height="24"
@@ -43,9 +57,72 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
+                <ContentControl HorizontalContentAlignment="Stretch" ContentTemplate="{StaticResource RuleHeaderTemplate}" />
+                <Grid
+                    Grid.Row="1"
+                    ColumnSpacing="4"
+                    RowSpacing="6">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                <ContentControl ContentTemplate="{StaticResource RuleHeaderTemplate}" />
-                <Button Grid.Row="1" Content="Test" />
+
+                    <!--  Larger than  -->
+                    <TextBlock
+                        Grid.Row="0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Text="Larger than" />
+                    <muxc:NumberBox
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        MinWidth="96"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Minimum="0"
+                        SpinButtonPlacementMode="Compact"
+                        ValidationMode="InvalidInputOverwritten"
+                        Value="{x:Bind MinFileSize, Mode=TwoWay}" />
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        FontSize="12"
+                        Opacity="0.8"
+                        Text="MB" />
+
+                    <!--  Smaller than  -->
+                    <TextBlock
+                        Grid.Row="1"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Text="Smaller than" />
+                    <muxc:NumberBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        MinWidth="96"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Minimum="0"
+                        SpinButtonPlacementMode="Compact"
+                        ValidationMode="InvalidInputOverwritten"
+                        Value="{x:Bind MaxFileSize, Mode=TwoWay}" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        FontSize="12"
+                        Opacity="0.8"
+                        Text="MB" />
+                </Grid>
             </Grid>
         </DataTemplate>
 
@@ -195,7 +272,8 @@
                 <ListView
                     Grid.Row="1"
                     ItemTemplateSelector="{StaticResource AutopasteTemplateSelector}"
-                    ItemsSource="{x:Bind ViewModel.AutopasteRules}" />
+                    ItemsSource="{x:Bind ViewModel.AutopasteRules}"
+                    SelectionMode="None" />
             </Grid>
 
             <!--  Autopaste disabled text  -->

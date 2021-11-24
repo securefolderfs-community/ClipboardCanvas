@@ -30,10 +30,6 @@ namespace ClipboardCanvas
     /// </summary>
     sealed partial class App : Application
     {
-        public static bool IsInRestrictedAccessMode = false;
-
-        public static string AppVersion = $"{Package.Current.Id.Version.Major}.{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}.{Package.Current.Id.Version.Revision}";
-
         /// <summary>
         /// <see cref="IServiceProvider"/> to resolve application services.
         /// </summary>
@@ -76,10 +72,11 @@ namespace ClipboardCanvas
                 .AddSingleton<IStatusCenterService, StatusCenterService>()
                 .AddSingleton<IAutopasteService, AutopasteService>()
                 .AddSingleton<IDialogService, DefaultDialogService>()
+                .AddSingleton<IApplicationService, ApplicationService>()
                 .AddSingleton<ILogger, ExceptionToFileLogger>()
 
                 // Settings services
-                .AddSingleton<IUserSettingsService, UserSettingsService>()
+                .AddSingleton<IUserSettingsService, UserSettingsService>((sp) => new UserSettingsService(sp.GetService<IApplicationService>()))
                 .AddSingleton<ICollectionsSettingsService, CollectionsSettingsService>()
                 .AddSingleton<ITimelineSettingsService, TimelineSettingsService>()
                 .AddSingleton<ICanvasSettingsService, CanvasSettingsService>()

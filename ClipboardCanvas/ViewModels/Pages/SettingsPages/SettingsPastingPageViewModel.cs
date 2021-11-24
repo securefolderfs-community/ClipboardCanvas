@@ -9,16 +9,18 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 {
     public class SettingsPastingPageViewModel : ObservableObject
     {
-        private IUserSettingsService UserSettings { get; } = Ioc.Default.GetService<IUserSettingsService>();
+        private IUserSettingsService UserSettingsService { get; } = Ioc.Default.GetService<IUserSettingsService>();
+
+        private IApplicationService ApplicationService { get; } = Ioc.Default.GetService<IApplicationService>();
 
         public bool OpenNewCanvasOnPaste
         {
-            get => UserSettings.OpenNewCanvasOnPaste;
+            get => UserSettingsService.OpenNewCanvasOnPaste;
             set
             {
-                if (value != UserSettings.OpenNewCanvasOnPaste)
+                if (value != UserSettingsService.OpenNewCanvasOnPaste)
                 {
-                    UserSettings.OpenNewCanvasOnPaste = value;
+                    UserSettingsService.OpenNewCanvasOnPaste = value;
 
                     OnPropertyChanged(nameof(OpenNewCanvasOnPaste));
                 }
@@ -27,12 +29,12 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         public bool AlwaysPasteFilesAsReference
         {
-            get => App.IsInRestrictedAccessMode ? false : UserSettings.AlwaysPasteFilesAsReference;
+            get => ApplicationService.IsInRestrictedAccessMode ? false : UserSettingsService.AlwaysPasteFilesAsReference;
             set
             {
-                if (value != UserSettings.AlwaysPasteFilesAsReference)
+                if (value != UserSettingsService.AlwaysPasteFilesAsReference)
                 {
-                    UserSettings.AlwaysPasteFilesAsReference = value;
+                    UserSettingsService.AlwaysPasteFilesAsReference = value;
 
                     OnPropertyChanged(nameof(AlwaysPasteFilesAsReference));
                 }
@@ -41,12 +43,12 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         public bool PrioritizeMarkdownOverText
         {
-            get => UserSettings.PrioritizeMarkdownOverText;
+            get => UserSettingsService.PrioritizeMarkdownOverText;
             set
             {
-                if (value != UserSettings.PrioritizeMarkdownOverText)
+                if (value != UserSettingsService.PrioritizeMarkdownOverText)
                 {
-                    UserSettings.PrioritizeMarkdownOverText = value;
+                    UserSettingsService.PrioritizeMarkdownOverText = value;
 
                     OnPropertyChanged(nameof(PrioritizeMarkdownOverText));
                 }
@@ -62,7 +64,7 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         public bool IsInRestrictedAccessMode
         {
-            get => App.IsInRestrictedAccessMode;
+            get => ApplicationService.IsInRestrictedAccessMode;
         }
 
         public ICommand ShowReferenceFilesTeachingTipCommand { get; private set; }

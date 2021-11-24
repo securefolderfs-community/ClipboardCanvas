@@ -14,21 +14,28 @@ namespace ClipboardCanvas.Models.JsonSettings.Implementation
 
         public override TValue GetValue<TValue>(string key, TValue defaultValue = default)
         {
-            if (settingsCache.ContainsKey(key))
+            try
             {
-                var value = settingsCache[key];
-                if (value is Newtonsoft.Json.Linq.JToken jTokenValue)
+                if (settingsCache.ContainsKey(key))
                 {
-                    var objValue = jTokenValue.ToObject<TValue>();
-                    settingsCache[key] = objValue;
-                    return objValue;
+                    var value = settingsCache[key];
+                    if (value is Newtonsoft.Json.Linq.JToken jTokenValue)
+                    {
+                        var objValue = jTokenValue.ToObject<TValue>();
+                        settingsCache[key] = objValue;
+                        return objValue;
+                    }
+                    return (TValue)value;
                 }
-                return (TValue)value;
+                else
+                {
+                    _cacheMisses++;
+                    return base.GetValue<TValue>(key, defaultValue);
+                }
             }
-            else
+            catch
             {
-                _cacheMisses++;
-                return base.GetValue<TValue>(key, defaultValue);
+                return defaultValue;
             }
         }
 

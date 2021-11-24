@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 
 using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Models.JsonSettings.Implementation;
@@ -21,9 +22,9 @@ namespace ClipboardCanvas.Models.JsonSettings
 
         protected ISettingsSharingContext settingsSharingContext;
 
-        protected readonly IJsonSettingsSerializer jsonSettingsSerializer;
+        public IJsonSettingsSerializer JsonSettingsSerializer { get; set; }
 
-        protected readonly ISettingsSerializer settingsSerializer;
+        public ISettingsSerializer SettingsSerializer { get; set; }
 
         #endregion Protected Members
 
@@ -75,20 +76,20 @@ namespace ClipboardCanvas.Models.JsonSettings
             this.FilePath = filePath;
             Initialize();
 
-            this.jsonSettingsSerializer = jsonSettingsSerializer;
-            this.settingsSerializer = settingsSerializer;
+            this.JsonSettingsSerializer = jsonSettingsSerializer;
+            this.SettingsSerializer = settingsSerializer;
 
             // Fallback
-            this.jsonSettingsSerializer ??= new DefaultJsonSettingsSerializer();
-            this.settingsSerializer ??= new DefaultSettingsSerializer(this.FilePath);
+            this.JsonSettingsSerializer ??= new DefaultJsonSettingsSerializer();
+            this.SettingsSerializer ??= new DefaultSettingsSerializer(this.FilePath);
 
             if (isCachingEnabled)
             {
-                this.JsonSettingsDatabase = new CachingJsonSettingsDatabase(this.jsonSettingsSerializer, this.settingsSerializer);
+                this.JsonSettingsDatabase = new CachingJsonSettingsDatabase(this.JsonSettingsSerializer, this.SettingsSerializer);
             }
             else
             {
-                this.JsonSettingsDatabase = new DefaultJsonSettingsDatabase(this.jsonSettingsSerializer, this.settingsSerializer);
+                this.JsonSettingsDatabase = new DefaultJsonSettingsDatabase(this.JsonSettingsSerializer, this.SettingsSerializer);
             }
         }
 
@@ -100,14 +101,14 @@ namespace ClipboardCanvas.Models.JsonSettings
             this.FilePath = filePath;
             Initialize();
 
-            this.jsonSettingsSerializer = jsonSettingsSerializer;
-            this.settingsSerializer = settingsSerializer;
+            this.JsonSettingsSerializer = jsonSettingsSerializer;
+            this.SettingsSerializer = settingsSerializer;
             this.JsonSettingsDatabase = jsonSettingsDatabase;
 
             // Fallback
-            this.jsonSettingsSerializer ??= new DefaultJsonSettingsSerializer();
-            this.settingsSerializer ??= new DefaultSettingsSerializer(this.FilePath);
-            this.JsonSettingsDatabase ??= new DefaultJsonSettingsDatabase(this.jsonSettingsSerializer, this.settingsSerializer);
+            this.JsonSettingsSerializer ??= new DefaultJsonSettingsSerializer();
+            this.SettingsSerializer ??= new DefaultSettingsSerializer(this.FilePath);
+            this.JsonSettingsDatabase ??= new DefaultJsonSettingsDatabase(this.JsonSettingsSerializer, this.SettingsSerializer);
         }
 
         #endregion Constructor
@@ -152,6 +153,33 @@ namespace ClipboardCanvas.Models.JsonSettings
         {
             registeredMembers++;
             return settingsSharingContext ?? this;
+        }
+
+        public bool GuaranteeAddToList<T>(IList<T> list, T item, string listSettingName)
+        {
+            list?.Add(item);
+
+            bool result = Set(list, listSettingName);
+            return FlushSettings() && result;
+        }
+
+        public bool GuaranteeAddRangeToList<T>(List<T> list, IEnumerable<T> items, string listSettingName)
+        {
+            list?.AddRange(items);
+
+            bool result = Set(list, listSettingName);
+            return FlushSettings() && result;
+        }
+
+        public bool GuaranteeRemoveFromList<T>(IList<T> list, T item, string listSettingName)
+        {
+            if (!list?.Remove(item) ?? true)
+            {
+                return false;
+            }
+
+            bool result = Set(list, listSettingName);
+            return FlushSettings() && result;
         }
 
         public virtual void RaiseOnSettingChangedEvent(object sender, SettingChangedEventArgs e)

@@ -8,12 +8,16 @@ namespace ClipboardCanvas.Services
 {
     public class UserSettingsService : BaseJsonSettingsModel, IUserSettingsService
     {
+        private IApplicationService _applicationService;
+
         #region Constructor
 
-        public UserSettingsService() 
+        public UserSettingsService(IApplicationService applicationService) 
             : base(Path.Combine(ApplicationData.Current.LocalFolder.Path, Constants.LocalSettings.SETTINGS_FOLDERNAME, Constants.LocalSettings.USER_SETTINGS_FILENAME),
                   isCachingEnabled: true)
         {
+            this._applicationService = applicationService;
+
             TrackAppCenterAnalytics();
         }
 
@@ -63,7 +67,7 @@ namespace ClipboardCanvas.Services
 
         public bool AlwaysPasteFilesAsReference
         {
-            get => App.IsInRestrictedAccessMode ? false : Get<bool>(true);
+            get => _applicationService.IsInRestrictedAccessMode ? false : Get<bool>(true);
             set => Set<bool>(value);
         }
 

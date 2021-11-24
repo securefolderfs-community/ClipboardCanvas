@@ -12,11 +12,15 @@ namespace ClipboardCanvas.Models.JsonSettings.Implementation
 
         protected readonly ISettingsSerializer settingsSerializer;
 
+        public Type DataBaseObjectType { get; }
+
         public DefaultJsonSettingsDatabase(IJsonSettingsSerializer jsonSettingsSerializer, ISettingsSerializer settingsSerializer)
         {
             this.jsonSettingsSerializer = jsonSettingsSerializer;
             this.settingsSerializer = settingsSerializer;
+
             this.settingsCache = new Dictionary<string, object>();
+            this.DataBaseObjectType = this.settingsCache.GetType();
         }
 
         protected virtual Dictionary<string, object> GetNewSettingsCache()
@@ -40,12 +44,19 @@ namespace ClipboardCanvas.Models.JsonSettings.Implementation
 
         public virtual TValue GetValue<TValue>(string key, TValue defaultValue = default)
         {
-            var value = GetObjectValue(key, defaultValue);
-            if (value is Newtonsoft.Json.Linq.JToken jTokenValue)
+            try
             {
-                return jTokenValue.ToObject<TValue>();
+                var value = GetObjectValue(key, defaultValue);
+                if (value is Newtonsoft.Json.Linq.JToken jTokenValue)
+                {
+                    return jTokenValue.ToObject<TValue>();
+                }
+                return (TValue)value;
             }
-            return (TValue)value;
+            catch
+            {
+                return defaultValue;
+            }
         }
 
         private object GetObjectValue(string key, object defaultValue = null)

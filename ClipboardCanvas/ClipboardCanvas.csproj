@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>10.0</LangVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{7E24036E-1FF4-47FE-B045-1A4C845461F1}</ProjectGuid>
@@ -163,6 +163,7 @@
     </Compile>
     <Compile Include="Enums\StatusCenterOperationType.cs" />
     <Compile Include="Models\Autopaste\IAutopasteTarget.cs" />
+    <Compile Include="Models\Autopaste\IRuleActions.cs" />
     <Compile Include="Models\JsonSettings\Implementation\CachingJsonSettingsDatabase.cs" />
     <Compile Include="EventArguments\InfiniteCanvasEventArgs.cs" />
     <Compile Include="EventArguments\JsonSettingsEventArgs.cs" />
@@ -181,6 +182,7 @@
     <Compile Include="Models\JsonSettings\Implementation\DefaultJsonSettingsDatabase.cs" />
     <Compile Include="Models\JsonSettings\Implementation\DefaultJsonSettingsSerializer.cs" />
     <Compile Include="Models\JsonSettings\Implementation\DefaultSettingsSerializer.cs" />
+    <Compile Include="Models\JsonSettings\Implementation\DerivedTypesJsonSettingsSerializer.cs" />
     <Compile Include="Models\JsonSettings\ISettingsSerializer.cs" />
     <Compile Include="Models\JsonSettings\ISettingsSharingContext.cs" />
     <Compile Include="ModelViews\IIntroductionScreenPaneView.cs" />
@@ -189,6 +191,7 @@
     <Compile Include="Pages\SettingsPages\SettingsNotificationsPage.xaml.cs">
       <DependentUpon>SettingsNotificationsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\IApplicationService.cs" />
     <Compile Include="Services\IAutopasteService.cs" />
     <Compile Include="Services\IAutopasteSettingsService.cs" />
     <Compile Include="Services\ILogger.cs" />
@@ -203,6 +206,7 @@
     <Compile Include="Models\IInteractableCanvasControlModel.cs" />
     <Compile Include="Models\IInteractableCanvasControlItemModel.cs" />
     <Compile Include="ModelViews\IInfiniteCanvasControlView.cs" />
+    <Compile Include="Services\Implementation\ApplicationService.cs" />
     <Compile Include="Services\Implementation\AutopasteService.cs" />
     <Compile Include="Services\Implementation\AutopasteSettingsService.cs" />
     <Compile Include="Services\Implementation\NavigationService.cs" />
@@ -816,6 +820,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ByteSize">
+      <Version>2.1.1</Version>
+    </PackageReference>
     <PackageReference Include="HtmlAgilityPack">
       <Version>1.11.37</Version>
     </PackageReference>
