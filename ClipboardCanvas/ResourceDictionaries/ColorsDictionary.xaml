@@ -16,6 +16,7 @@
             <SolidColorBrush x:Key="NavigationButtonsBorderBrush">#20FFFFFF</SolidColorBrush>
             <SolidColorBrush x:Key="BackgroundStrongTint">#AAFFFFFF</SolidColorBrush>
             <SolidColorBrush x:Key="SecondaryPanelDimmerBrush">#F3F3F3</SolidColorBrush>
+            <SolidColorBrush x:Key="SecondaryPanelLighterBrush">#90F3F3F3</SolidColorBrush>
             <SolidColorBrush x:Key="SolidTransparentHeaderBackgroundBrush">#F3F3F3</SolidColorBrush>
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
@@ -33,6 +34,7 @@
             <SolidColorBrush x:Key="NavigationButtonsBorderBrush">#0FFFFFFF</SolidColorBrush>
             <SolidColorBrush x:Key="BackgroundStrongTint">#DF000000</SolidColorBrush>
             <SolidColorBrush x:Key="SecondaryPanelDimmerBrush">#202020</SolidColorBrush>
+            <SolidColorBrush x:Key="SecondaryPanelLighterBrush">#AA202020</SolidColorBrush>
             <SolidColorBrush x:Key="SolidTransparentHeaderBackgroundBrush">#EE202020</SolidColorBrush>
 
         </ResourceDictionary>

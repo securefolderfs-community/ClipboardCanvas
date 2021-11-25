@@ -2,12 +2,12 @@
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
+using ByteSizeLib; 
 
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Models.Autopaste;
-using ByteSizeLib;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules
 {

@@ -18,7 +18,7 @@
     <UserControl.Resources>
         <!--  FileSize rule  -->
         <DataTemplate x:Key="RuleHeaderTemplate" x:DataType="rvm:BaseAutopasteRuleViewModel">
-            <Grid>
+            <Grid Padding="8" Background="{ThemeResource SecondaryPanelLighterBrush}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
@@ -51,7 +51,10 @@
         </DataTemplate>
 
         <DataTemplate x:Key="FileSizeRuleTemplate" x:DataType="rvm:FileSizeRuleViewModel">
-            <Grid RowSpacing="8">
+            <Grid
+                Background="{ThemeResource ControlFillColorDefault}"
+                CornerRadius="8"
+                RowSpacing="8">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
@@ -60,6 +63,7 @@
                 <ContentControl HorizontalContentAlignment="Stretch" ContentTemplate="{StaticResource RuleHeaderTemplate}" />
                 <Grid
                     Grid.Row="1"
+                    Padding="8"
                     ColumnSpacing="4"
                     RowSpacing="6">
                     <Grid.RowDefinitions>
@@ -212,7 +216,8 @@
                     Grid.Column="2"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
-                    Command="{x:Bind ViewModel.ChangeTargetCommand}">
+                    Command="{x:Bind ViewModel.ChangeTargetCommand}"
+                    ToolTipService.ToolTip="Change">
                     <HyperlinkButton.Content>
                         <FontIcon
                             VerticalAlignment="Center"
@@ -253,7 +258,8 @@
                         Grid.Column="1"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        Click="HyperlinkButton_Click">
+                        Click="HyperlinkButton_Click"
+                        ToolTipService.ToolTip="Add rule">
                         <HyperlinkButton.Content>
                             <FontIcon
                                 VerticalAlignment="Center"
@@ -271,9 +277,18 @@
                 <!--  Sections  -->
                 <ListView
                     Grid.Row="1"
+                    HorizontalContentAlignment="Stretch"
                     ItemTemplateSelector="{StaticResource AutopasteTemplateSelector}"
                     ItemsSource="{x:Bind ViewModel.AutopasteRules}"
-                    SelectionMode="None" />
+                    SelectionMode="None">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Margin" Value="0,0,0,8" />
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="Padding" Value="0" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
             </Grid>
 
             <!--  Autopaste disabled text  -->
