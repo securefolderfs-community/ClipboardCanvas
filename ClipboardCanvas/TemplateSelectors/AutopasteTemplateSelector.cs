@@ -1,17 +1,15 @@
-﻿using ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+
+using ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules;
 
 namespace ClipboardCanvas.TemplateSelectors
 {
     public class AutopasteTemplateSelector : DataTemplateSelector
     {
         public DataTemplate FileSizeDataTemplate { get; set; }
+
+        public DataTemplate TypeFilterDataTemplate { get; set; }
 
         protected override DataTemplate SelectTemplateCore(object item)
         {
@@ -20,6 +18,11 @@ namespace ClipboardCanvas.TemplateSelectors
                 case FileSizeRuleViewModel:
                     {
                         return FileSizeDataTemplate;
+                    }
+
+                case TypeFilterRuleViewModel:
+                    {
+                        return TypeFilterDataTemplate;
                     }
 
                 default:

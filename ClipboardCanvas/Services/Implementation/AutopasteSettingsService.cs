@@ -42,10 +42,9 @@ namespace ClipboardCanvas.Services.Implementation
             _knownTypes = new List<Type>()
             {
                 dataBaseObjectType,
-                typeof(string),
-                typeof(double),
                 typeof(BaseAutopasteRuleViewModel),
                 typeof(FileSizeRuleViewModel),
+                typeof(TypeFilterRuleViewModel),
                 typeof(List<BaseAutopasteRuleViewModel>)
             };
         }

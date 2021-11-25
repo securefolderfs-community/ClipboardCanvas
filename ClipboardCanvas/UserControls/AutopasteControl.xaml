@@ -16,9 +16,9 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <!--  FileSize rule  -->
+        <!--  Rule header  -->
         <DataTemplate x:Key="RuleHeaderTemplate" x:DataType="rvm:BaseAutopasteRuleViewModel">
-            <Grid Padding="8" Background="{ThemeResource SecondaryPanelLighterBrush}">
+            <Grid Padding="8,6,8,6" Background="{ThemeResource SecondaryPanelLighterBrush}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
@@ -35,7 +35,7 @@
                 <Button
                     Width="24"
                     Height="24"
-                    Padding="1"
+                    Padding="0"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
                     HorizontalContentAlignment="Center"
@@ -44,17 +44,15 @@
                     BorderBrush="Transparent"
                     Command="{x:Bind RemoveRuleCommand, Mode=OneWay}">
                     <Button.Content>
-                        <FontIcon Glyph="&#xE711;" />
+                        <FontIcon FontSize="14" Glyph="&#xE711;" />
                     </Button.Content>
                 </Button>
             </Grid>
         </DataTemplate>
 
+        <!--  FileSize rule  -->
         <DataTemplate x:Key="FileSizeRuleTemplate" x:DataType="rvm:FileSizeRuleViewModel">
-            <Grid
-                Background="{ThemeResource ControlFillColorDefault}"
-                CornerRadius="8"
-                RowSpacing="8">
+            <Grid Background="{ThemeResource ControlFillColorDefault}" CornerRadius="8">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
@@ -75,7 +73,6 @@
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-
 
                     <!--  Larger than  -->
                     <TextBlock
@@ -130,13 +127,53 @@
             </Grid>
         </DataTemplate>
 
+        <!--  Type filter  -->
+        <DataTemplate x:Key="TypeFilterRuleTemplate" x:DataType="rvm:TypeFilterRuleViewModel">
+            <Grid Background="{ThemeResource ControlFillColorDefault}" CornerRadius="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <ContentControl HorizontalContentAlignment="Stretch" ContentTemplate="{StaticResource RuleHeaderTemplate}" />
+
+                <Grid Grid.Row="1" Padding="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Text="Exclude type" />
+
+                    <ComboBox
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        SelectedIndex="{x:Bind SelectedIndex, Mode=TwoWay}">
+                        <ComboBox.Items>
+                            <ComboBoxItem Content="Image" />
+                            <ComboBoxItem Content="Text" />
+                            <ComboBoxItem Content="File" />
+                            <ComboBoxItem Content="Url" />
+                        </ComboBox.Items>
+                    </ComboBox>
+                </Grid>
+            </Grid>
+        </DataTemplate>
+
         <vc:BooleanInvertConverter x:Key="BooleanInvertConverter" />
-        <ts:AutopasteTemplateSelector x:Key="AutopasteTemplateSelector" FileSizeDataTemplate="{StaticResource FileSizeRuleTemplate}" />
+        <ts:AutopasteTemplateSelector
+            x:Key="AutopasteTemplateSelector"
+            FileSizeDataTemplate="{StaticResource FileSizeRuleTemplate}"
+            TypeFilterDataTemplate="{StaticResource TypeFilterRuleTemplate}" />
     </UserControl.Resources>
 
     <Grid
-        MinWidth="320"
-        MinHeight="400"
+        Width="320"
+        Height="416"
         Margin="-16">
         <Grid.RowDefinitions>
             <RowDefinition Height="58" />
@@ -164,142 +201,146 @@
         </Grid>
 
         <!--  Content  -->
-        <Grid
-            Grid.Row="1"
-            Padding="4"
-            RowSpacing="4">
 
-            <Grid.ChildrenTransitions>
-                <TransitionCollection>
-                    <ReorderThemeTransition />
-                </TransitionCollection>
-            </Grid.ChildrenTransitions>
+        <ScrollViewer Grid.Row="1">
 
-            <Grid.RowDefinitions>
-                <!--  Paste location  -->
-                <RowDefinition Height="Auto" />
-                <!--  Exceptions  -->
-                <RowDefinition />
-            </Grid.RowDefinitions>
+            <Grid Padding="4" RowSpacing="4">
 
-            <!--  Paste location  -->
-            <Grid
-                x:Name="PasteLocationBlock"
-                Height="60"
-                Padding="14,8,14,8"
-                VerticalAlignment="Top"
-                Background="{ThemeResource ControlFillColorDefault}"
-                CornerRadius="4"
-                RowSpacing="4"
-                Visibility="{x:Bind ViewModel.EnableAutopaste, Mode=OneWay}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
+                <Grid.ChildrenTransitions>
+                    <TransitionCollection>
+                        <ReorderThemeTransition />
+                    </TransitionCollection>
+                </Grid.ChildrenTransitions>
 
-                <StackPanel Orientation="Horizontal" Spacing="4">
-                    <TextBlock
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        FontWeight="SemiBold"
-                        Text="Paste to:" />
-
-                    <TextBlock
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        Opacity="0.8"
-                        Text="{x:Bind ViewModel.AutopasteTargetName, Mode=OneWay}"
-                        TextTrimming="CharacterEllipsis" />
-                </StackPanel>
-
-                <HyperlinkButton
-                    Grid.Column="2"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Command="{x:Bind ViewModel.ChangeTargetCommand}"
-                    ToolTipService.ToolTip="Change">
-                    <HyperlinkButton.Content>
-                        <FontIcon
-                            VerticalAlignment="Center"
-                            FontSize="14"
-                            Glyph="&#xE70F;" />
-                    </HyperlinkButton.Content>
-                </HyperlinkButton>
-            </Grid>
-
-            <!--  Exceptions  -->
-            <Grid
-                x:Name="AllowedTypesBlock"
-                Grid.Row="1"
-                Padding="14,8,14,8"
-                VerticalAlignment="Top"
-                Background="{ThemeResource ControlFillColorDefault}"
-                CornerRadius="4"
-                RowSpacing="4"
-                Visibility="{x:Bind ViewModel.EnableAutopaste, Mode=OneWay}">
                 <Grid.RowDefinitions>
-                    <RowDefinition />
+                    <!--  Paste location  -->
                     <RowDefinition Height="Auto" />
+                    <!--  Exceptions  -->
+                    <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <Grid MinHeight="44">
+                <!--  Paste location  -->
+                <Grid
+                    x:Name="PasteLocationBlock"
+                    Height="60"
+                    Padding="14,8,14,8"
+                    VerticalAlignment="Top"
+                    Background="{ThemeResource ControlFillColorDefault}"
+                    CornerRadius="4"
+                    RowSpacing="4"
+                    Visibility="{x:Bind ViewModel.EnableAutopaste, Mode=OneWay}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        FontWeight="SemiBold"
-                        Text="Rule set" />
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <TextBlock
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontWeight="SemiBold"
+                            Text="Paste to:" />
+
+                        <TextBlock
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Opacity="0.8"
+                            Text="{x:Bind ViewModel.AutopasteTargetName, Mode=OneWay}"
+                            TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
 
                     <HyperlinkButton
-                        Grid.Column="1"
+                        Grid.Column="2"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        Click="HyperlinkButton_Click"
-                        ToolTipService.ToolTip="Add rule">
+                        Command="{x:Bind ViewModel.ChangeTargetCommand}"
+                        ToolTipService.ToolTip="Change">
                         <HyperlinkButton.Content>
                             <FontIcon
                                 VerticalAlignment="Center"
                                 FontSize="14"
-                                Glyph="&#xE710;" />
+                                Glyph="&#xE70F;" />
                         </HyperlinkButton.Content>
-                        <FlyoutBase.AttachedFlyout>
-                            <MenuFlyout Placement="Bottom">
-                                <MenuFlyoutItem Command="{x:Bind ViewModel.AddFileSizeRuleCommand}" Text="File size..." />
-                            </MenuFlyout>
-                        </FlyoutBase.AttachedFlyout>
                     </HyperlinkButton>
                 </Grid>
 
-                <!--  Sections  -->
-                <ListView
+                <!--  Exceptions  -->
+                <Grid
+                    x:Name="AllowedTypesBlock"
                     Grid.Row="1"
-                    HorizontalContentAlignment="Stretch"
-                    ItemTemplateSelector="{StaticResource AutopasteTemplateSelector}"
-                    ItemsSource="{x:Bind ViewModel.AutopasteRules}"
-                    SelectionMode="None">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="Margin" Value="0,0,0,8" />
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                            <Setter Property="Padding" Value="0" />
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                </ListView>
+                    Padding="14,8,14,8"
+                    VerticalAlignment="Top"
+                    Background="{ThemeResource ControlFillColorDefault}"
+                    CornerRadius="4"
+                    RowSpacing="4"
+                    Visibility="{x:Bind ViewModel.EnableAutopaste, Mode=OneWay}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontWeight="SemiBold"
+                            Text="Rule set" />
+
+                        <HyperlinkButton
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Click="HyperlinkButton_Click"
+                            ToolTipService.ToolTip="Add rule">
+                            <HyperlinkButton.Content>
+                                <FontIcon
+                                    VerticalAlignment="Center"
+                                    FontSize="14"
+                                    Glyph="&#xE710;" />
+                            </HyperlinkButton.Content>
+                            <FlyoutBase.AttachedFlyout>
+                                <MenuFlyout Placement="Bottom">
+                                    <MenuFlyoutItem Command="{x:Bind ViewModel.AddFileSizeRuleCommand}" Text="File size..." />
+                                    <MenuFlyoutItem Command="{x:Bind ViewModel.AddTypeFilterCommand}" Text="Type filter..." />
+                                </MenuFlyout>
+                            </FlyoutBase.AttachedFlyout>
+                        </HyperlinkButton>
+                    </Grid>
+
+                    <!--  Sections  -->
+                    <ListView
+                        Grid.Row="1"
+                        HorizontalContentAlignment="Stretch"
+                        ItemTemplateSelector="{StaticResource AutopasteTemplateSelector}"
+                        ItemsSource="{x:Bind ViewModel.AutopasteRules}"
+                        SelectionMode="None">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="Margin" Value="0,0,0,8" />
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="Padding" Value="0" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                </Grid>
+
+                <!--  Autopaste disabled text  -->
+                <TextBlock
+                    x:Name="AutopasteDisabledText"
+                    Grid.RowSpan="3"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    x:Load="{x:Bind ViewModel.EnableAutopaste, Mode=OneWay, Converter={StaticResource BooleanInvertConverter}}"
+                    Opacity="0.8"
+                    Text="Autopaste is disabled" />
             </Grid>
 
-            <!--  Autopaste disabled text  -->
-            <TextBlock
-                x:Name="AutopasteDisabledText"
-                Grid.RowSpan="3"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                x:Load="{x:Bind ViewModel.EnableAutopaste, Mode=OneWay, Converter={StaticResource BooleanInvertConverter}}"
-                Opacity="0.8"
-                Text="Autopaste is disabled" />
-        </Grid>
+        </ScrollViewer>
+
     </Grid>
 </UserControl>

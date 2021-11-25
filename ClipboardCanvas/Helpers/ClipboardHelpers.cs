@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using System.Linq;
 
 namespace ClipboardCanvas.Helpers
 {
@@ -45,6 +46,11 @@ namespace ClipboardCanvas.Helpers
         public static async Task<SafeWrapper<RandomAccessStreamReference>> SafeGetBitmapAsync(this DataPackageView dataPackage)
         {
             return await SafeWrapperRoutines.SafeWrapAsync(() => dataPackage.GetBitmapAsync().AsTask());
+        }
+
+        public static bool ContainsOnly(this DataPackageView dataPackage, string format)
+        {
+            return dataPackage.AvailableFormats.Contains(format);
         }
     }
 }

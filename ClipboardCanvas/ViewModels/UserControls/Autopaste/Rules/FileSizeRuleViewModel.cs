@@ -43,6 +43,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules
             : base(ruleActions)
         {
             ruleName = "File size";
+            _MaxFileSize = 8.0d;
         }
 
         public override async Task<bool> PassesRule(DataPackageView dataPackage)

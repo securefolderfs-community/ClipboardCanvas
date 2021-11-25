@@ -90,14 +90,7 @@ namespace ClipboardCanvas.CanavsPasteModels
 
         protected async Task<SafeWrapperResult> SetDataFromDataPackageInternal(DataPackageView dataPackage)
         {
-            if (dataPackage.Contains(StandardDataFormats.StorageItems)
-                && !dataPackage.Contains(StandardDataFormats.ApplicationLink)
-                && !dataPackage.Contains(StandardDataFormats.Bitmap)
-                && !dataPackage.Contains(StandardDataFormats.Html)
-                && !dataPackage.Contains(StandardDataFormats.Rtf)
-                && !dataPackage.Contains(StandardDataFormats.Text)
-                && !dataPackage.Contains(StandardDataFormats.UserActivityJsonArray)
-                && !dataPackage.Contains(StandardDataFormats.WebLink))
+            if (dataPackage.ContainsOnly(StandardDataFormats.StorageItems))
             {
                 SafeWrapper<IReadOnlyList<IStorageItem>> items = await dataPackage.SafeGetStorageItemsAsync();
 

@@ -67,12 +67,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 
         public ICommand AddFileSizeRuleCommand { get; private set; }
 
+        public ICommand AddTypeFilterCommand { get; private set; }
+
         #endregion
 
         public AutopasteControlViewModel()
         {
             ChangeTargetCommand = new RelayCommand(ChangeTarget);
             AddFileSizeRuleCommand = new RelayCommand(AddFileSizeRule);
+            AddTypeFilterCommand = new RelayCommand(AddTypeFilter);
 
             AutopasteSettingsService.SavedRules ??= new List<BaseAutopasteRuleViewModel>();
 
@@ -91,6 +94,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
         private void AddFileSizeRule()
         {
             AddRuleToRuleset(new FileSizeRuleViewModel(this));
+        }
+
+        private void AddTypeFilter()
+        {
+            AddRuleToRuleset(new TypeFilterRuleViewModel(this));
         }
 
         #endregion
