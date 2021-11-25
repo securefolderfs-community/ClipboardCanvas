@@ -145,25 +145,16 @@ namespace ClipboardCanvas.ViewModels.Dialogs
             }
             catch (Exception e)
             {
-                Microsoft.Extensions.Logging.ILogger exceptionLogger = Ioc.Default.GetService<Microsoft.Extensions.Logging.ILogger>();
-                exceptionLogger.LogInformation(e.Message);
+                _dataFetchedSuccessfully = false;
             }
 
             if (!_dataFetchedSuccessfully || preparedReleases.IsEmpty())
             {
                 // Getting data failed, display fallback update info
-                _UpdateMarkdownInfoText += $"Version {currentVersion}";
+                _UpdateMarkdownInfoText += $"Error";
                 _UpdateMarkdownInfoText += "\n---";
                 _UpdateMarkdownInfoText += "\n";
-                _UpdateMarkdownInfoText += $"Clipboard Canvas has been updated to version {currentVersion}";
-                _UpdateMarkdownInfoText += "\n";
-                _UpdateMarkdownInfoText += "\n";
-                _UpdateMarkdownInfoText += "\n";
-                _UpdateMarkdownInfoText += "This update may include but is not limited to:";
-                _UpdateMarkdownInfoText += "\n";
-                _UpdateMarkdownInfoText += "\r\n\n- Stability and performance improvements";
-                _UpdateMarkdownInfoText += "\r\n\n- New and/or enhanced features";
-                _UpdateMarkdownInfoText += "\r\n\n- Bug fixes";
+                _UpdateMarkdownInfoText += $"An error occurred while trying to fetch Clipboard Canvas' release notes from GitHub";
 
                 IsLoadingData = false;
                 UpdateMarkdownLoad = true;

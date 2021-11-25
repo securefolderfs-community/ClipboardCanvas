@@ -134,7 +134,7 @@
 
                             <!--  Error  -->
                             <Grid
-                                x:Name="PrivacyPolicError"
+                                x:Name="PrivacyPolicyError"
                                 HorizontalAlignment="Stretch"
                                 x:Load="{x:Bind ViewModel.PrivacyPolicyLoadError, Mode=OneWay}"
                                 ColumnSpacing="8"
@@ -148,7 +148,12 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.ColumnSpan="2" Text="An error occurred while loading Privacy Policy" />
+                                <TextBlock
+                                    Grid.ColumnSpan="2"
+                                    HorizontalAlignment="Center"
+                                    Text="An error occurred while trying to load privacy policy"
+                                    TextAlignment="Center"
+                                    TextWrapping="WrapWholeWords" />
 
                                 <HyperlinkButton
                                     Grid.Row="1"
