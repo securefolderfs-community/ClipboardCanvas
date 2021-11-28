@@ -316,8 +316,12 @@
                     <ListView
                         Grid.Row="1"
                         HorizontalContentAlignment="Stretch"
+                        AllowDrop="True"
+                        CanDragItems="True"
+                        CanReorderItems="True"
                         ItemTemplateSelector="{StaticResource AutopasteTemplateSelector}"
                         ItemsSource="{x:Bind ViewModel.AutopasteRules}"
+                        ReorderMode="Enabled"
                         SelectionMode="None">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">

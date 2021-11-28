@@ -18,14 +18,19 @@ using ClipboardCanvas.Models.Autopaste;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
+using System.Collections.Specialized;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 {
-    public class AutopasteControlViewModel : ObservableObject, IRuleActions
+    public class AutopasteControlViewModel : ObservableObject, IRuleActions, IDisposable
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
         private readonly List<DataPackageView> _autopasteDataQueue = new List<DataPackageView>();
+
+        private int _internalCollectionCount;
+
+        private bool _itemAddedInternally;
 
         private bool _autopasteRoutineStarted = false;
 
@@ -79,12 +84,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 
             AutopasteSettingsService.SavedRules ??= new List<BaseAutopasteRuleViewModel>();
 
-            Clipboard.ContentChanged -= Clipboard_ContentChanged;
+            AutopasteRules.CollectionChanged += AutopasteRules_CollectionChanged;
             Clipboard.ContentChanged += Clipboard_ContentChanged;
         }
 
         #region Command Implementation
-
+        
         private void ChangeTarget()
         {
             NavigationService.OpenHomepage(new FromAutopasteHomepageNavigationParameterModel(
@@ -116,11 +121,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
             // Get rules
             if (!AutopasteSettingsService.SavedRules.IsEmpty())
             {
+                _itemAddedInternally = true;
                 AutopasteRules.AddRange(AutopasteSettingsService.SavedRules);
                 foreach (var item in AutopasteRules)
                 {
                     item.RuleActions = this; // Initialize Rule Actions when deserializing
                 }
+                _itemAddedInternally = false;
             }
 
             return Task.CompletedTask;
@@ -128,8 +135,45 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 
         private void AddRuleToRuleset(BaseAutopasteRuleViewModel ruleViewModel)
         {
+            _itemAddedInternally = true;
             AutopasteRules.Add(ruleViewModel);
             AutopasteSettingsService.GuaranteeAddToList(AutopasteSettingsService.SavedRules, ruleViewModel, nameof(AutopasteSettingsService.SavedRules));
+            _itemAddedInternally = false;
+        }
+
+        public void UpdateTarget(IAutopasteTarget autopasteTarget)
+        {
+            this.AutopasteTarget = autopasteTarget;
+            OnPropertyChanged(nameof(AutopasteTargetName));
+
+            AutopasteSettingsService.AutopastePath = autopasteTarget?.TargetPath;
+        }
+
+        public void SerializeRules()
+        {
+            AutopasteSettingsService.SavedRules = AutopasteRules.ToList();
+            AutopasteSettingsService.FlushSettings();
+        }
+
+        public void RemoveRule(BaseAutopasteRuleViewModel ruleViewModel)
+        {
+            AutopasteRules.Remove(ruleViewModel);
+            AutopasteSettingsService.GuaranteeRemoveFromList(AutopasteSettingsService.SavedRules, ruleViewModel, nameof(AutopasteSettingsService.SavedRules));
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        private void AutopasteRules_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (_internalCollectionCount < AutopasteRules.Count && !_itemAddedInternally)
+            {
+                // Serialize rules when collection items have been reordered
+                SerializeRules();
+            }
+
+            _internalCollectionCount = AutopasteRules.Count;
         }
 
         private async void Clipboard_ContentChanged(object sender, object e)
@@ -184,24 +228,17 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
             }
         }
 
-        public void UpdateTarget(IAutopasteTarget autopasteTarget)
-        {
-            this.AutopasteTarget = autopasteTarget;
-            OnPropertyChanged(nameof(AutopasteTargetName));
+        #endregion
 
-            AutopasteSettingsService.AutopastePath = autopasteTarget?.TargetPath;
-        }
+        #region IDisposable
 
-        public void SerializeRules()
+        public void Dispose()
         {
-            AutopasteSettingsService.SavedRules = AutopasteRules.ToList();
-            AutopasteSettingsService.FlushSettings();
-        }
-
-        public void RemoveRule(BaseAutopasteRuleViewModel ruleViewModel)
-        {
-            AutopasteRules.Remove(ruleViewModel);
-            AutopasteSettingsService.GuaranteeRemoveFromList(AutopasteSettingsService.SavedRules, ruleViewModel, nameof(AutopasteSettingsService.SavedRules));
+            Clipboard.ContentChanged -= Clipboard_ContentChanged;
+            if (AutopasteRules != null)
+            {
+                AutopasteRules.CollectionChanged -= AutopasteRules_CollectionChanged;
+            }
         }
 
         #endregion
