@@ -137,9 +137,14 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
 
         #region Helpers
 
-        public async Task<SafeWrapperResult> InitializeSectionItemContent(bool withLoadDelay = true)
+        public async Task UpdateFileName()
         {
             FileName = Path.GetFileName(await CanvasHelpers.SafeGetCanvasItemPath(CanvasItem));
+        }
+
+        public async Task<SafeWrapperResult> InitializeSectionItemContent(bool withLoadDelay = true)
+        {
+            await UpdateFileName();
 
             if (withLoadDelay)
             {

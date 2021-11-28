@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.ApplicationModel.DataTransfer;
+using System.Collections.Specialized;
 
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.DataModels.Navigation;
@@ -18,7 +19,6 @@ using ClipboardCanvas.Models.Autopaste;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
-using System.Collections.Specialized;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 {
@@ -66,6 +66,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
             }
         }
 
+        private bool _IsInfoBarOpen;
+        public bool IsInfoBarOpen
+        {
+            get => _IsInfoBarOpen;
+            set => SetProperty(ref _IsInfoBarOpen, value);
+        }
+
         #region Commands
 
         public ICommand ChangeTargetCommand { get; private set; }
@@ -74,6 +81,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 
         public ICommand AddTypeFilterCommand { get; private set; }
 
+        public ICommand CloseInfoBarCommand { get; private set; }
+
         #endregion
 
         public AutopasteControlViewModel()
@@ -81,6 +90,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
             ChangeTargetCommand = new RelayCommand(ChangeTarget);
             AddFileSizeRuleCommand = new RelayCommand(AddFileSizeRule);
             AddTypeFilterCommand = new RelayCommand(AddTypeFilter);
+            CloseInfoBarCommand = new RelayCommand(CloseInfoBar);
 
             AutopasteSettingsService.SavedRules ??= new List<BaseAutopasteRuleViewModel>();
 
@@ -99,11 +109,21 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
         private void AddFileSizeRule()
         {
             AddRuleToRuleset(new FileSizeRuleViewModel(this));
+
+            if (!AutopasteSettingsService.FileSizeRuleDoesNotApplyToFoldersWarningDismissed)
+            {
+                IsInfoBarOpen = true;
+            }
         }
 
         private void AddTypeFilter()
         {
             AddRuleToRuleset(new TypeFilterRuleViewModel(this));
+        }
+
+        private void CloseInfoBar()
+        {
+            AutopasteSettingsService.FileSizeRuleDoesNotApplyToFoldersWarningDismissed = true;
         }
 
         #endregion
@@ -126,6 +146,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
                 foreach (var item in AutopasteRules)
                 {
                     item.RuleActions = this; // Initialize Rule Actions when deserializing
+                    if (!IsInfoBarOpen && item is FileSizeRuleViewModel && !AutopasteSettingsService.FileSizeRuleDoesNotApplyToFoldersWarningDismissed)
+                    {
+                        IsInfoBarOpen = true;
+                    }
                 }
                 _itemAddedInternally = false;
             }
@@ -159,6 +183,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
         {
             AutopasteRules.Remove(ruleViewModel);
             AutopasteSettingsService.GuaranteeRemoveFromList(AutopasteSettingsService.SavedRules, ruleViewModel, nameof(AutopasteSettingsService.SavedRules));
+
+            if (IsInfoBarOpen && !AutopasteRules.Any((item) => item is FileSizeRuleViewModel))
+            {
+                IsInfoBarOpen = false;
+            }
         }
 
         #endregion
@@ -217,8 +246,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 
                     if (pasteResult)
                     {
-                        var todaySection = await TimelineService.GetOrCreateTodaySection();
-                        var item = await TimelineService.AddItemForSection(todaySection, AutopasteTarget.CollectionModel, pasteResult);
                     }
                     else
                     {

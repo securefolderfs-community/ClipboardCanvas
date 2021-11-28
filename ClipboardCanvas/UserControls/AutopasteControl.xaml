@@ -18,14 +18,27 @@
     <UserControl.Resources>
         <!--  Rule header  -->
         <DataTemplate x:Key="RuleHeaderTemplate" x:DataType="rvm:BaseAutopasteRuleViewModel">
-            <Grid Padding="8,6,8,6" Background="{ThemeResource SecondaryPanelLighterBrush}">
+            <Grid
+                Padding="8,6,8,6"
+                Background="{ThemeResource SecondaryPanelLighterBrush}"
+                ColumnSpacing="6">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
+                <FontIcon
+                    Grid.Column="0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    Glyph="{x:Bind RuleFontIconGlyph, Mode=OneWay}"
+                    Opacity="0.8" />
+
                 <!--  Title  -->
                 <TextBlock
+                    Grid.Column="1"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Opacity="0.8"
@@ -33,6 +46,7 @@
 
                 <!--  Close  -->
                 <Button
+                    Grid.Column="2"
                     Width="24"
                     Height="24"
                     Padding="0"
@@ -158,6 +172,7 @@
                             <ComboBoxItem Content="Text" />
                             <ComboBoxItem Content="File" />
                             <ComboBoxItem Content="Url" />
+                            <ComboBoxItem Content="Folder" />
                         </ComboBox.Items>
                     </ComboBox>
                 </Grid>
@@ -177,11 +192,15 @@
         Margin="-16">
         <Grid.RowDefinitions>
             <RowDefinition Height="58" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
         <!--  Header  -->
-        <Grid Padding="20,14,20,14" Background="{ThemeResource SolidTransparentHeaderBackgroundBrush}">
+        <Grid
+            Grid.Row="0"
+            Padding="20,14,20,14"
+            Background="{ThemeResource SecondaryPanelLighterBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -200,10 +219,17 @@
                 Style="{StaticResource ToggleSwitchRight}" />
         </Grid>
 
+        <!--  InfoBar  -->
+        <muxc:InfoBar
+            Grid.Row="1"
+            CloseButtonCommand="{x:Bind ViewModel.CloseInfoBarCommand}"
+            CornerRadius="0"
+            IsOpen="{x:Bind ViewModel.IsInfoBarOpen, Mode=TwoWay}"
+            Message="File size rule does not apply to folders."
+            Severity="Warning" />
+
         <!--  Content  -->
-
-        <ScrollViewer Grid.Row="1">
-
+        <ScrollViewer Grid.Row="2">
             <Grid Padding="4" RowSpacing="4">
 
                 <Grid.ChildrenTransitions>
@@ -305,8 +331,16 @@
                             </HyperlinkButton.Content>
                             <FlyoutBase.AttachedFlyout>
                                 <MenuFlyout Placement="Bottom">
-                                    <MenuFlyoutItem Command="{x:Bind ViewModel.AddFileSizeRuleCommand}" Text="File size..." />
-                                    <MenuFlyoutItem Command="{x:Bind ViewModel.AddTypeFilterCommand}" Text="Type filter..." />
+                                    <MenuFlyoutItem Command="{x:Bind ViewModel.AddFileSizeRuleCommand}" Text="File size...">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE2B2;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Command="{x:Bind ViewModel.AddTypeFilterCommand}" Text="Type filter...">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE71C;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
                                 </MenuFlyout>
                             </FlyoutBase.AttachedFlyout>
                         </HyperlinkButton>
@@ -343,8 +377,6 @@
                     Opacity="0.8"
                     Text="Autopaste is disabled" />
             </Grid>
-
         </ScrollViewer>
-
     </Grid>
 </UserControl>

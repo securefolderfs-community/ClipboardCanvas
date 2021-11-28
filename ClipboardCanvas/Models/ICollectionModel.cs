@@ -22,6 +22,8 @@ namespace ClipboardCanvas.Models
 
         event EventHandler<CollectionItemRenamedEventArgs> OnCollectionItemRenamedEvent;
 
+        event EventHandler<CollectionItemContentsChangedEventArgs> OnCollectionItemContentsChangedEvent;
+
         ObservableCollection<CollectionItemViewModel> CollectionItems { get; }
 
         /// <summary>

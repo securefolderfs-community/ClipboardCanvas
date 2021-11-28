@@ -33,6 +33,8 @@ using ClipboardCanvas.Models.Autopaste;
 using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Contexts.Operations;
 using ClipboardCanvas.CanavsPasteModels;
+using Windows.ApplicationModel.Core;
+using Microsoft.Toolkit.Uwp;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {
@@ -80,7 +82,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public virtual bool IsOnNewCanvas => currentIndex == CollectionItems.Count;
 
-        public CollectionItemViewModel CurrentCollectionItemViewModel => CollectionItems.Count == currentIndex ? null : CollectionItems[currentIndex];
+        public CollectionItemViewModel CurrentCollectionItemViewModel => CollectionItems.Count == currentIndex ? null : CollectionItems.ElementAtOrDefault(currentIndex);
 
         public string CollectionPath { get; protected set; }
 
@@ -185,6 +187,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         public event EventHandler<CollectionItemRemovedEventArgs> OnCollectionItemRemovedEvent;
 
         public event EventHandler<CollectionItemRenamedEventArgs> OnCollectionItemRenamedEvent;
+
+        public event EventHandler<CollectionItemContentsChangedEventArgs> OnCollectionItemContentsChangedEvent;
 
         #endregion
 
@@ -491,16 +495,22 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             await LoadCanvasFromCollection(pasteCanvasModel, cancellationToken);
         }
 
-        public virtual void AddCollectionItem(CollectionItemViewModel collectionItemViewModel)
+        public virtual void AddCollectionItem(CollectionItemViewModel collectionItemViewModel, bool fromInit = false)
         {
-            OnCollectionItemAddedEvent?.Invoke(this, new CollectionItemAddedEventArgs(this, collectionItemViewModel));
+            if (!fromInit)
+            {
+                OnCollectionItemAddedEvent?.Invoke(this, new CollectionItemAddedEventArgs(this, collectionItemViewModel));
+            }
             CollectionItems.Add(collectionItemViewModel);
         }
 
         public virtual void RemoveCollectionItem(CollectionItemViewModel collectionItemViewModel)
         {
-            OnCollectionItemRemovedEvent?.Invoke(this, new CollectionItemRemovedEventArgs(this, collectionItemViewModel));
-            CollectionItems.Remove(collectionItemViewModel);
+            if (collectionItemViewModel != null)
+            {
+                OnCollectionItemRemovedEvent?.Invoke(this, new CollectionItemRemovedEventArgs(this, collectionItemViewModel));
+                CollectionItems.Remove(collectionItemViewModel);
+            }
         }
 
         public virtual bool HasNext()
@@ -677,7 +687,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 IStorageItem changedItem = await item.GetStorageItemAsync();
 
                 string itemParentFolder = Path.GetDirectoryName(item.Path);
-                string watchedParentFolder = Path.GetDirectoryName(collectionFolder.Path);
+                string watchedParentFolder = collectionFolder.Path;
                 if (itemParentFolder != watchedParentFolder)
                 {
                     continue;
@@ -693,37 +703,63 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
                     case StorageLibraryChangeType.Created:
                         {
-                            // Add new collection item
-                            var collectionItem = new CollectionItemViewModel(changedItem);
-                            AddCollectionItem(collectionItem);
+                            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(() =>
+                            {
+                                // Add new collection item
+                                if (!CollectionItems.Any((i) => item.Path == i.AssociatedItem.Path))
+                                {
+                                    var collectionItem = new CollectionItemViewModel(changedItem);
+                                    AddCollectionItem(collectionItem);
+                                }
+                            });
                             break;
                         }
 
                     case StorageLibraryChangeType.MovedOutOfLibrary:
                     case StorageLibraryChangeType.Deleted:
                         {
-                            // Remove the collection item
-                            RemoveCollectionItem(FindCollectionItem(item.Path));
+                            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(() =>
+                            {
+                                // Remove the collection item
+                                var collectionItem = FindCollectionItem(item.Path);
+                                RemoveCollectionItem(collectionItem);
+                            });
                             break;
                         }
 
                     case StorageLibraryChangeType.MovedOrRenamed:
                         {
-                            string oldName = Path.GetFileName(item.PreviousPath);
-                            string newName = Path.GetFileName(item.Path);
-
-                            string oldParentPath = Path.GetDirectoryName(item.PreviousPath);
-                            string newParentPath = Path.GetDirectoryName(item.Path);
-
-                            if ((oldName != newName) && (oldParentPath == newParentPath))
+                            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(() =>
                             {
-                                // Renamed
-                                var collectionItem = FindCollectionItem(item.PreviousPath);
-                                collectionItem.DangerousUpdateItem(changedItem);
+                                string oldName = Path.GetFileName(item.PreviousPath);
+                                string newName = Path.GetFileName(item.Path);
 
-                                OnCollectionItemRenamedEvent?.Invoke(this, new CollectionItemRenamedEventArgs(this, collectionItem, item.PreviousPath));
-                            }
+                                string oldParentPath = Path.GetDirectoryName(item.PreviousPath);
+                                string newParentPath = Path.GetDirectoryName(item.Path);
 
+                                if ((oldName != newName) && (oldParentPath == newParentPath))
+                                {
+                                    // Renamed
+                                    var collectionItem = FindCollectionItem(item.PreviousPath);
+                                    collectionItem.DangerousUpdateItem(changedItem);
+
+                                    OnCollectionItemRenamedEvent?.Invoke(this, new CollectionItemRenamedEventArgs(this, collectionItem, item.PreviousPath));
+                                }
+                            });
+                            break;
+                        }
+
+                    case StorageLibraryChangeType.ContentsReplaced:
+                    case StorageLibraryChangeType.ContentsChanged:
+                        {
+                            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(() =>
+                            {
+                                var collectionItem = FindCollectionItem(changedItem.Path);
+                                if (collectionItem != null)
+                                {
+                                    OnCollectionItemContentsChangedEvent?.Invoke(this, new CollectionItemContentsChangedEventArgs(this, collectionItem));
+                                }
+                            });
                             break;
                         }
                 }
@@ -753,7 +789,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
                     foreach (var item in items)
                     {
-                        AddCollectionItem(new CollectionItemViewModel(item));
+                        AddCollectionItem(new CollectionItemViewModel(item), true);
                     }
 
                     // TODO: save index somewhere to file?

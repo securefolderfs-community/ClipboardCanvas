@@ -5,6 +5,9 @@ using Newtonsoft.Json;
 using ClipboardCanvas.Models.Autopaste;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Helpers.SafetyHelpers;
+using System.Collections.Generic;
+using Windows.Storage;
+using System.Linq;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules
 {
@@ -22,6 +25,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules
             : base(ruleActions)
         {
             ruleName = "Type filter";
+            ruleFontIconGlyph = "\uE71C";
         }
 
         public override async Task<bool> PassesRule(DataPackageView dataPackage)
@@ -57,7 +61,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules
                     {
                         if (dataPackage.ContainsOnly(StandardDataFormats.StorageItems))
                         {
-                            return false;
+                            SafeWrapper<IReadOnlyList<IStorageItem>> result = await dataPackage.SafeGetStorageItemsAsync();
+
+                            if (result && result.Result.Any((item) => item is IStorageFile))
+                            {
+                                return false;
+                            }
                         }
 
                         break;
@@ -70,6 +79,21 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules
                             SafeWrapper<string> result = await dataPackage.SafeGetTextAsync();
 
                             if (result && await WebHelpers.IsValidUrl(result))
+                            {
+                                return false;
+                            }
+                        }
+
+                        break;
+                    }
+
+                case 4: // Folder
+                    {
+                        if (dataPackage.ContainsOnly(StandardDataFormats.StorageItems))
+                        {
+                            SafeWrapper<IReadOnlyList<IStorageItem>> result = await dataPackage.SafeGetStorageItemsAsync();
+
+                            if (result && result.Result.Any((item) => item is IStorageFolder))
                             {
                                 return false;
                             }

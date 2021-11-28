@@ -24,6 +24,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules
         }
 
         [JsonIgnore]
+        protected string ruleFontIconGlyph;
+        [JsonIgnore]
+        public string RuleFontIconGlyph
+        {
+            get => ruleFontIconGlyph;
+            set => SetProperty(ref ruleFontIconGlyph, value);
+        }
+
+        [JsonIgnore]
         public ICommand RemoveRuleCommand { get; private set; }
 
         public BaseAutopasteRuleViewModel(IRuleActions ruleActions)

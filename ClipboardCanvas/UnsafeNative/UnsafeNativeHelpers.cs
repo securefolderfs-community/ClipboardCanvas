@@ -56,7 +56,8 @@ namespace ClipboardCanvas.UnsafeNative
 
                                 if (bRead = UnsafeNativeApis.ReadFile(hFile, pBuffer, BUFFER_LENGTH - 1, &dwBytesRead, IntPtr.Zero) && dwBytesRead > 0)
                                 {
-                                    szRead += reader.ReadToEnd().Substring(0, dwBytesRead);
+                                    string szRead2 = reader.ReadToEnd();
+                                    szRead = szRead2.Substring(0, Math.Min(szRead2.Length, dwBytesRead));
                                 }
                                 else
                                 {

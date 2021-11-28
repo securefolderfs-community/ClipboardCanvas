@@ -15,5 +15,7 @@ namespace ClipboardCanvas.Services
         string AutopastePath { get; set; }
 
         List<BaseAutopasteRuleViewModel> SavedRules { get; set; }
+
+        bool FileSizeRuleDoesNotApplyToFoldersWarningDismissed { get; set; }
     }
 }

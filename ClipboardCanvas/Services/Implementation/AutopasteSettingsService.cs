@@ -31,6 +31,12 @@ namespace ClipboardCanvas.Services.Implementation
             get => Get<List<BaseAutopasteRuleViewModel>>(null);
             set => Set(value);
         }
+
+        public bool FileSizeRuleDoesNotApplyToFoldersWarningDismissed
+        {
+            get => Get(false);
+            set => Set(value);
+        }
     }
 
     public sealed class AutopasteSerializationBinder : ISerializationBinder

@@ -19,7 +19,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules
             get => _MaxFileSize;
             set
             {
-                if (SetProperty(ref _MaxFileSize, value))
+                if (double.IsNaN(value))
+                {
+                    value = 0.0d;
+                    _MaxFileSize = value;
+                    OnPropertyChanged();
+                    RuleActions?.SerializeRules();
+                }
+                else if (SetProperty(ref _MaxFileSize, value))
                 {
                     RuleActions?.SerializeRules();
                 }
@@ -32,7 +39,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules
             get => _MinFileSize;
             set
             {
-                if (SetProperty(ref _MinFileSize, value))
+                if (double.IsNaN(value))
+                {
+                    value = 0.0d;
+                    _MinFileSize = value;
+                    OnPropertyChanged();
+                    RuleActions?.SerializeRules();
+                }
+                else if (SetProperty(ref _MinFileSize, value))
                 {
                     RuleActions?.SerializeRules();
                 }
@@ -43,6 +57,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules
             : base(ruleActions)
         {
             ruleName = "File size";
+            ruleFontIconGlyph = "\uE2B2";
             _MaxFileSize = 8.0d;
         }
 
@@ -66,8 +81,17 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules
                     }
                     else
                     {
-                        return false;
+                        return true;
                     }
+                }
+            }
+            else if (dataPackage.Contains(StandardDataFormats.Text))
+            {
+                SafeWrapper<string> result = await dataPackage.SafeGetTextAsync();
+
+                if (result && (result.Result.Length < ByteSize.FromMegaBytes(MinFileSize).Bytes || result.Result.Length > ByteSize.FromMegaBytes(MaxFileSize).Bytes))
+                {
+                    return false;
                 }
             }
 

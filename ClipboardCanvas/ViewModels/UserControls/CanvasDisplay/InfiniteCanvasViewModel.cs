@@ -457,7 +457,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 }
 
                 string itemParentFolder = Path.GetDirectoryName(item.Path);
-                string watchedParentFolder = Path.GetDirectoryName((await InfiniteCanvasItem.SourceItem).Path);
+                string watchedParentFolder = (await InfiniteCanvasItem.SourceItem).Path;
                 if (itemParentFolder != watchedParentFolder)
                 {
                     continue;
@@ -522,8 +522,29 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                                     // Renamed
                                     var interactableCanvasControlItem = InteractableCanvasControlModel.FindItem(item.PreviousPath);
 
-                                    interactableCanvasControlItem.CanvasItem.DangerousUpdateItem(changedItem);
-                                    await interactableCanvasControlItem.InitializeDisplayName();
+                                    if (interactableCanvasControlItem != null)
+                                    {
+                                        interactableCanvasControlItem.CanvasItem.DangerousUpdateItem(changedItem);
+                                        await interactableCanvasControlItem.InitializeDisplayName();
+
+                                        // Since it was renamed, configuration model needs to be updated too!
+                                        await SaveConfigurationModel();
+                                    }
+                                }
+                            });
+                            break;
+                        }
+
+                    case StorageLibraryChangeType.ContentsReplaced:
+                    case StorageLibraryChangeType.ContentsChanged:
+                        {
+                            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(async () =>
+                            {
+                                var interactableCanvasControlItem = InteractableCanvasControlModel.FindItem(changedItem.Path);
+                                if (interactableCanvasControlItem != null)
+                                {
+                                    await interactableCanvasControlItem.LoadContent();
+                                    await InteractableCanvasControlModel.RegenerateCanvasPreview();
                                 }
                             });
                             break;

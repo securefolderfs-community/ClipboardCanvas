@@ -101,6 +101,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public static event EventHandler<TipTextUpdateRequestedEventArgs> OnTipTextUpdateRequestedEvent;
 
+        public static event EventHandler<CollectionItemAddedEventArgs> OnCollectionItemAddedEvent;
+
+        public static event EventHandler<CollectionItemRemovedEventArgs> OnCollectionItemRemovedEvent;
+
+        public static event EventHandler<CollectionItemRenamedEventArgs> OnCollectionItemRenamedEvent;
+
+        public static event EventHandler<CollectionItemContentsChangedEventArgs> OnCollectionItemContentsChangedEvent;
+
         #endregion
 
         #region Commands
@@ -242,6 +250,26 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             {
                 e.canRename = false;
             }
+        }
+
+        private static void BaseCollectionViewModel_OnCollectionItemContentsChangedEvent(object sender, CollectionItemContentsChangedEventArgs e)
+        {
+            OnCollectionItemContentsChangedEvent?.Invoke(sender, e);
+        }
+
+        private static void BaseCollectionViewModel_OnCollectionItemRenamedEvent(object sender, CollectionItemRenamedEventArgs e)
+        {
+            OnCollectionItemRenamedEvent?.Invoke(sender, e);
+        }
+
+        private static void BaseCollectionViewModel_OnCollectionItemRemovedEvent(object sender, CollectionItemRemovedEventArgs e)
+        {
+            OnCollectionItemRemovedEvent?.Invoke(sender, e);
+        }
+
+        private static void BaseCollectionViewModel_OnCollectionItemAddedEvent(object sender, CollectionItemAddedEventArgs e)
+        {
+            OnCollectionItemAddedEvent?.Invoke(sender, e);
         }
 
         private static void BaseCollectionViewModel_OnTipTextUpdateRequestedEvent(object sender, TipTextUpdateRequestedEventArgs e)
@@ -409,6 +437,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             baseCollectionViewModel.OnCollectionItemsInitializationStartedEvent += BaseCollectionViewModel_OnCollectionItemsInitializationStartedEvent;
             baseCollectionViewModel.OnCollectionItemsInitializationFinishedEvent += BaseCollectionViewModel_OnCollectionItemsInitializationFinishedEvent;
             baseCollectionViewModel.OnTipTextUpdateRequestedEvent += BaseCollectionViewModel_OnTipTextUpdateRequestedEvent;
+            baseCollectionViewModel.OnCollectionItemAddedEvent += BaseCollectionViewModel_OnCollectionItemAddedEvent;
+            baseCollectionViewModel.OnCollectionItemRemovedEvent += BaseCollectionViewModel_OnCollectionItemRemovedEvent;
+            baseCollectionViewModel.OnCollectionItemRenamedEvent += BaseCollectionViewModel_OnCollectionItemRenamedEvent;
+            baseCollectionViewModel.OnCollectionItemContentsChangedEvent += BaseCollectionViewModel_OnCollectionItemContentsChangedEvent;
 
             // Hook extension interfaces events
             if (baseCollectionViewModel is ICollectionNameEditable collectionNameEditable)
@@ -454,6 +486,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             baseCollectionViewModel.OnCollectionItemsInitializationStartedEvent -= BaseCollectionViewModel_OnCollectionItemsInitializationStartedEvent;
             baseCollectionViewModel.OnCollectionItemsInitializationFinishedEvent -= BaseCollectionViewModel_OnCollectionItemsInitializationFinishedEvent;
             baseCollectionViewModel.OnTipTextUpdateRequestedEvent -= BaseCollectionViewModel_OnTipTextUpdateRequestedEvent;
+            baseCollectionViewModel.OnCollectionItemAddedEvent -= BaseCollectionViewModel_OnCollectionItemAddedEvent;
+            baseCollectionViewModel.OnCollectionItemRemovedEvent -= BaseCollectionViewModel_OnCollectionItemRemovedEvent;
+            baseCollectionViewModel.OnCollectionItemRenamedEvent -= BaseCollectionViewModel_OnCollectionItemRenamedEvent;
+            baseCollectionViewModel.OnCollectionItemContentsChangedEvent -= BaseCollectionViewModel_OnCollectionItemContentsChangedEvent;
 
             // Unhook extension interfaces events
             if (baseCollectionViewModel is ICollectionNameEditable collectionNameEditable)

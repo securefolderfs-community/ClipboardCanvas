@@ -51,6 +51,17 @@ namespace ClipboardCanvas.EventArguments.Collections
         }
     }
 
+    public class CollectionItemContentsChangedEventArgs : BaseCollectionEventArgs
+    {
+        public readonly CollectionItemViewModel itemChanged;
+
+        public CollectionItemContentsChangedEventArgs(BaseCollectionViewModel baseCollectionViewModel, CollectionItemViewModel itemChanged)
+            : base(baseCollectionViewModel)
+        {
+            this.itemChanged = itemChanged;
+        }
+    }
+
     public class CollectionRemovedEventArgs : BaseCollectionEventArgs
     {
         public CollectionRemovedEventArgs(BaseCollectionViewModel baseCollectionViewModel)

@@ -73,6 +73,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private IAutopasteService AutopasteService { get; } = Ioc.Default.GetService<IAutopasteService>();
 
+        private ITimelineService TimelineService { get; } = Ioc.Default.GetService<ITimelineService>();
+
         #endregion
 
         #region Constructor
@@ -258,6 +260,33 @@ namespace ClipboardCanvas.ViewModels.UserControls
         #endregion
 
         #region CollectionsControlViewModel
+
+        private async void CollectionsWidgetViewModel_OnCollectionItemContentsChangedEvent(object sender, CollectionItemContentsChangedEventArgs e)
+        {
+            if (NavigationService.CurrentPage == DisplayPageType.Homepage)
+            {
+                var (section, sectionItem) = TimelineService.FindTimelineSectionItem(e.itemChanged);
+                await sectionItem.InitializeSectionItemContent();
+            }
+        }
+
+        private async void CollectionsWidgetViewModel_OnCollectionItemRenamedEvent(object sender, CollectionItemRenamedEventArgs e)
+        {
+            var (section, sectionItem) = TimelineService.FindTimelineSectionItem(e.itemChanged);
+            await sectionItem.UpdateFileName();
+        }
+
+        private void CollectionsWidgetViewModel_OnCollectionItemRemovedEvent(object sender, CollectionItemRemovedEventArgs e)
+        {
+            var (section, sectionItem) = TimelineService.FindTimelineSectionItem(e.itemChanged);
+            section.RemoveItem(sectionItem);
+        }
+
+        private async void CollectionsWidgetViewModel_OnCollectionItemAddedEvent(object sender, CollectionItemAddedEventArgs e)
+        {
+            var todaySection = await TimelineService.GetOrCreateTodaySection();
+            await TimelineService.AddItemForSection(todaySection, e.baseCollectionViewModel, e.itemChanged);
+        }
 
         private void CollectionsControlViewModel_OnTipTextUpdateRequestedEvent(object sender, TipTextUpdateRequestedEventArgs e)
         {
@@ -822,6 +851,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CollectionsWidgetViewModel.OnCollectionErrorRaisedEvent += CollectionsControlViewModel_OnCollectionErrorRaisedEvent;
             CollectionsWidgetViewModel.OnCanvasLoadFailedEvent += CollectionsControlViewModel_OnCanvasLoadFailedEvent;
             CollectionsWidgetViewModel.OnTipTextUpdateRequestedEvent += CollectionsControlViewModel_OnTipTextUpdateRequestedEvent;
+            CollectionsWidgetViewModel.OnCollectionItemAddedEvent += CollectionsWidgetViewModel_OnCollectionItemAddedEvent;
+            CollectionsWidgetViewModel.OnCollectionItemRemovedEvent += CollectionsWidgetViewModel_OnCollectionItemRemovedEvent;
+            CollectionsWidgetViewModel.OnCollectionItemRenamedEvent += CollectionsWidgetViewModel_OnCollectionItemRenamedEvent;
+            CollectionsWidgetViewModel.OnCollectionItemContentsChangedEvent += CollectionsWidgetViewModel_OnCollectionItemContentsChangedEvent;
         }
 
         private void UnhookCollectionsEvents()
@@ -837,6 +870,10 @@ namespace ClipboardCanvas.ViewModels.UserControls
             CollectionsWidgetViewModel.OnCollectionErrorRaisedEvent -= CollectionsControlViewModel_OnCollectionErrorRaisedEvent;
             CollectionsWidgetViewModel.OnCanvasLoadFailedEvent -= CollectionsControlViewModel_OnCanvasLoadFailedEvent;
             CollectionsWidgetViewModel.OnTipTextUpdateRequestedEvent -= CollectionsControlViewModel_OnTipTextUpdateRequestedEvent;
+            CollectionsWidgetViewModel.OnCollectionItemAddedEvent -= CollectionsWidgetViewModel_OnCollectionItemAddedEvent;
+            CollectionsWidgetViewModel.OnCollectionItemRemovedEvent -= CollectionsWidgetViewModel_OnCollectionItemRemovedEvent;
+            CollectionsWidgetViewModel.OnCollectionItemRenamedEvent -= CollectionsWidgetViewModel_OnCollectionItemRenamedEvent;
+            CollectionsWidgetViewModel.OnCollectionItemContentsChangedEvent -= CollectionsWidgetViewModel_OnCollectionItemContentsChangedEvent;
         }
 
         private void HookCanvasControlEvents()

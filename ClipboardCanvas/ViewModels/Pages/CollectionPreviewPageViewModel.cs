@@ -355,6 +355,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             _view.AssociatedCollectionModel.OnCollectionItemAddedEvent += AssociatedCollectionModel_OnCollectionItemAddedEvent;
             _view.AssociatedCollectionModel.OnCollectionItemRemovedEvent += AssociatedCollectionModel_OnCollectionItemRemovedEvent;
             _view.AssociatedCollectionModel.OnCollectionItemRenamedEvent += AssociatedCollectionModel_OnCollectionItemRenamedEvent;
+            _view.AssociatedCollectionModel.OnCollectionItemContentsChangedEvent += AssociatedCollectionModel_OnCollectionItemContentsChangedEvent;
 
             await InitializeItems();
         }
@@ -479,6 +480,19 @@ namespace ClipboardCanvas.ViewModels.Pages
             });
         }
 
+        private async void AssociatedCollectionModel_OnCollectionItemContentsChangedEvent(object sender, CollectionItemContentsChangedEventArgs e)
+        {
+            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(async () =>
+            {
+                var itemToChange = Items.FirstOrDefault((item) => item.CollectionItemViewModel.AssociatedItem.Path == e.itemChanged.AssociatedItem.Path);
+
+                if (itemToChange != null)
+                {
+                    await itemToChange.RequestCanvasLoad();
+                }
+            });
+        }
+
         private void SearchControlModel_OnSearchCloseRequestedEvent(object sender, SearchCloseRequestedEventArgs e)
         {
             HideSearch();
@@ -514,6 +528,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             _view.AssociatedCollectionModel.OnCollectionItemAddedEvent -= AssociatedCollectionModel_OnCollectionItemAddedEvent;
             _view.AssociatedCollectionModel.OnCollectionItemRemovedEvent -= AssociatedCollectionModel_OnCollectionItemRemovedEvent;
             _view.AssociatedCollectionModel.OnCollectionItemRenamedEvent -= AssociatedCollectionModel_OnCollectionItemRenamedEvent;
+            _view.AssociatedCollectionModel.OnCollectionItemContentsChangedEvent -= AssociatedCollectionModel_OnCollectionItemContentsChangedEvent;
 
             if (_view.SearchControlModel != null)
             {
