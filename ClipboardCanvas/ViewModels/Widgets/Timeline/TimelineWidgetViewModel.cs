@@ -157,7 +157,7 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
 
                     foreach (var configurationSectionItem in configurationSection.items)
                     {
-                        SafeWrapper<IStorageItem> item = await StorageHelpers.ToStorageItemWithError<IStorageItem>(configurationSectionItem.collectionItemPath);
+                        SafeWrapper<IStorageItem> item = await StorageHelpers.ToStorageItemWithError<IStorageItem>(configurationSectionItem?.collectionItemPath);
 
                         if (item)
                         {

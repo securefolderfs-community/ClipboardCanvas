@@ -6,6 +6,8 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using Windows.UI.Xaml.Media.Imaging;
 
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
@@ -13,8 +15,6 @@ using ClipboardCanvas.Extensions;
 using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.Contexts.Operations;
 using ClipboardCanvas.Helpers;
-using System.Threading;
-using Windows.UI.Xaml.Media.Imaging;
 using ClipboardCanvas.Helpers.Filesystem;
 
 namespace ClipboardCanvas.CanavsPasteModels

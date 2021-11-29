@@ -153,6 +153,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             _softwareBitmap?.Dispose();
 
             _softwareBitmap = null;
+            _gifBitmapImage = null;
             ContentImage = null;
         }
 

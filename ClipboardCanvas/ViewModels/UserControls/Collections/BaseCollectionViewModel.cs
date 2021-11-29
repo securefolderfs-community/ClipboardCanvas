@@ -451,7 +451,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public CollectionItemViewModel FindCollectionItem(string path)
         {
-            return CollectionItems.FirstOrDefault((item) => item.AssociatedItem.Path == path);
+            return CollectionItems.FirstOrDefault((item) => item?.AssociatedItem.Path == path);
         }
 
         public virtual void NavigateFirst(ICanvasPreviewModel pasteCanvasModel)
@@ -684,14 +684,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             // Reflect changes in collection
             foreach (var item in changes)
             {
-                IStorageItem changedItem = await item.GetStorageItemAsync();
-
                 string itemParentFolder = Path.GetDirectoryName(item.Path);
                 string watchedParentFolder = collectionFolder.Path;
                 if (itemParentFolder != watchedParentFolder)
                 {
                     continue;
                 }
+
+                IStorageItem changedItem = await item.GetStorageItemAsync();
 
                 switch (item.ChangeType)
                 {
@@ -706,7 +706,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                             await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(() =>
                             {
                                 // Add new collection item
-                                if (!CollectionItems.Any((i) => item?.Path == i.AssociatedItem.Path))
+                                if (changedItem != null && !CollectionItems.Any((i) => item?.Path == i.AssociatedItem.Path))
                                 {
                                     var collectionItem = new CollectionItemViewModel(changedItem);
                                     AddCollectionItem(collectionItem);
@@ -731,19 +731,22 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                         {
                             await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(() =>
                             {
-                                string oldName = Path.GetFileName(item?.PreviousPath);
-                                string newName = Path.GetFileName(item?.Path);
-
-                                string oldParentPath = Path.GetDirectoryName(item?.PreviousPath);
-                                string newParentPath = Path.GetDirectoryName(item?.Path);
-
-                                if ((oldName != newName) && (oldParentPath == newParentPath))
+                                if (changedItem != null)
                                 {
-                                    // Renamed
-                                    var collectionItem = FindCollectionItem(item?.PreviousPath);
-                                    collectionItem.DangerousUpdateItem(changedItem);
+                                    string oldName = Path.GetFileName(item?.PreviousPath);
+                                    string newName = Path.GetFileName(item?.Path);
 
-                                    OnCollectionItemRenamedEvent?.Invoke(this, new CollectionItemRenamedEventArgs(this, collectionItem, item.PreviousPath));
+                                    string oldParentPath = Path.GetDirectoryName(item?.PreviousPath);
+                                    string newParentPath = Path.GetDirectoryName(item?.Path);
+
+                                    if ((oldName != newName) && (oldParentPath == newParentPath))
+                                    {
+                                        // Renamed
+                                        var collectionItem = FindCollectionItem(item?.PreviousPath);
+
+                                        collectionItem.DangerousUpdateItem(changedItem);
+                                        OnCollectionItemRenamedEvent?.Invoke(this, new CollectionItemRenamedEventArgs(this, collectionItem, item.PreviousPath));
+                                    }
                                 }
                             });
                             break;

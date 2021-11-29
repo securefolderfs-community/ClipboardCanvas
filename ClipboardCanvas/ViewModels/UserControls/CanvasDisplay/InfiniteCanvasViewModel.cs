@@ -477,7 +477,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                         {
                             await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(async () =>
                             {
-                                if (InteractableCanvasControlModel.ContainsItem(InteractableCanvasControlModel.FindItem(changedItem.Path)))
+                                if (changedItem == null || InteractableCanvasControlModel.ContainsItem(InteractableCanvasControlModel.FindItem(changedItem.Path)))
                                 {
                                     return;
                                 }
@@ -502,7 +502,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                         {
                             await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(() =>
                             {
-                                InteractableCanvasControlModel.RemoveItem(InteractableCanvasControlModel.FindItem(item.Path));
+                                InteractableCanvasControlModel.RemoveItem(InteractableCanvasControlModel.FindItem(item?.Path));
                             });
                             break;
                         }
@@ -511,24 +511,27 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                         {
                             await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(async () =>
                             {
-                                string oldName = Path.GetFileName(item.PreviousPath);
-                                string newName = Path.GetFileName(item.Path);
-
-                                string oldParentPath = Path.GetDirectoryName(item.PreviousPath);
-                                string newParentPath = Path.GetDirectoryName(item.Path);
-
-                                if ((oldName != newName) && (oldParentPath == newParentPath))
+                                if (changedItem != null)
                                 {
-                                    // Renamed
-                                    var interactableCanvasControlItem = InteractableCanvasControlModel.FindItem(item.PreviousPath);
+                                    string oldName = Path.GetFileName(item?.PreviousPath);
+                                    string newName = Path.GetFileName(item?.Path);
 
-                                    if (interactableCanvasControlItem != null)
+                                    string oldParentPath = Path.GetDirectoryName(item?.PreviousPath);
+                                    string newParentPath = Path.GetDirectoryName(item?.Path);
+
+                                    if ((oldName != newName) && (oldParentPath == newParentPath))
                                     {
-                                        interactableCanvasControlItem.CanvasItem.DangerousUpdateItem(changedItem);
-                                        await interactableCanvasControlItem.InitializeDisplayName();
+                                        // Renamed
+                                        var interactableCanvasControlItem = InteractableCanvasControlModel.FindItem(item?.PreviousPath);
 
-                                        // Since it was renamed, configuration model needs to be updated too!
-                                        await SaveConfigurationModel();
+                                        if (interactableCanvasControlItem != null)
+                                        {
+                                            interactableCanvasControlItem.CanvasItem.DangerousUpdateItem(changedItem);
+                                            await interactableCanvasControlItem.InitializeDisplayName();
+
+                                            // Since it was renamed, configuration model needs to be updated too!
+                                            await SaveConfigurationModel();
+                                        }
                                     }
                                 }
                             });
