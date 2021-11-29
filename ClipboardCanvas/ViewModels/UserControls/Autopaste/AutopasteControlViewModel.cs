@@ -19,6 +19,7 @@ using ClipboardCanvas.Models.Autopaste;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
+using System.Diagnostics;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 {
@@ -235,6 +236,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
                         }
 
                         pasteResult = await AutopasteTarget.PasteData(clipboardData, _cancellationTokenSource.Token);
+                        Debug.WriteLine(pasteResult.Message);
+                        Debug.WriteLine(pasteResult.Result);
+                        Debug.WriteLine(pasteResult.Exception);
+                        Debug.WriteLine(pasteResult.ErrorCode);
                     }
                     catch { }
                     finally

@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gxt="using:ClipboardCanvas.GlobalizationExtensions"
     xmlns:local="using:ClipboardCanvas.Pages.SettingsPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -23,14 +24,14 @@
                 Text="Pasting" />
 
             <StackPanel Spacing="4">
-                <uc:SettingBlockControl Description="Open new canvas on paste">
+                <uc:SettingBlockControl Description="{gxt:ResourceString Name=SettingsPastingPageOpenNewCanvas}">
                     <uc:SettingBlockControl.Icon>
                         <FontIcon Glyph="&#xE78B;" />
                     </uc:SettingBlockControl.Icon>
                     <ToggleSwitch IsOn="{x:Bind ViewModel.OpenNewCanvasOnPaste, Mode=TwoWay}" Style="{StaticResource ToggleSwitchRight}" />
                 </uc:SettingBlockControl>
 
-                <uc:SettingBlockControl Description="Paste files as reference">
+                <uc:SettingBlockControl Description="{gxt:ResourceString Name=SettingsPastingPagePasteAsReference}">
                     <uc:SettingBlockControl.Icon>
                         <FontIcon Glyph="&#xE71B;" />
                     </uc:SettingBlockControl.Icon>
@@ -40,7 +41,7 @@
                                 x:Name="RestrictedAccessLimitationsInfo"
                                 x:Load="{x:Bind ViewModel.IsInRestrictedAccessMode}"
                                 Foreground="{ThemeResource WarningYellowBrush}"
-                                Text="Cannot enable this setting while in Restricted Access mode."
+                                Text="{gxt:ResourceString Name=SettingsPastingPageRestrictedAccessWarning}"
                                 TextWrapping="WrapWholeWords" />
                         </Grid>
                     </uc:SettingBlockControl.AdditionalDescription>
@@ -68,7 +69,7 @@
                                 IsLightDismissEnabled="True"
                                 IsOpen="{x:Bind ViewModel.IsReferenceFilesTeachingTipVisible, Mode=TwoWay}"
                                 PreferredPlacement="Bottom"
-                                Subtitle="Reference Files allow you to paste files without creating copies of them. With this setting enabled, every file is pasted as a reference.&#x0a;&#x0a;A reference file is created pointing to the original file which is seamlessly displayed by Clipboard Canvas."
+                                Subtitle="{gxt:ResourceString Name=SettingsPastingPageReferenceFilesInfo}"
                                 Target="{x:Bind ShowReferenceFilesTeachingTip}">
                                 <muxc:TeachingTip.IconSource>
                                     <muxc:SymbolIconSource Symbol="Link" />
@@ -82,7 +83,7 @@
                         Style="{StaticResource ToggleSwitchRight}" />
                 </uc:SettingBlockControl>
 
-                <uc:SettingBlockControl Description="Use markdown format instead of text files">
+                <uc:SettingBlockControl Description="{gxt:ResourceString Name=SettingsPastingPageUseMarkdownAsDefault}">
                     <uc:SettingBlockControl.Icon>
                         <FontIcon Glyph="&#xE7C3;" />
                     </uc:SettingBlockControl.Icon>

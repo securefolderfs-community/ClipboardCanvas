@@ -451,7 +451,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         private void CollectionPreviewPageModel_OnCanvasPreviewSelectedItemChangedEvent(object sender, CanvasPreviewSelectedItemChangedEventArgs e)
         {
             // We must update the canvas button loading when selection is changed
-            if (e.selectedItem.CollectionModel.IsCollectionInitializing && e.selectedItem != null)
+            if (e.selectedItem != null && e.selectedItem.CollectionModel.IsCollectionInitializing)
             {
                 NavigationToolBarControlModel.NavigationControlModel.CollectionPreviewGoToCanvasLoading = true;
             }
@@ -462,7 +462,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
             if (e.selectedItem == null)
             {
-                e.selectedItem.CollectionModel.SetIndexOnNewCanvas();
+                _currentCollectionModel.SetIndexOnNewCanvas();
             }    
             else
             {

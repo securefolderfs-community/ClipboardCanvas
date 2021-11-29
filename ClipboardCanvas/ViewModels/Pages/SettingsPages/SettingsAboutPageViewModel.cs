@@ -16,6 +16,7 @@ using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
+using Microsoft.Toolkit.Uwp;
 
 namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 {
@@ -31,7 +32,7 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         public string AppVersionText
         {
-            get => $"Version: {ApplicationService.AppVersion}";
+            get => string.Format("SettingsAboutPageAppVersion".GetLocalized(), ApplicationService.AppVersion);
         }
 
         private bool _PrivacyPolicyProgressRingLoad;

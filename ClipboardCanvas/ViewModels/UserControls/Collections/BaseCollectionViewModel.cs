@@ -706,7 +706,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                             await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(() =>
                             {
                                 // Add new collection item
-                                if (!CollectionItems.Any((i) => item.Path == i.AssociatedItem.Path))
+                                if (!CollectionItems.Any((i) => item?.Path == i.AssociatedItem.Path))
                                 {
                                     var collectionItem = new CollectionItemViewModel(changedItem);
                                     AddCollectionItem(collectionItem);
@@ -721,7 +721,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                             await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(() =>
                             {
                                 // Remove the collection item
-                                var collectionItem = FindCollectionItem(item.Path);
+                                var collectionItem = FindCollectionItem(item?.Path);
                                 RemoveCollectionItem(collectionItem);
                             });
                             break;
@@ -731,16 +731,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                         {
                             await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(() =>
                             {
-                                string oldName = Path.GetFileName(item.PreviousPath);
-                                string newName = Path.GetFileName(item.Path);
+                                string oldName = Path.GetFileName(item?.PreviousPath);
+                                string newName = Path.GetFileName(item?.Path);
 
-                                string oldParentPath = Path.GetDirectoryName(item.PreviousPath);
-                                string newParentPath = Path.GetDirectoryName(item.Path);
+                                string oldParentPath = Path.GetDirectoryName(item?.PreviousPath);
+                                string newParentPath = Path.GetDirectoryName(item?.Path);
 
                                 if ((oldName != newName) && (oldParentPath == newParentPath))
                                 {
                                     // Renamed
-                                    var collectionItem = FindCollectionItem(item.PreviousPath);
+                                    var collectionItem = FindCollectionItem(item?.PreviousPath);
                                     collectionItem.DangerousUpdateItem(changedItem);
 
                                     OnCollectionItemRenamedEvent?.Invoke(this, new CollectionItemRenamedEventArgs(this, collectionItem, item.PreviousPath));
@@ -754,7 +754,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                         {
                             await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(() =>
                             {
-                                var collectionItem = FindCollectionItem(changedItem.Path);
+                                var collectionItem = FindCollectionItem(changedItem?.Path);
                                 if (collectionItem != null)
                                 {
                                     OnCollectionItemContentsChangedEvent?.Invoke(this, new CollectionItemContentsChangedEventArgs(this, collectionItem));
