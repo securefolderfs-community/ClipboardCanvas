@@ -147,8 +147,7 @@ namespace ClipboardCanvas.Helpers.Filesystem
             }
 
             StorageFile file = item as StorageFile;
-            string fileExtension = Path.GetExtension(item.Path);
-            if (file != null && fileExtension.Equals(".exe", StringComparison.OrdinalIgnoreCase))
+            if (file != null && FileHelpers.IsPathEqualExtension(item.Path, ".exe"))
             {
                 IDialogService dialogService = Ioc.Default.GetService<IDialogService>();
 

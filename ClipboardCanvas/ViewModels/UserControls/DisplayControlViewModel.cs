@@ -266,20 +266,26 @@ namespace ClipboardCanvas.ViewModels.UserControls
             if (NavigationService.CurrentPage == DisplayPageType.Homepage)
             {
                 var (section, sectionItem) = TimelineService.FindTimelineSectionItem(e.itemChanged);
-                await sectionItem.InitializeSectionItemContent();
+                if (sectionItem != null)
+                {
+                    await sectionItem.InitializeSectionItemContent();
+                }
             }
         }
 
         private async void CollectionsWidgetViewModel_OnCollectionItemRenamedEvent(object sender, CollectionItemRenamedEventArgs e)
         {
             var (section, sectionItem) = TimelineService.FindTimelineSectionItem(e.itemChanged);
-            await sectionItem.UpdateFileName();
+            if (sectionItem != null)
+            {
+                await sectionItem.UpdateFileName();
+            }
         }
 
         private void CollectionsWidgetViewModel_OnCollectionItemRemovedEvent(object sender, CollectionItemRemovedEventArgs e)
         {
             var (section, sectionItem) = TimelineService.FindTimelineSectionItem(e.itemChanged);
-            section.RemoveItem(sectionItem);
+            section?.RemoveItem(sectionItem);
         }
 
         private async void CollectionsWidgetViewModel_OnCollectionItemAddedEvent(object sender, CollectionItemAddedEventArgs e)

@@ -18,7 +18,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules
         public int SelectedIndex
         {
             get => _SelectedIndex;
-            set => SetProperty(ref _SelectedIndex, value);
+            set
+            {
+                if (SetProperty(ref _SelectedIndex, value))
+                {
+                    RuleActions?.SerializeRules();
+                }
+            }
         }
 
         public TypeFilterRuleViewModel(IRuleActions ruleActions)
