@@ -16,6 +16,7 @@ using ClipboardCanvas.CanavsPasteModels;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.Contexts.Operations;
 using ClipboardCanvas.Extensions;
+using ClipboardCanvas.Helpers.Filesystem;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -24,6 +25,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #region Members
 
         private SoftwareBitmap _softwareBitmap;
+
+        private BitmapImage _gifBitmapImage;
 
         #endregion
 
@@ -72,8 +75,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             SafeWrapperResult result = await SafeWrapperRoutines.SafeWrapAsync(async () =>
             {
-                BitmapDecoder bitmapDecoder = await BitmapDecoder.CreateAsync(openedStream.Result);
-                _softwareBitmap = await bitmapDecoder.GetSoftwareBitmapAsync();
+                if (FileHelpers.IsPathEqualExtension(item.Path, ".gif"))
+                {
+                    _gifBitmapImage = new BitmapImage();
+                    await _gifBitmapImage.SetSourceAsync(openedStream.Result);
+                }
+                else
+                {
+                    BitmapDecoder bitmapDecoder = await BitmapDecoder.CreateAsync(openedStream.Result);
+                    _softwareBitmap = await bitmapDecoder.GetSoftwareBitmapAsync();
+                }
             });
 
             openedStream.Result.Dispose();
@@ -85,6 +96,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             return await SafeWrapperRoutines.SafeWrapAsync(async () =>
             {
+                if (_gifBitmapImage != null || ImagePasteModel?.GifBitmapImage != null)
+                {
+                    ContentImage = ImagePasteModel?.GifBitmapImage ?? _gifBitmapImage;
+                    return;
+                }
+
                 byte[] buffer;
 
                 if (ImagePasteModel != null && ImagePasteModel?.SoftwareBitmap != null) // Data is pasted, use ImagePasteModel.SoftwareBitmap

@@ -14,6 +14,8 @@ using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.Contexts.Operations;
 using ClipboardCanvas.Helpers;
 using System.Threading;
+using Windows.UI.Xaml.Media.Imaging;
+using ClipboardCanvas.Helpers.Filesystem;
 
 namespace ClipboardCanvas.CanavsPasteModels
 {
@@ -22,6 +24,8 @@ namespace ClipboardCanvas.CanavsPasteModels
         private bool _wasPastedAsReference;
 
         public SoftwareBitmap SoftwareBitmap { get; private set; }
+
+        public BitmapImage GifBitmapImage;
 
         public ImagePasteModel(ICanvasItemReceiverModel canvasFileReceiver, IOperationContextReceiver operationContextReceiver)
             : base (canvasFileReceiver, operationContextReceiver)
@@ -174,8 +178,16 @@ namespace ClipboardCanvas.CanavsPasteModels
             {
                 using (openedStream.Result)
                 {
-                    BitmapDecoder bitmapDecoder = await BitmapDecoder.CreateAsync(openedStream.Result);
-                    SoftwareBitmap = await bitmapDecoder.GetSoftwareBitmapAsync();
+                    if (FileHelpers.IsPathEqualExtension(item.Path, ".gif"))
+                    {
+                        GifBitmapImage = new BitmapImage();
+                        await GifBitmapImage.SetSourceAsync(openedStream.Result);
+                    }
+                    else
+                    {
+                        BitmapDecoder bitmapDecoder = await BitmapDecoder.CreateAsync(openedStream.Result);
+                        SoftwareBitmap = await bitmapDecoder.GetSoftwareBitmapAsync();
+                    }
                 }
             });
         }
