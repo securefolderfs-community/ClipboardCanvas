@@ -21,4 +21,4 @@ Clipboard Canvas gives users an enhanced clipboard experience. Clipboard Canvas 
 
 # Contributing
 
-See [Contributing](CONTRIBUTING.md)
+See [CONTRIBUTING](CONTRIBUTING.md)
