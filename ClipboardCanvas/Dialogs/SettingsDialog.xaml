@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ap="using:ClipboardCanvas.AttachedProperties"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gxt="using:ClipboardCanvas.GlobalizationExtensions"
     xmlns:local="using:ClipboardCanvas.Dialogs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -47,11 +48,11 @@
                 <!--  General  -->
                 <muxc:NavigationViewItem
                     x:Name="General"
-                    AutomationProperties.Name="General Settings"
-                    Content="General"
+                    AutomationProperties.Name="{gxt:ResourceString Name=SettingsGeneral}"
+                    Content="{gxt:ResourceString Name=SettingsGeneral}"
                     IsSelected="True"
                     Tag="0"
-                    ToolTipService.ToolTip="General Settings">
+                    ToolTipService.ToolTip="{gxt:ResourceString Name=SettingsGeneral}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE12A;" />
                     </muxc:NavigationViewItem.Icon>
@@ -59,25 +60,23 @@
                 <!--  Pasting  -->
                 <muxc:NavigationViewItem
                     x:Name="Pasting"
-                    AutomationProperties.Name="Pasting Settings"
-                    Content="Pasting"
+                    AutomationProperties.Name="{gxt:ResourceString Name=SettingsPasting}"
+                    Content="{gxt:ResourceString Name=SettingsPasting}"
                     IsSelected="False"
                     Tag="1"
-                    ToolTipService.ToolTip="Pasting Settings">
+                    ToolTipService.ToolTip="{gxt:ResourceString Name=SettingsPasting}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE77F;" />
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
                 <!--  Notifications  -->
-                <!--  TODO: When more notification types are added, re-enable this  -->
                 <muxc:NavigationViewItem
                     x:Name="Notifications"
-                    AutomationProperties.Name="Notifications"
-                    Content="Notifications"
+                    AutomationProperties.Name="{gxt:ResourceString Name=SettingsNotifications}"
+                    Content="{gxt:ResourceString Name=SettingsNotifications}"
                     IsSelected="False"
                     Tag="2"
-                    ToolTipService.ToolTip="Notifications Settings"
-                    Visibility="Collapsed">
+                    ToolTipService.ToolTip="{gxt:ResourceString Name=SettingsNotifications}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE91C;" />
                     </muxc:NavigationViewItem.Icon>
@@ -88,11 +87,11 @@
                 <!--  About  -->
                 <muxc:NavigationViewItem
                     x:Name="About"
-                    AutomationProperties.Name="About Clipboard Canvas"
-                    Content="About"
+                    AutomationProperties.Name="{gxt:ResourceString Name=SettingsAbout}"
+                    Content="{gxt:ResourceString Name=SettingsAbout}"
                     IsSelected="False"
                     Tag="3"
-                    ToolTipService.ToolTip="Pasting Clipboard Canvas">
+                    ToolTipService.ToolTip="{gxt:ResourceString Name=SettingsAbout}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE946;" />
                     </muxc:NavigationViewItem.Icon>

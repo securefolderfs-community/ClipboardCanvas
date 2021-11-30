@@ -3,17 +3,18 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gxt="using:ClipboardCanvas.GlobalizationExtensions"
     xmlns:local="using:ClipboardCanvas.Dialogs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Delete item"
+    Title="{gxt:ResourceString Name=DeleteItem}"
     DefaultButton="Primary"
-    PrimaryButtonText="Delete"
-    SecondaryButtonText="Cancel"
+    PrimaryButtonText="{gxt:ResourceString Name=Delete}"
+    SecondaryButtonText="{gxt:ResourceString Name=Cancel}"
     Style="{StaticResource DefaultContentDialogStyle}"
     mc:Ignorable="d">
 
     <StackPanel Spacing="4">
-        <TextBlock Text="Are you sure you want to delete this item?" />
+        <TextBlock Text="{gxt:ResourceString Name=DeleteItemDescription}" />
         <TextBlock
             Opacity="0.7"
             Text="{x:Bind ViewModel.FileName, Mode=OneWay}"
@@ -22,7 +23,7 @@
 
         <CheckBox
             Margin="0,12,0,0"
-            Content="Permanently delete"
+            Content="{gxt:ResourceString Name=DeletePermanently}"
             IsChecked="{x:Bind ViewModel.PermanentlyDelete, Mode=TwoWay}" />
     </StackPanel>
 </ContentDialog>

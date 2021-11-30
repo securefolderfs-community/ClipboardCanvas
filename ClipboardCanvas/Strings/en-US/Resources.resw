@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AddCollection" xml:space="preserve">
+    <value>Add a collection</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
   <data name="CanvasTypeInfoCurrentInfiniteCanvas" xml:space="preserve">
     <value>You're in Infinite Canvas mode</value>
   </data>
@@ -125,6 +131,18 @@
   </data>
   <data name="ChangeIcon" xml:space="preserve">
     <value>Change icon</value>
+  </data>
+  <data name="ChangelogFetchingDataFromGitHub" xml:space="preserve">
+    <value>Fetching data from GitHub</value>
+  </data>
+  <data name="ChangelogFetchingError" xml:space="preserve">
+    <value>An error occurred while trying to fetch Clipboard Canvas' release notes from GitHub</value>
+  </data>
+  <data name="ChangelogTitle" xml:space="preserve">
+    <value>Clipboard Canvas has been updated!</value>
+  </data>
+  <data name="ChangelogViewOnGitHub" xml:space="preserve">
+    <value>ChangelogViewOnGitHub</value>
   </data>
   <data name="CloseSearch" xml:space="preserve">
     <value>Close Search</value>
@@ -148,6 +166,15 @@ Right click for more options.</value>
   <data name="CollectionUnavailable" xml:space="preserve">
     <value>Collection unavailable</value>
   </data>
+  <data name="ContinueInRestrictedAccess" xml:space="preserve">
+    <value>Continue in Restricted Access</value>
+  </data>
+  <data name="CopyFile" xml:space="preserve">
+    <value>Copy file</value>
+  </data>
+  <data name="CopySelectedText" xml:space="preserve">
+    <value>Copy selected text</value>
+  </data>
   <data name="CouldNotDeleteCollectionIcon" xml:space="preserve">
     <value>Current icon could not be deleted.</value>
   </data>
@@ -163,8 +190,23 @@ Right click for more options.</value>
   <data name="DefaultCollection" xml:space="preserve">
     <value>Default Collection</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DeleteFile" xml:space="preserve">
+    <value>Delete file</value>
+  </data>
   <data name="DeleteInfiniteCanvas" xml:space="preserve">
     <value>Delete Infinite Canvas</value>
+  </data>
+  <data name="DeleteItem" xml:space="preserve">
+    <value>Delete item</value>
+  </data>
+  <data name="DeleteItemDescription" xml:space="preserve">
+    <value>Are you sure you want to delete this item?</value>
+  </data>
+  <data name="DeletePermanently" xml:space="preserve">
+    <value>Permanently delete</value>
   </data>
   <data name="DeleteReference" xml:space="preserve">
     <value>Delete Reference</value>
@@ -174,6 +216,9 @@ Right click for more options.</value>
   </data>
   <data name="EmptyTimelineSectionText" xml:space="preserve">
     <value>Recently pasted items will show up on your Timeline here</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
   </data>
   <data name="ErrorWhilstOverridingReference" xml:space="preserve">
     <value>Error whilst overriding reference. Error: {0}</value>
@@ -199,11 +244,68 @@ Right click for more options.</value>
   <data name="NoItemsToPreview" xml:space="preserve">
     <value>There are no items to preview.</value>
   </data>
+  <data name="OOBECollectionPreviewDescription" xml:space="preserve">
+    <value>Get a bird's eye view of your files. Quickly locate what you need thanks to search function in Collection Preview.</value>
+  </data>
+  <data name="OOBECollectionPreviewTitle" xml:space="preserve">
+    <value>Preview your Collections</value>
+  </data>
+  <data name="OOBECollectionsDescription" xml:space="preserve">
+    <value>Use Collections to swiftly move around your workspaces. Customize collections to fit your needs. Group your work in separate folders.</value>
+  </data>
+  <data name="OOBECollectionsTitle" xml:space="preserve">
+    <value>Manage your workspace using Collections</value>
+  </data>
+  <data name="OOBEFinishDescription" xml:space="preserve">
+    <value>You are now ready to start using Clipboard Canvas! You can customize your app experience by heading to Settings.</value>
+  </data>
+  <data name="OOBEFinishTitle" xml:space="preserve">
+    <value>You're good to go!</value>
+  </data>
+  <data name="OOBEInfiniteCanvasDescription" xml:space="preserve">
+    <value>View your files on limit-free canvas. Infinite Canvas is your desktop sticky board that allows you to manage your work in a flexible fashion. Drag around pasted files and take a full control of them.</value>
+  </data>
+  <data name="OOBEInfiniteCanvasTitle" xml:space="preserve">
+    <value>Infinite Canvas</value>
+  </data>
+  <data name="OOBEOneCanvasDescription" xml:space="preserve">
+    <value>Quickly paste and interact with your content on One Canvas. One Canvas gives you a fully-sized interactive preview of various files:
+
+ - Image preview
+ - Media preview
+ - Text preview
+ - Markdown format preview
+ - Folder and file preview</value>
+  </data>
+  <data name="OOBEOneCanvasTitle" xml:space="preserve">
+    <value>One Canvas</value>
+  </data>
+  <data name="OOBEReferenceFilesDescription" xml:space="preserve">
+    <value>With Reference Files you don't have to worry about filling up your hard drive. Reference Files save space by holding a reference that points to original file. Thanks to Clipboard Canvas seamless integration, Reference Files work great in both One Canvas and Infinite Canvas.</value>
+  </data>
+  <data name="OOBEReferenceFilesTitle" xml:space="preserve">
+    <value>Save storage space with Reference Files</value>
+  </data>
+  <data name="OOBETimelineDescription" xml:space="preserve">
+    <value>Never miss a file or folder with Timeline on your homepage. Timeline keeps track of recently pasted items so you don't have to worry about anything sliding past unnoticed!</value>
+  </data>
+  <data name="OOBETimelineTitle" xml:space="preserve">
+    <value>See a run-down of recent activity on your Timeline</value>
+  </data>
+  <data name="OOBEWelcomeDescription" xml:space="preserve">
+    <value>Thank you for trying out Clipboard Canvas! To get you started, this presentation will guide you through most notable features of the app.</value>
+  </data>
+  <data name="OOBEWelcomeTitle" xml:space="preserve">
+    <value>Welcome to Clipboard Canvas!</value>
+  </data>
   <data name="OpenCanvas" xml:space="preserve">
     <value>Open canvas</value>
   </data>
   <data name="OpenCollectionLocation" xml:space="preserve">
     <value>Open Collection location</value>
+  </data>
+  <data name="OpenContainingFolder" xml:space="preserve">
+    <value>Open containing folder</value>
   </data>
   <data name="OpenFile" xml:space="preserve">
     <value>Open file</value>
@@ -216,6 +318,12 @@ Right click for more options.</value>
   </data>
   <data name="OpenNewInfiniteCanvas" xml:space="preserve">
     <value>Open new Infinite Canvas</value>
+  </data>
+  <data name="OpenReferenceContainingFolder" xml:space="preserve">
+    <value>Open reference containing folder</value>
+  </data>
+  <data name="OpenSettings" xml:space="preserve">
+    <value>Open Settings</value>
   </data>
   <data name="OperationCanceled" xml:space="preserve">
     <value>The operation was canceled.</value>
@@ -255,14 +363,38 @@ You can override the reference and copy the item directly to this collection by 
   <data name="ResetItemPositions" xml:space="preserve">
     <value>Reset item positions</value>
   </data>
+  <data name="RestartApplication" xml:space="preserve">
+    <value>Restart Application</value>
+  </data>
+  <data name="RestrictedAccess" xml:space="preserve">
+    <value>Restricted Access</value>
+  </data>
+  <data name="RestrictedAccessDescription1" xml:space="preserve">
+    <value>Clipboard Canvas requires permission to access the file system for it to work correctly. Without the permission, some features will be disabled and/or limited.</value>
+  </data>
+  <data name="RestrictedAccessDescription2" xml:space="preserve">
+    <value>You can grant this permission by heading to settings, whereupon the app will be closed.</value>
+  </data>
+  <data name="RestrictedAccessDescription3" xml:space="preserve">
+    <value>You can also continue in Restricted Access mode with limited features.</value>
+  </data>
+  <data name="RestrictedAccessTitleTooltip" xml:space="preserve">
+    <value>Clipboard Canvas is currently in Restricted Access mode. Click for more details.</value>
+  </data>
   <data name="Retry" xml:space="preserve">
     <value>Retry</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Search</value>
   </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Select all</value>
+  </data>
   <data name="SetAsAutopasteTarget" xml:space="preserve">
     <value>Set as Autopaste target</value>
+  </data>
+  <data name="SettingsAbout" xml:space="preserve">
+    <value>About</value>
   </data>
   <data name="SettingsAboutPageAppVersion" xml:space="preserve">
     <value>Version {0}</value>
@@ -291,6 +423,9 @@ You can override the reference and copy the item directly to this collection by 
   <data name="SettingsAboutPageViewIntroductionPage" xml:space="preserve">
     <value>View introduction page</value>
   </data>
+  <data name="SettingsGeneral" xml:space="preserve">
+    <value>General</value>
+  </data>
   <data name="SettingsGeneralPageInfiniteCanvasAsDefault" xml:space="preserve">
     <value>Use Infinite Canvas as default</value>
   </data>
@@ -303,8 +438,14 @@ You can override the reference and copy the item directly to this collection by 
   <data name="SettingsGeneralPageShowTimelineWidget" xml:space="preserve">
     <value>Show Timeline widget on the Homepage</value>
   </data>
+  <data name="SettingsNotifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
   <data name="SettingsNotificationsPageShowCrashNotification" xml:space="preserve">
     <value>Show error notification if app crashes</value>
+  </data>
+  <data name="SettingsPasting" xml:space="preserve">
+    <value>Pasting</value>
   </data>
   <data name="SettingsPastingPageOpenNewCanvas" xml:space="preserve">
     <value>Open new canvas on paste</value>

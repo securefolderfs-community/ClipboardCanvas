@@ -8,6 +8,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System.Collections.ObjectModel;
+using Microsoft.Toolkit.Uwp;
 
 using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Enums;
@@ -272,7 +273,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 Command = new AsyncRelayCommand(async () => await StorageHelpers.OpenFile(await SourceItem)),
                 IconGlyph = "\uE8E5",
-                Text = "Open file"
+                Text = "OpenFile".GetLocalized()
             });
 
             // Separator
@@ -283,7 +284,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 Command = new AsyncRelayCommand(CopyData),
                 IconGlyph = "\uE8C8",
-                Text = "Copy file"
+                Text = "CopyFile".GetLocalized()
             });
 
             // Open containing folder
@@ -291,7 +292,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 Command = new AsyncRelayCommand(async () => await StorageHelpers.OpenContainingFolder(await SourceItem)),
                 IconGlyph = "\uE838",
-                Text = "Open containing folder"
+                Text = "OpenContainingFolder".GetLocalized()
             });
 
             // Open reference containing folder
@@ -301,7 +302,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 {
                     Command = new AsyncRelayCommand(() => StorageHelpers.OpenContainingFolder(AssociatedItem)),
                     IconGlyph = "\uE838",
-                    Text = "Open reference containing folder"
+                    Text = "OpenReferenceContainingFolder".GetLocalized()
                 });
             }
 
@@ -310,7 +311,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 Command = new AsyncRelayCommand(() => TryDeleteData()),
                 IconGlyph = "\uE74D",
-                Text = isContentAsReference ? "Delete reference" : "Delete file",
+                Text = isContentAsReference ? "DeleteReference".GetLocalized() : "DeleteFile".GetLocalized(),
             });
         }
 

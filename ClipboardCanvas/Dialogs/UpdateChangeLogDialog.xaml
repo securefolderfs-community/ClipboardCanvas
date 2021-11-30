@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gxt="using:ClipboardCanvas.GlobalizationExtensions"
     xmlns:local="using:ClipboardCanvas.Dialogs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -38,7 +39,7 @@
                 VerticalAlignment="Center"
                 FontSize="18"
                 FontWeight="Bold"
-                Text="Clipboard Canvas has been updated!" />
+                Text="{gxt:ResourceString Name=ChangelogTitle}" />
         </StackPanel>
 
         <StackPanel
@@ -51,7 +52,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Opacity="0.6"
-                Text="Fetching data from GitHub" />
+                Text="{gxt:ResourceString Name=ChangelogFetchingDataFromGitHub}" />
         </StackPanel>
 
         <ScrollViewer Grid.Row="1" tui:ScrollViewerExtensions.EnableMiddleClickScrolling="True">
@@ -62,6 +63,6 @@
             Grid.Row="2"
             x:Load="{x:Bind ViewModel.IsLoadingData, Mode=OneWay, Converter={StaticResource BooleanInvertConverter}}"
             Command="{x:Bind ViewModel.OpenReleasesOnGitHubCommand}"
-            Content="Check out on GitHub" />
+            Content="{gxt:ResourceString Name=ChangelogViewOnGitHub}" />
     </Grid>
 </ContentDialog>

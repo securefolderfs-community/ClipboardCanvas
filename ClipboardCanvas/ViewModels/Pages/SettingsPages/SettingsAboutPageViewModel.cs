@@ -9,6 +9,7 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Windows.ApplicationModel.DataTransfer;
 using Octokit;
 using System.Linq;
+using Microsoft.Toolkit.Uwp;
 
 using ClipboardCanvas.ViewModels.Dialogs;
 using ClipboardCanvas.Services;
@@ -16,7 +17,6 @@ using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
-using Microsoft.Toolkit.Uwp;
 
 namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 {

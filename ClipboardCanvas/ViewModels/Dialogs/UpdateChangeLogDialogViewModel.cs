@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.System;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Uwp;
 
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Extensions;
@@ -151,10 +151,10 @@ namespace ClipboardCanvas.ViewModels.Dialogs
             if (!_dataFetchedSuccessfully || preparedReleases.IsEmpty())
             {
                 // Getting data failed, display fallback update info
-                _UpdateMarkdownInfoText += $"Error";
+                _UpdateMarkdownInfoText += $"Error".GetLocalized();
                 _UpdateMarkdownInfoText += "\n---";
                 _UpdateMarkdownInfoText += "\n";
-                _UpdateMarkdownInfoText += $"An error occurred while trying to fetch Clipboard Canvas' release notes from GitHub";
+                _UpdateMarkdownInfoText += "ChangelogFetchingError".GetLocalized();
 
                 IsLoadingData = false;
                 UpdateMarkdownLoad = true;
