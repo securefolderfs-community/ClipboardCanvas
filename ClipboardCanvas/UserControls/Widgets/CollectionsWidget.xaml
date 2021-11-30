@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ap="using:ClipboardCanvas.AttachedProperties"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gxt="using:ClipboardCanvas.GlobalizationExtensions"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
     xmlns:local="using:ClipboardCanvas.UserControls"
@@ -42,7 +43,7 @@
             Margin="8,0,8,0"
             FontSize="32"
             FontWeight="Bold"
-            Text="Collections" />
+            Text="{gxt:ResourceString Name=Collections}" />
 
         <ListView
             x:Name="CollectionsItemsHolder"
@@ -111,7 +112,7 @@
                         <!--  Context menu  -->
                         <Grid.ContextFlyout>
                             <MenuFlyout>
-                                <MenuFlyoutItem Command="{x:Bind OpenCollectionLocationCommand}" Text="Open Collection location">
+                                <MenuFlyoutItem Command="{x:Bind OpenCollectionLocationCommand}" Text="{gxt:ResourceString Name=OpenCollectionLocation}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE838;" />
                                     </MenuFlyoutItem.Icon>
@@ -120,12 +121,12 @@
                                     x:Name="SetAsAutopasteTargetOption"
                                     x:Load="{x:Bind CanBeSetAsAutopasteTarget, Mode=OneWay}"
                                     Command="{x:Bind SetAsAutopasteTargetCommand}"
-                                    Text="Set as Autopaste target">
+                                    Text="{gxt:ResourceString Name=SetAsAutopasteTarget}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE77F;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem Command="{x:Bind ChangeCollectionIconCommand}" Text="Change icon">
+                                <MenuFlyoutItem Command="{x:Bind ChangeCollectionIconCommand}" Text="{gxt:ResourceString Name=ChangeIcon}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE70F;" />
                                     </MenuFlyoutItem.Icon>
@@ -134,23 +135,23 @@
                                     x:Name="RemoveCollectionIconOption"
                                     x:Load="{x:Bind UsesCustomIcon, Mode=OneWay}"
                                     Command="{x:Bind RemoveCollectionIconCommand}"
-                                    Text="Remove icon">
+                                    Text="{gxt:ResourceString Name=RemoveIcon}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE738;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutSeparator />
-                                <MenuFlyoutItem Command="{x:Bind ReloadCollectionCommand}" Text="Reload Collection">
+                                <MenuFlyoutItem Command="{x:Bind ReloadCollectionCommand}" Text="{gxt:ResourceString Name=ReloadCollection}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE72C;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem Command="{x:Bind StartRenameCollectionCommand}" Text="Edit name">
+                                <MenuFlyoutItem Command="{x:Bind StartRenameCollectionCommand}" Text="{gxt:ResourceString Name=Rename}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8AC;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem Command="{x:Bind RemoveCollectionCommand}" Text="Remove Collection">
+                                <MenuFlyoutItem Command="{x:Bind RemoveCollectionCommand}" Text="{gxt:ResourceString Name=RemoveCollection}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xECC9;" />
                                     </MenuFlyoutItem.Icon>
@@ -160,25 +161,6 @@
 
                         <!--  Icon  -->
                         <Grid Grid.Row="0" HorizontalAlignment="Stretch">
-                            <ToolTipService.ToolTip>
-                                <ToolTip>
-                                    <StackPanel Spacing="8">
-                                        <!--  Title  -->
-                                        <TextBlock
-                                            FontSize="16"
-                                            FontWeight="SemiBold"
-                                            Text="{x:Bind DisplayName, Mode=OneWay}"
-                                            TextTrimming="CharacterEllipsis" />
-
-                                        <!--  Content text  -->
-                                        <TextBlock
-                                            Text="Double click to open this Collection.&#x0a;Right click for more options."
-                                            TextTrimming="WordEllipsis"
-                                            TextWrapping="Wrap" />
-                                    </StackPanel>
-                                </ToolTip>
-                            </ToolTipService.ToolTip>
-
                             <!--  Glyph icon  -->
                             <FontIcon
                                 HorizontalAlignment="Center"
@@ -213,7 +195,7 @@
                                             <TextBlock
                                                 FontSize="16"
                                                 FontWeight="SemiBold"
-                                                Text="Collection unavailable" />
+                                                Text="{gxt:ResourceString Name=CollectionUnavailable}" />
 
                                             <!--  Content text  -->
                                             <TextBlock
@@ -262,10 +244,30 @@
                         <!--  Progressbar  -->
                         <muxc:ProgressBar
                             Grid.Row="2"
+                            Margin="2,0,2,0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center"
-                            IsIndeterminate="True"
+                            IsIndeterminate="{x:Bind IsCollectionInitializing, Mode=OneWay}"
                             Visibility="{x:Bind IsCollectionInitializing, Mode=OneWay}" />
+
+                        <ToolTipService.ToolTip>
+                            <ToolTip>
+                                <StackPanel Spacing="8">
+                                    <!--  Title  -->
+                                    <TextBlock
+                                        FontSize="16"
+                                        FontWeight="SemiBold"
+                                        Text="{x:Bind DisplayName, Mode=OneWay}"
+                                        TextTrimming="CharacterEllipsis" />
+
+                                    <!--  Content text  -->
+                                    <TextBlock
+                                        Text="{gxt:ResourceString Name=CollectionTooltip}"
+                                        TextTrimming="WordEllipsis"
+                                        TextWrapping="Wrap" />
+                                </StackPanel>
+                            </ToolTip>
+                        </ToolTipService.ToolTip>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>

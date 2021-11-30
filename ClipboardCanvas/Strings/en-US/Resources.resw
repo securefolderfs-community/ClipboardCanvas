@@ -117,11 +117,60 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ChangeIcon" xml:space="preserve">
+    <value>Change icon</value>
+  </data>
+  <data name="Collections" xml:space="preserve">
+    <value>Collections</value>
+  </data>
+  <data name="CollectionTooltip" xml:space="preserve">
+    <value>Double click to open this Collection.
+Right click for more options.</value>
+  </data>
+  <data name="CollectionUnavailable" xml:space="preserve">
+    <value>Collection unavailable</value>
+  </data>
+  <data name="EmptyTimelineSectionText" xml:space="preserve">
+    <value>Recently pasted items will show up on your Timeline here</value>
+  </data>
+  <data name="HomePageTargetAutopasteDescription" xml:space="preserve">
+    <value>Right click desired collection and set it as an autopaste target.</value>
+  </data>
+  <data name="HomePageTargetAutopasteTitle" xml:space="preserve">
+    <value>Select autopaste target</value>
+  </data>
+  <data name="OpenCanvas" xml:space="preserve">
+    <value>Open canvas</value>
+  </data>
+  <data name="OpenCollectionLocation" xml:space="preserve">
+    <value>Open Collection location</value>
+  </data>
+  <data name="OpenFile" xml:space="preserve">
+    <value>Open file</value>
+  </data>
   <data name="ReferenceFiles" xml:space="preserve">
     <value>Reference Files</value>
   </data>
+  <data name="ReloadCollection" xml:space="preserve">
+    <value>Reload Collection</value>
+  </data>
+  <data name="RemoveCollection" xml:space="preserve">
+    <value>Remove Collection</value>
+  </data>
+  <data name="RemoveFromTimelineSection" xml:space="preserve">
+    <value>Remove from this section</value>
+  </data>
+  <data name="RemoveIcon" xml:space="preserve">
+    <value>Remove icon</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
   <data name="Retry" xml:space="preserve">
     <value>Retry</value>
+  </data>
+  <data name="SetAsAutopasteTarget" xml:space="preserve">
+    <value>Set as Autopaste target</value>
   </data>
   <data name="SettingsAboutPageAppVersion" xml:space="preserve">
     <value>Version {0}</value>
@@ -181,6 +230,12 @@ A reference file is created pointing to the original file which is seamlessly di
   </data>
   <data name="SettingsPastingPageUseMarkdownAsDefault" xml:space="preserve">
     <value>Use markdown format instead of text files</value>
+  </data>
+  <data name="ShowInCollection" xml:space="preserve">
+    <value>Show in Collection</value>
+  </data>
+  <data name="Timeline" xml:space="preserve">
+    <value>Timeline</value>
   </data>
   <data name="ViewOnGitHub" xml:space="preserve">
     <value>View on GitHub</value>

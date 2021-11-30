@@ -165,7 +165,7 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
                             if (baseCollectionViewModel != null)
                             {
                                 CanvasItem canvasItem = new CanvasItem(item.Result);
-                                section.AddItemBack(baseCollectionViewModel, canvasItem, true);
+                                await section.AddItemBack(baseCollectionViewModel, canvasItem, true);
                             }
                         }
                     }
