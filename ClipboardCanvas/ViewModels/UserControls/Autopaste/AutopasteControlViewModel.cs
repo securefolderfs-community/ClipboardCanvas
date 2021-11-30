@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.ApplicationModel.DataTransfer;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using Microsoft.Toolkit.Uwp;
 
 using ClipboardCanvas.DataModels;
@@ -45,6 +44,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
         private IUserSettingsService UserSettingsService { get; } = Ioc.Default.GetService<IUserSettingsService>();
 
         private IApplicationService ApplicationService { get; } = Ioc.Default.GetService<IApplicationService>();
+
+        private INotificationService NotificationService { get; } = Ioc.Default.GetService<INotificationService>();
 
         public RangeObservableCollection<BaseAutopasteRuleViewModel> AutopasteRules { get; } = new RangeObservableCollection<BaseAutopasteRuleViewModel>();
 
@@ -236,13 +237,22 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
                             }
                         }
 
-                        pasteResult = await AutopasteTarget.PasteData(clipboardData, _cancellationTokenSource.Token);
-                        Debug.WriteLine(pasteResult.Message);
-                        Debug.WriteLine(pasteResult.Result);
-                        Debug.WriteLine(pasteResult.Exception);
-                        Debug.WriteLine(pasteResult.ErrorCode);
+                        CancellationToken cancellationToken;
+                        if (UserSettingsService.PushAutopasteNotification)
+                        {
+                            cancellationToken = NotificationService.PushAutopastePasteStartedNotification();
+                        }
+                        else
+                        {
+                            cancellationToken = CancellationToken.None;
+                        }
+
+                        pasteResult = await AutopasteTarget.PasteData(clipboardData, cancellationToken);
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        pasteResult = (null, SafeWrapperResult.FromException(ex));
+                    }
                     finally
                     {
                         // Remove the completed operation from queue
@@ -250,13 +260,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
                         _autopasteRoutineStarted = _autopasteDataQueue.IsEmpty();
                     }
 
-                    if (pasteResult)
+                    if (pasteResult && UserSettingsService.PushAutopasteNotification)
                     {
-
+                        NotificationService.PushAutopastePasteFinishedNotification();
                     }
-                    else
+                    else if (UserSettingsService.PushAutopasteFailedNotification)
                     {
                         // Show notification if failed
+                        NotificationService.PushAutopastePasteFailedNotification(pasteResult);
                     }
                 }
             }

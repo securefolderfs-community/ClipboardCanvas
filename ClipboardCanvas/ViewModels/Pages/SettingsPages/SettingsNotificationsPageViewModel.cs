@@ -7,18 +7,46 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 {
     public class SettingsNotificationsPageViewModel : ObservableObject
     {
-        private IUserSettingsService UserSettings { get; } = Ioc.Default.GetService<IUserSettingsService>();
+        private IUserSettingsService UserSettingsService { get; } = Ioc.Default.GetService<IUserSettingsService>();
 
         public bool PushErrorNotification
         {
-            get => UserSettings.PushErrorNotification;
+            get => UserSettingsService.PushErrorNotification;
             set
             {
-                if (value != UserSettings.PushErrorNotification)
+                if (value != UserSettingsService.PushErrorNotification)
                 {
-                    UserSettings.PushErrorNotification = value;
+                    UserSettingsService.PushErrorNotification = value;
 
-                    OnPropertyChanged(nameof(PushErrorNotification));
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool PushAutopasteNotification
+        {
+            get => UserSettingsService.PushAutopasteNotification;
+            set
+            {
+                if (value != UserSettingsService.PushAutopasteNotification)
+                {
+                    UserSettingsService.PushAutopasteNotification = value;
+
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool PushAutopasteFailedNotification
+        {
+            get => UserSettingsService.PushAutopasteFailedNotification;
+            set
+            {
+                if (value != UserSettingsService.PushAutopasteFailedNotification)
+                {
+                    UserSettingsService.PushAutopasteFailedNotification = value;
+
+                    OnPropertyChanged();
                 }
             }
         }

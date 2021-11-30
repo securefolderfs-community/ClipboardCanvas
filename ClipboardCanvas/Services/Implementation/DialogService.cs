@@ -13,7 +13,7 @@ using ClipboardCanvas.Helpers;
 
 namespace ClipboardCanvas.Services.Implementation
 {
-    public class DefaultDialogService : IDialogService
+    public class DialogService : IDialogService
     {
         private IInAppNotification _lastInAppNotification;
 

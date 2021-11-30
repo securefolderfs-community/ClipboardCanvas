@@ -52,7 +52,17 @@ namespace ClipboardCanvas.Services
         bool UseInfiniteCanvasAsDefault { get; set; }
 
         /// <summary>
-        /// Determines whether to use autopasting functionality
+        /// Determines whether to show a notification when Autopaste is run or finished
+        /// </summary>
+        bool PushAutopasteNotification { get; set; }
+
+        /// <summary>
+        /// Determines whether to show a notification when Autopaste failed
+        /// </summary>
+        bool PushAutopasteFailedNotification { get; set; }
+
+        /// <summary>
+        /// Determines whether to use Autopaste
         /// </summary>
         bool IsAutopasteEnabled { get; set; }
     }

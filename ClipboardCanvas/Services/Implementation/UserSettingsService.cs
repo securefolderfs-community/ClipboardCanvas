@@ -35,6 +35,9 @@ namespace ClipboardCanvas.Services
             Analytics.TrackEvent($"{nameof(PrioritizeMarkdownOverText)} {PrioritizeMarkdownOverText}");
             Analytics.TrackEvent($"{nameof(ShowDeleteConfirmationDialog)} {ShowDeleteConfirmationDialog}");
             Analytics.TrackEvent($"{nameof(UseInfiniteCanvasAsDefault)} {UseInfiniteCanvasAsDefault}");
+            Analytics.TrackEvent($"{nameof(IsAutopasteEnabled)} {IsAutopasteEnabled}");
+            Analytics.TrackEvent($"{nameof(PushAutopasteNotification)} {PushAutopasteNotification}");
+            Analytics.TrackEvent($"{nameof(PushAutopasteFailedNotification)} {PushAutopasteFailedNotification}");
         }
 
         #endregion
@@ -92,6 +95,18 @@ namespace ClipboardCanvas.Services
         public bool IsAutopasteEnabled
         {
             get => Get(false);
+            set => Set(value);
+        }
+
+        public bool PushAutopasteNotification
+        {
+            get => Get(true);
+            set => Set(value);
+        }
+
+        public bool PushAutopasteFailedNotification
+        {
+            get => Get(true);
             set => Set(value);
         }
 

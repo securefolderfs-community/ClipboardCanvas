@@ -26,6 +26,20 @@
                     </uc:SettingBlockControl.Icon>
                     <ToggleSwitch IsOn="{x:Bind ViewModel.PushErrorNotification, Mode=TwoWay}" Style="{StaticResource ToggleSwitchRight}" />
                 </uc:SettingBlockControl>
+
+                <uc:SettingBlockControl Description="{gxt:ResourceString Name=SettingsNotificationsPageShowAutopasteNotification}">
+                    <uc:SettingBlockControl.Icon>
+                        <FontIcon Glyph="&#xE77F;" />
+                    </uc:SettingBlockControl.Icon>
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.PushAutopasteNotification, Mode=TwoWay}" Style="{StaticResource ToggleSwitchRight}" />
+                </uc:SettingBlockControl>
+
+                <uc:SettingBlockControl Description="{gxt:ResourceString Name=SettingsNotificationsPageShowAutopasteFailedNotification}">
+                    <uc:SettingBlockControl.Icon>
+                        <FontIcon Glyph="&#xE7BA;" />
+                    </uc:SettingBlockControl.Icon>
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.PushAutopasteFailedNotification, Mode=TwoWay}" Style="{StaticResource ToggleSwitchRight}" />
+                </uc:SettingBlockControl>
             </StackPanel>
         </StackPanel>
     </Grid>

@@ -126,8 +126,20 @@
   <data name="AutopasteAddRule" xml:space="preserve">
     <value>Add rule</value>
   </data>
+  <data name="AutopasteContentBeingPasted" xml:space="preserve">
+    <value>Content is being pasted</value>
+  </data>
+  <data name="AutopasteContentPasted" xml:space="preserve">
+    <value>The content has been pasted</value>
+  </data>
+  <data name="AutopasteContentPastingFailed" xml:space="preserve">
+    <value>Autopaste was unable to paste content. Error: {0}</value>
+  </data>
   <data name="AutopasteExcludeType" xml:space="preserve">
     <value>Exclude type</value>
+  </data>
+  <data name="AutopasteFinishedWorking" xml:space="preserve">
+    <value>Autopaste pasted successfully</value>
   </data>
   <data name="AutopasteIsDisabled" xml:space="preserve">
     <value>Autopaste is disabled</value>
@@ -140,6 +152,9 @@
   </data>
   <data name="AutopastePasteToTarget" xml:space="preserve">
     <value>Paste to:</value>
+  </data>
+  <data name="AutopastePastingFailed" xml:space="preserve">
+    <value>Autopaste failed</value>
   </data>
   <data name="AutopasteRuleFileSize" xml:space="preserve">
     <value>File size...</value>
@@ -168,6 +183,9 @@
   <data name="AutopasteTypeUrl" xml:space="preserve">
     <value>Url</value>
   </data>
+  <data name="AutopasteWorking" xml:space="preserve">
+    <value>Autopaste is working</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -194,6 +212,15 @@
   </data>
   <data name="ChangelogViewOnGitHub" xml:space="preserve">
     <value>ChangelogViewOnGitHub</value>
+  </data>
+  <data name="ClipboardCanvasCrashReportIssue" xml:space="preserve">
+    <value>Report this issue</value>
+  </data>
+  <data name="ClipboardCanvasCrashSubtitle" xml:space="preserve">
+    <value>We've encountered an issue that we couldn't recover from.</value>
+  </data>
+  <data name="ClipboardCanvasCrashTitle" xml:space="preserve">
+    <value>Clipboard Canvas crashed spectacularly!</value>
   </data>
   <data name="CloseSearch" xml:space="preserve">
     <value>Close Search</value>
@@ -506,6 +533,12 @@ You can override the reference and copy the item directly to this collection by 
   </data>
   <data name="SettingsNotifications" xml:space="preserve">
     <value>Notifications</value>
+  </data>
+  <data name="SettingsNotificationsPageShowAutopasteFailedNotification" xml:space="preserve">
+    <value>Show a notification when autopaste fails</value>
+  </data>
+  <data name="SettingsNotificationsPageShowAutopasteNotification" xml:space="preserve">
+    <value>Show a notification when autopaste starts pasting</value>
   </data>
   <data name="SettingsNotificationsPageShowCrashNotification" xml:space="preserve">
     <value>Show error notification if app crashes</value>

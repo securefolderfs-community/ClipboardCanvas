@@ -22,6 +22,7 @@ using Windows.Storage;
 
 using ClipboardCanvas.Services;
 using ClipboardCanvas.Services.Implementation;
+using Microsoft.Toolkit.Uwp;
 
 namespace ClipboardCanvas
 {
@@ -71,7 +72,8 @@ namespace ClipboardCanvas
                 .AddSingleton<ITimelineService, TimelineService>()
                 .AddSingleton<IStatusCenterService, StatusCenterService>()
                 .AddSingleton<IAutopasteService, AutopasteService>()
-                .AddSingleton<IDialogService, DefaultDialogService>()
+                .AddSingleton<IDialogService, DialogService>()
+                .AddSingleton<INotificationService, NotificationService>()
                 .AddSingleton<IApplicationService, ApplicationService>()
                 .AddSingleton<ILogger, ExceptionToFileLogger>()
 
@@ -250,11 +252,11 @@ namespace ClipboardCanvas
                         {
                             new AdaptiveText()
                             {
-                                Text = "Clipboard Canvas crashed spectacularly!"
+                                Text = "ClipboardCanvasCrashTitle".GetLocalized()
                             },
                             new AdaptiveText()
                             {
-                                Text = "We've encountered an issue that we couldn't recover from."
+                                Text = "ClipboardCanvasCrashSubtitle".GetLocalized()
                             }
                         }
                     }
@@ -263,7 +265,7 @@ namespace ClipboardCanvas
                 {
                     Buttons =
                     {
-                        new ToastButton("Report this issue", Constants.UI.Notifications.TOAST_NOTIFICATION_ERROR_ARGUMENT)
+                        new ToastButton("ClipboardCanvasCrashReportIssue".GetLocalized(), Constants.UI.Notifications.TOAST_NOTIFICATION_ERROR_ARGUMENT)
                         {
                             ActivationType = ToastActivationType.Foreground
                         }
