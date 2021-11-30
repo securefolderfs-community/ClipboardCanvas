@@ -1,6 +1,5 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System;
-using System.Collections.Generic;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,6 +7,8 @@ using Microsoft.Toolkit.Mvvm.Input;
 using System.Windows.Input;
 using Windows.Storage;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Windows.ApplicationModel.DataTransfer;
+using Microsoft.Toolkit.Uwp;
 using System.Collections.ObjectModel;
 
 using ClipboardCanvas.DataModels;
@@ -24,7 +25,6 @@ using ClipboardCanvas.Enums;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.EventArguments.CanvasControl;
-using Windows.ApplicationModel.DataTransfer;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -161,7 +161,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             else if (newCanvasItemResult != OperationErrorCode.Canceled)
             {
                 IInAppNotification notification = DialogService.GetNotification();
-                notification.ViewModel.NotificationText = $"Error whilst overriding reference. Error: {newCanvasItemResult.ErrorCode}";
+                notification.ViewModel.NotificationText = string.Format("ErrorWhilstOverridingReference".GetLocalized(), newCanvasItemResult.ErrorCode);
                 notification.ViewModel.ShownButtons = InAppNotificationButtonType.OkButton;
 
                 notification.Show(Constants.UI.Notifications.NOTIFICATION_DEFAULT_SHOW_TIME);
@@ -175,7 +175,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task InitializeDisplayName()
         {
-            DisplayName = (await CanvasItem.SourceItem)?.Name ?? "Invalid file.";
+            DisplayName = (await CanvasItem.SourceItem)?.Name ?? "InvalidFile".GetLocalized();
         }
 
         public async Task InitializeItem()

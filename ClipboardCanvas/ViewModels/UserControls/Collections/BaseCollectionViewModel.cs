@@ -15,6 +15,8 @@ using Windows.Storage.Streams;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.ApplicationModel.Core;
+using Microsoft.Toolkit.Uwp;
 
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.EventArguments.Collections;
@@ -33,8 +35,6 @@ using ClipboardCanvas.Models.Autopaste;
 using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Contexts.Operations;
 using ClipboardCanvas.CanavsPasteModels;
-using Windows.ApplicationModel.Core;
-using Microsoft.Toolkit.Uwp;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {
@@ -42,7 +42,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
     {
         #region Protected Members
 
-        protected readonly SafeWrapperResult CollectionFolderNotFound = new SafeWrapperResult(OperationErrorCode.NotFound, new DirectoryNotFoundException(), "The folder associated with this collection was not found.");
+        protected readonly SafeWrapperResult CollectionFolderNotFound = new SafeWrapperResult(OperationErrorCode.NotFound, new DirectoryNotFoundException(), "CollectionFolderNotFound".GetLocalized());
 
         protected readonly SafeWrapperResult RestrictedAccessUnauthorized = StaticExceptionReporters.DefaultSafeWrapperExceptionReporter.GetStatusResult(new UnauthorizedAccessException());
 
@@ -86,7 +86,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public string CollectionPath { get; protected set; }
 
-        public string DisplayName => Path.GetFileName(CollectionPath);
+        public virtual string DisplayName => Path.GetFileName(CollectionPath);
 
         public string TargetPath => CollectionPath;
         
@@ -278,7 +278,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         private async Task ChangeCollectionIcon()
         {
-            string errorMessage = "Couldn't set custom Collection icon.";
+            string errorMessage = "CouldNotSetCollectionIcon".GetLocalized();
 
             StorageFile pickedIcon = await DialogService.PickSingleFile(new List<string>() { ".png", ".jpg", ".jpeg"/*, ".gif", ".svg"*/ });
             if (pickedIcon != null)
@@ -290,7 +290,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
                     if (!result)
                     {
-                        PushErrorNotification("Current icon could not be deleted.", result);
+                        PushErrorNotification("CouldNotDeleteCollectionIcon".GetLocalized(), result);
                     }
                 }
 
@@ -338,7 +338,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 {
                     if (result != OperationErrorCode.NotFound) // Only if it wasn't NotFound -- if it was, continue as usual
                     { 
-                        PushErrorNotification("Couldn't remove icon.", result);
+                        PushErrorNotification("CouldNotRemoveCollectionIcon".GetLocalized(), result);
                         return;
                     }
                 }
@@ -924,7 +924,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         protected virtual void PushErrorNotification(string errorMessage, SafeWrapperResult result)
         {
             IInAppNotification notification = DialogService.GetNotification();
-            notification.ViewModel.NotificationText = $"{errorMessage} Error: {result.ErrorCode}";
+            notification.ViewModel.NotificationText = string.Format("CollectionErrorNotificationDescription".GetLocalized(), errorMessage, result.ErrorCode);
             notification.ViewModel.ShownButtons = InAppNotificationButtonType.OkButton;
 
             notification.Show(Constants.UI.Notifications.NOTIFICATION_DEFAULT_SHOW_TIME);

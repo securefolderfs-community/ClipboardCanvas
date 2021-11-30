@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ap="using:ClipboardCanvas.AttachedProperties"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gxt="using:ClipboardCanvas.GlobalizationExtensions"
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tuc="using:Microsoft.Toolkit.Uwp.UI.Controls"
@@ -112,13 +113,13 @@
                                                 Grid.Row="0"
                                                 FontSize="16"
                                                 FontWeight="SemiBold"
-                                                Text="Reference Files" />
+                                                Text="{gxt:ResourceString Name=ReferenceFiles}" />
 
                                             <!--  Content text  -->
                                             <TextBlock
                                                 Grid.Row="1"
                                                 Width="300"
-                                                Text="This file has been pasted as a reference to the original file. Clipboard Canvas loads the original file that the reference is pointing to.&#x0a;&#x0a;You can override the reference and copy the item directly to this collection by pressing the button below."
+                                                Text="{gxt:ResourceString Name=PastedAsReferenceDescription}"
                                                 TextTrimming="WordEllipsis"
                                                 TextWrapping="Wrap" />
 
@@ -128,9 +129,9 @@
                                                 Margin="0,16,0,0"
                                                 HorizontalAlignment="Stretch"
                                                 VerticalAlignment="Center"
-                                                AutomationProperties.Name="Paste Reference"
+                                                AutomationProperties.Name="{gxt:ResourceString Name=OverwriteReference}"
                                                 Command="{x:Bind OverrideReferenceCommand}"
-                                                Content="Paste reference"
+                                                Content="{gxt:ResourceString Name=OverwriteReference}"
                                                 IsEnabled="{x:Bind OverrideReferenceEnabled, Mode=OneWay}" />
                                         </Grid>
                                     </Flyout>
@@ -169,12 +170,12 @@
                 VerticalAlignment="Center"
                 FontSize="18"
                 Opacity="0.8"
-                Text="Infinite Canvas is empty" />
+                Text="{gxt:ResourceString Name=InfiniteCanvasIsEmpty}" />
             <TextBlock
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Opacity="0.8"
-                Text="Drag and drop or paste to add content" />
+                Text="{gxt:ResourceString Name=DropOrPasteToAddContent}" />
         </StackPanel>
     </Grid>
 </UserControl>

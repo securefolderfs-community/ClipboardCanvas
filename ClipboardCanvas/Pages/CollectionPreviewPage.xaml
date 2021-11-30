@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animvis="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gxt="using:ClipboardCanvas.GlobalizationExtensions"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
     xmlns:local="using:ClipboardCanvas.Pages"
@@ -217,7 +218,7 @@
             VerticalAlignment="Center"
             x:Load="{x:Bind ViewModel.NoItemsInfoTextLoad, Mode=OneWay}"
             Opacity="0.7"
-            Text="There are no items to preview." />
+            Text="{gxt:ResourceString Name=NoItemsToPreview}" />
 
         <!--  Collection loading indicator  -->
         <StackPanel
@@ -226,7 +227,7 @@
             VerticalAlignment="Center"
             x:Load="{x:Bind ViewModel.CollectionLoadingIndicatorLoad, Mode=OneWay}"
             Spacing="8">
-            <TextBlock Opacity="0.7" Text="The Collection is being initialized..." />
+            <TextBlock Opacity="0.7" Text="{gxt:ResourceString Name=CollectionIsBeingInitialized}" />
             <muxc:ProgressBar IsIndeterminate="True" />
         </StackPanel>
 
@@ -272,7 +273,7 @@
                                 <muxc:SymbolIconSource Symbol="Find" />
                             </muxc:AnimatedIcon.FallbackIconSource>
                         </muxc:AnimatedIcon>
-                        <TextBlock VerticalAlignment="Center" Text="Search" />
+                        <TextBlock VerticalAlignment="Center" Text="{gxt:ResourceString Name=Search}" />
                     </StackPanel>
                 </Button.Content>
             </Button>
@@ -289,12 +290,12 @@
                             x:Name="OpenNewCanvasOption"
                             x:Load="{x:Bind ViewModel.SplitButtonShowInfiniteCanvasOption, Mode=OneWay, Converter={StaticResource BooleanInvertConverter}}"
                             Command="{x:Bind ViewModel.OpenNewCanvasCommand}"
-                            Text="Open new Canvas" />
+                            Text="{gxt:ResourceString Name=OpenNewCanvas}" />
                         <MenuFlyoutItem
                             x:Name="OpenNewInfiniteCanvasOption"
                             x:Load="{x:Bind ViewModel.SplitButtonShowInfiniteCanvasOption, Mode=OneWay}"
                             Command="{x:Bind ViewModel.OpenNewInfiniteCanvasCommand}"
-                            Text="Open new Infinite Canvas" />
+                            Text="{gxt:ResourceString Name=OpenNewInfiniteCanvas}" />
                     </MenuFlyout>
                 </muxc:SplitButton.Flyout>
             </muxc:SplitButton>

@@ -5,6 +5,7 @@ using Windows.UI.Xaml.Input;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.Storage;
+using Microsoft.Toolkit.Uwp;
 
 using ClipboardCanvas.EventArguments.Collections;
 using ClipboardCanvas.Helpers;
@@ -142,7 +143,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 else
                 {
                     // Post a notification informing that rename had failed
-                    PushErrorNotification("Couldn't rename the collection", result);
+                    PushErrorNotification("CouldNotRenameCollection".GetLocalized(), result);
                 }
             }
 

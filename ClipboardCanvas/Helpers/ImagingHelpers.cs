@@ -117,6 +117,10 @@ namespace ClipboardCanvas.Helpers
             using (InMemoryRandomAccessStream imras = new InMemoryRandomAccessStream())
             {
                 BitmapEncoder encoder = await BitmapEncoder.CreateAsync(encoderId, imras);
+                if (softwareBitmap == null)
+                {
+                    return new byte[] { };
+                }
                 encoder.SetSoftwareBitmap(softwareBitmap);
 
                 try

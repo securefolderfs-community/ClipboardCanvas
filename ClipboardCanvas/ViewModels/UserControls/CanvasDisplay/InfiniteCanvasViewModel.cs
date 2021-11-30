@@ -365,14 +365,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     SafeWrapper<DataPackageView> dataPackage = ClipboardHelpers.GetClipboardData();
 
                     await TryPasteData(dataPackage, CanvasPreviewControlViewModel.CanvasPasteCancellationTokenSource.Token);
-                }), "Paste from Clipboard", "\uE77F");
+                }), "PasteFromClipboard".GetLocalized(), "\uE77F");
 
             // Open Infinite Canvas folder
             var action_openInfiniteCanvasFolder = new SuggestedActionsControlItemViewModel(
                 new AsyncRelayCommand(async () =>
                 {
                     await AssociatedCollection.CurrentCollectionItemViewModel.OpenFile();
-                }), "Open Infinite Canvas folder", "\uE838");
+                }), "OpenInfiniteCanvasFolder".GetLocalized(), "\uE838");
 
             actions.Add(action_paste);
             actions.Add(action_openInfiniteCanvasFolder);
@@ -394,7 +394,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 Command = new AsyncRelayCommand(InteractableCanvasControlModel.ResetAllItemPositions),
                 IconGlyph = "\uE72C",
-                Text = "Reset item positions"
+                Text = "ResetItemPositions".GetLocalized()
             });
 
             // Delete Infinite Canvas
@@ -402,7 +402,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 Command = new AsyncRelayCommand(() => TryDeleteData()),
                 IconGlyph = "\uE74D",
-                Text = isContentAsReference ? "Delete reference" : "Delete Infinite Canvas"
+                Text = isContentAsReference ? "DeleteReference".GetLocalized() : "DeleteInfiniteCanvas".GetLocalized()
             });
         }
 

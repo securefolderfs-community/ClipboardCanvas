@@ -22,6 +22,7 @@ using ClipboardCanvas.Enums;
 using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.ViewModels.UserControls.CanvasPreview;
 using ClipboardCanvas.DataModels.ContentDataModels;
+using Microsoft.Toolkit.Uwp;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {
@@ -79,7 +80,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public string SwitchCanvasModeText
         {
-            get => RequestedCanvasType == CanvasType.OneCanvas ? "Switch to Infinite Canvas" : "Switch to One Canvas";
+            get => RequestedCanvasType == CanvasType.OneCanvas ? "SwitchToInfiniteCanvas".GetLocalized() : "SwitchToOneCanvas".GetLocalized();
         }
 
         private bool _InfiniteCanvasCaptionLoad;
@@ -112,7 +113,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public string CanvasTypeText
         {
-            get => RequestedCanvasType == CanvasType.OneCanvas ? "You're in One Canvas mode" : "You're in Infinite Canvas mode";
+            get => RequestedCanvasType == CanvasType.OneCanvas ? "CanvasTypeInfoCurrentOneCanvas".GetLocalized() : "CanvasTypeInfoCurrentInfiniteCanvas".GetLocalized();
         }
 
         private string _TipText;

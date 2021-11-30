@@ -117,8 +117,26 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CanvasTypeInfoCurrentInfiniteCanvas" xml:space="preserve">
+    <value>You're in Infinite Canvas mode</value>
+  </data>
+  <data name="CanvasTypeInfoCurrentOneCanvas" xml:space="preserve">
+    <value>You're in One Canvas mode</value>
+  </data>
   <data name="ChangeIcon" xml:space="preserve">
     <value>Change icon</value>
+  </data>
+  <data name="CloseSearch" xml:space="preserve">
+    <value>Close Search</value>
+  </data>
+  <data name="CollectionErrorNotificationDescription" xml:space="preserve">
+    <value>{0} Error: {1}</value>
+  </data>
+  <data name="CollectionFolderNotFound" xml:space="preserve">
+    <value>The folder associated with this collection was not found.</value>
+  </data>
+  <data name="CollectionIsBeingInitialized" xml:space="preserve">
+    <value>The Collection is being initialized</value>
   </data>
   <data name="Collections" xml:space="preserve">
     <value>Collections</value>
@@ -130,14 +148,56 @@ Right click for more options.</value>
   <data name="CollectionUnavailable" xml:space="preserve">
     <value>Collection unavailable</value>
   </data>
+  <data name="CouldNotDeleteCollectionIcon" xml:space="preserve">
+    <value>Current icon could not be deleted.</value>
+  </data>
+  <data name="CouldNotRemoveCollectionIcon" xml:space="preserve">
+    <value>Couldn't remove icon.</value>
+  </data>
+  <data name="CouldNotRenameCollection" xml:space="preserve">
+    <value>Couldn't rename Collection</value>
+  </data>
+  <data name="CouldNotSetCollectionIcon" xml:space="preserve">
+    <value>Couldn't set custom Collection icon.</value>
+  </data>
+  <data name="DefaultCollection" xml:space="preserve">
+    <value>Default Collection</value>
+  </data>
+  <data name="DeleteInfiniteCanvas" xml:space="preserve">
+    <value>Delete Infinite Canvas</value>
+  </data>
+  <data name="DeleteReference" xml:space="preserve">
+    <value>Delete Reference</value>
+  </data>
+  <data name="DropOrPasteToAddContent" xml:space="preserve">
+    <value>Drag and drop or paste to add content</value>
+  </data>
   <data name="EmptyTimelineSectionText" xml:space="preserve">
     <value>Recently pasted items will show up on your Timeline here</value>
+  </data>
+  <data name="ErrorWhilstOverridingReference" xml:space="preserve">
+    <value>Error whilst overriding reference. Error: {0}</value>
+  </data>
+  <data name="FindNext" xml:space="preserve">
+    <value>Find next</value>
+  </data>
+  <data name="FindPrevious" xml:space="preserve">
+    <value>Find previous</value>
   </data>
   <data name="HomePageTargetAutopasteDescription" xml:space="preserve">
     <value>Right click desired collection and set it as an autopaste target.</value>
   </data>
   <data name="HomePageTargetAutopasteTitle" xml:space="preserve">
     <value>Select autopaste target</value>
+  </data>
+  <data name="InfiniteCanvasIsEmpty" xml:space="preserve">
+    <value>InfiniteCanvasIsEmpty</value>
+  </data>
+  <data name="InvalidFile" xml:space="preserve">
+    <value>Invalid file.</value>
+  </data>
+  <data name="NoItemsToPreview" xml:space="preserve">
+    <value>There are no items to preview.</value>
   </data>
   <data name="OpenCanvas" xml:space="preserve">
     <value>Open canvas</value>
@@ -147,6 +207,32 @@ Right click for more options.</value>
   </data>
   <data name="OpenFile" xml:space="preserve">
     <value>Open file</value>
+  </data>
+  <data name="OpenInfiniteCanvasFolder" xml:space="preserve">
+    <value>Open Infinite Canvas folder</value>
+  </data>
+  <data name="OpenNewCanvas" xml:space="preserve">
+    <value>Open new Canvas</value>
+  </data>
+  <data name="OpenNewInfiniteCanvas" xml:space="preserve">
+    <value>Open new Infinite Canvas</value>
+  </data>
+  <data name="OperationCanceled" xml:space="preserve">
+    <value>The operation was canceled.</value>
+  </data>
+  <data name="OverwriteReference" xml:space="preserve">
+    <value>Paste reference</value>
+  </data>
+  <data name="PastedAsReference" xml:space="preserve">
+    <value>File pasted as reference</value>
+  </data>
+  <data name="PastedAsReferenceDescription" xml:space="preserve">
+    <value>This file has been pasted as a reference to the original file. Clipboard Canvas loads the original file that the reference is pointing to.
+
+You can override the reference and copy the item directly to this collection by pressing the button below.</value>
+  </data>
+  <data name="PasteFromClipboard" xml:space="preserve">
+    <value>Paste from Clipboard</value>
   </data>
   <data name="ReferenceFiles" xml:space="preserve">
     <value>Reference Files</value>
@@ -166,8 +252,14 @@ Right click for more options.</value>
   <data name="Rename" xml:space="preserve">
     <value>Rename</value>
   </data>
+  <data name="ResetItemPositions" xml:space="preserve">
+    <value>Reset item positions</value>
+  </data>
   <data name="Retry" xml:space="preserve">
     <value>Retry</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
   </data>
   <data name="SetAsAutopasteTarget" xml:space="preserve">
     <value>Set as Autopaste target</value>
@@ -234,8 +326,17 @@ A reference file is created pointing to the original file which is seamlessly di
   <data name="ShowInCollection" xml:space="preserve">
     <value>Show in Collection</value>
   </data>
+  <data name="SwitchToInfiniteCanvas" xml:space="preserve">
+    <value>Switch to Infinite Canvas</value>
+  </data>
+  <data name="SwitchToOneCanvas" xml:space="preserve">
+    <value>Switch to One Canvas</value>
+  </data>
   <data name="Timeline" xml:space="preserve">
     <value>Timeline</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>An unknown error occurred.</value>
   </data>
   <data name="ViewOnGitHub" xml:space="preserve">
     <value>View on GitHub</value>

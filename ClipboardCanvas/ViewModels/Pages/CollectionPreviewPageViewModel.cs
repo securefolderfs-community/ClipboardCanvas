@@ -112,7 +112,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public string SplitButtonMainOptionText
         {
-            get => UserSettings.UseInfiniteCanvasAsDefault ? "Open new Infinite Canvas" : "Open new Canvas";
+            get => UserSettings.UseInfiniteCanvasAsDefault ? "OpenNewInfiniteCanvas".GetLocalized() : "OpenNewCanvas".GetLocalized();
         }
 
         public bool SplitButtonShowInfiniteCanvasOption

@@ -5,6 +5,7 @@
     xmlns:Windows10version1903="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 8)"
     xmlns:ap="using:ClipboardCanvas.AttachedProperties"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gxt="using:ClipboardCanvas.GlobalizationExtensions"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
     xmlns:local="using:ClipboardCanvas.UserControls"
@@ -71,7 +72,7 @@
             VerticalAlignment="Stretch"
             ap:TextBoxFocusAttachedProperty.Value="{x:Bind ViewModel.SearchBoxFocus, Mode=OneWay}"
             Loaded="TextBox_Loaded"
-            PlaceholderText="Search..."
+            PlaceholderText="{gxt:ResourceString Name=Search}"
             Text="{x:Bind ViewModel.SearchBoxText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
         <!--  Next/Previous  -->
@@ -86,7 +87,7 @@
             </muxc:SplitButton.Content>
             <muxc:SplitButton.Flyout>
                 <MenuFlyout>
-                    <MenuFlyoutItem Command="{x:Bind ViewModel.FindNextCommand}" Text="Find Next">
+                    <MenuFlyoutItem Command="{x:Bind ViewModel.FindNextCommand}" Text="{gxt:ResourceString Name=FindNext}">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE72A;" />
                         </MenuFlyoutItem.Icon>
@@ -94,7 +95,7 @@
                             <KeyboardAccelerator Key="F3" IsEnabled="False" />
                         </MenuFlyoutItem.KeyboardAccelerators>
                     </MenuFlyoutItem>
-                    <MenuFlyoutItem Command="{x:Bind ViewModel.FindPreviousCommand}" Text="Find Previous">
+                    <MenuFlyoutItem Command="{x:Bind ViewModel.FindPreviousCommand}" Text="{gxt:ResourceString Name=FindPrevious}">
                         <MenuFlyoutItem.Icon>
                             <FontIcon Glyph="&#xE72B;" />
                         </MenuFlyoutItem.Icon>
@@ -115,7 +116,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Stretch"
             Command="{x:Bind ViewModel.HideSearchCommand}"
-            ToolTipService.ToolTip="Close Search">
+            ToolTipService.ToolTip="{gxt:ResourceString Name=CloseSearch}">
             <Button.Content>
                 <FontIcon FontSize="16" Glyph="&#xE8BB;" />
             </Button.Content>

@@ -1,4 +1,6 @@
 ﻿using Windows.Storage;
+using Microsoft.Toolkit.Uwp;
+
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
 
@@ -6,6 +8,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {
     public class DefaultCollectionViewModel : BaseCollectionViewModel
     {
+        #region Properties
+
+        public override string DisplayName => "DefaultCollection".GetLocalized();
+
+        #endregion
+
         #region Constructor
 
         public DefaultCollectionViewModel(StorageFolder collectionFolder)
