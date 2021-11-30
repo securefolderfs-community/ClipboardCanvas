@@ -14,7 +14,11 @@ Clipboard Canvas gives users an enhanced clipboard experience. Clipboard Canvas 
   - Image preview
   - GIF preview
   - Media preview
-  - PDF preview
   - Markdown preview
+  - Text preview
   - Html preview
 - Paste as Reference - allows you to paste your files as reference to the original file saving space on your drive.
+
+# Contributing
+
+See [Contributing](CONTRIBUTING.md)
