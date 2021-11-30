@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.ApplicationModel.DataTransfer;
 using System.Collections.Specialized;
+using System.Diagnostics;
+using Microsoft.Toolkit.Uwp;
 
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.DataModels.Navigation;
@@ -19,7 +21,6 @@ using ClipboardCanvas.Models.Autopaste;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
-using System.Diagnostics;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 {
@@ -51,7 +52,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 
         public string AutopasteTargetName
         {
-            get => AutopasteTarget?.DisplayName ?? "No target";
+            get => AutopasteTarget?.DisplayName ?? "AutopasteNoTarget".GetLocalized();
         }
 
         public bool EnableAutopaste
@@ -251,6 +252,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 
                     if (pasteResult)
                     {
+
                     }
                     else
                     {

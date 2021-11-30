@@ -4,6 +4,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Threading;
 using System.Windows.Input;
+using Microsoft.Toolkit.Uwp;
 
 using ClipboardCanvas.Contexts.Operations;
 using ClipboardCanvas.Enums;
@@ -154,13 +155,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.StatusCenter
 
             if (value > 0.0d)
             {
-                OperationDescription = $"Completed {value.ToString("0.00")}%";
+                OperationDescription = string.Format("StatusCenterPercentCompleted".GetLocalized(), value.ToString("0.00"));
                 IsIndeterminate = false;
                 ProgressBarValue = value;
             }
             else
             {
-                OperationDescription = "Processing...";
+                OperationDescription = "StatusCenterProcessing".GetLocalized();
                 IsIndeterminate = true;
             }
         }
@@ -169,7 +170,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.StatusCenter
         {
             StatusCenterItemViewModel item = new StatusCenterItemViewModel(operationName, operationType, cancellationTokenSource)
             {
-                OperationDescription = "Starting..."
+                OperationDescription = "StatusCenterStarting".GetLocalized()
             };
 
             return item;
@@ -196,24 +197,24 @@ namespace ClipboardCanvas.ViewModels.UserControls.StatusCenter
             {
                 case StatusCenterOperationType.Paste:
                     {
-                        operationDescription = "Pasting was canceled";
+                        operationDescription = "StatusCenterPastingCanceled".GetLocalized();
                         break;
                     }
 
                 case StatusCenterOperationType.OverrideReference:
                     {
-                        operationDescription = "Overriding Reference was canceled";
+                        operationDescription = "StatusCenterOverwritingReferenceCanceled".GetLocalized();
                         break;
                     }
 
                 default:
                     {
-                        operationDescription = "The operation was canceled";
+                        operationDescription = "StatusCenterOperationCanceled".GetLocalized();
                         break;
                     }
             }
 
-            var item = StatusCenterService.AppendInfoBanner("Operation canceled", operationDescription, _result);
+            var item = StatusCenterService.AppendInfoBanner("StatusCenterOperationCanceledTitle".GetLocalized(), operationDescription, _result);
             item.ProgressPaused = true;
             item.IsProgressBarVisible = true;
         }
@@ -227,24 +228,24 @@ namespace ClipboardCanvas.ViewModels.UserControls.StatusCenter
             {
                 case StatusCenterOperationType.Paste:
                     {
-                        operationDescription = "Pasting complete";
+                        operationDescription = "StatusCenterPastingComplete".GetLocalized();
                         break;
                     }
 
                 case StatusCenterOperationType.OverrideReference:
                     {
-                        operationDescription = "Overriding Reference complete";
+                        operationDescription = "StatusCenterOverwritingReferenceComplete".GetLocalized();
                         break;
                     }
 
                 default:
                     {
-                        operationDescription = "The operation is complete";
+                        operationDescription = "StatusCenterOperationComplete".GetLocalized();
                         break;
                     }
             }
 
-            var item = StatusCenterService.AppendInfoBanner("Operation complete", operationDescription, _result);
+            var item = StatusCenterService.AppendInfoBanner("StatusCenterOperationCompleteTitle".GetLocalized(), operationDescription, _result);
             item.IconGlyph = "\uE73E";
         }
 
@@ -269,7 +270,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.StatusCenter
         public void StartOperation()
         {
             IsIndeterminate = false;
-            OperationDescription = "Completed 0.00%";
+            OperationDescription = "StatusCenterCompleted".GetLocalized();
 
             if (IsOperationFinished)
             {

@@ -1,8 +1,10 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using ClipboardCanvas.Models;
+﻿using System;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Uwp;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.Input;
-using System;
+
+using ClipboardCanvas.Models;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -111,7 +113,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         public void SetTitleBarForCanvasView(string collectionName)
         {
             TwoSideTitleBarLoad = true;
-            TitleBarFirstSideText = "Current Collection:";
+            TitleBarFirstSideText = "CurrentCollection".GetLocalized();
             TitleBarSecondSideText = collectionName;
 
             StandardTitleBarLoad = false;
@@ -120,7 +122,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         public void SetTitleBarForCollectionPreview(string collectionName)
         {
             TwoSideTitleBarLoad = true;
-            TitleBarFirstSideText = "Collection Preview:";
+            TitleBarFirstSideText = "CollectionPreview".GetLocalized();
             TitleBarSecondSideText = collectionName;
 
             StandardTitleBarLoad = false;

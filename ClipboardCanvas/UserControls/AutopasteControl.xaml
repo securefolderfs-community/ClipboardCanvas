@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gxt="using:ClipboardCanvas.GlobalizationExtensions"
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -93,7 +94,7 @@
                         Grid.Row="0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
-                        Text="Larger than" />
+                        Text="{gxt:ResourceString Name=AutopasteLargerThan}" />
                     <muxc:NumberBox
                         Grid.Row="0"
                         Grid.Column="1"
@@ -118,7 +119,7 @@
                         Grid.Row="1"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
-                        Text="Smaller than" />
+                        Text="{gxt:ResourceString Name=AutopasteSmallerThan}" />
                     <muxc:NumberBox
                         Grid.Row="1"
                         Grid.Column="1"
@@ -160,7 +161,7 @@
                     <TextBlock
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
-                        Text="Exclude type" />
+                        Text="{gxt:ResourceString Name=AutopasteExcludeType}" />
 
                     <ComboBox
                         Grid.Column="1"
@@ -168,11 +169,11 @@
                         VerticalAlignment="Center"
                         SelectedIndex="{x:Bind SelectedIndex, Mode=TwoWay}">
                         <ComboBox.Items>
-                            <ComboBoxItem Content="Image" />
-                            <ComboBoxItem Content="Text" />
-                            <ComboBoxItem Content="File" />
-                            <ComboBoxItem Content="Url" />
-                            <ComboBoxItem Content="Folder" />
+                            <ComboBoxItem Content="{gxt:ResourceString Name=AutopasteTypeImage}" />
+                            <ComboBoxItem Content="{gxt:ResourceString Name=AutopasteTypeImage}" />
+                            <ComboBoxItem Content="{gxt:ResourceString Name=AutopasteTypeFile}" />
+                            <ComboBoxItem Content="{gxt:ResourceString Name=AutopasteTypeUrl}" />
+                            <ComboBoxItem Content="{gxt:ResourceString Name=AutopasteTypeFolder}" />
                         </ComboBox.Items>
                     </ComboBox>
                 </Grid>
@@ -209,7 +210,7 @@
             <TextBlock
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Text="Enable Autopaste" />
+                Text="{gxt:ResourceString Name=EnableAutopaste}" />
             <ToggleSwitch
                 Grid.Column="1"
                 Margin="0,-4,0,0"
@@ -225,7 +226,7 @@
             CloseButtonCommand="{x:Bind ViewModel.CloseInfoBarCommand}"
             CornerRadius="0"
             IsOpen="{x:Bind ViewModel.IsInfoBarOpen, Mode=TwoWay}"
-            Message="File size rule does not apply to folders."
+            Message="{gxt:ResourceString Name=FileSizeRuleDoesNotApplyToFolders}"
             Severity="Warning" />
 
         <!--  Content  -->
@@ -265,7 +266,7 @@
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             FontWeight="SemiBold"
-                            Text="Paste to:" />
+                            Text="{gxt:ResourceString Name=AutopastePasteToTarget}" />
 
                         <TextBlock
                             HorizontalAlignment="Left"
@@ -280,7 +281,7 @@
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         Command="{x:Bind ViewModel.ChangeTargetCommand}"
-                        ToolTipService.ToolTip="Change">
+                        ToolTipService.ToolTip="{gxt:ResourceString Name=Change}">
                         <HyperlinkButton.Content>
                             <FontIcon
                                 VerticalAlignment="Center"
@@ -315,14 +316,14 @@
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             FontWeight="SemiBold"
-                            Text="Rule set" />
+                            Text="{gxt:ResourceString Name=AutopasteRuleSet}" />
 
                         <HyperlinkButton
                             Grid.Column="1"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             Click="HyperlinkButton_Click"
-                            ToolTipService.ToolTip="Add rule">
+                            ToolTipService.ToolTip="{gxt:ResourceString Name=AutopasteAddRule}">
                             <HyperlinkButton.Content>
                                 <FontIcon
                                     VerticalAlignment="Center"
@@ -331,12 +332,12 @@
                             </HyperlinkButton.Content>
                             <FlyoutBase.AttachedFlyout>
                                 <MenuFlyout Placement="Bottom">
-                                    <MenuFlyoutItem Command="{x:Bind ViewModel.AddFileSizeRuleCommand}" Text="File size...">
+                                    <MenuFlyoutItem Command="{x:Bind ViewModel.AddFileSizeRuleCommand}" Text="{gxt:ResourceString Name=AutopasteRuleFileSize}">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE2B2;" />
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem Command="{x:Bind ViewModel.AddTypeFilterCommand}" Text="Type filter...">
+                                    <MenuFlyoutItem Command="{x:Bind ViewModel.AddTypeFilterCommand}" Text="{gxt:ResourceString Name=AutopasteRuleTypeFilter}">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE71C;" />
                                         </MenuFlyoutItem.Icon>
@@ -375,7 +376,7 @@
                     VerticalAlignment="Center"
                     x:Load="{x:Bind ViewModel.EnableAutopaste, Mode=OneWay, Converter={StaticResource BooleanInvertConverter}}"
                     Opacity="0.8"
-                    Text="Autopaste is disabled" />
+                    Text="{gxt:ResourceString Name=AutopasteIsDisabled}" />
             </Grid>
         </ScrollViewer>
     </Grid>

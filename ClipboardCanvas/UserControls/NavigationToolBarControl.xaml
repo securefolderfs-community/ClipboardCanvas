@@ -5,6 +5,7 @@
     xmlns:Windows10version1903="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 8)"
     xmlns:animvis="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gxt="using:ClipboardCanvas.GlobalizationExtensions"
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -120,7 +121,7 @@
                                 <TextBlock
                                     Margin="0,0,0,2"
                                     VerticalAlignment="Center"
-                                    Text="Autopaste" />
+                                    Text="{gxt:ResourceString Name=Autopaste}" />
                             </StackPanel>
                             <Button.Flyout>
                                 <Flyout Placement="Top">
@@ -149,7 +150,7 @@
                                 <TextBlock
                                     Margin="0,0,0,2"
                                     VerticalAlignment="Center"
-                                    Text="Status Center" />
+                                    Text="{gxt:ResourceString Name=StatusCenter}" />
                             </StackPanel>
                             <Button.Flyout>
                                 <Flyout Placement="Top">
@@ -206,7 +207,7 @@
                                 <TextBlock
                                     Margin="0,0,0,2"
                                     VerticalAlignment="Center"
-                                    Text="Settings" />
+                                    Text="{gxt:ResourceString Name=Settings}" />
                             </StackPanel>
                         </Button>
                     </StackPanel>

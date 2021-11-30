@@ -120,6 +120,54 @@
   <data name="AddCollection" xml:space="preserve">
     <value>Add a collection</value>
   </data>
+  <data name="Autopaste" xml:space="preserve">
+    <value>Autopaste</value>
+  </data>
+  <data name="AutopasteAddRule" xml:space="preserve">
+    <value>Add rule</value>
+  </data>
+  <data name="AutopasteExcludeType" xml:space="preserve">
+    <value>Exclude type</value>
+  </data>
+  <data name="AutopasteIsDisabled" xml:space="preserve">
+    <value>Autopaste is disabled</value>
+  </data>
+  <data name="AutopasteLargerThan" xml:space="preserve">
+    <value>Larger than</value>
+  </data>
+  <data name="AutopasteNoTarget" xml:space="preserve">
+    <value>No target</value>
+  </data>
+  <data name="AutopastePasteToTarget" xml:space="preserve">
+    <value>Paste to:</value>
+  </data>
+  <data name="AutopasteRuleFileSize" xml:space="preserve">
+    <value>File size...</value>
+  </data>
+  <data name="AutopasteRuleSet" xml:space="preserve">
+    <value>Rule set</value>
+  </data>
+  <data name="AutopasteRuleTypeFilter" xml:space="preserve">
+    <value>Type filter...</value>
+  </data>
+  <data name="AutopasteSmallerThan" xml:space="preserve">
+    <value>Smaller than</value>
+  </data>
+  <data name="AutopasteTypeFile" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="AutopasteTypeFolder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="AutopasteTypeImage" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="AutopasteTypeText" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="AutopasteTypeUrl" xml:space="preserve">
+    <value>Url</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -128,6 +176,9 @@
   </data>
   <data name="CanvasTypeInfoCurrentOneCanvas" xml:space="preserve">
     <value>You're in One Canvas mode</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>Change</value>
   </data>
   <data name="ChangeIcon" xml:space="preserve">
     <value>Change icon</value>
@@ -155,6 +206,9 @@
   </data>
   <data name="CollectionIsBeingInitialized" xml:space="preserve">
     <value>The Collection is being initialized</value>
+  </data>
+  <data name="CollectionPreview" xml:space="preserve">
+    <value>Collection Preview:</value>
   </data>
   <data name="Collections" xml:space="preserve">
     <value>Collections</value>
@@ -187,6 +241,9 @@ Right click for more options.</value>
   <data name="CouldNotSetCollectionIcon" xml:space="preserve">
     <value>Couldn't set custom Collection icon.</value>
   </data>
+  <data name="CurrentCollection" xml:space="preserve">
+    <value>Current Collection:</value>
+  </data>
   <data name="DefaultCollection" xml:space="preserve">
     <value>Default Collection</value>
   </data>
@@ -217,11 +274,17 @@ Right click for more options.</value>
   <data name="EmptyTimelineSectionText" xml:space="preserve">
     <value>Recently pasted items will show up on your Timeline here</value>
   </data>
+  <data name="EnableAutopaste" xml:space="preserve">
+    <value>Enable Autopaste</value>
+  </data>
   <data name="Error" xml:space="preserve">
     <value>Error</value>
   </data>
   <data name="ErrorWhilstOverridingReference" xml:space="preserve">
     <value>Error whilst overriding reference. Error: {0}</value>
+  </data>
+  <data name="FileSizeRuleDoesNotApplyToFolders" xml:space="preserve">
+    <value>File size rule does not apply to folders.</value>
   </data>
   <data name="FindNext" xml:space="preserve">
     <value>Find next</value>
@@ -393,6 +456,9 @@ You can override the reference and copy the item directly to this collection by 
   <data name="SetAsAutopasteTarget" xml:space="preserve">
     <value>Set as Autopaste target</value>
   </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
   <data name="SettingsAbout" xml:space="preserve">
     <value>About</value>
   </data>
@@ -466,6 +532,45 @@ A reference file is created pointing to the original file which is seamlessly di
   </data>
   <data name="ShowInCollection" xml:space="preserve">
     <value>Show in Collection</value>
+  </data>
+  <data name="StatusCenter" xml:space="preserve">
+    <value>Status Center</value>
+  </data>
+  <data name="StatusCenterCompleted" xml:space="preserve">
+    <value>Completed 0.00%</value>
+  </data>
+  <data name="StatusCenterOperationCanceled" xml:space="preserve">
+    <value>The operation was canceled</value>
+  </data>
+  <data name="StatusCenterOperationCanceledTitle" xml:space="preserve">
+    <value>Operation canceled</value>
+  </data>
+  <data name="StatusCenterOperationComplete" xml:space="preserve">
+    <value>The operation is complete</value>
+  </data>
+  <data name="StatusCenterOperationCompleteTitle" xml:space="preserve">
+    <value>Operation complete</value>
+  </data>
+  <data name="StatusCenterOverwritingReferenceCanceled" xml:space="preserve">
+    <value>Overwriting Reference was canceled</value>
+  </data>
+  <data name="StatusCenterOverwritingReferenceComplete" xml:space="preserve">
+    <value>Overwriting Reference complete</value>
+  </data>
+  <data name="StatusCenterPastingCanceled" xml:space="preserve">
+    <value>Pasting was canceled</value>
+  </data>
+  <data name="StatusCenterPastingComplete" xml:space="preserve">
+    <value>Pasting complete</value>
+  </data>
+  <data name="StatusCenterPercentCompleted" xml:space="preserve">
+    <value>Completed {0}%</value>
+  </data>
+  <data name="StatusCenterProcessing" xml:space="preserve">
+    <value>Processing...</value>
+  </data>
+  <data name="StatusCenterStarting" xml:space="preserve">
+    <value>Starting...</value>
   </data>
   <data name="SwitchToInfiniteCanvas" xml:space="preserve">
     <value>Switch to Infinite Canvas</value>
