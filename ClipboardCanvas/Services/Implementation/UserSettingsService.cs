@@ -3,6 +3,7 @@ using Windows.Storage;
 using Microsoft.AppCenter.Analytics;
 
 using ClipboardCanvas.Models.JsonSettings;
+using ClipboardCanvas.DataModels;
 
 namespace ClipboardCanvas.Services
 {
@@ -43,6 +44,13 @@ namespace ClipboardCanvas.Services
         #endregion
 
         #region IUserSettings
+
+        public AppLanguageModel AppLanguage
+        {
+            get => Get<AppLanguageModel>(new AppLanguageModel(null));
+            set => Set(value);
+        }
+
 
         public bool PushErrorNotification
         {

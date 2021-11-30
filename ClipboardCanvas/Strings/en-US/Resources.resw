@@ -519,8 +519,14 @@ You can override the reference and copy the item directly to this collection by 
   <data name="SettingsGeneral" xml:space="preserve">
     <value>General</value>
   </data>
+  <data name="SettingsGeneralPageDefaultLanguage" xml:space="preserve">
+    <value>Windows default</value>
+  </data>
   <data name="SettingsGeneralPageInfiniteCanvasAsDefault" xml:space="preserve">
     <value>Use Infinite Canvas as default</value>
+  </data>
+  <data name="SettingsGeneralPageLanguage" xml:space="preserve">
+    <value>Language</value>
   </data>
   <data name="SettingsGeneralPagePermanentDeletionAsDefault" xml:space="preserve">
     <value>Permanently delete items as default</value>

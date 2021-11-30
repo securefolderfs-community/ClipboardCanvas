@@ -1,22 +1,59 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using System.Collections.ObjectModel;
+using Windows.Globalization;
 
 using ClipboardCanvas.Services;
+using ClipboardCanvas.DataModels;
 
 namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 {
     public class SettingsGeneralPageViewModel : ObservableObject
     {
-        private IUserSettingsService UserSettings { get; } = Ioc.Default.GetService<IUserSettingsService>();
+        private IUserSettingsService UserSettingsService { get; } = Ioc.Default.GetService<IUserSettingsService>();
+
+        public ObservableCollection<AppLanguageModel> AppLanguages { get; set; }
+
+        public SettingsGeneralPageViewModel()
+        {
+            AppLanguages = new ObservableCollection<AppLanguageModel>();
+
+            foreach (var item in ApplicationLanguages.ManifestLanguages)
+            {
+                AppLanguages.Add(new AppLanguageModel(item));
+            }
+        }
+
+        private int _SelectedLanguageIndex;
+        public int SelectedLanguageIndex
+        {
+            get => _SelectedLanguageIndex;
+            set
+            {
+                if (SetProperty(ref _SelectedLanguageIndex, value))
+                {
+                    UserSettingsService.AppLanguage = AppLanguages[value];
+
+                    if (UserSettingsService.AppLanguage.Id != AppLanguages[value].Id)
+                    {
+                        //ShowRestartControl = true;
+                    }
+                    else
+                    {
+                        //ShowRestartControl = false;
+                    }
+                }
+            }
+        }
 
         public bool UseInfiniteCanvasAsDefault
         {
-            get => UserSettings.UseInfiniteCanvasAsDefault;
+            get => UserSettingsService.UseInfiniteCanvasAsDefault;
             set
             {
-                if (value != UserSettings.UseInfiniteCanvasAsDefault)
+                if (value != UserSettingsService.UseInfiniteCanvasAsDefault)
                 {
-                    UserSettings.UseInfiniteCanvasAsDefault = value;
+                    UserSettingsService.UseInfiniteCanvasAsDefault = value;
 
                     OnPropertyChanged(nameof(UseInfiniteCanvasAsDefault));
                 }
@@ -25,12 +62,12 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         public bool ShowDeleteConfirmationDialog
         {
-            get => UserSettings.ShowDeleteConfirmationDialog;
+            get => UserSettingsService.ShowDeleteConfirmationDialog;
             set
             {
-                if (value != UserSettings.ShowDeleteConfirmationDialog)
+                if (value != UserSettingsService.ShowDeleteConfirmationDialog)
                 {
-                    UserSettings.ShowDeleteConfirmationDialog = value;
+                    UserSettingsService.ShowDeleteConfirmationDialog = value;
 
                     OnPropertyChanged(nameof(ShowDeleteConfirmationDialog));
                 }
@@ -39,12 +76,12 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         public bool DeletePermanentlyAsDefault
         {
-            get => UserSettings.DeletePermanentlyAsDefault;
+            get => UserSettingsService.DeletePermanentlyAsDefault;
             set
             {
-                if (value != UserSettings.DeletePermanentlyAsDefault)
+                if (value != UserSettingsService.DeletePermanentlyAsDefault)
                 {
-                    UserSettings.DeletePermanentlyAsDefault = value;
+                    UserSettingsService.DeletePermanentlyAsDefault = value;
 
                     OnPropertyChanged(nameof(DeletePermanentlyAsDefault));
                 }
@@ -53,12 +90,12 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         public bool ShowTimelineOnHomepage
         {
-            get => UserSettings.ShowTimelineOnHomepage;
+            get => UserSettingsService.ShowTimelineOnHomepage;
             set
             {
-                if (value != UserSettings.ShowTimelineOnHomepage)
+                if (value != UserSettingsService.ShowTimelineOnHomepage)
                 {
-                    UserSettings.ShowTimelineOnHomepage = value;
+                    UserSettingsService.ShowTimelineOnHomepage = value;
 
                     OnPropertyChanged(nameof(ShowTimelineOnHomepage));
                 }

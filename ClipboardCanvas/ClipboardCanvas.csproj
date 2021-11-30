@@ -155,6 +155,7 @@
     <Compile Include="Contexts\Operations\IOperationContext.cs" />
     <Compile Include="Contexts\Operations\IOperationContextReceiver.cs" />
     <Compile Include="Contexts\Operations\StatusCenterOperationReceiver.cs" />
+    <Compile Include="DataModels\AppLanguageModel.cs" />
     <Compile Include="DataModels\BaseAdditionalData.cs" />
     <Compile Include="DataModels\ContentDataModels\UrlPreviewContentType.cs" />
     <Compile Include="DataModels\InfiniteCanvasItem.cs" />
