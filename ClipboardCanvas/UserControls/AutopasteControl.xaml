@@ -170,7 +170,7 @@
                         SelectedIndex="{x:Bind SelectedIndex, Mode=TwoWay}">
                         <ComboBox.Items>
                             <ComboBoxItem Content="{gxt:ResourceString Name=AutopasteTypeImage}" />
-                            <ComboBoxItem Content="{gxt:ResourceString Name=AutopasteTypeImage}" />
+                            <ComboBoxItem Content="{gxt:ResourceString Name=AutopasteTypeText}" />
                             <ComboBoxItem Content="{gxt:ResourceString Name=AutopasteTypeFile}" />
                             <ComboBoxItem Content="{gxt:ResourceString Name=AutopasteTypeUrl}" />
                             <ComboBoxItem Content="{gxt:ResourceString Name=AutopasteTypeFolder}" />

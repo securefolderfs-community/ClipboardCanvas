@@ -217,13 +217,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
                 {
                     SafeWrapper<CanvasItem> pasteResult = (null, SafeWrapperResult.UNKNOWN_FAIL);
 
+                    if (_autopasteRoutineStarted && _autopasteDataQueue.Any((item) => item.Properties.SequenceEqual(clipboardData.Result.Properties)))
+                    {
+                        return; // Avoid duplicates where the event is called twice
+                    }
+
                     try
                     {
-                        if (_autopasteRoutineStarted && _autopasteDataQueue.Any((item) => item.Properties.SequenceEqual(clipboardData.Result.Properties)))
-                        {
-                            return; // Avoid duplicates where the event is called twice
-                        }
-
                         // Start and add the operation to queue
                         _autopasteRoutineStarted = true;
                         _autopasteDataQueue.Add(clipboardData);
