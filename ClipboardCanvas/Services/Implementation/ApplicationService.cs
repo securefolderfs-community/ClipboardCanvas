@@ -17,13 +17,15 @@ namespace ClipboardCanvas.Services.Implementation
 
         public bool IsInRestrictedAccessMode { get; set; }
 
-        public List<AppLanguageModel> AppLanguages { get; } = ApplicationLanguages.ManifestLanguages.Select((item) => new AppLanguageModel(item)).ToList();
-
         public AppLanguageModel AppLanguage
         {
             get => AppLanguages.FirstOrDefault(item => item.Id == ApplicationLanguages.PrimaryLanguageOverride) ?? AppLanguages.FirstOrDefault();
             set => ApplicationLanguages.PrimaryLanguageOverride = value.Id;
         }
+
+        public List<AppLanguageModel> AppLanguages { get; } = ApplicationLanguages.ManifestLanguages.Select((item) => new AppLanguageModel(item)).ToList();
+
+        public AppLanguageModel CurrentAppLanguage { get; } = new AppLanguageModel(ApplicationLanguages.PrimaryLanguageOverride);
 
         public ApplicationService()
         {

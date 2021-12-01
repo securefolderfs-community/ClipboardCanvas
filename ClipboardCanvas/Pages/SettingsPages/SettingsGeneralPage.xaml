@@ -23,6 +23,16 @@
                     <uc:SettingBlockControl.Icon>
                         <FontIcon Glyph="&#xF2B7;" />
                     </uc:SettingBlockControl.Icon>
+                    <uc:SettingBlockControl.AdditionalDescription>
+                        <Grid>
+                            <TextBlock
+                                x:Name="AppRestartRequiredInfo"
+                                x:Load="{x:Bind ViewModel.RestartRequiredLoad, Mode=OneWay}"
+                                Foreground="{ThemeResource WarningYellowBrush}"
+                                Text="{gxt:ResourceString Name=AppRestartRequired}"
+                                TextWrapping="WrapWholeWords" />
+                        </Grid>
+                    </uc:SettingBlockControl.AdditionalDescription>
                     <ComboBox
                         HorizontalAlignment="Left"
                         AutomationProperties.Name="Language"

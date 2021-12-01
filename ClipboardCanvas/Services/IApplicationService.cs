@@ -15,5 +15,7 @@ namespace ClipboardCanvas.Services
         List<AppLanguageModel> AppLanguages { get; }
 
         AppLanguageModel AppLanguage { get; set; }
+
+        AppLanguageModel CurrentAppLanguage { get; }
     }
 }

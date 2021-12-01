@@ -2,6 +2,8 @@
 using System;
 using System.Globalization;
 
+using ClipboardCanvas.Extensions;
+
 namespace ClipboardCanvas.DataModels
 {
     [Serializable]
@@ -17,7 +19,7 @@ namespace ClipboardCanvas.DataModels
             {
                 var info = new CultureInfo(id);
                 Id = info.Name;
-                Name = info.NativeName;
+                Name = info.NativeName.FirstToUpper();
             }
             else
             {

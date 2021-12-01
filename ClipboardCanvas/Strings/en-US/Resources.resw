@@ -120,6 +120,9 @@
   <data name="AddCollection" xml:space="preserve">
     <value>Add a collection</value>
   </data>
+  <data name="AppRestartRequired" xml:space="preserve">
+    <value>The app will need to be restarted in order to apply the changes.</value>
+  </data>
   <data name="Autopaste" xml:space="preserve">
     <value>Autopaste</value>
   </data>

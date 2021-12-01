@@ -31,16 +31,23 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
                 {
                     ApplicationService.AppLanguage = AppLanguages[value];
 
-                    if (ApplicationService.AppLanguage.Id != AppLanguages[value].Id)
+                    if (ApplicationService.CurrentAppLanguage.Id != AppLanguages[value].Id)
                     {
-                        //ShowRestartControl = true;
+                        RestartRequiredLoad = true;
                     }
                     else
                     {
-                        //ShowRestartControl = false;
+                        RestartRequiredLoad = false;
                     }
                 }
             }
+        }
+
+        private bool _RestartRequiredLoad;
+        public bool RestartRequiredLoad
+        {
+            get => _RestartRequiredLoad;
+            set => SetProperty(ref _RestartRequiredLoad, value);
         }
 
         public bool UseInfiniteCanvasAsDefault
