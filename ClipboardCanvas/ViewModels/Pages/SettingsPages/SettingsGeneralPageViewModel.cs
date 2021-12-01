@@ -1,7 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System.Collections.ObjectModel;
-using Windows.Globalization;
 
 using ClipboardCanvas.Services;
 using ClipboardCanvas.DataModels;
@@ -12,16 +11,14 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
     {
         private IUserSettingsService UserSettingsService { get; } = Ioc.Default.GetService<IUserSettingsService>();
 
+        private IApplicationService ApplicationService { get; } = Ioc.Default.GetService<IApplicationService>();
+
         public ObservableCollection<AppLanguageModel> AppLanguages { get; set; }
 
         public SettingsGeneralPageViewModel()
         {
-            AppLanguages = new ObservableCollection<AppLanguageModel>();
-
-            foreach (var item in ApplicationLanguages.ManifestLanguages)
-            {
-                AppLanguages.Add(new AppLanguageModel(item));
-            }
+            AppLanguages = new ObservableCollection<AppLanguageModel>(ApplicationService.AppLanguages);
+            _SelectedLanguageIndex = ApplicationService.AppLanguages.IndexOf(ApplicationService.AppLanguage);
         }
 
         private int _SelectedLanguageIndex;
@@ -32,9 +29,9 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
             {
                 if (SetProperty(ref _SelectedLanguageIndex, value))
                 {
-                    UserSettingsService.AppLanguage = AppLanguages[value];
+                    ApplicationService.AppLanguage = AppLanguages[value];
 
-                    if (UserSettingsService.AppLanguage.Id != AppLanguages[value].Id)
+                    if (ApplicationService.AppLanguage.Id != AppLanguages[value].Id)
                     {
                         //ShowRestartControl = true;
                     }

@@ -1,4 +1,8 @@
-﻿namespace ClipboardCanvas.Services
+﻿using System.Collections.Generic;
+
+using ClipboardCanvas.DataModels;
+
+namespace ClipboardCanvas.Services
 {
     public interface IApplicationService
     {
@@ -7,5 +11,9 @@
         string AppVersion { get; }
 
         bool IsInRestrictedAccessMode { get; set; }
+
+        List<AppLanguageModel> AppLanguages { get; }
+
+        AppLanguageModel AppLanguage { get; set; }
     }
 }

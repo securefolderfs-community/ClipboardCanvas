@@ -1,6 +1,5 @@
 ﻿using System;
 
-using ClipboardCanvas.DataModels;
 using ClipboardCanvas.EventArguments;
 
 namespace ClipboardCanvas.Services
@@ -8,8 +7,6 @@ namespace ClipboardCanvas.Services
     public interface IUserSettingsService
     {
         event EventHandler<SettingChangedEventArgs> OnSettingChangedEvent;
-
-        AppLanguageModel AppLanguage { get; set; }
 
         /// <summary>
         /// Determines whether to push a notification when app crashes

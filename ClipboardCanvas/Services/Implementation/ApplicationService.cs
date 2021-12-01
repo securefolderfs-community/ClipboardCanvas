@@ -1,6 +1,11 @@
-﻿using Windows.ApplicationModel;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Windows.ApplicationModel;
+using Windows.Globalization;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
+
+using ClipboardCanvas.DataModels;
 
 namespace ClipboardCanvas.Services.Implementation
 {
@@ -12,13 +17,21 @@ namespace ClipboardCanvas.Services.Implementation
 
         public bool IsInRestrictedAccessMode { get; set; }
 
+        public List<AppLanguageModel> AppLanguages { get; } = ApplicationLanguages.ManifestLanguages.Select((item) => new AppLanguageModel(item)).ToList();
+
+        public AppLanguageModel AppLanguage
+        {
+            get => AppLanguages.FirstOrDefault(item => item.Id == ApplicationLanguages.PrimaryLanguageOverride) ?? AppLanguages.FirstOrDefault();
+            set => ApplicationLanguages.PrimaryLanguageOverride = value.Id;
+        }
+
         public ApplicationService()
         {
             Window.Current.Activated -= Current_Activated;
             Window.Current.Activated += Current_Activated;
         }
 
-        private void Current_Activated(object sender, Windows.UI.Core.WindowActivatedEventArgs e)
+        private void Current_Activated(object sender, WindowActivatedEventArgs e)
         {
             IsWindowActivated = e.WindowActivationState != CoreWindowActivationState.Deactivated;
         }
