@@ -273,7 +273,8 @@
                             VerticalAlignment="Center"
                             Opacity="0.8"
                             Text="{x:Bind ViewModel.AutopasteTargetName, Mode=OneWay}"
-                            TextTrimming="CharacterEllipsis" />
+                            TextTrimming="CharacterEllipsis"
+                            ToolTipService.ToolTip="{x:Bind ViewModel.AutopasteTargetName, Mode=OneWay}" />
                     </StackPanel>
 
                     <HyperlinkButton
