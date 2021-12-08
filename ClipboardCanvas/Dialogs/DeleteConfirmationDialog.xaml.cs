@@ -5,12 +5,13 @@ using Microsoft.UI.Xaml.Controls;
 using ClipboardCanvas.ViewModels.Dialogs;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers;
+using ClipboardCanvas.ModelViews;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace ClipboardCanvas.Dialogs
 {
-    public sealed partial class DeleteConfirmationDialog : ContentDialog, IDialog<DeleteConfirmationDialogViewModel>
+    public sealed partial class DeleteConfirmationDialog : ContentDialog, IDialog<DeleteConfirmationDialogViewModel>, IDialogView
     {
         public DeleteConfirmationDialogViewModel ViewModel
         {

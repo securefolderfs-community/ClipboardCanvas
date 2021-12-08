@@ -10,6 +10,7 @@ using ClipboardCanvas.ViewModels.Dialogs;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.Helpers;
+using ClipboardCanvas.ModelViews;
 
 namespace ClipboardCanvas.Services.Implementation
 {
@@ -37,6 +38,15 @@ namespace ClipboardCanvas.Services.Implementation
 
             dialog = GetDialogFromType<TViewModel, IDialog<TViewModel>>(dialogType, viewModel);
             dialog.ViewModel = viewModel;
+
+            if (dialog is IDialogView dialogView)
+            {
+                dialogView.XamlRoot = MainWindow.Instance.Content.XamlRoot;
+            }
+            else
+            {
+                throw new NotSupportedException($"Dialog doesn't implement {nameof(IDialogView)}.");
+            }
 
             return dialog;
         }

@@ -678,35 +678,35 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         private async void FilesystemChangeWatcher_OnChangeRegisteredEvent(object sender, ChangeRegisteredEventArgs e)
         {
-            // Get changes
-            IEnumerable<StorageLibraryChange> changes = await e.filesystemChangeReader.ReadBatchAsync();
-
-            // Accept changes
-            await e.filesystemChangeReader.AcceptChangesAsync();
-
-            // Reflect changes in collection
-            foreach (var item in changes)
+            await DispatcherQueue.GetForCurrentThread().EnqueueAsync(async () =>
             {
-                string itemParentFolder = Path.GetDirectoryName(item.Path);
-                string watchedParentFolder = collectionFolder.Path;
-                if (itemParentFolder != watchedParentFolder)
+                // Get changes
+                IEnumerable<StorageLibraryChange> changes = await e.filesystemChangeReader.ReadBatchAsync();
+
+                // Accept changes
+                await e.filesystemChangeReader.AcceptChangesAsync();
+
+                // Reflect changes in collection
+                foreach (var item in changes)
                 {
-                    continue;
-                }
+                    string itemParentFolder = Path.GetDirectoryName(item.Path);
+                    string watchedParentFolder = collectionFolder.Path;
+                    if (itemParentFolder != watchedParentFolder)
+                    {
+                        continue;
+                    }
 
-                IStorageItem changedItem = await item.GetStorageItemAsync();
+                    IStorageItem changedItem = await item.GetStorageItemAsync();
 
-                switch (item.ChangeType)
-                {
-                    case StorageLibraryChangeType.ChangeTrackingLost:
-                        {
-                            e.filesystemChangeTracker.Reset();
-                            break;
-                        }
+                    switch (item.ChangeType)
+                    {
+                        case StorageLibraryChangeType.ChangeTrackingLost:
+                            {
+                                e.filesystemChangeTracker.Reset();
+                                break;
+                            }
 
-                    case StorageLibraryChangeType.Created:
-                        {
-                            await DispatcherQueue.GetForCurrentThread().EnqueueAsync(() =>
+                        case StorageLibraryChangeType.Created:
                             {
                                 // Add new collection item
                                 if (changedItem != null && !CollectionItems.Any((i) => item?.Path == i.AssociatedItem.Path))
@@ -714,25 +714,19 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                                     var collectionItem = new CollectionItemViewModel(changedItem);
                                     AddCollectionItem(collectionItem);
                                 }
-                            });
-                            break;
-                        }
+                                break;
+                            }
 
-                    case StorageLibraryChangeType.MovedOutOfLibrary:
-                    case StorageLibraryChangeType.Deleted:
-                        {
-                            await DispatcherQueue.GetForCurrentThread().EnqueueAsync(() =>
+                        case StorageLibraryChangeType.MovedOutOfLibrary:
+                        case StorageLibraryChangeType.Deleted:
                             {
                                 // Remove the collection item
                                 var collectionItem = FindCollectionItem(item?.Path);
                                 RemoveCollectionItem(collectionItem);
-                            });
-                            break;
-                        }
+                                break;
+                            }
 
-                    case StorageLibraryChangeType.MovedOrRenamed:
-                        {
-                            await DispatcherQueue.GetForCurrentThread().EnqueueAsync(() =>
+                        case StorageLibraryChangeType.MovedOrRenamed:
                             {
                                 if (changedItem != null)
                                 {
@@ -751,25 +745,22 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                                         OnCollectionItemRenamedEvent?.Invoke(this, new CollectionItemRenamedEventArgs(this, collectionItem, item.PreviousPath));
                                     }
                                 }
-                            });
-                            break;
-                        }
+                                break;
+                            }
 
-                    case StorageLibraryChangeType.ContentsReplaced:
-                    case StorageLibraryChangeType.ContentsChanged:
-                        {
-                            await DispatcherQueue.GetForCurrentThread().EnqueueAsync(() =>
+                        case StorageLibraryChangeType.ContentsReplaced:
+                        case StorageLibraryChangeType.ContentsChanged:
                             {
                                 var collectionItem = FindCollectionItem(changedItem?.Path);
                                 if (collectionItem != null)
                                 {
                                     OnCollectionItemContentsChangedEvent?.Invoke(this, new CollectionItemContentsChangedEventArgs(this, collectionItem));
                                 }
-                            });
-                            break;
-                        }
+                                break;
+                            }
+                    }
                 }
-            }
+            });
         }
 
         public virtual async Task<bool> InitializeCollectionItems()

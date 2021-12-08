@@ -11,7 +11,7 @@ using ClipboardCanvas.ModelViews;
 
 namespace ClipboardCanvas.Dialogs
 {
-    public sealed partial class SettingsDialog : Microsoft.UI.Xaml.Controls.ContentDialog, IDialog<SettingsDialogViewModel>, ISettingsDialogView
+    public sealed partial class SettingsDialog : ContentDialog, IDialog<SettingsDialogViewModel>, ISettingsDialogView, IDialogView
     {
         public SettingsDialogViewModel ViewModel
         {
