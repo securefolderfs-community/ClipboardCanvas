@@ -6,7 +6,6 @@
     xmlns:gxt="using:ClipboardCanvas.GlobalizationExtensions"
     xmlns:local="using:ClipboardCanvas.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:w="using:ClipboardCanvas.UserControls.Widgets"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     NavigationCacheMode="Disabled"
@@ -31,15 +30,17 @@
                 x:Load="{x:Bind ViewModel.IsTimelineWidgetEnabled, Mode=OneWay}"
                 Loaded="TimelineWidget_Loaded" />
 
-            <muxc:TeachingTip
+            <TeachingTip
+                x:Name="AutopasteTeachingTip"
                 Title="{gxt:ResourceString Name=HomePageTargetAutopasteTitle}"
+                IsLightDismissEnabled="True"
                 IsOpen="{x:Bind ViewModel.IsAutopasteTeachingTipShown, Mode=TwoWay}"
-                Subtitle="{gxt:ResourceString Name=HomePageTargetAutopasteDescription}"
-                Target="{x:Bind CollectionsWidget}">
-                <muxc:TeachingTip.IconSource>
-                    <muxc:SymbolIconSource Symbol="Paste" />
-                </muxc:TeachingTip.IconSource>
-            </muxc:TeachingTip>
+                PreferredPlacement="Bottom"
+                Subtitle="{gxt:ResourceString Name=HomePageTargetAutopasteDescription}">
+                <TeachingTip.IconSource>
+                    <SymbolIconSource Symbol="Paste" />
+                </TeachingTip.IconSource>
+            </TeachingTip>
         </Grid>
     </ScrollViewer>
 </Page>
