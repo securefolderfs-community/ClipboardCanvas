@@ -150,7 +150,7 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         private void ShowIntroductionScreen()
         {
-            DialogService.CloseAllDialogs();
+            DialogService.CloseDialog();
             _view.IntroductionPanelLoad = true;
         }
 
@@ -161,7 +161,7 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         private async Task ShowChangeLog()
         {
-            DialogService.CloseAllDialogs();
+            DialogService.CloseDialog();
             await DialogService.ShowDialog(new UpdateChangeLogDialogViewModel());
         }
 

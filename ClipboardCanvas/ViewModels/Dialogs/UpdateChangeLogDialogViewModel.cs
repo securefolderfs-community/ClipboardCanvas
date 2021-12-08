@@ -98,7 +98,7 @@ namespace ClipboardCanvas.ViewModels.Dialogs
                 foreach (var item in releases)
                 {
                     string itemVersion = item.TagName;
-                    itemVersion = itemVersion.Replace("v", string.Empty);
+                    itemVersion = itemVersion.Replace("v", string.Empty, StringComparison.OrdinalIgnoreCase);
 
                     if (!item.Draft)
                     {
@@ -112,7 +112,7 @@ namespace ClipboardCanvas.ViewModels.Dialogs
                         }
                         else
                         {
-                            if (VersionHelpers.IsVersionBiggerThan(itemVersion, currentVersion))
+                            if (VersionHelpers.IsVersionBiggerThanOrEqual(itemVersion, currentVersion))
                             {
                                 preparedReleases.Add((item.Name, item.Body));
                             }

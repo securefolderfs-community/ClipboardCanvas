@@ -678,7 +678,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         private async void FilesystemChangeWatcher_OnChangeRegisteredEvent(object sender, ChangeRegisteredEventArgs e)
         {
-            await DispatcherQueue.GetForCurrentThread().EnqueueAsync(async () =>
+            return;
+            await MainWindow.Instance.DispatcherQueue.EnqueueAsync(async () =>
             {
                 // Get changes
                 IEnumerable<StorageLibraryChange> changes = await e.filesystemChangeReader.ReadBatchAsync();

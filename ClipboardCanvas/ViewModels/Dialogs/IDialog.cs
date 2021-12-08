@@ -9,5 +9,7 @@ namespace ClipboardCanvas.ViewModels.Dialogs
         TViewModel ViewModel { get; set; }
 
         Task<DialogResult> ShowAsync();
+
+        void Hide();
     }
 }
