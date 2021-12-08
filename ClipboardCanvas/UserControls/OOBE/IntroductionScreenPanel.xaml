@@ -1,0 +1,110 @@
+﻿<UserControl
+    x:Class="ClipboardCanvas.UserControls.OOBE.IntroductionScreenPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:ClipboardCanvas.UserControls.OOBE"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:tuc="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:vc="using:ClipboardCanvas.ValueConverters"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <vc:BooleanInvertConverter x:Key="BooleanInvertConverter" />
+    </UserControl.Resources>
+
+    <Grid
+        Padding="128,128,128,128"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        Background="{ThemeResource BackgroundStrongTint}">
+        <Grid.RowDefinitions>
+            <!--  Flipview  -->
+            <RowDefinition Height="5*" />
+            <!--  Caption  -->
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <!--  Flipview  -->
+        <tuc:DropShadowPanel
+            BlurRadius="8"
+            CornerRadius="8"
+            IsMasked="True"
+            Color="{ThemeResource SubtleDropShadowColorBrush}">
+            <FlipView
+                x:Name="IntroductionFilpView"
+                CornerRadius="8"
+                SelectedIndex="{x:Bind ViewModel.SelectedIndex, Mode=TwoWay}">
+                <local:IntroductionScreenWelcome />
+                <local:IntroductionScreenCollections />
+                <local:IntroductionScreenCollectionPreview />
+                <local:IntroductionScreenOneCanvas />
+                <local:IntroductionScreenInfiniteCanvas />
+                <local:IntroductionScreenReferenceFiles />
+                <local:IntroductionScreenTimeline />
+                <local:IntroductionScreenFinish />
+            </FlipView>
+        </tuc:DropShadowPanel>
+
+        <!--  Caption  -->
+        <StackPanel
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Spacing="8">
+            <!--  Caption title  -->
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontWeight="Medium"
+                Text="Feature showcase" />
+
+            <!--  Progress  -->
+            <StackPanel
+                HorizontalAlignment="Center"
+                Orientation="Horizontal"
+                Spacing="4">
+                <muxc:ProgressBar Width="60" Value="{x:Bind ViewModel.Progress1, Mode=OneWay}" />
+                <muxc:ProgressBar Width="60" Value="{x:Bind ViewModel.Progress2, Mode=OneWay}" />
+                <muxc:ProgressBar Width="60" Value="{x:Bind ViewModel.Progress3, Mode=OneWay}" />
+                <muxc:ProgressBar Width="60" Value="{x:Bind ViewModel.Progress4, Mode=OneWay}" />
+            </StackPanel>
+
+            <!--  Step  -->
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Opacity="0.8"
+                Text="{x:Bind ViewModel.CurrentStepText, Mode=OneWay}" />
+        </StackPanel>
+
+        <!--  Skip  -->
+        <Button
+            x:Name="SkipButton"
+            Grid.Row="1"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            x:Load="{x:Bind ViewModel.BeginButtonLoad, Mode=OneWay, Converter={StaticResource BooleanInvertConverter}}"
+            Background="Transparent"
+            Command="{x:Bind ViewModel.SkipCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <FontIcon FontSize="14" Glyph="&#xE72A;" />
+                <TextBlock VerticalAlignment="Center" Text="Skip" />
+            </StackPanel>
+        </Button>
+
+        <!--  Begin  -->
+        <Button
+            x:Name="BeginButton"
+            Grid.Row="1"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            x:Load="{x:Bind ViewModel.BeginButtonLoad, Mode=OneWay}"
+            Background="Transparent"
+            Command="{x:Bind ViewModel.BeginCommand}"
+            Content="Let's begin!" />
+    </Grid>
+</UserControl>

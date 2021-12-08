@@ -1,0 +1,201 @@
+﻿<UserControl
+    x:Class="ClipboardCanvas.UserControls.SimpleCanvasDisplay.UrlSimpleCanvasControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:ClipboardCanvas.UserControls.SimpleCanvasDisplay"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:tuc="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:vc="using:ClipboardCanvas.ValueConverters"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <vc:NullToBooleanConverter x:Key="NullToBooleanConverter" />
+        <vc:BooleanInvertConverter x:Key="BooleanInvertConverter" />
+    </UserControl.Resources>
+
+    <Grid
+        MaxWidth="320"
+        Padding="16,8,16,8"
+        RowSpacing="4">
+
+        <Grid.RowDefinitions>
+            <!--  Header (Icon + Title)  -->
+            <RowDefinition Height="Auto" />
+            <!--  Content  -->
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--  Header  -->
+        <Grid
+            Padding="8"
+            ColumnSpacing="16"
+            RowSpacing="4">
+            <Grid.ColumnDefinitions>
+                <!--  Icon  -->
+                <ColumnDefinition Width="Auto" />
+                <!--  Title  -->
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <!--  Title  -->
+                <RowDefinition />
+                <!--  Subtitle  -->
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!--  Icon  -->
+            <Image
+                x:Name="SiteIcon"
+                Grid.RowSpan="2"
+                Width="24"
+                Height="24"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                x:Load="{x:Bind ViewModel.SiteIcon, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}"
+                Source="{x:Bind ViewModel.SiteIcon, Mode=OneWay}"
+                Stretch="UniformToFill"
+                ToolTipService.ToolTip="{x:Bind ViewModel.SiteName, Mode=OneWay}" />
+
+            <!--  Title  -->
+            <TextBlock
+                x:Name="SiteTitle"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                x:Load="{x:Bind ViewModel.Title, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}"
+                FontWeight="Medium"
+                Text="{x:Bind ViewModel.Title, Mode=OneWay}"
+                TextTrimming="CharacterEllipsis"
+                ToolTipService.ToolTip="{x:Bind ViewModel.Title, Mode=OneWay}" />
+
+            <!--  Subtitle (website name)  -->
+            <TextBlock
+                x:Name="WebsiteName"
+                Grid.Row="1"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                x:Load="{x:Bind ViewModel.SiteName, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}"
+                FontSize="13"
+                Opacity="0.8"
+                Text="{x:Bind ViewModel.SiteName, Mode=OneWay}"
+                TextTrimming="CharacterEllipsis" />
+        </Grid>
+
+        <!--  Content  -->
+        <Grid Grid.Row="1" RowSpacing="8">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!--  Content images  -->
+            <Grid
+                x:Name="ContentImages"
+                x:Load="{x:Bind ViewModel.ContentImageLoad, Mode=OneWay}"
+                BorderBrush="{ThemeResource ButtonBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="4">
+                <tuc:UniformGrid
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    tuc:UniformGrid.AutoLayout="False"
+                    ColumnSpacing="4"
+                    CornerRadius="4"
+                    RowSpacing="4">
+                    <Image
+                        x:Name="Img1"
+                        VerticalAlignment="Stretch"
+                        x:Load="{x:Bind ViewModel.ContentImage1, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}"
+                        Source="{x:Bind ViewModel.ContentImage1, Mode=OneWay}"
+                        Stretch="UniformToFill" />
+                    <Image
+                        x:Name="Img2"
+                        VerticalAlignment="Stretch"
+                        x:Load="{x:Bind ViewModel.ContentImage2, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}"
+                        Source="{x:Bind ViewModel.ContentImage2, Mode=OneWay}"
+                        Stretch="UniformToFill" />
+                    <Image
+                        x:Name="Img3"
+                        VerticalAlignment="Stretch"
+                        x:Load="{x:Bind ViewModel.ContentImage3, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}"
+                        Source="{x:Bind ViewModel.ContentImage3, Mode=OneWay}"
+                        Stretch="UniformToFill" />
+                    <Image
+                        x:Name="Img4"
+                        VerticalAlignment="Stretch"
+                        x:Load="{x:Bind ViewModel.ContentImage4, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}"
+                        Source="{x:Bind ViewModel.ContentImage4, Mode=OneWay}"
+                        Stretch="UniformToFill" />
+                </tuc:UniformGrid>
+            </Grid>
+
+            <!--  Description text  -->
+            <Grid
+                x:Name="DescriptionContent"
+                Grid.Row="1"
+                x:Load="{x:Bind ViewModel.Description, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}">
+                <!--  With expander  -->
+                <muxc:Expander
+                    x:Name="DescriptionExpander"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    x:Load="{x:Bind ViewModel.DescriptionExpanderLoad, Mode=OneWay}">
+                    <muxc:Expander.Header>
+                        <TextBlock
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Text="More info..." />
+                    </muxc:Expander.Header>
+                    <ScrollViewer>
+                        <TextBlock Text="{x:Bind ViewModel.Description, Mode=OneWay}" TextWrapping="WrapWholeWords" />
+                    </ScrollViewer>
+                </muxc:Expander>
+
+                <!--  Without expander  -->
+                <TextBlock
+                    x:Name="DescriptionText"
+                    x:Load="{x:Bind ViewModel.DescriptionExpanderLoad, Mode=OneWay, Converter={StaticResource BooleanInvertConverter}}"
+                    Text="{x:Bind ViewModel.Description, Mode=OneWay}"
+                    TextWrapping="WrapWholeWords" />
+            </Grid>
+
+            <HyperlinkButton
+                x:Name="UrlLink"
+                Grid.Row="2"
+                Padding="0"
+                x:Load="{x:Bind ViewModel.Url, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}}"
+                Command="{x:Bind ViewModel.OpenLinkCommand}">
+                <TextBlock Text="{x:Bind ViewModel.Url, Mode=OneWay}" TextTrimming="CharacterEllipsis" />
+            </HyperlinkButton>
+
+            <!--  No preview available  -->
+            <Grid x:Name="NoPreviewAvailable" x:Load="{x:Bind ViewModel.Description, Mode=OneWay, Converter={StaticResource NullToBooleanConverter}, ConverterParameter='invert'}">
+                <Grid x:Name="NoPreviewAvailable2" x:Load="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource BooleanInvertConverter}}">
+                    <TextBlock
+                        x:Name="NoPreviewAvailable3"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        x:Load="{x:Bind ViewModel.ContentImageLoad, Mode=OneWay, Converter={StaticResource BooleanInvertConverter}}"
+                        Opacity="0.8"
+                        Text="No preview available." />
+                </Grid>
+            </Grid>
+
+            <!--  Loading ring  -->
+            <muxc:ProgressRing
+                x:Name="LoadingRing"
+                Grid.RowSpan="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                x:Load="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                IsIndeterminate="True" />
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,280 @@
+﻿<Page
+    x:Class="ClipboardCanvas.Pages.CollectionPreviewPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animvis="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gxt="using:ClipboardCanvas.GlobalizationExtensions"
+    xmlns:local="using:ClipboardCanvas.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:tua="using:CommunityToolkit.WinUI.UI.Animations"
+    xmlns:tuc="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:uc="using:ClipboardCanvas.UserControls"
+    xmlns:uc2="using:ClipboardCanvas.UserControls.SimpleCanvasDisplay"
+    xmlns:vc="using:ClipboardCanvas.ValueConverters"
+    xmlns:vm="using:ClipboardCanvas.ViewModels"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Loaded="Page_Loaded"
+    NavigationCacheMode="Disabled"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <vc:BooleanInvertConverter x:Key="BooleanInvertConverter" />
+            <vc:SelectedItemToBorderThicknessConverter x:Key="SelectedItemToBorderThicknessConverter" />
+            <vc:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <vc:BooleanSearchedItemToShadowOpacityConverter x:Key="BooleanSearchedItemToShadowOpacityConverter" />
+            <vc:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter" />
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Page.KeyboardAccelerators>
+        <KeyboardAccelerator Key="F3" Invoked="KeyboardAccelerator_Invoked" />
+        <KeyboardAccelerator
+            Key="F"
+            Invoked="KeyboardAccelerator_Invoked"
+            Modifiers="Control" />
+        <KeyboardAccelerator
+            Key="F3"
+            Invoked="KeyboardAccelerator_Invoked"
+            Modifiers="Shift" />
+        <KeyboardAccelerator
+            Key="V"
+            Invoked="KeyboardAccelerator_Invoked"
+            Modifiers="Control" />
+    </Page.KeyboardAccelerators>
+
+    <Grid Padding="15,10,15,10">
+        <Grid.RowDefinitions>
+            <!--  Grid of contents  -->
+            <RowDefinition />
+            <!--  Options  -->
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+
+        <!--  Grid of contents  -->
+        <GridView
+            x:Name="ItemsGrid"
+            Grid.Row="0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            x:Load="{x:Bind ViewModel.NoItemsInfoTextLoad, Mode=OneWay, Converter={StaticResource BooleanInvertConverter}}"
+            ContainerContentChanging="ItemsGrid_ContainerContentChanging"
+            IsItemClickEnabled="True"
+            ItemsSource="{x:Bind ViewModel.Items}"
+            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+            ScrollViewer.HorizontalScrollMode="Auto"
+            ScrollViewer.VerticalScrollBarVisibility="Disabled"
+            ScrollViewer.VerticalScrollMode="Disabled"
+            SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
+            SelectionMode="Single">
+
+            <GridView.KeyboardAccelerators>
+                <KeyboardAccelerator
+                    Key="Enter"
+                    Invoked="KeyboardAccelerator_Invoked"
+                    Modifiers="None" />
+            </GridView.KeyboardAccelerators>
+
+            <!--  Remove Reveal Highlight Effect  -->
+            <GridView.ItemContainerStyle>
+                <Style TargetType="GridViewItem">
+                    <!--  Spacing  -->
+                    <Setter Property="Margin" Value="8,8,8,8" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="GridViewItem">
+                                <ListViewItemPresenter
+                                    x:Name="Root"
+                                    RevealBackground="{ThemeResource GridViewItemRevealBackground}"
+                                    RevealBorderBrush="{ThemeResource GridViewItemRevealBorderBrush}"
+                                    RevealBorderThickness="0" />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </GridView.ItemContainerStyle>
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="vm:CollectionPreviewItemViewModel">
+                    <tuc:DropShadowPanel
+                        x:Name="RootPanel"
+                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                        BlurRadius="10"
+                        DoubleTapped="RootPanel_DoubleTapped"
+                        IsDoubleTapEnabled="True"
+                        IsMasked="True"
+                        ShadowOpacity="{x:Bind IsHighlighted, Mode=OneWay, Converter={StaticResource BooleanSearchedItemToShadowOpacityConverter}}"
+                        Color="{ThemeResource SystemAccentColor}">
+                        <Grid
+                            Width="256"
+                            Height="144"
+                            Padding="0"
+                            Background="{ThemeResource SubtleBackgroundBrush}"
+                            BorderBrush="{ThemeResource SystemAccentColor}"
+                            BorderThickness="{x:Bind IsSelected, Mode=OneWay, Converter={StaticResource SelectedItemToBorderThicknessConverter}}"
+                            CornerRadius="8">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <!--  The canvas preview  -->
+                            <Grid
+                                x:Name="SimpleCanvasPreviewControl"
+                                Grid.RowSpan="2"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                CornerRadius="4">
+
+                                <Viewbox
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Top"
+                                    StretchDirection="Both">
+                                    <Grid CornerRadius="4">
+                                        <uc2:SimpleCanvasPreviewControl CollectionModel="{x:Bind CollectionModel, Mode=OneWay}" TwoWayReadOnlyCanvasPreview="{x:Bind TwoWayReadOnlyCanvasPreview, Mode=OneWay}" />
+                                        <!--  Overlay grid to block interactions with content  -->
+                                        <Grid
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            Background="Transparent" />
+                                    </Grid>
+                                </Viewbox>
+                            </Grid>
+
+                            <!--  Shadow and Filename  -->
+                            <Grid Grid.Row="1">
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <!--  Shadow  -->
+                                <Border Grid.ColumnSpan="2" VerticalAlignment="Stretch">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+                                            <LinearGradientBrush.GradientStops>
+                                                <GradientStop Offset="0.0" Color="{ThemeResource GradientPrimaryStrongColor}" />
+                                                <GradientStop Offset="1.0" Color="{ThemeResource GradientPrimaryEndColor}" />
+                                            </LinearGradientBrush.GradientStops>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                </Border>
+
+                                <!--  Filename  -->
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Padding="8"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Bottom"
+                                    Opacity="0.8"
+                                    Text="{x:Bind DisplayName, Mode=OneWay}"
+                                    TextTrimming="CharacterEllipsis"
+                                    ToolTipService.ToolTip="{x:Bind DisplayName, Mode=OneWay}" />
+
+                                <!--  Add to favorites  -->
+                                <!--  TODO  -->
+                            </Grid>
+                        </Grid>
+                    </tuc:DropShadowPanel>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+
+        <!--  No items info text  -->
+        <TextBlock
+            x:Name="NoItemsInfoText"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            x:Load="{x:Bind ViewModel.NoItemsInfoTextLoad, Mode=OneWay}"
+            Opacity="0.7"
+            Text="{gxt:ResourceString Name=NoItemsToPreview}" />
+
+        <!--  Collection loading indicator  -->
+        <StackPanel
+            x:Name="CollectionLoadingIndicator"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            x:Load="{x:Bind ViewModel.CollectionLoadingIndicatorLoad, Mode=OneWay}"
+            Spacing="8">
+            <TextBlock Opacity="0.7" Text="{gxt:ResourceString Name=CollectionIsBeingInitialized}" />
+            <muxc:ProgressBar IsIndeterminate="True" />
+        </StackPanel>
+
+        <!--  Search control  -->
+        <tuc:DropShadowPanel
+            x:Name="SearchControl"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Opacity="0"
+            ShadowOpacity="0.2"
+            Visibility="{x:Bind ViewModel.SearchControlVisible, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <uc:SearchControl x:Name="CanvasPreviewSearchControl" />
+            <tua:Implicit.ShowAnimations>
+                <tua:OpacityAnimation To="1" Duration="0:0:0.2" />
+            </tua:Implicit.ShowAnimations>
+            <tua:Implicit.HideAnimations>
+                <tua:OpacityAnimation To="0" Duration="0:0:0.2" />
+            </tua:Implicit.HideAnimations>
+        </tuc:DropShadowPanel>
+
+        <!--  Options  -->
+        <StackPanel
+            Grid.Row="1"
+            Padding="8"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Stretch"
+            Orientation="Horizontal"
+            Spacing="8">
+
+            <!--  Open Search  -->
+            <Button
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Command="{x:Bind ViewModel.ShowOrHideSearchCommand}"
+                IsEnabled="{x:Bind ViewModel.IsSearchEnabled, Mode=OneWay}">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <muxc:AnimatedIcon x:Name="SearchAnimatedIcon">
+                            <muxc:AnimatedIcon.Source>
+                                <animvis:AnimatedFindVisualSource />
+                            </muxc:AnimatedIcon.Source>
+                            <muxc:AnimatedIcon.FallbackIconSource>
+                                <muxc:SymbolIconSource Symbol="Find" />
+                            </muxc:AnimatedIcon.FallbackIconSource>
+                        </muxc:AnimatedIcon>
+                        <TextBlock VerticalAlignment="Center" Text="{gxt:ResourceString Name=Search}" />
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+
+            <!--  Open new canvas  -->
+            <muxc:SplitButton
+                HorizontalAlignment="Right"
+                VerticalAlignment="Stretch"
+                Command="{x:Bind ViewModel.SplitButtonDefaultOptionCommand}"
+                Content="{x:Bind ViewModel.SplitButtonMainOptionText, Mode=OneWay}">
+                <muxc:SplitButton.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem
+                            x:Name="OpenNewCanvasOption"
+                            x:Load="{x:Bind ViewModel.SplitButtonShowInfiniteCanvasOption, Mode=OneWay, Converter={StaticResource BooleanInvertConverter}}"
+                            Command="{x:Bind ViewModel.OpenNewCanvasCommand}"
+                            Text="{gxt:ResourceString Name=OpenNewCanvas}" />
+                        <MenuFlyoutItem
+                            x:Name="OpenNewInfiniteCanvasOption"
+                            x:Load="{x:Bind ViewModel.SplitButtonShowInfiniteCanvasOption, Mode=OneWay}"
+                            Command="{x:Bind ViewModel.OpenNewInfiniteCanvasCommand}"
+                            Text="{gxt:ResourceString Name=OpenNewInfiniteCanvas}" />
+                    </MenuFlyout>
+                </muxc:SplitButton.Flyout>
+            </muxc:SplitButton>
+        </StackPanel>
+    </Grid>
+</Page>

@@ -1,0 +1,193 @@
+﻿<Page
+    x:Class="ClipboardCanvas.Pages.SettingsPages.SettingsAboutPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gxt="using:ClipboardCanvas.GlobalizationExtensions"
+    xmlns:local="using:ClipboardCanvas.Pages.SettingsPages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:tuc="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:tui="using:CommunityToolkit.WinUI.UI"
+    xmlns:uc="using:ClipboardCanvas.UserControls.Settings"
+    xmlns:vc="using:ClipboardCanvas.ValueConverters"
+    d:DesignWidth="400"
+    Background="Transparent"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <vc:BooleanInvertConverter x:Key="BooleanInvertConverter" />
+    </Page.Resources>
+
+    <Grid Padding="20,8,20,20">
+        <StackPanel Spacing="12">
+
+            <TextBlock
+                FontSize="25"
+                FontWeight="SemiBold"
+                Text="About" />
+
+            <StackPanel Spacing="4">
+                <StackPanel.ChildrenTransitions>
+                    <TransitionCollection>
+                        <ReorderThemeTransition />
+                    </TransitionCollection>
+                </StackPanel.ChildrenTransitions>
+
+                <uc:SettingBlockControl Description="Clipboard Canvas">
+                    <uc:SettingBlockControl.Icon>
+                        <muxc:ImageIcon
+                            Width="32"
+                            Height="32"
+                            Margin="-8,0,-4,0"
+                            Source="/Assets/AppLogo.png" />
+                    </uc:SettingBlockControl.Icon>
+                    <uc:SettingBlockControl.ExpanderContent>
+                        <StackPanel Margin="-16" Spacing="0">
+                            <uc:SettingBlockControl Description="{x:Bind ViewModel.AppVersionText}">
+                                <uc:SettingBlockControl.Icon>
+                                    <FontIcon Glyph="&#xE946;" />
+                                </uc:SettingBlockControl.Icon>
+                                <Button
+                                    Width="32"
+                                    Height="32"
+                                    Padding="0"
+                                    Command="{x:Bind ViewModel.CopyVersionCommand}">
+                                    <FontIcon FontSize="14" Glyph="&#xE8C8;" />
+                                </Button>
+                            </uc:SettingBlockControl>
+
+                            <uc:SettingBlockControl Description="{gxt:ResourceString Name=SettingsAboutPageSubmitFeedback}">
+                                <uc:SettingBlockControl.Icon>
+                                    <FontIcon Glyph="&#xED15;" />
+                                </uc:SettingBlockControl.Icon>
+                                <Button
+                                    Width="32"
+                                    Height="32"
+                                    Padding="0"
+                                    Command="{x:Bind ViewModel.SubmitFeedbackCommand}">
+                                    <FontIcon FontSize="14" Glyph="&#xE2B4;" />
+                                </Button>
+                            </uc:SettingBlockControl>
+
+                            <uc:SettingBlockControl Description="{gxt:ResourceString Name=SettingsAboutPageStarOnGitHub}">
+                                <uc:SettingBlockControl.Icon>
+                                    <FontIcon Glyph="&#xE735;" />
+                                </uc:SettingBlockControl.Icon>
+                                <Button
+                                    Width="32"
+                                    Height="32"
+                                    Padding="0"
+                                    Command="{x:Bind ViewModel.OpenOnGitHubCommand}">
+                                    <FontIcon FontSize="14" Glyph="&#xE2B4;" />
+                                </Button>
+                            </uc:SettingBlockControl>
+
+                            <uc:SettingBlockControl
+                                ButtonCommand="{x:Bind ViewModel.ShowIntroductionScreenCommand}"
+                                Description="{gxt:ResourceString Name=SettingsAboutPageViewIntroductionPage}"
+                                IsClickable="True">
+                                <uc:SettingBlockControl.Icon>
+                                    <FontIcon Glyph="&#xE786;" />
+                                </uc:SettingBlockControl.Icon>
+                            </uc:SettingBlockControl>
+                        </StackPanel>
+                    </uc:SettingBlockControl.ExpanderContent>
+                </uc:SettingBlockControl>
+
+                <uc:SettingBlockControl
+                    ButtonCommand="{x:Bind ViewModel.ShowChangeLogCommand}"
+                    Description="{gxt:ResourceString Name=SettingsAboutPageReleaseNotes}"
+                    IsClickable="True">
+                    <uc:SettingBlockControl.Icon>
+                        <FontIcon Glyph="&#xF000;" />
+                    </uc:SettingBlockControl.Icon>
+                </uc:SettingBlockControl>
+
+                <uc:SettingBlockControl Description="{gxt:ResourceString Name=SettingsAboutPagePrivacyPolicy}" ExpanderExpandingCommand="{x:Bind ViewModel.LoadPrivacyPolicyCommand}">
+                    <uc:SettingBlockControl.Icon>
+                        <FontIcon Glyph="&#xEA18;" />
+                    </uc:SettingBlockControl.Icon>
+                    <uc:SettingBlockControl.ExpanderContent>
+                        <Grid>
+                            <!--  Loading ring  -->
+                            <StackPanel
+                                x:Name="PrivacyPolicyLoading"
+                                x:Load="{x:Bind ViewModel.PrivacyPolicyProgressRingLoad, Mode=OneWay}"
+                                Spacing="8">
+                                <muxc:ProgressRing IsIndeterminate="True" />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="14"
+                                    Opacity="0.8"
+                                    Text="{gxt:ResourceString Name=SettingsAboutPagePullingPrivacyPolicy}"
+                                    TextWrapping="WrapWholeWords" />
+                            </StackPanel>
+
+                            <!--  Privacy policy text  -->
+                            <ScrollViewer
+                                x:Name="PrivacyPolicyTextScrollViewer"
+                                tui:ScrollViewerExtensions.EnableMiddleClickScrolling="True"
+                                x:Load="{x:Bind ViewModel.PrivacyPolicyProgressRingLoad, Mode=OneWay, Converter={StaticResource BooleanInvertConverter}}">
+                                <tuc:MarkdownTextBlock Background="Transparent" Text="{x:Bind ViewModel.PrivacyPolicyText, Mode=OneWay}" />
+                            </ScrollViewer>
+
+                            <!--  Error  -->
+                            <Grid
+                                x:Name="PrivacyPolicyError"
+                                HorizontalAlignment="Stretch"
+                                x:Load="{x:Bind ViewModel.PrivacyPolicyLoadError, Mode=OneWay}"
+                                ColumnSpacing="8"
+                                RowSpacing="8">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock
+                                    Grid.ColumnSpan="2"
+                                    HorizontalAlignment="Center"
+                                    Text="{gxt:ResourceString Name=SettingsAboutPagePrivacyPolicyError}"
+                                    TextAlignment="Center"
+                                    TextWrapping="WrapWholeWords" />
+
+                                <HyperlinkButton
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Command="{x:Bind ViewModel.OpenPrivacyPolicyCommand}"
+                                    Content="{gxt:ResourceString Name=ViewOnGitHub}" />
+                                <HyperlinkButton
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Command="{x:Bind ViewModel.LoadPrivacyPolicyCommand}"
+                                    Content="{gxt:ResourceString Name=Retry}" />
+                            </Grid>
+                        </Grid>
+                    </uc:SettingBlockControl.ExpanderContent>
+                </uc:SettingBlockControl>
+
+                <uc:SettingBlockControl Description="{gxt:ResourceString Name=SettingsAboutPageOpenLogLocation}">
+                    <uc:SettingBlockControl.Icon>
+                        <FontIcon Glyph="&#xE838;" />
+                    </uc:SettingBlockControl.Icon>
+                    <Button
+                        Width="32"
+                        Height="32"
+                        Padding="0"
+                        Command="{x:Bind ViewModel.OpenLogLocationCommand}">
+                        <FontIcon FontSize="14" Glyph="&#xE2B4;" />
+                    </Button>
+                </uc:SettingBlockControl>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

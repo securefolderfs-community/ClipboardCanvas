@@ -1,0 +1,126 @@
+﻿<ContentDialog
+    x:Class="ClipboardCanvas.Dialogs.SettingsDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ap="using:ClipboardCanvas.AttachedProperties"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gxt="using:ClipboardCanvas.GlobalizationExtensions"
+    xmlns:local="using:ClipboardCanvas.Dialogs"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    Loaded="ContentDialog_Loaded"
+    Style="{StaticResource DefaultContentDialogStyle}"
+    mc:Ignorable="d">
+
+    <ContentDialog.Resources>
+        <ResourceDictionary>
+            <x:Double x:Key="ContentDialogMaxWidth">1300</x:Double>
+        </ResourceDictionary>
+    </ContentDialog.Resources>
+
+    <Grid
+        x:Name="RootGrid"
+        Height="500"
+        Margin="-24"
+        HorizontalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <!--  Navigation  -->
+            <ColumnDefinition />
+            <!--  Frame  -->
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <muxc:NavigationView
+            x:Name="SettingsNavigationView"
+            Grid.Column="0"
+            Width="200"
+            Margin="12,12,0,12"
+            IsBackButtonVisible="Collapsed"
+            IsPaneOpen="True"
+            IsPaneToggleButtonVisible="False"
+            IsSettingsVisible="False"
+            IsTitleBarAutoPaddingEnabled="False"
+            OpenPaneLength="200"
+            PaneDisplayMode="Left"
+            SelectedItem="{Binding ElementName=General, RelativeSource={RelativeSource Mode=Self}, Mode=OneTime}"
+            SelectionChanged="SettingsNavigationView_SelectionChanged">
+            <muxc:NavigationView.MenuItems>
+                <!--  General  -->
+                <muxc:NavigationViewItem
+                    x:Name="General"
+                    AutomationProperties.Name="{gxt:ResourceString Name=SettingsGeneral}"
+                    Content="{gxt:ResourceString Name=SettingsGeneral}"
+                    IsSelected="True"
+                    Tag="0"
+                    ToolTipService.ToolTip="{gxt:ResourceString Name=SettingsGeneral}">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE12A;" />
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+                <!--  Pasting  -->
+                <muxc:NavigationViewItem
+                    x:Name="Pasting"
+                    AutomationProperties.Name="{gxt:ResourceString Name=SettingsPasting}"
+                    Content="{gxt:ResourceString Name=SettingsPasting}"
+                    IsSelected="False"
+                    Tag="1"
+                    ToolTipService.ToolTip="{gxt:ResourceString Name=SettingsPasting}">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE77F;" />
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+                <!--  Notifications  -->
+                <muxc:NavigationViewItem
+                    x:Name="Notifications"
+                    AutomationProperties.Name="{gxt:ResourceString Name=SettingsNotifications}"
+                    Content="{gxt:ResourceString Name=SettingsNotifications}"
+                    IsSelected="False"
+                    Tag="2"
+                    ToolTipService.ToolTip="{gxt:ResourceString Name=SettingsNotifications}">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE91C;" />
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+            </muxc:NavigationView.MenuItems>
+
+            <muxc:NavigationView.FooterMenuItems>
+                <!--  About  -->
+                <muxc:NavigationViewItem
+                    x:Name="About"
+                    AutomationProperties.Name="{gxt:ResourceString Name=SettingsAbout}"
+                    Content="{gxt:ResourceString Name=SettingsAbout}"
+                    IsSelected="False"
+                    Tag="3"
+                    ToolTipService.ToolTip="{gxt:ResourceString Name=SettingsAbout}">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE946;" />
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+            </muxc:NavigationView.FooterMenuItems>
+        </muxc:NavigationView>
+
+        <!--  The content  -->
+        <ScrollViewer
+            Grid.Column="1"
+            Width="460"
+            Margin="12,0,0,0"
+            Padding="4,12,8,0"
+            Background="{ThemeResource SecondaryPanelDimmerBrush}">
+            <Frame x:Name="SettingsFrame" ap:SettingsFrameNavigationAttachedProperty.Value="{x:Bind ViewModel.CurrentPageNavigation, Mode=OneWay}" />
+        </ScrollViewer>
+
+        <!--  Close button  -->
+        <Button
+            Grid.Column="1"
+            Width="36"
+            Height="36"
+            Margin="12"
+            Padding="0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Command="{x:Bind ViewModel.CloseDialogCommand}"
+            CornerRadius="20">
+            <FontIcon FontSize="12" Glyph="&#xE8BB;" />
+        </Button>
+    </Grid>
+</ContentDialog>

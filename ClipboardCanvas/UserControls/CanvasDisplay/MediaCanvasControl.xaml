@@ -1,0 +1,33 @@
+﻿<UserControl
+    x:Class="ClipboardCanvas.UserControls.CanvasDisplay.MediaCanvasControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:ClipboardCanvas.UserControls.CanvasDisplay"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+
+    <!--  TODO: Regression  -->
+    <Grid>
+        <!--<MediaPlayerElement
+            x:Name="MediaPlayerContent"
+            x:Load="{x:Bind ViewModel.ContentMediaLoad, Mode=OneWay}"
+            AreTransportControlsEnabled="True"
+            AutoPlay="True"
+            Foreground="Transparent"
+            Loaded="UserControl_Loaded"
+            Source="{x:Bind ViewModel.ContentMedia, Mode=OneWay}">
+            <MediaPlayerElement.TransportControls>
+                <MediaTransportControls
+                    IsFullWindowButtonVisible="True"
+                    IsRepeatButtonVisible="True"
+                    IsRepeatEnabled="True"
+                    IsSeekBarVisible="True"
+                    IsZoomButtonVisible="True"
+                    ShowAndHideAutomatically="True" />
+            </MediaPlayerElement.TransportControls>
+        </MediaPlayerElement>-->
+    </Grid>
+</UserControl>

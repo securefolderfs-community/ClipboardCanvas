@@ -1,0 +1,252 @@
+﻿<UserControl
+    x:Class="ClipboardCanvas.UserControls.NavigationControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:ClipboardCanvas.UserControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    Background="Transparent"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style x:Key="NavigationButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Stretch" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="CornerRadius" Value="0" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <ContentPresenter
+                                x:Name="ContentPresenter"
+                                Padding="{TemplateBinding Padding}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                AutomationProperties.AccessibilityView="Raw"
+                                Background="{TemplateBinding Background}"
+                                BackgroundSizing="{TemplateBinding BackgroundSizing}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                ContentTransitions="{TemplateBinding ContentTransitions}"
+                                CornerRadius="{TemplateBinding CornerRadius}">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal">
+                                            <Storyboard>
+                                                <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="PointerOver">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundPointerOver}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPointerOver}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPointerOver}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="Pressed">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundPressed}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPressed}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPressed}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <PointerDownThemeAnimation Storyboard.TargetName="ContentPresenter" />
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="Disabled">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource NavigationButtonDisabledBackgroundBrush}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushDisabled}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundDisabled}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </ContentPresenter>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <UserControl.KeyboardAccelerators>
+        <KeyboardAccelerator
+            Key="Up"
+            Invoked="KeyboardAccelerator_Invoked"
+            Modifiers="Control" />
+        <KeyboardAccelerator
+            Key="Down"
+            Invoked="KeyboardAccelerator_Invoked"
+            Modifiers="Control" />
+        <KeyboardAccelerator Key="Right" Invoked="KeyboardAccelerator_Invoked" />
+        <KeyboardAccelerator Key="Home" Invoked="KeyboardAccelerator_Invoked" />
+        <KeyboardAccelerator
+            Key="Right"
+            Invoked="KeyboardAccelerator_Invoked"
+            Modifiers="Control" />
+        <KeyboardAccelerator Key="Left" Invoked="KeyboardAccelerator_Invoked" />
+        <KeyboardAccelerator Key="End" Invoked="KeyboardAccelerator_Invoked" />
+        <KeyboardAccelerator
+            Key="Left"
+            Invoked="KeyboardAccelerator_Invoked"
+            Modifiers="Control" />
+    </UserControl.KeyboardAccelerators>
+
+    <Grid
+        Width="300"
+        BorderBrush="{ThemeResource NavigationButtonsBorderBrush}"
+        BorderThickness="2,0,2,0">
+        <Grid x:Name="CanvasLayoutControls" x:Load="{x:Bind ViewModel.CanvasLayoutControlsLoad, Mode=OneWay}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <!--  Navigate back  -->
+            <Grid Grid.Column="0">
+                <Button
+                    AutomationProperties.Name="Navigate back"
+                    Command="{x:Bind ViewModel.NavigateBackCommand}"
+                    IsEnabled="{x:Bind ViewModel.NavigateBackEnabled, Mode=OneWay}"
+                    Style="{StaticResource NavigationButtonStyle}"
+                    ToolTipService.ToolTip="Navigate Back (Left Arrow)&#x0a;Navigate to last item (Ctrl + Left Arrow | End)">
+                    <Button.Content>
+                        <FontIcon Glyph="&#xE76B;" />
+                    </Button.Content>
+                </Button>
+                <muxc:ProgressRing
+                    x:Name="NavigateBackRing"
+                    Margin="12"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    x:Load="{x:Bind ViewModel.NavigateBackLoading, Mode=OneWay}"
+                    IsActive="True" />
+            </Grid>
+
+            <!--  Go to Homepage  -->
+            <Button
+                Grid.Column="1"
+                AutomationProperties.Name="Navigate to Homepage"
+                Command="{x:Bind ViewModel.GoToHomepageCommand}"
+                Style="{StaticResource NavigationButtonStyle}"
+                ToolTipService.ToolTip="Navigate Home (Ctrl + Down Arrow)">
+                <Button.Content>
+                    <FontIcon Glyph="&#xE80F;" />
+                </Button.Content>
+            </Button>
+
+            <!--  Navigate forward  -->
+            <Grid Grid.Column="2">
+                <Button
+                    AutomationProperties.Name="Navigate forward"
+                    Command="{x:Bind ViewModel.NavigateForwardCommand}"
+                    IsEnabled="{x:Bind ViewModel.NavigateForwardEnabled, Mode=OneWay}"
+                    Style="{StaticResource NavigationButtonStyle}"
+                    ToolTipService.ToolTip="Navigate Forward (Right Arrow)&#x0a;Open new canvas (Ctrl + Right Arrow | Home)">
+                    <Button.Content>
+                        <FontIcon Glyph="&#xE76C;" />
+                    </Button.Content>
+                </Button>
+                <muxc:ProgressRing
+                    x:Name="NavigateForwardRing"
+                    Margin="12"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    x:Load="{x:Bind ViewModel.NavigateForwardLoading, Mode=OneWay}"
+                    IsActive="True" />
+            </Grid>
+        </Grid>
+
+        <Grid x:Name="HomepageLayoutControls" x:Load="{x:Bind ViewModel.HomepageLayoutControlsLoad, Mode=OneWay}">
+            <!--  Go to Canvas  -->
+            <Button
+                AutomationProperties.Name="Navigate to Canvas"
+                Command="{x:Bind ViewModel.GoToCanvasCommand}"
+                IsEnabled="{x:Bind ViewModel.GoToCanvasEnabled, Mode=OneWay}"
+                Style="{StaticResource NavigationButtonStyle}"
+                ToolTipService.ToolTip="Navigate to Canvas (Ctrl + Up Arrow)">
+                <Button.Content>
+                    <FontIcon Glyph="&#xF0E3;" />
+                </Button.Content>
+            </Button>
+        </Grid>
+
+        <Grid x:Name="CollectionPreviewLayoutControls" x:Load="{x:Bind ViewModel.CollectionPreviewLayoutControlsLoad, Mode=OneWay}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <!--  Go back  -->
+            <Button
+                Grid.Column="0"
+                AutomationProperties.Name="Go back"
+                Command="{x:Bind ViewModel.CollectionPreviewNavigateBackCommand}"
+                Style="{StaticResource NavigationButtonStyle}"
+                ToolTipService.ToolTip="Go Back (Ctrl + Left Arrow)">
+                <Button.Content>
+                    <FontIcon Glyph="&#xE76B;" />
+                </Button.Content>
+            </Button>
+            <!--  Go to Homepage  -->
+            <Button
+                Grid.Column="1"
+                AutomationProperties.Name="Navigate to Homepage"
+                Command="{x:Bind ViewModel.GoToHomepageCommand}"
+                Style="{StaticResource NavigationButtonStyle}"
+                ToolTipService.ToolTip="Navigate Home (Ctrl + Down Arrow)">
+                <Button.Content>
+                    <FontIcon Glyph="&#xE80F;" />
+                </Button.Content>
+            </Button>
+            <!--  Go to Canvas  -->
+            <Grid Grid.Column="2">
+                <Button
+                    AutomationProperties.Name="Navigate to Canvas"
+                    Command="{x:Bind ViewModel.CollectionPreviewGoToCanvasCommand}"
+                    IsEnabled="{x:Bind ViewModel.CollectionPreviewGoToCanvasEnabled, Mode=OneWay}"
+                    Style="{StaticResource NavigationButtonStyle}"
+                    ToolTipService.ToolTip="Navigate to Canvas (Ctrl + Up Arrow)">
+                    <Button.Content>
+                        <FontIcon Glyph="&#xF0E3;" />
+                    </Button.Content>
+                </Button>
+                <muxc:ProgressRing
+                    x:Name="CollectionPreviewGoToCanvasRing"
+                    Margin="12"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    x:Load="{x:Bind ViewModel.CollectionPreviewGoToCanvasLoading, Mode=OneWay}"
+                    IsActive="True" />
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

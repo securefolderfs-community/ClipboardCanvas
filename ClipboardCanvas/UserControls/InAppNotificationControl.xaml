@@ -1,0 +1,84 @@
+﻿<UserControl
+    x:Class="ClipboardCanvas.UserControls.InAppNotificationControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ap="using:ClipboardCanvas.AttachedProperties"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:ClipboardCanvas.UserControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tuc="using:CommunityToolkit.WinUI.UI.Controls"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+
+    <!--  TODO: Add templates for big notification and small one  -->
+    <!--<Grid>
+        <tuc:InAppNotification
+            Padding="0"
+            ap:InAppNotificationShowHideControlAttachedProperty.Value="{x:Bind ViewModel.ShowNotification, Mode=OneWay}"
+            BorderBrush="{ThemeResource SubtleBackgroundBrush}"
+            BorderThickness="1"
+            ShowDismissButton="False">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <Grid
+                    Grid.Row="0"
+                    Padding="8"
+                    ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    --><!--  Text  --><!--
+                    <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Text="{x:Bind ViewModel.NotificationText, Mode=OneWay}"
+                            TextWrapping="WrapWholeWords" />
+                    </ScrollViewer>
+
+                    --><!--  Buttons  --><!--
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        --><!--  OK Button  --><!--
+                        <Button
+                            x:Name="OKButton"
+                            x:Load="{x:Bind ViewModel.OkButtonLoad, Mode=OneWay}"
+                            Command="{x:Bind ViewModel.OkButtonClickCommand}"
+                            Content="OK" />
+
+                        --><!--  Yes Button  --><!--
+                        <Button
+                            x:Name="YesButton"
+                            x:Load="{x:Bind ViewModel.YesButtonLoad, Mode=OneWay}"
+                            Command="{x:Bind ViewModel.YesButtonClickCommand}"
+                            Content="Yes" />
+
+                        --><!--  No Button  --><!--
+                        <Button
+                            x:Name="NoButton"
+                            x:Load="{x:Bind ViewModel.NoButtonLoad, Mode=OneWay}"
+                            Command="{x:Bind ViewModel.NoButtonClickCommand}"
+                            Content="No" />
+                    </StackPanel>
+                </Grid>
+
+                <ProgressBar
+                    x:Name="ProgressBarTimer"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    Height="3"
+                    Margin="0,0,-40,0"
+                    HorizontalAlignment="Stretch"
+                    x:Load="{x:Bind ViewModel.NotificationShowTimerProgressBarLoad, Mode=OneWay}"
+                    CornerRadius="0 0 4 4"
+                    Value="{x:Bind ViewModel.NotificationShowTimerProgressBarValue, Mode=OneWay}" />
+            </Grid>
+        </tuc:InAppNotification>
+    </Grid>-->
+</UserControl>
