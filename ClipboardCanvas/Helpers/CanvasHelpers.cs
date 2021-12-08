@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers.SafetyHelpers;

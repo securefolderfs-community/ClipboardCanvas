@@ -1,4 +1,4 @@
-﻿using Windows.UI.Xaml.Media.Animation;
+﻿using Microsoft.UI.Xaml.Media.Animation;
 using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.Helpers

@@ -1,6 +1,6 @@
-﻿using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml;
+﻿using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml;
 using System.Linq;
 
 using ClipboardCanvas.Enums;
@@ -27,13 +27,13 @@ namespace ClipboardCanvas.Helpers
 
         public static bool IsAnyContentDialogOpen()
         {
-            var openedDialogs = VisualTreeHelper.GetOpenPopups(Window.Current);
+            var openedDialogs = VisualTreeHelper.GetOpenPopups(MainWindow.Instance);
             return openedDialogs.Any((item) => item.Child is ContentDialog);
         }
 
         public static void CloseCurrentDialog()
         {
-            var openedDialogs = VisualTreeHelper.GetOpenPopups(Window.Current);
+            var openedDialogs = VisualTreeHelper.GetOpenPopups(MainWindow.Instance);
 
             foreach (var item in openedDialogs)
             {

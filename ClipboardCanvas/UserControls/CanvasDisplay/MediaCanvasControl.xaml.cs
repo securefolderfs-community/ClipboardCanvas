@@ -1,5 +1,5 @@
 ﻿using System;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
@@ -8,7 +8,7 @@ using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 
 namespace ClipboardCanvas.UserControls.CanvasDisplay
 {
-    public sealed partial class MediaCanvasControl : UserControl, IMediaCanvasControlView
+    public sealed partial class MediaCanvasControl : UserControl, IMediaCanvasControlView // TODO: Regression
     {
         public MediaCanvasViewModel ViewModel
         {
@@ -17,20 +17,20 @@ namespace ClipboardCanvas.UserControls.CanvasDisplay
 
         public TimeSpan Position
         {
-            get => MediaPlayerContent.MediaPlayer.PlaybackSession.Position;
-            set => MediaPlayerContent.MediaPlayer.PlaybackSession.Position = value;
+            get => TimeSpan.FromMilliseconds(0);// MediaPlayerContent.MediaPlayer.PlaybackSession.Position;
+            set { }// MediaPlayerContent.MediaPlayer.PlaybackSession.Position = value;
         }
 
         public bool IsLoopingEnabled
         {
-            get => MediaPlayerContent.MediaPlayer.IsLoopingEnabled;
-            set => MediaPlayerContent.MediaPlayer.IsLoopingEnabled = value;
+            get => false;// MediaPlayerContent.MediaPlayer.IsLoopingEnabled;
+            set { }// MediaPlayerContent.MediaPlayer.IsLoopingEnabled = value;
         }
 
         public double Volume
         {
-            get => MediaPlayerContent.MediaPlayer.Volume;
-            set => MediaPlayerContent.MediaPlayer.Volume = value;
+            get => 0.0d;//MediaPlayerContent.MediaPlayer.Volume;
+            set { }// MediaPlayerContent.MediaPlayer.Volume = value;
         }
 
         public MediaCanvasControl()
@@ -38,7 +38,7 @@ namespace ClipboardCanvas.UserControls.CanvasDisplay
             this.InitializeComponent();
         }
 
-        private void UserControl_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void UserControl_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             this.ViewModel.ControlView = this;
             this.ViewModel.UpdateMediaControl();

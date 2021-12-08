@@ -9,7 +9,7 @@ using Windows.Services.Store;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media.Imaging;
 using ClipboardCanvas.Extensions;
 
 namespace ClipboardCanvas.Helpers

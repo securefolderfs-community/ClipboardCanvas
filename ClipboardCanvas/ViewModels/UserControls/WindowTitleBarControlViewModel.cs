@@ -1,8 +1,8 @@
 ﻿using System;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Uwp;
+using CommunityToolkit.Mvvm.ComponentModel;
+using ClipboardCanvas.GlobalizationExtensions;
 using System.Windows.Input;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 
 using ClipboardCanvas.Models;
 

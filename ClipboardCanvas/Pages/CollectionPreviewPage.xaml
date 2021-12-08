@@ -5,13 +5,11 @@
     xmlns:animvis="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:gxt="using:ClipboardCanvas.GlobalizationExtensions"
-    xmlns:i="using:Microsoft.Xaml.Interactivity"
-    xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
     xmlns:local="using:ClipboardCanvas.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:tua="using:Microsoft.Toolkit.Uwp.UI.Animations"
-    xmlns:tuc="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:tua="using:CommunityToolkit.WinUI.UI.Animations"
+    xmlns:tuc="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:uc="using:ClipboardCanvas.UserControls"
     xmlns:uc2="using:ClipboardCanvas.UserControls.SimpleCanvasDisplay"
     xmlns:vc="using:ClipboardCanvas.ValueConverters"
@@ -32,34 +30,19 @@
     </Page.Resources>
 
     <Page.KeyboardAccelerators>
-        <KeyboardAccelerator Key="F" Modifiers="Control">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="Invoked">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </KeyboardAccelerator>
-        <KeyboardAccelerator Key="F3">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="Invoked">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </KeyboardAccelerator>
-        <KeyboardAccelerator Key="F3" Modifiers="Shift">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="Invoked">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </KeyboardAccelerator>
-        <KeyboardAccelerator Key="V" Modifiers="Control">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="Invoked">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </KeyboardAccelerator>
+        <KeyboardAccelerator Key="F3" Invoked="KeyboardAccelerator_Invoked" />
+        <KeyboardAccelerator
+            Key="F"
+            Invoked="KeyboardAccelerator_Invoked"
+            Modifiers="Control" />
+        <KeyboardAccelerator
+            Key="F3"
+            Invoked="KeyboardAccelerator_Invoked"
+            Modifiers="Shift" />
+        <KeyboardAccelerator
+            Key="V"
+            Invoked="KeyboardAccelerator_Invoked"
+            Modifiers="Control" />
     </Page.KeyboardAccelerators>
 
     <Grid Padding="15,10,15,10">
@@ -77,6 +60,7 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             x:Load="{x:Bind ViewModel.NoItemsInfoTextLoad, Mode=OneWay, Converter={StaticResource BooleanInvertConverter}}"
+            ContainerContentChanging="ItemsGrid_ContainerContentChanging"
             IsItemClickEnabled="True"
             ItemsSource="{x:Bind ViewModel.Items}"
             ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -85,20 +69,12 @@
             ScrollViewer.VerticalScrollMode="Disabled"
             SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
             SelectionMode="Single">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="ContainerContentChanging">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.ContainerChangingCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
 
             <GridView.KeyboardAccelerators>
-                <KeyboardAccelerator Key="Enter" Modifiers="None">
-                    <i:Interaction.Behaviors>
-                        <icore:EventTriggerBehavior EventName="Invoked">
-                            <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
-                        </icore:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
-                </KeyboardAccelerator>
+                <KeyboardAccelerator
+                    Key="Enter"
+                    Invoked="KeyboardAccelerator_Invoked"
+                    Modifiers="None" />
             </GridView.KeyboardAccelerators>
 
             <!--  Remove Reveal Highlight Effect  -->

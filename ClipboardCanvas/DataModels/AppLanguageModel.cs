@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Uwp;
+﻿using ClipboardCanvas.GlobalizationExtensions;
 using System;
 using System.Globalization;
 

@@ -1,6 +1,8 @@
-﻿using ClipboardCanvas.ViewModels.UserControls;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+
+using ClipboardCanvas.ViewModels.UserControls;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -25,6 +27,16 @@ namespace ClipboardCanvas.UserControls
             this.InitializeComponent();
 
             // TODO: Use AttachedViewModel and set there DataContext?
+        }
+
+        private void KeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            this.ViewModel?.DefaultKeyboardAcceleratorInvokedCommand?.Execute(args);
+        }
+
+        private void ListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            this.ViewModel?.ItemClickCommand?.Execute(e);
         }
     }
 }

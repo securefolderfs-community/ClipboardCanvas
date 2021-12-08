@@ -5,8 +5,6 @@
     xmlns:ap="using:ClipboardCanvas.AttachedProperties"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:gxt="using:ClipboardCanvas.GlobalizationExtensions"
-    xmlns:i="using:Microsoft.Xaml.Interactivity"
-    xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -24,15 +22,11 @@
         <vc:ControlToFocusActionConverter x:Key="ControlToFocusActionConverter" />
     </UserControl.Resources>
 
-    <Grid AllowDrop="True" RowSpacing="16">
-        <i:Interaction.Behaviors>
-            <icore:EventTriggerBehavior EventName="DragOver">
-                <icore:InvokeCommandAction Command="{x:Bind ViewModel.DragOverCommand}" />
-            </icore:EventTriggerBehavior>
-            <icore:EventTriggerBehavior EventName="Drop">
-                <icore:InvokeCommandAction Command="{x:Bind ViewModel.DropCommand}" />
-            </icore:EventTriggerBehavior>
-        </i:Interaction.Behaviors>
+    <Grid
+        AllowDrop="True"
+        DragOver="Grid_DragOver"
+        Drop="Grid_Drop"
+        RowSpacing="16">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -227,18 +221,11 @@
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Bottom"
                                 ap:TextBoxFocusAttachedProperty.Value="{x:Bind EditBoxFocus, Mode=OneWay}"
+                                KeyDown="EditBox_KeyDown"
+                                LostFocus="EditBox_LostFocus"
                                 Text="{x:Bind EditBoxText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                 TextAlignment="Center"
-                                Visibility="{x:Bind IsEditingName, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <i:Interaction.Behaviors>
-                                    <icore:EventTriggerBehavior EventName="KeyDown">
-                                        <icore:InvokeCommandAction Command="{x:Bind RenameBoxKeyDownCommand}" />
-                                    </icore:EventTriggerBehavior>
-                                    <icore:EventTriggerBehavior EventName="LostFocus">
-                                        <icore:InvokeCommandAction Command="{x:Bind RenameBoxLostFocusCommand}" />
-                                    </icore:EventTriggerBehavior>
-                                </i:Interaction.Behaviors>
-                            </TextBox>
+                                Visibility="{x:Bind IsEditingName, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         </Grid>
 
                         <!--  Progressbar  -->

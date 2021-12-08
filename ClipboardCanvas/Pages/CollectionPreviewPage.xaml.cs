@@ -1,8 +1,9 @@
-﻿using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
-using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml;
-using System.Linq;
+﻿using System.Linq;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Input;
 
 using ClipboardCanvas.ViewModels.Pages;
 using ClipboardCanvas.Models;
@@ -110,12 +111,22 @@ namespace ClipboardCanvas.Pages
             }    
         }
 
-        private void RootPanel_DoubleTapped(object sender, Windows.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
+        private void RootPanel_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
             if ((sender as FrameworkElement)?.DataContext is CollectionPreviewItemViewModel itemViewModel)
             {
                 this.ViewModel.OpenItem(itemViewModel);
             }
+        }
+
+        private void KeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            this.ViewModel?.DefaultKeyboardAcceleratorInvokedCommand?.Execute(args);
+        }
+
+        private void ItemsGrid_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        {
+            this.ViewModel?.ContainerChangingCommand?.Execute(args);
         }
     }
 }

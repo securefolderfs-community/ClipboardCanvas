@@ -2,10 +2,10 @@
 using System.Linq;
 using Windows.ApplicationModel;
 using Windows.Globalization;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 
 using ClipboardCanvas.DataModels;
+using Microsoft.UI.Windowing;
 
 namespace ClipboardCanvas.Services.Implementation
 {
@@ -29,13 +29,13 @@ namespace ClipboardCanvas.Services.Implementation
 
         public ApplicationService()
         {
-            Window.Current.Activated -= Current_Activated;
-            Window.Current.Activated += Current_Activated;
+            MainWindow.Instance.Activated -= Current_Activated;
+            MainWindow.Instance.Activated += Current_Activated;
         }
 
         private void Current_Activated(object sender, WindowActivatedEventArgs e)
         {
-            IsWindowActivated = e.WindowActivationState != CoreWindowActivationState.Deactivated;
+            IsWindowActivated = e.WindowActivationState != WindowActivationState.Deactivated;
         }
     }
 }

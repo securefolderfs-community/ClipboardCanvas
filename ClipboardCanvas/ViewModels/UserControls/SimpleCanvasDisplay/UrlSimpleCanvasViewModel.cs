@@ -5,8 +5,8 @@ using Windows.Storage;
 using System.Threading;
 using HtmlAgilityPack;
 using Windows.System;
-using Windows.UI.Xaml.Media;
-using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.UI.Xaml.Media;
+using CommunityToolkit.Mvvm.Input;
 
 using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;

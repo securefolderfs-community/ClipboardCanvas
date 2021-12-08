@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.Toolkit.Uwp;
+using ClipboardCanvas.GlobalizationExtensions;
 
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;

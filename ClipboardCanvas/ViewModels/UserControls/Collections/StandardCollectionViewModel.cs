@@ -1,11 +1,11 @@
 ﻿using System;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Input;
 using Windows.System;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Windows.Storage;
-using Microsoft.Toolkit.Uwp;
+using ClipboardCanvas.GlobalizationExtensions;
 
 using ClipboardCanvas.EventArguments.Collections;
 using ClipboardCanvas.Helpers;

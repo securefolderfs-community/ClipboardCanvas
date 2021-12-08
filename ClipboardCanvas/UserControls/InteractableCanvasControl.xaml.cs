@@ -1,13 +1,13 @@
 ﻿using System;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Windows.Foundation;
 using System.Collections.Generic;
 using Windows.Storage;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media.Imaging;
 using System.Numerics;
 
 using ClipboardCanvas.ViewModels.UserControls;
@@ -169,7 +169,7 @@ namespace ClipboardCanvas.UserControls
             }
         }
 
-        private async void RootContentGrid_DoubleTapped(object sender, Windows.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
+        private async void RootContentGrid_DoubleTapped(object sender, Microsoft.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
         {
             if ((sender as FrameworkElement)?.DataContext is InteractableCanvasControlItemViewModel itemViewModel)
             {

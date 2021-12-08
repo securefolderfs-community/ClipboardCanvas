@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
-using Microsoft.Toolkit.Mvvm.Input;
-using Windows.System;
-using ClipboardCanvas.DataModels;
-using Windows.UI.Xaml.Media.Imaging;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Storage.Streams;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.WinUI;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.ApplicationModel.Core;
-using Microsoft.Toolkit.Uwp;
+using Microsoft.UI.Xaml;
 
+using ClipboardCanvas.DataModels;
+using ClipboardCanvas.GlobalizationExtensions;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.EventArguments.Collections;
 using ClipboardCanvas.Extensions;
@@ -35,6 +35,9 @@ using ClipboardCanvas.Models.Autopaste;
 using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Contexts.Operations;
 using ClipboardCanvas.CanavsPasteModels;
+using Microsoft.UI.Dispatching;
+using Windows.System;
+using DispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {
@@ -703,7 +706,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
                     case StorageLibraryChangeType.Created:
                         {
-                            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(() =>
+                            await DispatcherQueue.GetForCurrentThread().EnqueueAsync(() =>
                             {
                                 // Add new collection item
                                 if (changedItem != null && !CollectionItems.Any((i) => item?.Path == i.AssociatedItem.Path))
@@ -718,7 +721,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                     case StorageLibraryChangeType.MovedOutOfLibrary:
                     case StorageLibraryChangeType.Deleted:
                         {
-                            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(() =>
+                            await DispatcherQueue.GetForCurrentThread().EnqueueAsync(() =>
                             {
                                 // Remove the collection item
                                 var collectionItem = FindCollectionItem(item?.Path);
@@ -729,7 +732,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
                     case StorageLibraryChangeType.MovedOrRenamed:
                         {
-                            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(() =>
+                            await DispatcherQueue.GetForCurrentThread().EnqueueAsync(() =>
                             {
                                 if (changedItem != null)
                                 {
@@ -755,7 +758,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                     case StorageLibraryChangeType.ContentsReplaced:
                     case StorageLibraryChangeType.ContentsChanged:
                         {
-                            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(() =>
+                            await DispatcherQueue.GetForCurrentThread().EnqueueAsync(() =>
                             {
                                 var collectionItem = FindCollectionItem(changedItem?.Path);
                                 if (collectionItem != null)

@@ -6,11 +6,10 @@
     xmlns:local="using:ClipboardCanvas.UserControls.OOBE"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:tuc="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:tuc="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:vc="using:ClipboardCanvas.ValueConverters"
     d:DesignHeight="300"
     d:DesignWidth="400"
-    muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
     mc:Ignorable="d">
 
     <UserControl.Resources>

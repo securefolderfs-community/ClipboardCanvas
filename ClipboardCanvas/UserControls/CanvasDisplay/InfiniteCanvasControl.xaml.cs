@@ -1,4 +1,4 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Models;
@@ -21,7 +21,7 @@ namespace ClipboardCanvas.UserControls.CanvasDisplay
             this.InitializeComponent();
         }
 
-        private void UserControl_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void UserControl_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             this.ViewModel.ControlView = this;
         }

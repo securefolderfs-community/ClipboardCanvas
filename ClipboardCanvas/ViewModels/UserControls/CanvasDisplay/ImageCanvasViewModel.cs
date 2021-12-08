@@ -4,7 +4,7 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using System.Collections.Generic;
 using Windows.Graphics.Imaging;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.ApplicationModel.DataTransfer;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;

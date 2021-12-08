@@ -1,4 +1,4 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 using ClipboardCanvas.ViewModels.UserControls;
 using ClipboardCanvas.Helpers;
 
@@ -22,7 +22,7 @@ namespace ClipboardCanvas.UserControls
         }
 
         // TODO: Move to view model??
-        private async void RestrictedAccess_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        private async void RestrictedAccess_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             await InitialApplicationChecksHelpers.HandleFileSystemPermissionDialog(ViewModel);
         }

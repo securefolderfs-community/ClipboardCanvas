@@ -1,5 +1,5 @@
 ﻿using Windows.Storage;
-using Microsoft.Toolkit.Uwp;
+using ClipboardCanvas.GlobalizationExtensions;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;

@@ -4,8 +4,8 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using System.Threading;
 using System.Collections.Generic;
-using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.Toolkit.Uwp;
+using CommunityToolkit.Mvvm.Input;
+using ClipboardCanvas.GlobalizationExtensions;
 
 using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;

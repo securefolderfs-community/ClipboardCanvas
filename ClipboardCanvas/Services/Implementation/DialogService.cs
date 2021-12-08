@@ -52,7 +52,7 @@ namespace ClipboardCanvas.Services.Implementation
         {
             _lastInAppNotification?.Dismiss();
 
-            IInAppNotification notification = MainPage.Instance.MainInAppNotification;
+            IInAppNotification notification = MainWindow.Instance.MainWindowContentPage.MainInAppNotification;
             _lastInAppNotification = notification;
 
             if (viewModel != null)

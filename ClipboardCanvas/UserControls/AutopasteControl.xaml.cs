@@ -1,10 +1,10 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 
 using ClipboardCanvas.ViewModels.UserControls.Autopaste;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using ClipboardCanvas.Services;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Windows.UI.Xaml.Controls.Primitives;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.UI.Xaml.Controls.Primitives;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 

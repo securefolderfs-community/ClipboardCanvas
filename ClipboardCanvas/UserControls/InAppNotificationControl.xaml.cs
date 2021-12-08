@@ -1,5 +1,5 @@
 ﻿using System;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
 using ClipboardCanvas.EventArguments;
 using ClipboardCanvas.Enums;

@@ -7,7 +7,7 @@ using Windows.Storage.Streams;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;

@@ -10,9 +10,10 @@
     mc:Ignorable="d">
 
     <Grid>
-        <WebView
+        <!--  TODO: Regression  -->
+        <!--<WebView
             x:Name="ContentWebView"
             x:Load="{x:Bind ViewModel.ContentWebViewLoad, Mode=OneWay}"
-            Loaded="ContentWebView_Loaded" />
+            Loaded="ContentWebView_Loaded" />-->
     </Grid>
 </UserControl>

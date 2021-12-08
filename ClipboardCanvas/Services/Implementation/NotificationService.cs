@@ -1,9 +1,9 @@
-﻿using Microsoft.Toolkit.Uwp;
-using Microsoft.Toolkit.Uwp.Notifications;
+﻿using CommunityToolkit.WinUI.Notifications;
 using System.Threading;
 using Windows.UI.Notifications;
 
 using ClipboardCanvas.Enums;
+using ClipboardCanvas.GlobalizationExtensions;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 
 namespace ClipboardCanvas.Services.Implementation

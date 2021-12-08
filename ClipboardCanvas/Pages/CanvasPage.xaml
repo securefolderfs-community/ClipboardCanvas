@@ -5,8 +5,6 @@
     xmlns:ap="using:ClipboardCanvas.AttachedProperties"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:gxt="using:ClipboardCanvas.GlobalizationExtensions"
-    xmlns:i="using:Microsoft.Xaml.Interactivity"
-    xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
     xmlns:local="using:ClipboardCanvas.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -21,20 +19,14 @@
         <vc:BooleanInvertConverter x:Key="BooleanInvertConverter" />
     </Page.Resources>
     <Page.KeyboardAccelerators>
-        <KeyboardAccelerator Key="V" Modifiers="Control">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="Invoked">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </KeyboardAccelerator>
-        <KeyboardAccelerator Key="C" Modifiers="Control">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="Invoked">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </KeyboardAccelerator>
+        <KeyboardAccelerator
+            Key="V"
+            Invoked="KeyboardAccelerator_Invoked"
+            Modifiers="Control" />
+        <KeyboardAccelerator
+            Key="C"
+            Invoked="KeyboardAccelerator_Invoked"
+            Modifiers="Control" />
     </Page.KeyboardAccelerators>
 
     <Grid>
@@ -53,18 +45,10 @@
             Grid.ColumnSpan="2"
             AllowDrop="True"
             Background="Transparent"
+            DragEnter="Grid_DragEnter"
+            DragLeave="Grid_DragLeave"
+            Drop="Grid_Drop"
             RowSpacing="8">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="DragEnter">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DragEnterCommand}" />
-                </icore:EventTriggerBehavior>
-                <icore:EventTriggerBehavior EventName="Drop">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DropCommand}" />
-                </icore:EventTriggerBehavior>
-                <icore:EventTriggerBehavior EventName="DragLeave">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DragLeaveCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
 
             <Grid.RowDefinitions>
                 <RowDefinition />

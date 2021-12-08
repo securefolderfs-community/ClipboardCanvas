@@ -9,8 +9,9 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
+    <!--  TODO: Regression  -->
     <Grid>
-        <MediaPlayerElement
+        <!--<MediaPlayerElement
             x:Name="MediaPlayerContent"
             x:Load="{x:Bind ViewModel.ContentMediaLoad, Mode=OneWay}"
             AreTransportControlsEnabled="True"
@@ -27,6 +28,6 @@
                     IsZoomButtonVisible="True"
                     ShowAndHideAutomatically="True" />
             </MediaPlayerElement.TransportControls>
-        </MediaPlayerElement>
+        </MediaPlayerElement>-->
     </Grid>
 </UserControl>

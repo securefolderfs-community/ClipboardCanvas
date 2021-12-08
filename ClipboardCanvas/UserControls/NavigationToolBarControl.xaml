@@ -9,7 +9,7 @@
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:tua="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    xmlns:tua="using:CommunityToolkit.WinUI.UI.Animations"
     xmlns:uc="using:ClipboardCanvas.UserControls"
     xmlns:vc="using:ClipboardCanvas.ValueConverters"
     xmlns:vm="using:ClipboardCanvas.ViewModels.UserControls"
@@ -28,22 +28,26 @@
                     <!--  Theme dictionary  -->
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Light">
-                            <AcrylicBrush
+                            <!--  TODO: Regression  -->
+
+                            <!--<AcrylicBrush
                                 x:Key="NavigationBarBackground"
                                 Windows10version1903:TintLuminosityOpacity="0.60"
                                 BackgroundSource="HostBackdrop"
                                 FallbackColor="{ThemeResource SolidBackgroundAcrylic}"
                                 TintColor="{ThemeResource SolidBackgroundAcrylic}"
-                                TintOpacity="0.60" />
+                                TintOpacity="0.60" />-->
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Dark">
-                            <AcrylicBrush
+                            <!--  TODO: Regression  -->
+
+                            <!--<AcrylicBrush
                                 x:Key="NavigationBarBackground"
                                 Windows10version1903:TintLuminosityOpacity="0.50"
                                 BackgroundSource="HostBackdrop"
                                 FallbackColor="{ThemeResource SolidBackgroundAcrylic}"
                                 TintColor="{ThemeResource SolidBackgroundAcrylic}"
-                                TintOpacity="0.50" />
+                                TintOpacity="0.50" />-->
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>
                 </ResourceDictionary>
@@ -53,7 +57,7 @@
 
             <!--  Medium size mode  -->
             <DataTemplate x:Key="ToolBar_Small_SizeMode" x:DataType="vm:NavigationToolBarControlViewModel">
-                <Grid Background="{StaticResource NavigationBarBackground}">
+                <Grid Background="{ThemeResource SolidBackgroundAcrylic}">
                     <!--  Navigation  -->
                     <uc:NavigationControl
                         x:Name="NavigationControls"
@@ -68,7 +72,7 @@
                     Height="80"
                     Padding="20,0,20,0"
                     HorizontalAlignment="Stretch"
-                    Background="{StaticResource NavigationBarBackground}">
+                    Background="{ThemeResource SolidBackgroundAcrylic}">
                     <Grid.ColumnDefinitions>
 
                         <!--  Suggested actions  -->

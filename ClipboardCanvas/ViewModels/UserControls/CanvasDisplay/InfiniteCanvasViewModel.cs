@@ -5,16 +5,17 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using System.IO;
 using Newtonsoft.Json;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.WinUI;
 using System.Linq;
 using System.Collections.Generic;
-using Windows.ApplicationModel.Core;
-using Microsoft.Toolkit.Uwp;
 using Windows.Storage.Streams;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
+using Microsoft.UI.Dispatching;
 
+using ClipboardCanvas.GlobalizationExtensions;
 using ClipboardCanvas.CanavsPasteModels;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.DataModels.ContentDataModels;
@@ -475,7 +476,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
                     case StorageLibraryChangeType.Created:
                         {
-                            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(async () =>
+                            await DispatcherQueue.GetForCurrentThread().EnqueueAsync(async () =>
                             {
                                 if (changedItem == null || InteractableCanvasControlModel.ContainsItem(InteractableCanvasControlModel.FindItem(changedItem.Path)))
                                 {
@@ -500,7 +501,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     case StorageLibraryChangeType.MovedOutOfLibrary:
                     case StorageLibraryChangeType.Deleted:
                         {
-                            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(() =>
+                            await DispatcherQueue.GetForCurrentThread().EnqueueAsync(() =>
                             {
                                 InteractableCanvasControlModel.RemoveItem(InteractableCanvasControlModel.FindItem(item?.Path));
                             });
@@ -509,7 +510,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
                     case StorageLibraryChangeType.MovedOrRenamed:
                         {
-                            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(async () =>
+                            await DispatcherQueue.GetForCurrentThread().EnqueueAsync(async () =>
                             {
                                 if (changedItem != null)
                                 {
@@ -541,7 +542,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     case StorageLibraryChangeType.ContentsReplaced:
                     case StorageLibraryChangeType.ContentsChanged:
                         {
-                            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(async () =>
+                            await DispatcherQueue.GetForCurrentThread().EnqueueAsync(async () =>
                             {
                                 var interactableCanvasControlItem = InteractableCanvasControlModel.FindItem(changedItem.Path);
                                 if (interactableCanvasControlItem != null)

@@ -1,7 +1,7 @@
 ﻿using ClipboardCanvas.Extensions;
 using ClipboardCanvas.ViewModels.ContextMenu;
 using System.Collections.Generic;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 
 namespace ClipboardCanvas.Helpers
 {

@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.UserControls.SimpleCanvasDisplay"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:tui="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:tui="using:CommunityToolkit.WinUI.UI"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
