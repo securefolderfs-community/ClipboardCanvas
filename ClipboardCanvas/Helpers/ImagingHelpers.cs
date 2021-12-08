@@ -7,10 +7,10 @@ using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using Microsoft.UI.Xaml.Media.Imaging;
-
-using ClipboardCanvas.Helpers.Filesystem;
 using Microsoft.UI.Xaml.Media;
 using System.Threading;
+
+using ClipboardCanvas.Helpers.Filesystem;
 
 namespace ClipboardCanvas.Helpers
 {

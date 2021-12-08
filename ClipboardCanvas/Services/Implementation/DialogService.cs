@@ -9,7 +9,6 @@ using ClipboardCanvas.Enums;
 using ClipboardCanvas.ViewModels.Dialogs;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
 using ClipboardCanvas.Extensions;
-using ClipboardCanvas.Helpers;
 using ClipboardCanvas.ModelViews;
 
 namespace ClipboardCanvas.Services.Implementation
@@ -18,11 +17,14 @@ namespace ClipboardCanvas.Services.Implementation
     {
         private IInAppNotification _lastInAppNotification;
 
+        private IDialogView _currentDialog;
+
         #region IDialogService
 
-        public void CloseAllDialogs()
+        public void CloseDialog()
         {
-            DialogHelpers.CloseCurrentDialog();
+            _currentDialog?.Hide();
+            _currentDialog = null;
         }
 
         public IDialog<TViewModel> GetDialog<TViewModel>(TViewModel viewModel)
@@ -42,6 +44,7 @@ namespace ClipboardCanvas.Services.Implementation
             if (dialog is IDialogView dialogView)
             {
                 dialogView.XamlRoot = MainWindow.Instance.Content.XamlRoot;
+                _currentDialog = dialogView;
             }
             else
             {

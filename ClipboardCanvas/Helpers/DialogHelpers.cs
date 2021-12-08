@@ -4,6 +4,8 @@ using Microsoft.UI.Xaml;
 using System.Linq;
 
 using ClipboardCanvas.Enums;
+using System.Collections.Generic;
+using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace ClipboardCanvas.Helpers
 {

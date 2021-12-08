@@ -214,7 +214,7 @@
     <value>Clipboard Canvas has been updated!</value>
   </data>
   <data name="ChangelogViewOnGitHub" xml:space="preserve">
-    <value>ChangelogViewOnGitHub</value>
+    <value>View on GitHub</value>
   </data>
   <data name="ClipboardCanvasCrashReportIssue" xml:space="preserve">
     <value>Report this issue</value>
