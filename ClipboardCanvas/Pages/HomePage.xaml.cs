@@ -25,7 +25,7 @@ namespace ClipboardCanvas.Pages
         {
             if (e.Parameter is FromAutopasteHomepageNavigationParameterModel fromAutopasteParameter)
             {
-                this.ViewModel.IsAutopasteTeachingTipShown = true;
+                this.ViewModel.OpenTeachingTip();
             }
 
             base.OnNavigatedTo(e);

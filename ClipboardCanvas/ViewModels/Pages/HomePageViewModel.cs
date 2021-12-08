@@ -41,6 +41,11 @@ namespace ClipboardCanvas.ViewModels.Pages
             await TimelineService.LoadAllSectionsAsync();
         }
 
+        public void OpenTeachingTip()
+        {
+            IsAutopasteTeachingTipShown = true;
+        }
+
         private void UserSettingsService_OnSettingChangedEvent(object sender, SettingChangedEventArgs e)
         {
             if (e.settingName == nameof(UserSettingsService.ShowTimelineOnHomepage))
