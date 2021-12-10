@@ -32,7 +32,7 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         public string AppVersionText
         {
-            get => string.Format("SettingsAboutPageAppVersion".GetLocalized(), ApplicationService.AppVersion);
+            get => string.Format("SettingsAboutPageAppVersion".GetLocalized2(), ApplicationService.AppVersion);
         }
 
         private bool _PrivacyPolicyProgressRingLoad;

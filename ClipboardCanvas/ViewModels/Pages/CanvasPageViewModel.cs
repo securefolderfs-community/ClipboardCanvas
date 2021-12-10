@@ -80,7 +80,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public string SwitchCanvasModeText
         {
-            get => RequestedCanvasType == CanvasType.OneCanvas ? "SwitchToInfiniteCanvas".GetLocalized() : "SwitchToOneCanvas".GetLocalized();
+            get => RequestedCanvasType == CanvasType.OneCanvas ? "SwitchToInfiniteCanvas".GetLocalized2() : "SwitchToOneCanvas".GetLocalized2();
         }
 
         private bool _InfiniteCanvasCaptionLoad;
@@ -113,7 +113,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public string CanvasTypeText
         {
-            get => RequestedCanvasType == CanvasType.OneCanvas ? "CanvasTypeInfoCurrentOneCanvas".GetLocalized() : "CanvasTypeInfoCurrentInfiniteCanvas".GetLocalized();
+            get => RequestedCanvasType == CanvasType.OneCanvas ? "CanvasTypeInfoCurrentOneCanvas".GetLocalized2() : "CanvasTypeInfoCurrentInfiniteCanvas".GetLocalized2();
         }
 
         private string _TipText;

@@ -12,12 +12,11 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Storage.Streams;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using CommunityToolkit.WinUI;
 using Windows.ApplicationModel.DataTransfer;
 using Microsoft.UI.Xaml;
 
-using ClipboardCanvas.DataModels;
 using ClipboardCanvas.GlobalizationExtensions;
+using ClipboardCanvas.DataModels;
 using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.EventArguments.Collections;
 using ClipboardCanvas.Extensions;
@@ -38,6 +37,7 @@ using ClipboardCanvas.CanavsPasteModels;
 using Microsoft.UI.Dispatching;
 using Windows.System;
 using DispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue;
+using CommunityToolkit.WinUI;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {
@@ -45,7 +45,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
     {
         #region Protected Members
 
-        protected readonly SafeWrapperResult CollectionFolderNotFound = new SafeWrapperResult(OperationErrorCode.NotFound, new DirectoryNotFoundException(), "CollectionFolderNotFound".GetLocalized());
+        protected readonly SafeWrapperResult CollectionFolderNotFound = new SafeWrapperResult(OperationErrorCode.NotFound, new DirectoryNotFoundException(), "CollectionFolderNotFound".GetLocalized2());
 
         protected readonly SafeWrapperResult RestrictedAccessUnauthorized = StaticExceptionReporters.DefaultSafeWrapperExceptionReporter.GetStatusResult(new UnauthorizedAccessException());
 
@@ -281,7 +281,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         private async Task ChangeCollectionIcon()
         {
-            string errorMessage = "CouldNotSetCollectionIcon".GetLocalized();
+            string errorMessage = "CouldNotSetCollectionIcon".GetLocalized2();
 
             StorageFile pickedIcon = await DialogService.PickSingleFile(new List<string>() { ".png", ".jpg", ".jpeg"/*, ".gif", ".svg"*/ });
             if (pickedIcon != null)
@@ -293,7 +293,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
                     if (!result)
                     {
-                        PushErrorNotification("CouldNotDeleteCollectionIcon".GetLocalized(), result);
+                        PushErrorNotification("CouldNotDeleteCollectionIcon".GetLocalized2(), result);
                     }
                 }
 
@@ -341,7 +341,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 {
                     if (result != OperationErrorCode.NotFound) // Only if it wasn't NotFound -- if it was, continue as usual
                     { 
-                        PushErrorNotification("CouldNotRemoveCollectionIcon".GetLocalized(), result);
+                        PushErrorNotification("CouldNotRemoveCollectionIcon".GetLocalized2(), result);
                         return;
                     }
                 }
@@ -676,90 +676,99 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
         private async void FilesystemChangeWatcher_OnChangeRegisteredEvent(object sender, ChangeRegisteredEventArgs e)
         {
+            // TODO: Regression - e.filesystemChangeReader.ReadBatchAsync() throws E_WRONG_THREAD
             return;
             await MainWindow.Instance.DispatcherQueue.EnqueueAsync(async () =>
             {
-                // Get changes
-                IEnumerable<StorageLibraryChange> changes = await e.filesystemChangeReader.ReadBatchAsync();
-
-                // Accept changes
-                await e.filesystemChangeReader.AcceptChangesAsync();
-
-                // Reflect changes in collection
-                foreach (var item in changes)
+                try
                 {
-                    string itemParentFolder = Path.GetDirectoryName(item.Path);
-                    string watchedParentFolder = collectionFolder.Path;
-                    if (itemParentFolder != watchedParentFolder)
+                    // Get changes
+                    IEnumerable<StorageLibraryChange> changes = await e.filesystemChangeReader.ReadBatchAsync();
+
+                    // Accept changes
+                    await e.filesystemChangeReader.AcceptChangesAsync();
+
+                    // Reflect changes in collection
+                    foreach (var item in changes)
                     {
-                        continue;
-                    }
+                        string itemParentFolder = Path.GetDirectoryName(item.Path);
+                        string watchedParentFolder = collectionFolder.Path;
+                        if (itemParentFolder != watchedParentFolder)
+                        {
+                            continue;
+                        }
 
-                    IStorageItem changedItem = await item.GetStorageItemAsync();
+                        IStorageItem changedItem = await item.GetStorageItemAsync();
 
-                    switch (item.ChangeType)
-                    {
-                        case StorageLibraryChangeType.ChangeTrackingLost:
-                            {
-                                e.filesystemChangeTracker.Reset();
-                                break;
-                            }
-
-                        case StorageLibraryChangeType.Created:
-                            {
-                                // Add new collection item
-                                if (changedItem != null && !CollectionItems.Any((i) => item?.Path == i.AssociatedItem.Path))
+                        switch (item.ChangeType)
+                        {
+                            case StorageLibraryChangeType.ChangeTrackingLost:
                                 {
-                                    var collectionItem = new CollectionItemViewModel(changedItem);
-                                    AddCollectionItem(collectionItem);
+                                    e.filesystemChangeTracker.Reset();
+                                    break;
                                 }
-                                break;
-                            }
 
-                        case StorageLibraryChangeType.MovedOutOfLibrary:
-                        case StorageLibraryChangeType.Deleted:
-                            {
-                                // Remove the collection item
-                                var collectionItem = FindCollectionItem(item?.Path);
-                                RemoveCollectionItem(collectionItem);
-                                break;
-                            }
-
-                        case StorageLibraryChangeType.MovedOrRenamed:
-                            {
-                                if (changedItem != null)
+                            case StorageLibraryChangeType.Created:
                                 {
-                                    string oldName = Path.GetFileName(item?.PreviousPath);
-                                    string newName = Path.GetFileName(item?.Path);
-
-                                    string oldParentPath = Path.GetDirectoryName(item?.PreviousPath);
-                                    string newParentPath = Path.GetDirectoryName(item?.Path);
-
-                                    if ((oldName != newName) && (oldParentPath == newParentPath))
+                                    // Add new collection item
+                                    if (changedItem != null && !CollectionItems.Any((i) => item?.Path == i.AssociatedItem.Path))
                                     {
-                                        // Renamed
-                                        var collectionItem = FindCollectionItem(item?.PreviousPath);
-
-                                        collectionItem.DangerousUpdateItem(changedItem);
-                                        OnCollectionItemRenamedEvent?.Invoke(this, new CollectionItemRenamedEventArgs(this, collectionItem, item.PreviousPath));
+                                        var collectionItem = new CollectionItemViewModel(changedItem);
+                                        AddCollectionItem(collectionItem);
                                     }
+                                    break;
                                 }
-                                break;
-                            }
 
-                        case StorageLibraryChangeType.ContentsReplaced:
-                        case StorageLibraryChangeType.ContentsChanged:
-                            {
-                                var collectionItem = FindCollectionItem(changedItem?.Path);
-                                if (collectionItem != null)
+                            case StorageLibraryChangeType.MovedOutOfLibrary:
+                            case StorageLibraryChangeType.Deleted:
                                 {
-                                    OnCollectionItemContentsChangedEvent?.Invoke(this, new CollectionItemContentsChangedEventArgs(this, collectionItem));
+                                    // Remove the collection item
+                                    var collectionItem = FindCollectionItem(item?.Path);
+                                    RemoveCollectionItem(collectionItem);
+                                    break;
                                 }
-                                break;
-                            }
+
+                            case StorageLibraryChangeType.MovedOrRenamed:
+                                {
+                                    if (changedItem != null)
+                                    {
+                                        string oldName = Path.GetFileName(item?.PreviousPath);
+                                        string newName = Path.GetFileName(item?.Path);
+
+                                        string oldParentPath = Path.GetDirectoryName(item?.PreviousPath);
+                                        string newParentPath = Path.GetDirectoryName(item?.Path);
+
+                                        if ((oldName != newName) && (oldParentPath == newParentPath))
+                                        {
+                                            // Renamed
+                                            var collectionItem = FindCollectionItem(item?.PreviousPath);
+
+                                            collectionItem.DangerousUpdateItem(changedItem);
+                                            OnCollectionItemRenamedEvent?.Invoke(this, new CollectionItemRenamedEventArgs(this, collectionItem, item.PreviousPath));
+                                        }
+                                    }
+                                    break;
+                                }
+
+                            case StorageLibraryChangeType.ContentsReplaced:
+                            case StorageLibraryChangeType.ContentsChanged:
+                                {
+                                    var collectionItem = FindCollectionItem(changedItem?.Path);
+                                    if (collectionItem != null)
+                                    {
+                                        OnCollectionItemContentsChangedEvent?.Invoke(this, new CollectionItemContentsChangedEventArgs(this, collectionItem));
+                                    }
+                                    break;
+                                }
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    // Wrong thread exception bug?
                 }
             });
         }
@@ -919,7 +928,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
         protected virtual void PushErrorNotification(string errorMessage, SafeWrapperResult result)
         {
             IInAppNotification notification = DialogService.GetNotification();
-            notification.ViewModel.NotificationText = string.Format("CollectionErrorNotificationDescription".GetLocalized(), errorMessage, result.ErrorCode);
+            notification.ViewModel.NotificationText = string.Format("CollectionErrorNotificationDescription".GetLocalized2(), errorMessage, result.ErrorCode);
             notification.ViewModel.ShownButtons = InAppNotificationButtonType.OkButton;
 
             notification.Show(Constants.UI.Notifications.NOTIFICATION_DEFAULT_SHOW_TIME);

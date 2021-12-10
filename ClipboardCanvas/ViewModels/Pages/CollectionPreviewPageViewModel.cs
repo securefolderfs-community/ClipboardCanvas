@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using CommunityToolkit.WinUI;
+using ClipboardCanvas.GlobalizationExtensions;
 using System;
 using System.Linq;
 using System.Windows.Input;
@@ -28,6 +28,7 @@ using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers;
 using Windows.System;
 using DispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue;
+using CommunityToolkit.WinUI;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {
@@ -114,7 +115,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public string SplitButtonMainOptionText
         {
-            get => UserSettings.UseInfiniteCanvasAsDefault ? "OpenNewInfiniteCanvas".GetLocalized() : "OpenNewCanvas".GetLocalized();
+            get => UserSettings.UseInfiniteCanvasAsDefault ? "OpenNewInfiniteCanvas".GetLocalized2() : "OpenNewCanvas".GetLocalized2();
         }
 
         public bool SplitButtonShowInfiniteCanvasOption
