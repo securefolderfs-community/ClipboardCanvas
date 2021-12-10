@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.UI.Xaml;
 
 using ClipboardCanvas.DataModels;
 
@@ -17,5 +19,7 @@ namespace ClipboardCanvas.Services
         AppLanguageModel AppLanguage { get; set; }
 
         AppLanguageModel CurrentAppLanguage { get; }
+
+        IntPtr GetHwnd(Window wnd);
     }
 }

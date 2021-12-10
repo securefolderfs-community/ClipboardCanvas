@@ -13,9 +13,8 @@ using Windows.Storage.Streams;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
-using Microsoft.UI.Dispatching;
+using CommunityToolkit.WinUI;
 
-using ClipboardCanvas.GlobalizationExtensions;
 using ClipboardCanvas.CanavsPasteModels;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.DataModels.ContentDataModels;
@@ -32,7 +31,8 @@ using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.ViewModels.UserControls.CanvasPreview;
 using ClipboardCanvas.Contexts.Operations;
 using ClipboardCanvas.Enums;
-using CommunityToolkit.WinUI;
+using ClipboardCanvas.UnsafeNative;
+using Vanara.PInvoke;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -419,29 +419,27 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             AssertNoErrorInfiniteCanvas(saveDataResult); // Only for notification
 
             // Save canvas image preview
-            SafeWrapperResult imagePreviewSaveResult = await SafeWrapperRoutines.SafeWrapAsync(() =>
+            SafeWrapperResult imagePreviewSaveResult = await SafeWrapperRoutines.SafeWrapAsync(async () =>
             {
-                // TODO: Regression
-                return FileIO.WriteBufferAsync(InfiniteCanvasItem.CanvasPreviewImageFile, e.canvasImageBuffer).AsTask();
-                //return;
-                //using (IRandomAccessStream fileStream = await InfiniteCanvasItem.CanvasPreviewImageFile.OpenAsync(FileAccessMode.ReadWrite))
-                //{
-                //    byte[] pixelArray = e.canvasImageBuffer.ToArray();
+                using (IRandomAccessStream fileStream = await InfiniteCanvasItem.CanvasPreviewImageFile.OpenAsync(FileAccessMode.ReadWrite))
+                {
+                    byte[] pixelArray = e.canvasImageBuffer.ToArray();
 
+                    IntPtr hwnd = ApplicationService.GetHwnd(MainWindow.Instance);
+                    HMONITOR hmonitor = User32.MonitorFromWindow(hwnd, User32.MonitorFlags.MONITOR_DEFAULTTONULL);
+                    SHCore.GetDpiForMonitor(hmonitor, SHCore.MONITOR_DPI_TYPE.MDT_RAW_DPI, out uint rawDpiX, out uint rawDpiY);
 
-                //    DisplayInformation displayInfo = DisplayInformation.GetForCurrentView();
+                    BitmapEncoder bitmapEncoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
+                    bitmapEncoder.SetPixelData(BitmapPixelFormat.Bgra8, // RGB with alpha
+                                         BitmapAlphaMode.Premultiplied,
+                                         (uint)e.pixelWidth,
+                                         (uint)e.pixelHeight,
+                                         rawDpiX,
+                                         rawDpiY,
+                                         pixelArray);
 
-                //    BitmapEncoder bitmapEncoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
-                //    bitmapEncoder.SetPixelData(BitmapPixelFormat.Bgra8, // RGB with alpha
-                //                         BitmapAlphaMode.Premultiplied,
-                //                         (uint)e.pixelWidth,
-                //                         (uint)e.pixelHeight,
-                //                         displayInfo.RawDpiX,
-                //                         displayInfo.RawDpiY,
-                //                         pixelArray);
-
-                //    await bitmapEncoder.FlushAsync();
-                //}
+                    await bitmapEncoder.FlushAsync();
+                }
             });
         }
 
