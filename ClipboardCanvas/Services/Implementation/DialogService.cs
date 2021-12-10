@@ -2,14 +2,17 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.Storage.Pickers;
 using System.Collections.Generic;
+using Microsoft.UI.Xaml;
 
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.ViewModels.Dialogs;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
-using ClipboardCanvas.Extensions;
+//using ClipboardCanvas.Extensions;
 using ClipboardCanvas.ModelViews;
+using ClipboardCanvas.ComImports;
+using ClipboardCanvas.Extensions;
+using Windows.Storage.Pickers;
 
 namespace ClipboardCanvas.Services.Implementation
 {
@@ -90,6 +93,9 @@ namespace ClipboardCanvas.Services.Implementation
             FolderPicker folderPicker = new FolderPicker();
             folderPicker.FileTypeFilter.Add("*");
 
+            IntPtr hwnd = Vanara.PInvoke.User32.GetActiveWindow().DangerousGetHandle();
+            WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, hwnd);
+
             return await folderPicker.PickSingleFolderAsync();
         }
 
@@ -108,6 +114,9 @@ namespace ClipboardCanvas.Services.Implementation
                     filePicker.FileTypeFilter.Add(item);
                 }
             }
+
+            IntPtr hwnd = Vanara.PInvoke.User32.GetActiveWindow().DangerousGetHandle();
+            WinRT.Interop.InitializeWithWindow.Initialize(filePicker, hwnd);
 
             return await filePicker.PickSingleFileAsync();
         }

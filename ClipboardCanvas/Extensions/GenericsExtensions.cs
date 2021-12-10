@@ -35,23 +35,5 @@ namespace ClipboardCanvas.Extensions
         /// <param name="value"></param>
         /// <returns><see cref="bool"/> if <paramref name="value"/> is null, otherwise false</returns>
         public static bool IsNull<T>(this T value) => GenericEquals<T>(value, default);
-
-        /// <summary>
-        /// Tries to cast the given value to new type
-        /// </summary>
-        /// <typeparam name="TRequested"></typeparam>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public static TRequested As<TRequested>(this object obj, TRequested defaultValue = default(TRequested))
-        {
-            try
-            {
-                return (TRequested)obj;
-            }
-            catch
-            {
-                return defaultValue;
-            }
-        }
     }
 }
