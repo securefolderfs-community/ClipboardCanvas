@@ -161,7 +161,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             else if (newCanvasItemResult != OperationErrorCode.Canceled)
             {
                 IInAppNotification notification = DialogService.GetNotification();
-                notification.ViewModel.NotificationText = string.Format("ErrorWhilstOverridingReference".GetLocalized(), newCanvasItemResult.ErrorCode);
+                notification.ViewModel.NotificationText = string.Format("ErrorWhilstOverridingReference".GetLocalized2(), newCanvasItemResult.ErrorCode);
                 notification.ViewModel.ShownButtons = InAppNotificationButtonType.OkButton;
 
                 notification.Show(Constants.UI.Notifications.NOTIFICATION_DEFAULT_SHOW_TIME);
@@ -175,7 +175,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task InitializeDisplayName()
         {
-            DisplayName = (await CanvasItem.SourceItem)?.Name ?? "InvalidFile".GetLocalized();
+            DisplayName = (await CanvasItem.SourceItem)?.Name ?? "InvalidFile".GetLocalized2();
         }
 
         public async Task InitializeItem()

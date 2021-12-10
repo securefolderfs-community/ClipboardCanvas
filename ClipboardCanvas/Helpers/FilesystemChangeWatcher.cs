@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Search;
@@ -80,7 +79,7 @@ namespace ClipboardCanvas.Helpers
             return false;
         }
 
-        private void FilesystemWatcherQuery_ContentsChanged(IStorageQueryResultBase sender, object args)
+        private async void FilesystemWatcherQuery_ContentsChanged(IStorageQueryResultBase sender, object args)
         {
             OnChangeRegisteredEvent?.Invoke(this, new ChangeRegisteredEventArgs(_filesystemChangeTracker, _filesystemChangeReader));
         }

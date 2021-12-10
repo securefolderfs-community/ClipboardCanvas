@@ -12,7 +12,7 @@ namespace ClipboardCanvas.GlobalizationExtensions
             IndependentLoader = ResourceLoader.GetForViewIndependentUse();
         }
 
-        public static string GetLocalized(this string resourceKey, UIContext uiContext = null)
+        public static string GetLocalized2(this string resourceKey, UIContext uiContext = null)
         {
             if (uiContext is not null)
             {

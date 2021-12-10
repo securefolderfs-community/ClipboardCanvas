@@ -53,7 +53,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 
         public string AutopasteTargetName
         {
-            get => AutopasteTarget?.DisplayName ?? "AutopasteNoTarget".GetLocalized();
+            get => AutopasteTarget?.DisplayName ?? "AutopasteNoTarget".GetLocalized2();
         }
 
         public bool EnableAutopaste
@@ -210,7 +210,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 
         private async void Clipboard_ContentChanged(object sender, object e)
         {
-            if (AutopasteTarget != null && !ApplicationService.IsWindowActivated)
+            if (AutopasteTarget != null && !ApplicationService.IsWindowActivated && UserSettingsService.IsAutopasteEnabled)
             {
                 SafeWrapper<DataPackageView> clipboardData = ClipboardHelpers.GetClipboardData();
                 if (clipboardData)

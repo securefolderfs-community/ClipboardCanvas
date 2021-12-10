@@ -273,7 +273,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 Command = new AsyncRelayCommand(async () => await StorageHelpers.OpenFile(await SourceItem)),
                 IconGlyph = "\uE8E5",
-                Text = "OpenFile".GetLocalized()
+                Text = "OpenFile".GetLocalized2()
             });
 
             // Separator
@@ -284,7 +284,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 Command = new AsyncRelayCommand(CopyData),
                 IconGlyph = "\uE8C8",
-                Text = "CopyFile".GetLocalized()
+                Text = "CopyFile".GetLocalized2()
             });
 
             // Open containing folder
@@ -292,7 +292,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 Command = new AsyncRelayCommand(async () => await StorageHelpers.OpenContainingFolder(await SourceItem)),
                 IconGlyph = "\uE838",
-                Text = "OpenContainingFolder".GetLocalized()
+                Text = "OpenContainingFolder".GetLocalized2()
             });
 
             // Open reference containing folder
@@ -302,7 +302,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 {
                     Command = new AsyncRelayCommand(() => StorageHelpers.OpenContainingFolder(AssociatedItem)),
                     IconGlyph = "\uE838",
-                    Text = "OpenReferenceContainingFolder".GetLocalized()
+                    Text = "OpenReferenceContainingFolder".GetLocalized2()
                 });
             }
 
@@ -311,7 +311,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 Command = new AsyncRelayCommand(() => TryDeleteData()),
                 IconGlyph = "\uE74D",
-                Text = isContentAsReference ? "DeleteReference".GetLocalized() : "DeleteFile".GetLocalized(),
+                Text = isContentAsReference ? "DeleteReference".GetLocalized2() : "DeleteFile".GetLocalized2(),
             });
         }
 

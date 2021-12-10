@@ -151,10 +151,10 @@ namespace ClipboardCanvas.ViewModels.Dialogs
             if (!_dataFetchedSuccessfully || preparedReleases.IsEmpty())
             {
                 // Getting data failed, display fallback update info
-                _UpdateMarkdownInfoText += $"Error".GetLocalized();
+                _UpdateMarkdownInfoText += $"Error".GetLocalized2();
                 _UpdateMarkdownInfoText += "\n---";
                 _UpdateMarkdownInfoText += "\n";
-                _UpdateMarkdownInfoText += "ChangelogFetchingError".GetLocalized();
+                _UpdateMarkdownInfoText += "ChangelogFetchingError".GetLocalized2();
 
                 IsLoadingData = false;
                 UpdateMarkdownLoad = true;

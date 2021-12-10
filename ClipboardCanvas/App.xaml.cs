@@ -7,8 +7,8 @@ using System.Runtime.ExceptionServices;
 using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI.Notifications;
-
 using ClipboardCanvas.GlobalizationExtensions;
+
 using ClipboardCanvas.Services;
 using ClipboardCanvas.Services.Implementation;
 
@@ -208,11 +208,11 @@ namespace ClipboardCanvas
                         {
                             new AdaptiveText()
                             {
-                                Text = "ClipboardCanvasCrashTitle".GetLocalized()
+                                Text = "ClipboardCanvasCrashTitle".GetLocalized2()
                             },
                             new AdaptiveText()
                             {
-                                Text = "ClipboardCanvasCrashSubtitle".GetLocalized()
+                                Text = "ClipboardCanvasCrashSubtitle".GetLocalized2()
                             }
                         }
                     }
@@ -221,7 +221,7 @@ namespace ClipboardCanvas
                 {
                     Buttons =
                     {
-                        new ToastButton("ClipboardCanvasCrashReportIssue".GetLocalized(), Constants.UI.Notifications.TOAST_NOTIFICATION_ERROR_ARGUMENT)
+                        new ToastButton("ClipboardCanvasCrashReportIssue".GetLocalized2(), Constants.UI.Notifications.TOAST_NOTIFICATION_ERROR_ARGUMENT)
                         {
                             ActivationType = ToastActivationType.Foreground
                         }

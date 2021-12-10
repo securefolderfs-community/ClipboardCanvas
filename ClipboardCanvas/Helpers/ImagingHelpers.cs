@@ -20,6 +20,7 @@ namespace ClipboardCanvas.Helpers
         {
             if (FileHelpers.IsPathEqualExtension(file.Path, ".png"))
             {
+                return await file.GetThumbnailAsync(mode, requestedSize, options);
                 // Try to create a scaled-down version of the PNG with transparency
                 using (IRandomAccessStream fileStream = await file.OpenAsync(FileAccessMode.Read))
                 {

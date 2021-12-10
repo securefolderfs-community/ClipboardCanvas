@@ -155,13 +155,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.StatusCenter
 
             if (value > 0.0d)
             {
-                OperationDescription = string.Format("StatusCenterPercentCompleted".GetLocalized(), value.ToString("0.00"));
+                OperationDescription = string.Format("StatusCenterPercentCompleted".GetLocalized2(), value.ToString("0.00"));
                 IsIndeterminate = false;
                 ProgressBarValue = value;
             }
             else
             {
-                OperationDescription = "StatusCenterProcessing".GetLocalized();
+                OperationDescription = "StatusCenterProcessing".GetLocalized2();
                 IsIndeterminate = true;
             }
         }
@@ -170,7 +170,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.StatusCenter
         {
             StatusCenterItemViewModel item = new StatusCenterItemViewModel(operationName, operationType, cancellationTokenSource)
             {
-                OperationDescription = "StatusCenterStarting".GetLocalized()
+                OperationDescription = "StatusCenterStarting".GetLocalized2()
             };
 
             return item;
@@ -197,24 +197,24 @@ namespace ClipboardCanvas.ViewModels.UserControls.StatusCenter
             {
                 case StatusCenterOperationType.Paste:
                     {
-                        operationDescription = "StatusCenterPastingCanceled".GetLocalized();
+                        operationDescription = "StatusCenterPastingCanceled".GetLocalized2();
                         break;
                     }
 
                 case StatusCenterOperationType.OverrideReference:
                     {
-                        operationDescription = "StatusCenterOverwritingReferenceCanceled".GetLocalized();
+                        operationDescription = "StatusCenterOverwritingReferenceCanceled".GetLocalized2();
                         break;
                     }
 
                 default:
                     {
-                        operationDescription = "StatusCenterOperationCanceled".GetLocalized();
+                        operationDescription = "StatusCenterOperationCanceled".GetLocalized2();
                         break;
                     }
             }
 
-            var item = StatusCenterService.AppendInfoBanner("StatusCenterOperationCanceledTitle".GetLocalized(), operationDescription, _result);
+            var item = StatusCenterService.AppendInfoBanner("StatusCenterOperationCanceledTitle".GetLocalized2(), operationDescription, _result);
             item.ProgressPaused = true;
             item.IsProgressBarVisible = true;
         }
@@ -228,24 +228,24 @@ namespace ClipboardCanvas.ViewModels.UserControls.StatusCenter
             {
                 case StatusCenterOperationType.Paste:
                     {
-                        operationDescription = "StatusCenterPastingComplete".GetLocalized();
+                        operationDescription = "StatusCenterPastingComplete".GetLocalized2();
                         break;
                     }
 
                 case StatusCenterOperationType.OverrideReference:
                     {
-                        operationDescription = "StatusCenterOverwritingReferenceComplete".GetLocalized();
+                        operationDescription = "StatusCenterOverwritingReferenceComplete".GetLocalized2();
                         break;
                     }
 
                 default:
                     {
-                        operationDescription = "StatusCenterOperationComplete".GetLocalized();
+                        operationDescription = "StatusCenterOperationComplete".GetLocalized2();
                         break;
                     }
             }
 
-            var item = StatusCenterService.AppendInfoBanner("StatusCenterOperationCompleteTitle".GetLocalized(), operationDescription, _result);
+            var item = StatusCenterService.AppendInfoBanner("StatusCenterOperationCompleteTitle".GetLocalized2(), operationDescription, _result);
             item.IconGlyph = "\uE73E";
         }
 
@@ -270,7 +270,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.StatusCenter
         public void StartOperation()
         {
             IsIndeterminate = false;
-            OperationDescription = "StatusCenterCompleted".GetLocalized();
+            OperationDescription = "StatusCenterCompleted".GetLocalized2();
 
             if (IsOperationFinished)
             {

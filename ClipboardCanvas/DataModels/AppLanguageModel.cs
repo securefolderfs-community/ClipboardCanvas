@@ -24,7 +24,7 @@ namespace ClipboardCanvas.DataModels
             else
             {
                 Id = string.Empty;
-                var systemDefaultLanguageOptionStr = "SettingsGeneralPageDefaultLanguage".GetLocalized();
+                var systemDefaultLanguageOptionStr = "SettingsGeneralPageDefaultLanguage".GetLocalized2();
                 Name = string.IsNullOrEmpty(systemDefaultLanguageOptionStr) ? "System Default" : systemDefaultLanguageOptionStr;
             }
         }

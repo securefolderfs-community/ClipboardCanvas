@@ -143,7 +143,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 else
                 {
                     // Post a notification informing that rename had failed
-                    PushErrorNotification("CouldNotRenameCollection".GetLocalized(), result);
+                    PushErrorNotification("CouldNotRenameCollection".GetLocalized2(), result);
                 }
             }
 

@@ -113,7 +113,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         public void SetTitleBarForCanvasView(string collectionName)
         {
             TwoSideTitleBarLoad = true;
-            TitleBarFirstSideText = "CurrentCollection".GetLocalized();
+            TitleBarFirstSideText = "CurrentCollection".GetLocalized2();
             TitleBarSecondSideText = collectionName;
 
             StandardTitleBarLoad = false;
@@ -122,7 +122,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         public void SetTitleBarForCollectionPreview(string collectionName)
         {
             TwoSideTitleBarLoad = true;
-            TitleBarFirstSideText = "CollectionPreview".GetLocalized();
+            TitleBarFirstSideText = "CollectionPreview".GetLocalized2();
             TitleBarSecondSideText = collectionName;
 
             StandardTitleBarLoad = false;
