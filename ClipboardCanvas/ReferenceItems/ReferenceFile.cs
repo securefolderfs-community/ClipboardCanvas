@@ -9,6 +9,9 @@ using ClipboardCanvas.Exceptions;
 using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.UnsafeNative;
+using Vanara.PInvoke;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace ClipboardCanvas.ReferenceItems
 {
@@ -43,7 +46,7 @@ namespace ClipboardCanvas.ReferenceItems
                 return new SafeWrapperResult(OperationErrorCode.NotFound, new FileNotFoundException(), "File does not exist.");
             }
 
-            long fileId = UnsafeNativeHelpers.GetFileId(newPath);
+            long fileId = GetFileId(newPath);
             bool isRepairable = fileId != -1;
 
             _referenceFileData = new ReferenceFileData(newPath, fileId, isRepairable);
@@ -126,13 +129,18 @@ namespace ClipboardCanvas.ReferenceItems
             }
             else
             {
-                if (referenceFile.LastError == OperationErrorCode.InvalidArgument || referenceFile.LastError == OperationErrorCode.NotFound)
+                if (referenceFile.LastError == OperationErrorCode.InvalidArgument || referenceFile.LastError == OperationErrorCode.NotFound || referenceFile.LastError == OperationErrorCode.UnknownFailed)
                 {
                     if (referenceFileData.Result?.isRepairable ?? false)
                     {
                         // Repair it
-                        SafeWrapperResult result = await RepairReferenceFile(referenceFile, referenceFileData);
+                        SafeWrapper<ReferenceFileData> result = RepairReferenceFile(referenceFile, referenceFileData);
                         referenceFile.LastError = result;
+                        if (result)
+                        {
+                            await referenceFile.UpdateReference(result.Result.path, false);
+                            return await GetFile(file, result);
+                        }
                     }
                 }
             }
@@ -184,19 +192,59 @@ namespace ClipboardCanvas.ReferenceItems
             };
         }
 
-        private static async Task<SafeWrapperResult> RepairReferenceFile(ReferenceFile referenceFile, ReferenceFileData referenceFileData)
+        private static SafeWrapper<ReferenceFileData> RepairReferenceFile(ReferenceFile referenceFile, ReferenceFileData referenceFileData)
         {
             if (referenceFileData.fileId == -1)
             {
-                return referenceFile.LastError;
+                return (null, referenceFile.LastError);
             }
 
             // Get path from FileId...
+            SafeWrapperResult result = new SafeWrapperResult(OperationErrorCode.NotFound, "The reference file could not be repaired.");
 
-            // TODO: Implement that when it becomes possible
+            string volumeRoot = Path.GetPathRoot(referenceFileData.path);
+            using var volumeHandle = Kernel32.CreateFile(volumeRoot, Kernel32.FileAccess.GENERIC_READ, FileShare.Read, null, FileMode.Open, FileFlagsAndAttributes.FILE_FLAG_BACKUP_SEMANTICS);
+            if (volumeHandle.IsInvalid)
+            {
+                return (null, result);
+            }
 
-            // for now, return the error
-            return await Task.FromResult(referenceFile.LastError);
+            var fileId = new Kernel32.FILE_ID_DESCRIPTOR() { Type = 0, Id = new Kernel32.FILE_ID_DESCRIPTOR.DUMMYUNIONNAME() { FileId = referenceFileData.fileId } };
+            fileId.dwSize = (uint)Marshal.SizeOf(fileId);
+
+            using var hFile = Kernel32.OpenFileById(volumeHandle, fileId, Kernel32.FileAccess.GENERIC_READ, FileShare.Read, null, FileFlagsAndAttributes.FILE_FLAG_BACKUP_SEMANTICS);
+            if (hFile.IsInvalid)
+            {
+                return (null, result);
+            }
+
+            var stringBuilder = new StringBuilder(4096);
+            uint res = Kernel32.GetFinalPathNameByHandle(hFile, stringBuilder, 4095, 0);
+            if (res != 0)
+            {
+                return new SafeWrapper<ReferenceFileData>(new ReferenceFileData(Path.GetFullPath(stringBuilder.ToString().Replace(@"\\?\", "", StringComparison.Ordinal)), referenceFileData.fileId, true), OperationErrorCode.Success);
+            }
+            else
+            {
+                return (null, result);
+            }
+        }
+
+        private static long GetFileId(string path)
+        {
+            using var hFile = Kernel32.CreateFile(path, Kernel32.FileAccess.GENERIC_READ, FileShare.ReadWrite, null, FileMode.Open, FileFlagsAndAttributes.FILE_FLAG_BACKUP_SEMANTICS);
+            if (hFile.IsInvalid)
+            {
+                return -1L;
+            }
+
+            SafeWrapper<long> result = SafeWrapperRoutines.SafeWrap(() =>
+            {
+                var fileId = Kernel32.GetFileInformationByHandleEx<Kernel32.FILE_ID_INFO>(hFile, Kernel32.FILE_INFO_BY_HANDLE_CLASS.FileIdInfo);
+                return BitConverter.ToInt64(fileId.FileId.Identifier, 0);
+            });
+
+            return result ? result : -1L;
         }
 
         public static bool IsReferenceFile(StorageFile file)
