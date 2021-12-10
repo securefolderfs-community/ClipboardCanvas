@@ -10,6 +10,18 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
+    <UserControl.Resources>
+        <Style x:Key="WindowButton" TargetType="Button">
+            <Setter Property="Width" Value="54" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+    </UserControl.Resources>
+
     <Grid
         x:Name="CustomTitleBar"
         Padding="15,0,15,0"
@@ -32,9 +44,11 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
+        <!--  Draggable region  -->
         <Grid
             x:Name="DraggableRegion"
             Grid.ColumnSpan="3"
+            Margin="0,0,145,0"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             x:FieldModifier="public"
@@ -127,5 +141,56 @@
             Visibility="Collapsed">
             <FontIcon FontFamily="/Assets/Fonts/CalcMDL2.ttf#Calculator MDL2 Assets" Glyph="&#xEE49;" />
         </Button>
+
+        <Grid
+            Grid.Column="2"
+            Height="32"
+            Margin="0,0,-16,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Canvas.ZIndex="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button
+                Grid.Column="0"
+                Command="{x:Bind ViewModel.MinimizeCommand}"
+                Style="{StaticResource WindowButton}">
+                <Button.Content>
+                    <FontIcon
+                        FontSize="13"
+                        FontWeight="Light"
+                        Glyph="&#xE921;"
+                        Opacity="0.8" />
+                </Button.Content>
+            </Button>
+            <Button
+                Grid.Column="1"
+                Command="{x:Bind ViewModel.RestoreOrMaximizeCommand}"
+                Style="{StaticResource WindowButton}">
+                <Button.Content>
+                    <FontIcon
+                        FontSize="13"
+                        FontWeight="Light"
+                        Glyph="&#xE922;"
+                        Opacity="0.8" />
+                </Button.Content>
+            </Button>
+            <Button
+                Grid.Column="2"
+                Command="{x:Bind ViewModel.CloseCommand}"
+                Style="{StaticResource WindowButton}">
+                <Button.Content>
+                    <FontIcon
+                        FontSize="13"
+                        FontWeight="Light"
+                        Glyph="&#xE8BB;"
+                        Opacity="0.8" />
+                </Button.Content>
+            </Button>
+        </Grid>
     </Grid>
 </UserControl>
