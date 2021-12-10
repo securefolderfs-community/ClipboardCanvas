@@ -39,7 +39,6 @@ namespace ClipboardCanvas
 
         private void Initialize()
         {
-            // TODO: Regression
             Title = "Clipboard Canvas";
             ExtendsContentIntoTitleBar = true;
             SetTitleBar(MainWindowContentPage.WindowTitleBar.DraggableRegion);
@@ -47,20 +46,8 @@ namespace ClipboardCanvas
             IntPtr hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
             int wndLong = User32.GetWindowLong(hwnd, User32.WindowLongFlags.GWL_STYLE);
             User32.SetWindowLong(hwnd, User32.WindowLongFlags.GWL_STYLE, wndLong | (int)User32.WindowStyles.WS_SYSMENU);
-            //TitleBar = ApplicationView.GetForCurrentView().TitleBar;
-            //CoreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-
-            //CoreTitleBar.ExtendViewIntoTitleBar = true;
-            //Window.Current.SetTitleBar(MainWindowContentPage.WindowTitleBar.DraggableRegion);
 
             ThemeHelper.Initialize();
-
-            //CoreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
-        }
-
-        private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
-        {
-            //MainWindowContentPage.WindowTitleBar.CompactOverlay.Margin = new Thickness(0, 0, sender.SystemOverlayRightInset, 0);
         }
     }
 }
