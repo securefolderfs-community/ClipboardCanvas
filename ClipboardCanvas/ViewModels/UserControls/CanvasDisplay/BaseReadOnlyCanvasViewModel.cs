@@ -66,6 +66,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected ITimelineService TimelineService { get; } = Ioc.Default.GetService<ITimelineService>();
 
+        protected IApplicationService ApplicationService { get; } = Ioc.Default.GetService<IApplicationService>();
+
         protected ICollectionModel AssociatedCollection => view?.CollectionModel;
 
         /// <inheritdoc cref="AssociatedItem"/>

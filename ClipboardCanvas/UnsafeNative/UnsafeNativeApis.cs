@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Text;
 using static ClipboardCanvas.UnsafeNative.UnsafeNativeDataModels;
 
 namespace ClipboardCanvas.UnsafeNative
@@ -20,6 +19,8 @@ namespace ClipboardCanvas.UnsafeNative
             IntPtr hTemplateFile
         );
 
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        public static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint dwFlags);
 
         [DllImport("api-ms-win-core-file-fromapp-l1-1-0.dll", CharSet = CharSet.Auto,
         CallingConvention = CallingConvention.StdCall,

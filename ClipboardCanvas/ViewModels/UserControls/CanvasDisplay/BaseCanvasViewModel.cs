@@ -5,8 +5,8 @@ using Windows.Storage;
 using System.Threading;
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.Input;
-using ClipboardCanvas.GlobalizationExtensions;
 
+using ClipboardCanvas.GlobalizationExtensions;
 using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;

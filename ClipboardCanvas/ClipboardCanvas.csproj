@@ -32,6 +32,8 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Octokit" Version="0.50.0" />
+    <PackageReference Include="Vanara.PInvoke.SHCore" Version="3.3.14" />
+    <PackageReference Include="Vanara.Windows.Shell" Version="3.3.14" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 

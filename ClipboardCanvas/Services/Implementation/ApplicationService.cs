@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.ApplicationModel;
 using Windows.Globalization;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Windowing;
 
 using ClipboardCanvas.DataModels;
-using Microsoft.UI.Windowing;
 
 namespace ClipboardCanvas.Services.Implementation
 {
@@ -26,6 +27,12 @@ namespace ClipboardCanvas.Services.Implementation
         public List<AppLanguageModel> AppLanguages { get; } = ApplicationLanguages.ManifestLanguages.Select((item) => new AppLanguageModel(item)).ToList();
 
         public AppLanguageModel CurrentAppLanguage { get; } = new AppLanguageModel(ApplicationLanguages.PrimaryLanguageOverride);
+
+        public IntPtr GetHwnd(Window wnd)
+        {
+            IntPtr hwnd = WinRT.Interop.WindowNative.GetWindowHandle(wnd);
+            return hwnd;
+        }
 
         public ApplicationService()
         {
