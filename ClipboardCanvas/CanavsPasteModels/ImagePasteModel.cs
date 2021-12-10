@@ -53,7 +53,7 @@ namespace ClipboardCanvas.CanavsPasteModels
                         return items;
                     }
 
-                    StorageFile imageFile = items.Result.First().As<StorageFile>();
+                    StorageFile imageFile = items.Result.First() as StorageFile;
 
                     openedStream = await SafeWrapperRoutines.SafeWrapAsync(
                         () => imageFile.OpenReadAsync().AsTask());
