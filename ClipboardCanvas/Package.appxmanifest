@@ -7,12 +7,12 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="3547304d-3535-482e-8bf0-1b7a59e307d8"
+    Name="ClipboardCanvasWASDK"
     Publisher="CN=szymo"
     Version="1.0.0.0" />
 
   <Properties>
-    <DisplayName>ClipboardCanvas</DisplayName>
+    <DisplayName>Clipboard Canvas WASDK</DisplayName>
     <PublisherDisplayName>szymo</PublisherDisplayName>
     <Logo>Assets\AppIcon\StoreLogo.png</Logo>
   </Properties>
