@@ -7,6 +7,8 @@ using Windows.UI.ViewManagement;
 
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Pages;
+using Vanara.PInvoke;
+using System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -38,6 +40,13 @@ namespace ClipboardCanvas
         private void Initialize()
         {
             // TODO: Regression
+            Title = "Clipboard Canvas";
+            ExtendsContentIntoTitleBar = true;
+            SetTitleBar(MainWindowContentPage.WindowTitleBar.DraggableRegion);
+
+            IntPtr hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            int wndLong = User32.GetWindowLong(hwnd, User32.WindowLongFlags.GWL_STYLE);
+            User32.SetWindowLong(hwnd, User32.WindowLongFlags.GWL_STYLE, wndLong | (int)User32.WindowStyles.WS_SYSMENU);
             //TitleBar = ApplicationView.GetForCurrentView().TitleBar;
             //CoreTitleBar = CoreApplication.GetCurrentView().TitleBar;
 

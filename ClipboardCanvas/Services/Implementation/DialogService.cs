@@ -3,16 +3,13 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Windows.Storage;
 using System.Collections.Generic;
-using Microsoft.UI.Xaml;
+using Windows.Storage.Pickers;
 
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.ViewModels.Dialogs;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
-//using ClipboardCanvas.Extensions;
 using ClipboardCanvas.ModelViews;
-using ClipboardCanvas.ComImports;
 using ClipboardCanvas.Extensions;
-using Windows.Storage.Pickers;
 
 namespace ClipboardCanvas.Services.Implementation
 {
