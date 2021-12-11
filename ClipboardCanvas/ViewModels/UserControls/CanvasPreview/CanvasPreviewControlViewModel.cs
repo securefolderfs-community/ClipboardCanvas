@@ -47,8 +47,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasPreview
             }
 
             // Try for media
-            // TODO: Regression - media player does not exist in WindowsAppSDK 1.0
-            if (InitializeViewModelForType<MediaContentType, FallbackCanvasViewModel>(contentType, () => new FallbackCanvasViewModel(view, contentType)))
+            if (InitializeViewModelForType<MediaContentType, MediaCanvasViewModel>(contentType, () => new MediaCanvasViewModel(view, contentType)))
             {
                 return true;
             }
