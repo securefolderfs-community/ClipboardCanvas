@@ -21,29 +21,30 @@ namespace ClipboardCanvas.UserControls.CanvasDisplay
             this.InitializeComponent();
         }
 
-        private void ContentWebView_Loaded(object sender, RoutedEventArgs e)
+        private async void ContentWebView_Loaded(object sender, RoutedEventArgs e)
         {
             this.ViewModel.ControlView = this;
+
+            await ContentWebView.EnsureCoreWebView2Async(); // Init
+
             this.ViewModel.NotifyWebViewLoaded();
         }
 
         public void NavigateToHtml(string html)
         {
-            // TODO: Regression
-            //this.ContentWebView.NavigateToString(html);
+            this.ContentWebView.NavigateToString(html);
         }
 
         public void NavigateToSource(string source)
         {
-            // TODO: Regression
-            //this.ContentWebView.Source = new Uri(source);
+            this.ContentWebView.Source = new Uri(source);
         }
 
         #region IDisposable
 
         public void Dispose()
         {
-            // TODO: Dispose WebView
+            ContentWebView.Close();
         }
 
         #endregion
