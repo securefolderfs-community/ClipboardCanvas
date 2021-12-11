@@ -7,10 +7,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="300"
     d:DesignWidth="400"
+    Loaded="UserControl_Loaded"
     mc:Ignorable="d">
 
-    <!--  TODO: Regression  -->
     <Grid>
+        <!--  TODO: Regression - MediaPlayerElement does not exist in WindowsAppSDK 1.0  -->
         <!--<MediaPlayerElement
             x:Name="MediaPlayerContent"
             x:Load="{x:Bind ViewModel.ContentMediaLoad, Mode=OneWay}"
@@ -29,5 +30,10 @@
                     ShowAndHideAutomatically="True" />
             </MediaPlayerElement.TransportControls>
         </MediaPlayerElement>-->
+
+        <WebView2
+            x:Name="ContentWebView"
+            x:Load="{x:Bind ViewModel.ContentWebViewLoad, Mode=OneWay}"
+            Loaded="ContentWebView_Loaded" />
     </Grid>
 </UserControl>

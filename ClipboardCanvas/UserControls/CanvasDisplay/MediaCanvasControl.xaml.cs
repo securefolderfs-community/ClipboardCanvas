@@ -3,12 +3,15 @@ using Microsoft.UI.Xaml.Controls;
 
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
+using Windows.Storage;
+using System.IO;
+using Microsoft.Web.WebView2.Core;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace ClipboardCanvas.UserControls.CanvasDisplay
 {
-    public sealed partial class MediaCanvasControl : UserControl, IMediaCanvasControlView // TODO: Regression
+    public sealed partial class MediaCanvasControl : UserControl, IMediaCanvasControlView
     {
         public MediaCanvasViewModel ViewModel
         {
@@ -42,6 +45,28 @@ namespace ClipboardCanvas.UserControls.CanvasDisplay
         {
             this.ViewModel.ControlView = this;
             this.ViewModel.UpdateMediaControl();
+        }
+
+        private async void ContentWebView_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            await ContentWebView.EnsureCoreWebView2Async(); // Init
+
+            await this.ViewModel.NotifyWebViewLoaded();
+        }
+
+        public void LoadFromMedia(IStorageFile file)
+        {
+            ContentWebView.Source = new Uri(file.Path);
+        }
+
+        public void LoadFromAudio(IStorageFile file)
+        {
+            ContentWebView.Source = new Uri(file.Path);
+        }
+
+        public void Dispose()
+        {
+            this.ContentWebView.Close();
         }
     }
 }
