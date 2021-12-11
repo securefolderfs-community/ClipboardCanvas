@@ -257,14 +257,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
                     {
                         // Remove the completed operation from queue
                         _autopasteDataQueue.Remove(clipboardData);
-                        _autopasteRoutineStarted = _autopasteDataQueue.IsEmpty();
+                        _autopasteRoutineStarted = !_autopasteDataQueue.IsEmpty();
                     }
 
                     if (pasteResult && UserSettingsService.PushAutopasteNotification)
                     {
                         NotificationService.PushAutopastePasteFinishedNotification();
                     }
-                    else if (UserSettingsService.PushAutopasteFailedNotification)
+                    else if (!pasteResult && UserSettingsService.PushAutopasteFailedNotification)
                     {
                         // Show notification if failed
                         NotificationService.PushAutopastePasteFailedNotification(pasteResult);
