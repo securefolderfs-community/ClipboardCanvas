@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace ClipboardCanvas.ModelViews
@@ -11,8 +12,8 @@ namespace ClipboardCanvas.ModelViews
 
         double Volume { get; set; }
 
-        void LoadFromMedia(IStorageFile file);
+        Task LoadFromMedia(IStorageFile file);
 
-        void LoadFromAudio(IStorageFile file);
+        Task LoadFromAudio(IStorageFile file);
     }
 }
