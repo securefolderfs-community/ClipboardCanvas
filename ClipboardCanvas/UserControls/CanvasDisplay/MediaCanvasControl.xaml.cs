@@ -76,7 +76,7 @@ namespace ClipboardCanvas.UserControls.CanvasDisplay
 
             Uri uri = new Uri(file.Path);
             string encodedPath = uri.AbsoluteUri;
-            string html = $"<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"></head><body style=\"margin: 0px;\"><video style=\"object-fit: contain;\" controls autoplay loop><source src=\"{encodedPath}\" type=\"video/mp4\"></video></body></html>";
+            string html = $"<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"></head><body style=\"background-color: #000000; margin: 0px; padding: 0px;\"><div style=\"height: 100vh; overflow: hidden;\"><video style=\"object-fit: contain; max-height: 100%; width: 100%;\" controls autoplay loop><source src=\"{encodedPath}\" type=\"video/mp4\"></video></div></body></html>";
 
             await FileIO.WriteTextAsync(_htmlTempFile, html);
 
