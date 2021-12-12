@@ -161,11 +161,11 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 string ext = Path.GetExtension((await SourceFile).Path).ToLower();
                 if (AudioExtensions.Contains(ext))
                 {
-                    ControlView.LoadFromAudio(await SourceFile);
+                    await ControlView.LoadFromAudio(await SourceFile);
                 }
                 else
                 {
-                    ControlView.LoadFromMedia(await SourceFile);
+                    await ControlView.LoadFromMedia(await SourceFile);
                 }
             }
         }
