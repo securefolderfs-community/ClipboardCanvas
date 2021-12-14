@@ -54,6 +54,8 @@ jobs:
       uses: nuget/setup-nuget@v1
       with:
         nuget-version: '5.x'
+        dotnet-version: '6.0'
+        include-prerelease: True
         
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1
@@ -65,7 +67,7 @@ jobs:
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/ClipboardCanvas/Package.appxmanifest') }}
         restore-keys: |
           ${{ runner.os }}-nuget-
-          
+        
     - name: Restore NuGet for Solution
       run: nuget restore -LockedMode ClipboardCanvas.sln
       
