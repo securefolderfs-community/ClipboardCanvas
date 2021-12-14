@@ -7,10 +7,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="300"
     d:DesignWidth="400"
+    Loaded="UserControl_Loaded"
     mc:Ignorable="d">
 
     <Grid>
-        <MediaPlayerElement
+        <!--  TODO: Regression - MediaPlayerElement does not exist in WindowsAppSDK 1.0  -->
+        <!--<MediaPlayerElement
             x:Name="MediaPlayerContent"
             x:Load="{x:Bind ViewModel.ContentMediaLoad, Mode=OneWay}"
             AreTransportControlsEnabled="True"
@@ -27,6 +29,11 @@
                     IsZoomButtonVisible="True"
                     ShowAndHideAutomatically="True" />
             </MediaPlayerElement.TransportControls>
-        </MediaPlayerElement>
+        </MediaPlayerElement>-->
+
+        <WebView2
+            x:Name="ContentWebView"
+            x:Load="{x:Bind ViewModel.ContentWebViewLoad, Mode=OneWay}"
+            Loaded="ContentWebView_Loaded" />
     </Grid>
 </UserControl>

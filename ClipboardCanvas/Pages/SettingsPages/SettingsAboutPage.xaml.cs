@@ -1,4 +1,4 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 
 using ClipboardCanvas.ViewModels.Pages.SettingsPages;
 using ClipboardCanvas.ModelViews;
@@ -27,8 +27,8 @@ namespace ClipboardCanvas.Pages.SettingsPages
 
         public bool IntroductionPanelLoad
         {
-            get => MainPage.Instance.IntroductionPanelLoad;
-            set => MainPage.Instance.IntroductionPanelLoad = value;
+            get => MainWindow.Instance.MainWindowContentPage.IntroductionPanelLoad;
+            set => MainWindow.Instance.MainWindowContentPage.IntroductionPanelLoad = value;
         }
     }
 }

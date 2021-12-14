@@ -1,4 +1,4 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 
 using ClipboardCanvas.ViewModels.UserControls.OOBE;
 using ClipboardCanvas.ModelViews;
@@ -24,8 +24,8 @@ namespace ClipboardCanvas.UserControls.OOBE
 
         public bool IntroductionPanelLoad
         {
-            get => MainPage.Instance.IntroductionPanelLoad;
-            set => MainPage.Instance.IntroductionPanelLoad = value;
+            get => MainWindow.Instance.MainWindowContentPage.IntroductionPanelLoad;
+            set => MainWindow.Instance.MainWindowContentPage.IntroductionPanelLoad = value;
         }
 
         public int ItemsCount

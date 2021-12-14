@@ -6,13 +6,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:tuc="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:tuc="using:CommunityToolkit.WinUI.UI.Controls"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
 
     <!--  TODO: Add templates for big notification and small one  -->
-    <Grid>
+    <!--<Grid>
         <tuc:InAppNotification
             Padding="0"
             ap:InAppNotificationShowHideControlAttachedProperty.Value="{x:Bind ViewModel.ShowNotification, Mode=OneWay}"
@@ -34,7 +34,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <!--  Text  -->
+                    --><!--  Text  --><!--
                     <ScrollViewer VerticalScrollBarVisibility="Hidden">
                         <TextBlock
                             HorizontalAlignment="Center"
@@ -43,23 +43,23 @@
                             TextWrapping="WrapWholeWords" />
                     </ScrollViewer>
 
-                    <!--  Buttons  -->
+                    --><!--  Buttons  --><!--
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
-                        <!--  OK Button  -->
+                        --><!--  OK Button  --><!--
                         <Button
                             x:Name="OKButton"
                             x:Load="{x:Bind ViewModel.OkButtonLoad, Mode=OneWay}"
                             Command="{x:Bind ViewModel.OkButtonClickCommand}"
                             Content="OK" />
 
-                        <!--  Yes Button  -->
+                        --><!--  Yes Button  --><!--
                         <Button
                             x:Name="YesButton"
                             x:Load="{x:Bind ViewModel.YesButtonLoad, Mode=OneWay}"
                             Command="{x:Bind ViewModel.YesButtonClickCommand}"
                             Content="Yes" />
 
-                        <!--  No Button  -->
+                        --><!--  No Button  --><!--
                         <Button
                             x:Name="NoButton"
                             x:Load="{x:Bind ViewModel.NoButtonLoad, Mode=OneWay}"
@@ -80,5 +80,5 @@
                     Value="{x:Bind ViewModel.NotificationShowTimerProgressBarValue, Mode=OneWay}" />
             </Grid>
         </tuc:InAppNotification>
-    </Grid>
+    </Grid>-->
 </UserControl>

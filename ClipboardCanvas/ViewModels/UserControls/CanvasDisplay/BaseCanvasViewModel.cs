@@ -4,9 +4,9 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using System.Threading;
 using System.Collections.Generic;
-using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.Toolkit.Uwp;
+using CommunityToolkit.Mvvm.Input;
 
+using ClipboardCanvas.GlobalizationExtensions;
 using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
@@ -155,14 +155,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                                     new AsyncRelayCommand(async () =>
                                     {
                                         await AssociatedCollection.CurrentCollectionItemViewModel.OpenFile();
-                                    }), "OpenFile".GetLocalized(), "\uE8E5");
+                                    }), "OpenFile".GetLocalized2(), "\uE8E5");
 
             // Open directory
             var action_openContainingFolder = new SuggestedActionsControlItemViewModel(
                 new AsyncRelayCommand(async () =>
                 {
                     await AssociatedCollection.CurrentCollectionItemViewModel.OpenContainingFolder();
-                }), "OpenContainingFolder".GetLocalized(), "\uE838");
+                }), "OpenContainingFolder".GetLocalized2(), "\uE838");
 
             actions.Add(action_openFile);
             actions.Add(action_openContainingFolder);

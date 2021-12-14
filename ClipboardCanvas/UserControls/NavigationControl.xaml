@@ -3,8 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:i="using:Microsoft.Xaml.Interactivity"
-    xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -98,64 +96,27 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <UserControl.KeyboardAccelerators>
-        <KeyboardAccelerator Key="Up" Modifiers="Control">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="Invoked">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </KeyboardAccelerator>
-        <KeyboardAccelerator Key="Down" Modifiers="Control">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="Invoked">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </KeyboardAccelerator>
-        <KeyboardAccelerator Key="Right">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="Invoked">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </KeyboardAccelerator>
-        <KeyboardAccelerator Key="Home">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="Invoked">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </KeyboardAccelerator>
-        <KeyboardAccelerator Key="Right" Modifiers="Control">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="Invoked">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </KeyboardAccelerator>
-        <KeyboardAccelerator Key="Left">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="Invoked">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </KeyboardAccelerator>
-        <KeyboardAccelerator Key="End">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="Invoked">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </KeyboardAccelerator>
-        <KeyboardAccelerator Key="Left" Modifiers="Control">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="Invoked">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </KeyboardAccelerator>
+        <KeyboardAccelerator
+            Key="Up"
+            Invoked="KeyboardAccelerator_Invoked"
+            Modifiers="Control" />
+        <KeyboardAccelerator
+            Key="Down"
+            Invoked="KeyboardAccelerator_Invoked"
+            Modifiers="Control" />
+        <KeyboardAccelerator Key="Right" Invoked="KeyboardAccelerator_Invoked" />
+        <KeyboardAccelerator Key="Home" Invoked="KeyboardAccelerator_Invoked" />
+        <KeyboardAccelerator
+            Key="Right"
+            Invoked="KeyboardAccelerator_Invoked"
+            Modifiers="Control" />
+        <KeyboardAccelerator Key="Left" Invoked="KeyboardAccelerator_Invoked" />
+        <KeyboardAccelerator Key="End" Invoked="KeyboardAccelerator_Invoked" />
+        <KeyboardAccelerator
+            Key="Left"
+            Invoked="KeyboardAccelerator_Invoked"
+            Modifiers="Control" />
     </UserControl.KeyboardAccelerators>
-
 
     <Grid
         Width="300"

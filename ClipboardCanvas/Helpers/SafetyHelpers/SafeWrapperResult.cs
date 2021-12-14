@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.Toolkit.Uwp;
+using ClipboardCanvas.GlobalizationExtensions;
 
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers.SafetyHelpers.ExceptionReporters;
@@ -10,9 +10,9 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
     {
         public static readonly SafeWrapperResult SUCCESS = new SafeWrapperResult(OperationErrorCode.Success, "Operation completed successfully.");
 
-        public static readonly SafeWrapperResult CANCEL = new SafeWrapperResult(OperationErrorCode.Canceled, "OperationCanceled".GetLocalized());
+        public static readonly SafeWrapperResult CANCEL = new SafeWrapperResult(OperationErrorCode.Canceled, "OperationCanceled".GetLocalized2());
 
-        public static readonly SafeWrapperResult UNKNOWN_FAIL = new SafeWrapperResult(OperationErrorCode.UnknownFailed, new Exception(), "UnknownError".GetLocalized());
+        public static readonly SafeWrapperResult UNKNOWN_FAIL = new SafeWrapperResult(OperationErrorCode.UnknownFailed, new Exception(), "UnknownError".GetLocalized2());
 
         public string Message => Details?.message;
 

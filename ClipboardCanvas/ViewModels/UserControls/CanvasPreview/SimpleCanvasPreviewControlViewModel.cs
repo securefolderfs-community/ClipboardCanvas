@@ -8,7 +8,7 @@ using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 using ClipboardCanvas.ViewModels.UserControls.SimpleCanvasDisplay;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using Windows.ApplicationModel.DataTransfer;
 using System.Threading;
-using Microsoft.Toolkit.Uwp;
 
+using ClipboardCanvas.GlobalizationExtensions;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.ViewModels.UserControls;
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
@@ -23,7 +23,7 @@ namespace ClipboardCanvas.Helpers
                 new AsyncRelayCommand(async () =>
                 {
                     await pasteCanvasModel.TryDeleteData(true);
-                }), "DeleteReference".GetLocalized(), "\uE738");
+                }), "DeleteReference".GetLocalized2(), "\uE738");
 
             actions.Add(action_deleteReference);
 
@@ -43,7 +43,7 @@ namespace ClipboardCanvas.Helpers
                     SafeWrapper<DataPackageView> dataPackage = ClipboardHelpers.GetClipboardData();
 
                     await pasteCanvasControlModel.TryPasteData(dataPackage, BaseReadOnlyCanvasPreviewControlViewModel<BaseReadOnlyCanvasViewModel>.CanvasPasteCancellationTokenSource.Token);
-                }), "PasteFromClipboard".GetLocalized(), "\uE77F");
+                }), "PasteFromClipboard".GetLocalized2(), "\uE77F");
 
             actions.Add(action_paste);
 
@@ -58,7 +58,7 @@ namespace ClipboardCanvas.Helpers
                 new AsyncRelayCommand(async () =>
                 {
                     await CollectionsWidgetViewModel.AddCollectionViaUi();
-                }), "AddCollection".GetLocalized(), "\uE710");
+                }), "AddCollection".GetLocalized2(), "\uE710");
 
             actions.Add(action_addCollection);
 

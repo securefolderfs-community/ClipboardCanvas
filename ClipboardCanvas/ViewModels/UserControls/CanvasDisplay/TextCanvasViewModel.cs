@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.Generic;
 using Windows.ApplicationModel.DataTransfer;
-using Microsoft.Toolkit.Uwp;
+using ClipboardCanvas.GlobalizationExtensions;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.DataModels.ContentDataModels;
@@ -93,7 +93,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                     RefreshContextMenuItems();
                 }),
                 IconGlyph = "\uE8B3",
-                Text = "SelectAll".GetLocalized(),
+                Text = "SelectAll".GetLocalized2(),
                 IsShown = () => (ControlView?.SelectedTextLength ?? 0) < Text.Length
             });
 
@@ -102,7 +102,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 Command = new RelayCommand(() => ControlView?.CopySelectedText()),
                 IconGlyph = "\uE8C8",
-                Text = "CopySelectedText".GetLocalized(),
+                Text = "CopySelectedText".GetLocalized2(),
                 IsShown = () => ControlView?.IsTextSelected ?? false
             });
         }

@@ -1,13 +1,13 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Octokit;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.System;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Microsoft.Toolkit.Uwp;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using ClipboardCanvas.GlobalizationExtensions;
 
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Extensions;
@@ -98,7 +98,7 @@ namespace ClipboardCanvas.ViewModels.Dialogs
                 foreach (var item in releases)
                 {
                     string itemVersion = item.TagName;
-                    itemVersion = itemVersion.Replace("v", string.Empty);
+                    itemVersion = itemVersion.Replace("v", string.Empty, StringComparison.OrdinalIgnoreCase);
 
                     if (!item.Draft)
                     {
@@ -112,7 +112,7 @@ namespace ClipboardCanvas.ViewModels.Dialogs
                         }
                         else
                         {
-                            if (VersionHelpers.IsVersionBiggerThan(itemVersion, currentVersion))
+                            if (VersionHelpers.IsVersionBiggerThanOrEqual(itemVersion, currentVersion))
                             {
                                 preparedReleases.Add((item.Name, item.Body));
                             }
@@ -151,10 +151,10 @@ namespace ClipboardCanvas.ViewModels.Dialogs
             if (!_dataFetchedSuccessfully || preparedReleases.IsEmpty())
             {
                 // Getting data failed, display fallback update info
-                _UpdateMarkdownInfoText += $"Error".GetLocalized();
+                _UpdateMarkdownInfoText += $"Error".GetLocalized2();
                 _UpdateMarkdownInfoText += "\n---";
                 _UpdateMarkdownInfoText += "\n";
-                _UpdateMarkdownInfoText += "ChangelogFetchingError".GetLocalized();
+                _UpdateMarkdownInfoText += "ChangelogFetchingError".GetLocalized2();
 
                 IsLoadingData = false;
                 UpdateMarkdownLoad = true;

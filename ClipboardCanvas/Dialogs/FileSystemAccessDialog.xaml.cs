@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.ViewModels.Dialogs;
+using ClipboardCanvas.ModelViews;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace ClipboardCanvas.Dialogs
 {
-    public sealed partial class FileSystemAccessDialog : ContentDialog, IDialog<FileSystemAccessDialogViewModel>
+    public sealed partial class FileSystemAccessDialog : ContentDialog, IDialog<FileSystemAccessDialogViewModel>, IDialogView
     {
         public FileSystemAccessDialogViewModel ViewModel
         {

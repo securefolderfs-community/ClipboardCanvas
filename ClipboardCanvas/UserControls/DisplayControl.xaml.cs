@@ -1,6 +1,6 @@
-﻿using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using System.Diagnostics;
 
 using ClipboardCanvas.Models;
@@ -25,8 +25,8 @@ namespace ClipboardCanvas.UserControls
 
         public bool IntroductionPanelLoad
         {
-            get => MainPage.Instance.IntroductionPanelLoad;
-            set => MainPage.Instance.IntroductionPanelLoad = value;
+            get => MainWindow.Instance.MainWindowContentPage.IntroductionPanelLoad;
+            set => MainWindow.Instance.MainWindowContentPage.IntroductionPanelLoad = value;
         }
 
         public IWindowTitleBarControlModel WindowTitleBarControlModel { get; set; }

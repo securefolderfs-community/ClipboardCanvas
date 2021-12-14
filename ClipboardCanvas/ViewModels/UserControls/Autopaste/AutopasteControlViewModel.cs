@@ -1,6 +1,6 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.ApplicationModel.DataTransfer;
 using System.Collections.Specialized;
-using Microsoft.Toolkit.Uwp;
+using ClipboardCanvas.GlobalizationExtensions;
 
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.DataModels.Navigation;
@@ -53,7 +53,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 
         public string AutopasteTargetName
         {
-            get => AutopasteTarget?.DisplayName ?? "AutopasteNoTarget".GetLocalized();
+            get => AutopasteTarget?.DisplayName ?? "AutopasteNoTarget".GetLocalized2();
         }
 
         public bool EnableAutopaste
@@ -210,7 +210,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 
         private async void Clipboard_ContentChanged(object sender, object e)
         {
-            if (AutopasteTarget != null && !ApplicationService.IsWindowActivated)
+            if (AutopasteTarget != null && !ApplicationService.IsWindowActivated && UserSettingsService.IsAutopasteEnabled)
             {
                 SafeWrapper<DataPackageView> clipboardData = ClipboardHelpers.GetClipboardData();
                 if (clipboardData)
@@ -257,14 +257,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
                     {
                         // Remove the completed operation from queue
                         _autopasteDataQueue.Remove(clipboardData);
-                        _autopasteRoutineStarted = _autopasteDataQueue.IsEmpty();
+                        _autopasteRoutineStarted = !_autopasteDataQueue.IsEmpty();
                     }
 
                     if (pasteResult && UserSettingsService.PushAutopasteNotification)
                     {
                         NotificationService.PushAutopastePasteFinishedNotification();
                     }
-                    else if (UserSettingsService.PushAutopasteFailedNotification)
+                    else if (!pasteResult && UserSettingsService.PushAutopasteFailedNotification)
                     {
                         // Show notification if failed
                         NotificationService.PushAutopastePasteFailedNotification(pasteResult);

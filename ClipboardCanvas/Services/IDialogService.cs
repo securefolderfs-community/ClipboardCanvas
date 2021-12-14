@@ -10,7 +10,7 @@ namespace ClipboardCanvas.Services
 {
     public interface IDialogService
     {
-        void CloseAllDialogs();
+        void CloseDialog();
 
         IDialog<TViewModel> GetDialog<TViewModel>(TViewModel viewModel);
 

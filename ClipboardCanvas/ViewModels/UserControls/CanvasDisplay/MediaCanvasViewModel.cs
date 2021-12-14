@@ -12,11 +12,16 @@ using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.CanavsPasteModels;
 using ClipboardCanvas.DataModels;
 using ClipboardCanvas.Contexts.Operations;
+using System.IO;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
     public class MediaCanvasViewModel : BaseCanvasViewModel
     {
+        private bool _webViewNeedsUpdate;
+
+        private bool _webViewLoaded;
+
         #region Properties
 
         private MediaContentType MediaContentType => ContentType as MediaContentType;
@@ -41,9 +46,15 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             set => ControlView.Volume = value;
         }
 
-        public static List<string> Extensions => new List<string>() {
+        public static List<string> Extensions = new List<string>() {
             // Video
             ".mp4", ".webm", ".ogg", ".mov", ".qt", ".mp4", ".m4v", ".mp4v", ".3g2", ".3gp2", ".3gp", ".3gpp", ".mkv",
+            // Audio
+            ".mp3", ".m4a", ".wav", ".wma", ".aac", ".adt", ".adts", ".cda",
+        };
+
+        public static List<string> AudioExtensions = new List<string>()
+        {
             // Audio
             ".mp3", ".m4a", ".wav", ".wma", ".aac", ".adt", ".adts", ".cda",
         };
@@ -60,6 +71,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             get => _ContentMediaLoad;
             set => SetProperty(ref _ContentMediaLoad, value);
+        }
+
+        private bool _ContentWebViewLoad;
+        public bool ContentWebViewLoad
+        {
+            get => _ContentWebViewLoad;
+            set => SetProperty(ref _ContentWebViewLoad, value);
         }
 
         public IMediaCanvasControlView ControlView { get; set; }
@@ -96,10 +114,20 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         protected override async Task<SafeWrapperResult> TryFetchDataToView()
         {
+            ContentWebViewLoad = true;
             ContentMediaLoad = true;
-            ContentMedia = MediaSource.CreateFromStorageFile(await SourceFile);
+            //ContentMedia = MediaSource.CreateFromStorageFile(await SourceFile);
 
-            return await Task.FromResult(SafeWrapperResult.SUCCESS);
+            if (!_webViewLoaded)
+            {
+                _webViewNeedsUpdate = true;
+            }
+            else
+            {
+                await UpdateWebViewContent(true);
+            }
+
+            return SafeWrapperResult.SUCCESS;
         }
 
         protected override async Task OnReferencePasted()
@@ -118,6 +146,29 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         #endregion
 
         #region Public Helpers
+
+        public async Task NotifyWebViewLoaded()
+        {
+            _webViewLoaded = true;
+
+            await UpdateWebViewContent();
+        }
+
+        private async Task UpdateWebViewContent(bool force = false)
+        {
+            if (_webViewLoaded && (_webViewNeedsUpdate || force))
+            {
+                string ext = Path.GetExtension((await SourceFile).Path).ToLower();
+                if (AudioExtensions.Contains(ext))
+                {
+                    await ControlView.LoadFromAudio(await SourceFile);
+                }
+                else
+                {
+                    await ControlView.LoadFromMedia(await SourceFile);
+                }
+            }
+        }
 
         public void UpdateMediaControl()
         {
@@ -149,7 +200,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             base.Dispose();
 
             ContentMedia?.Dispose();
+            ControlView?.Dispose();
+            ContentMediaLoad = false;
             ContentMedia = null;
+            ContentWebViewLoad = false;
         }
 
         #endregion

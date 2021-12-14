@@ -1,14 +1,14 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using System.Windows.Input;
 using Windows.Storage;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Windows.ApplicationModel.DataTransfer;
-using Microsoft.Toolkit.Uwp;
+using ClipboardCanvas.GlobalizationExtensions;
 using System.Collections.ObjectModel;
 
 using ClipboardCanvas.DataModels;
@@ -161,7 +161,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
             else if (newCanvasItemResult != OperationErrorCode.Canceled)
             {
                 IInAppNotification notification = DialogService.GetNotification();
-                notification.ViewModel.NotificationText = string.Format("ErrorWhilstOverridingReference".GetLocalized(), newCanvasItemResult.ErrorCode);
+                notification.ViewModel.NotificationText = string.Format("ErrorWhilstOverridingReference".GetLocalized2(), newCanvasItemResult.ErrorCode);
                 notification.ViewModel.ShownButtons = InAppNotificationButtonType.OkButton;
 
                 notification.Show(Constants.UI.Notifications.NOTIFICATION_DEFAULT_SHOW_TIME);
@@ -175,7 +175,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public async Task InitializeDisplayName()
         {
-            DisplayName = (await CanvasItem.SourceItem)?.Name ?? "InvalidFile".GetLocalized();
+            DisplayName = (await CanvasItem.SourceItem)?.Name ?? "InvalidFile".GetLocalized2();
         }
 
         public async Task InitializeItem()

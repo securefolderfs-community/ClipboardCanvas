@@ -2,14 +2,14 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.Storage.Pickers;
 using System.Collections.Generic;
+using Windows.Storage.Pickers;
 
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.ViewModels.Dialogs;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
+using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.Extensions;
-using ClipboardCanvas.Helpers;
 
 namespace ClipboardCanvas.Services.Implementation
 {
@@ -17,11 +17,14 @@ namespace ClipboardCanvas.Services.Implementation
     {
         private IInAppNotification _lastInAppNotification;
 
+        private IDialogView _currentDialog;
+
         #region IDialogService
 
-        public void CloseAllDialogs()
+        public void CloseDialog()
         {
-            DialogHelpers.CloseCurrentDialog();
+            _currentDialog?.Hide();
+            _currentDialog = null;
         }
 
         public IDialog<TViewModel> GetDialog<TViewModel>(TViewModel viewModel)
@@ -38,6 +41,16 @@ namespace ClipboardCanvas.Services.Implementation
             dialog = GetDialogFromType<TViewModel, IDialog<TViewModel>>(dialogType, viewModel);
             dialog.ViewModel = viewModel;
 
+            if (dialog is IDialogView dialogView)
+            {
+                dialogView.XamlRoot = MainWindow.Instance.Content.XamlRoot;
+                _currentDialog = dialogView;
+            }
+            else
+            {
+                throw new NotSupportedException($"Dialog doesn't implement {nameof(IDialogView)}.");
+            }
+
             return dialog;
         }
 
@@ -52,7 +65,7 @@ namespace ClipboardCanvas.Services.Implementation
         {
             _lastInAppNotification?.Dismiss();
 
-            IInAppNotification notification = MainPage.Instance.MainInAppNotification;
+            IInAppNotification notification = MainWindow.Instance.MainWindowContentPage.MainInAppNotification;
             _lastInAppNotification = notification;
 
             if (viewModel != null)
@@ -77,6 +90,9 @@ namespace ClipboardCanvas.Services.Implementation
             FolderPicker folderPicker = new FolderPicker();
             folderPicker.FileTypeFilter.Add("*");
 
+            IntPtr hwnd = Vanara.PInvoke.User32.GetActiveWindow().DangerousGetHandle();
+            WinRT.Interop.InitializeWithWindow.Initialize(folderPicker, hwnd);
+
             return await folderPicker.PickSingleFolderAsync();
         }
 
@@ -95,6 +111,9 @@ namespace ClipboardCanvas.Services.Implementation
                     filePicker.FileTypeFilter.Add(item);
                 }
             }
+
+            IntPtr hwnd = Vanara.PInvoke.User32.GetActiveWindow().DangerousGetHandle();
+            WinRT.Interop.InitializeWithWindow.Initialize(filePicker, hwnd);
 
             return await filePicker.PickSingleFileAsync();
         }

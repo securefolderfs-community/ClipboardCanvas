@@ -10,7 +10,7 @@
     mc:Ignorable="d">
 
     <Grid>
-        <WebView
+        <WebView2
             x:Name="ContentWebView"
             x:Load="{x:Bind ViewModel.ContentWebViewLoad, Mode=OneWay}"
             Loaded="ContentWebView_Loaded" />

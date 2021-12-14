@@ -9,7 +9,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:rvm="using:ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules"
     xmlns:ts="using:ClipboardCanvas.TemplateSelectors"
-    xmlns:tua="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    xmlns:tua="using:CommunityToolkit.WinUI.UI.Animations"
     xmlns:vc="using:ClipboardCanvas.ValueConverters"
     xmlns:vm="using:ClipboardCanvas.ViewModels.UserControls.Autopaste"
     d:DesignHeight="300"

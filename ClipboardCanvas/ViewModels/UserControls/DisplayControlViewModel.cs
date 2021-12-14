@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using System.Threading;
 using Windows.UI.ViewManagement;
 using Windows.Storage;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Models;

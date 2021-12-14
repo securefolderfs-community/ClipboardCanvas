@@ -5,8 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.UserControls.CanvasDisplay"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:tuc="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:tui="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:tuc="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:tui="using:CommunityToolkit.WinUI.UI"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">

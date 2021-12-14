@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Windows.Storage;
 
 using ClipboardCanvas.Enums;

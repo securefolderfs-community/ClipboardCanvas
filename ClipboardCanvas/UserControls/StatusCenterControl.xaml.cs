@@ -1,5 +1,5 @@
-﻿using Windows.UI.Xaml.Controls;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+﻿using Microsoft.UI.Xaml.Controls;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 using ClipboardCanvas.ViewModels.UserControls.StatusCenter;
 using ClipboardCanvas.Services;

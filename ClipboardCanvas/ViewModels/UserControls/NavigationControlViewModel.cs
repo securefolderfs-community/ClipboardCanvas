@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows.Input;
 using Windows.System;
-using Windows.UI.Xaml.Input;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.UI.Xaml.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.Models;

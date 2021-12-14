@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.ApplicationModel;
 using Windows.Globalization;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Windowing;
 
 using ClipboardCanvas.DataModels;
 
@@ -27,15 +28,21 @@ namespace ClipboardCanvas.Services.Implementation
 
         public AppLanguageModel CurrentAppLanguage { get; } = new AppLanguageModel(ApplicationLanguages.PrimaryLanguageOverride);
 
+        public IntPtr GetHwnd(Window wnd)
+        {
+            IntPtr hwnd = WinRT.Interop.WindowNative.GetWindowHandle(wnd);
+            return hwnd;
+        }
+
         public ApplicationService()
         {
-            Window.Current.Activated -= Current_Activated;
-            Window.Current.Activated += Current_Activated;
+            MainWindow.Instance.Activated -= Current_Activated;
+            MainWindow.Instance.Activated += Current_Activated;
         }
 
         private void Current_Activated(object sender, WindowActivatedEventArgs e)
         {
-            IsWindowActivated = e.WindowActivationState != CoreWindowActivationState.Deactivated;
+            IsWindowActivated = e.WindowActivationState != WindowActivationState.Deactivated;
         }
     }
 }

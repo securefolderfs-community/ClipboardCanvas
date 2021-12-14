@@ -214,7 +214,7 @@
     <value>Clipboard Canvas has been updated!</value>
   </data>
   <data name="ChangelogViewOnGitHub" xml:space="preserve">
-    <value>ChangelogViewOnGitHub</value>
+    <value>View on GitHub</value>
   </data>
   <data name="ClipboardCanvasCrashReportIssue" xml:space="preserve">
     <value>Report this issue</value>
@@ -329,7 +329,7 @@ Right click for more options.</value>
     <value>Select autopaste target</value>
   </data>
   <data name="InfiniteCanvasIsEmpty" xml:space="preserve">
-    <value>InfiniteCanvasIsEmpty</value>
+    <value>Infinite Canvas is empty</value>
   </data>
   <data name="InvalidFile" xml:space="preserve">
     <value>Invalid file.</value>

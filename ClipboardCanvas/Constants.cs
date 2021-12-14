@@ -15,6 +15,8 @@
         {
             public const string SETTINGS_FOLDERNAME = "app_settings";
 
+            public const string HTML_TEMPDATA_FOLDERNAME = "tmp_htmlfiles";
+
             public const string USER_SETTINGS_FILENAME = "user_settings.json";
 
             public const string COLLECTION_SETTINGS_FILENAME = "collections_settings.json";

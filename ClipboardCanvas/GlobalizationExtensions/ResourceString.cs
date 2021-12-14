@@ -1,12 +1,12 @@
 ﻿using Windows.ApplicationModel.Resources;
-using Windows.UI.Xaml.Markup;
+using Microsoft.UI.Xaml.Markup;
 
 namespace ClipboardCanvas.GlobalizationExtensions
 {
     [MarkupExtensionReturnType(ReturnType = typeof(string))]
     public sealed class ResourceString : MarkupExtension
     {
-        private static readonly ResourceLoader ResourceLoader = ResourceLoader.GetForCurrentView();
+        private static readonly ResourceLoader ResourceLoader = new ResourceLoader();
 
         public string Name { get; set; }
 

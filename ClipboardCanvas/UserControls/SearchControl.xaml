@@ -6,8 +6,6 @@
     xmlns:ap="using:ClipboardCanvas.AttachedProperties"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:gxt="using:ClipboardCanvas.GlobalizationExtensions"
-    xmlns:i="using:Microsoft.Xaml.Interactivity"
-    xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -22,7 +20,6 @@
                     <AcrylicBrush
                         x:Key="PanelBackground"
                         Windows10version1903:TintLuminosityOpacity="0.40"
-                        BackgroundSource="Backdrop"
                         FallbackColor="{ThemeResource SolidBackgroundAcrylic}"
                         TintColor="{ThemeResource SolidBackgroundAcrylic}"
                         TintOpacity="0.50" />
@@ -31,7 +28,6 @@
                     <AcrylicBrush
                         x:Key="PanelBackground"
                         Windows10version1903:TintLuminosityOpacity="0.30"
-                        BackgroundSource="Backdrop"
                         FallbackColor="{ThemeResource SolidBackgroundAcrylic}"
                         TintColor="{ThemeResource SolidBackgroundAcrylic}"
                         TintOpacity="0.30" />
@@ -40,13 +36,10 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <UserControl.KeyboardAccelerators>
-        <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsKeyboardAcceleratorEnabled, Mode=OneWay}">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="Invoked">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </KeyboardAccelerator>
+        <KeyboardAccelerator
+            Key="Escape"
+            Invoked="KeyboardAccelerator_Invoked"
+            IsEnabled="{x:Bind ViewModel.IsKeyboardAcceleratorEnabled, Mode=OneWay}" />
     </UserControl.KeyboardAccelerators>
 
     <Grid

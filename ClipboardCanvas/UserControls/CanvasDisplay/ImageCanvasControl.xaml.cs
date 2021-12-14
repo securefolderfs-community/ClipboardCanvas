@@ -1,4 +1,4 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 
@@ -18,7 +18,7 @@ namespace ClipboardCanvas.UserControls.CanvasDisplay
             this.InitializeComponent();
         }
 
-        private async void Image_DragStarting(Windows.UI.Xaml.UIElement sender, Windows.UI.Xaml.DragStartingEventArgs args)
+        private async void Image_DragStarting(Microsoft.UI.Xaml.UIElement sender, Microsoft.UI.Xaml.DragStartingEventArgs args)
         {
             await ViewModel.SetDragData(args.Data);
         }

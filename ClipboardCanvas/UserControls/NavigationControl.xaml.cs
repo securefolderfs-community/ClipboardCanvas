@@ -1,7 +1,8 @@
-﻿using ClipboardCanvas.ViewModels.UserControls;
-using System.ComponentModel;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+
+using ClipboardCanvas.ViewModels.UserControls;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -25,6 +26,11 @@ namespace ClipboardCanvas.UserControls
         public NavigationControl()
         {
             this.InitializeComponent();
+        }
+
+        private void KeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            this.ViewModel?.DefaultKeyboardAcceleratorInvokedCommand?.Execute(args);
         }
     }
 }

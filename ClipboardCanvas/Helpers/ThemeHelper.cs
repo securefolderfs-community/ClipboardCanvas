@@ -1,9 +1,6 @@
-﻿using System;
-using Windows.ApplicationModel.Core;
-using Windows.UI;
-using Windows.UI.Core;
-using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
+﻿using Windows.UI.ViewManagement;
+using Microsoft.UI.Xaml;
+using Microsoft.UI;
 
 namespace ClipboardCanvas.Helpers
 {
@@ -15,8 +12,9 @@ namespace ClipboardCanvas.Helpers
 
         public static void Initialize()
         {
-            MainPage.TitleBar.ButtonBackgroundColor = Colors.Transparent;
-            MainPage.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+            // TODO: Regression
+            //MainWindow.TitleBar.ButtonBackgroundColor = Colors.Transparent;
+            //MainWindow.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 
             UISettings = new UISettings();
             UISettings.ColorValuesChanged += UISettings_ColorValuesChanged;
@@ -31,17 +29,18 @@ namespace ClipboardCanvas.Helpers
 
         public static void RefreshTheme()
         {
+            // TODO: Regression
             switch (CurrentTheme)
             {
                 case ApplicationTheme.Light:
                     {
-                        MainPage.TitleBar.ButtonForegroundColor = Colors.Black;
+                        //MainWindow.TitleBar.ButtonForegroundColor = Colors.Black;
                         break;
                     }
 
                 case ApplicationTheme.Dark:
                     {
-                        MainPage.TitleBar.ButtonForegroundColor = Colors.White;
+                        //MainWindow.TitleBar.ButtonForegroundColor = Colors.White;
                         break;
                     }
             }

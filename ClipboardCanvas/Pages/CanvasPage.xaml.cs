@@ -1,8 +1,9 @@
 ﻿using System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
-using Windows.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Input;
 
 using ClipboardCanvas.ViewModels.Pages;
 using ClipboardCanvas.ModelViews;
@@ -92,6 +93,26 @@ namespace ClipboardCanvas.Pages
                 _collectionPreviewIDisposable.Dispose();
                 _collectionPreviewIDisposable = null;
             }
+        }
+
+        private void KeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            this.ViewModel?.DefaultKeyboardAcceleratorInvokedCommand?.Execute(args);
+        }
+
+        private void Grid_DragEnter(object sender, DragEventArgs e)
+        {
+            this.ViewModel?.DragEnterCommand?.Execute(e);
+        }
+
+        private void Grid_Drop(object sender, DragEventArgs e)
+        {
+            this.ViewModel?.DropCommand?.Execute(e);
+        }
+
+        private void Grid_DragLeave(object sender, DragEventArgs e)
+        {
+            this.ViewModel?.DragLeaveCommand?.Execute(e);
         }
     }
 }

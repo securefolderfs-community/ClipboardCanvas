@@ -1,6 +1,6 @@
 ﻿using System;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using System.Threading.Tasks;
 
 using ClipboardCanvas.Services;
@@ -39,6 +39,11 @@ namespace ClipboardCanvas.ViewModels.Pages
         public async Task LoadWidgets()
         {
             await TimelineService.LoadAllSectionsAsync();
+        }
+
+        public void OpenTeachingTip()
+        {
+            IsAutopasteTeachingTipShown = true;
         }
 
         private void UserSettingsService_OnSettingChangedEvent(object sender, SettingChangedEventArgs e)

@@ -1,6 +1,6 @@
 ﻿using System.Threading;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 
 using ClipboardCanvas.ViewModels.Pages;
 using ClipboardCanvas.ViewModels.Widgets.Timeline;
@@ -25,7 +25,7 @@ namespace ClipboardCanvas.Pages
         {
             if (e.Parameter is FromAutopasteHomepageNavigationParameterModel fromAutopasteParameter)
             {
-                this.ViewModel.IsAutopasteTeachingTipShown = true;
+                this.ViewModel.OpenTeachingTip();
             }
 
             base.OnNavigatedTo(e);
@@ -50,7 +50,7 @@ namespace ClipboardCanvas.Pages
             this.ViewModel = new HomePageViewModel();
         }
 
-        private async void TimelineWidget_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void TimelineWidget_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             await this.ViewModel.LoadWidgets();
         }

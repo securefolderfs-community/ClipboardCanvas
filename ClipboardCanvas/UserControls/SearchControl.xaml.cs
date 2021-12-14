@@ -1,5 +1,7 @@
-﻿using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml;
+﻿using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Input;
+
 using ClipboardCanvas.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -24,6 +26,11 @@ namespace ClipboardCanvas.UserControls
         private void TextBox_Loaded(object sender, RoutedEventArgs e)
         {
             InputBox.Focus(FocusState.Programmatic);
+        }
+
+        private void KeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            this.ViewModel?.DefaultKeyboardAcceleratorInvokedCommand?.Execute(args);
         }
     }
 }

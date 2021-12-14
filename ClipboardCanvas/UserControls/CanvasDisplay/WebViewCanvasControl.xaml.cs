@@ -1,8 +1,9 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using System;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+
 using ClipboardCanvas.ViewModels.UserControls.CanvasDisplay;
 using ClipboardCanvas.ModelViews;
-using ClipboardCanvas.Models;
-using System;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -20,9 +21,12 @@ namespace ClipboardCanvas.UserControls.CanvasDisplay
             this.InitializeComponent();
         }
 
-        private void ContentWebView_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void ContentWebView_Loaded(object sender, RoutedEventArgs e)
         {
             this.ViewModel.ControlView = this;
+
+            await ContentWebView.EnsureCoreWebView2Async(); // Init
+
             this.ViewModel.NotifyWebViewLoaded();
         }
 
@@ -40,7 +44,7 @@ namespace ClipboardCanvas.UserControls.CanvasDisplay
 
         public void Dispose()
         {
-            // TODO: Dispose WebView
+            ContentWebView.Close();
         }
 
         #endregion

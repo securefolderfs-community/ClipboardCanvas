@@ -3,11 +3,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:i="using:Microsoft.Xaml.Interactivity"
-    xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
     xmlns:local="using:ClipboardCanvas.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:tua="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    xmlns:tua="using:CommunityToolkit.WinUI.UI.Animations"
     xmlns:vm="using:ClipboardCanvas.ViewModels.UserControls"
     d:DesignHeight="300"
     d:DesignWidth="400"
@@ -118,27 +116,18 @@
     </UserControl.Resources>
 
     <UserControl.KeyboardAccelerators>
-        <KeyboardAccelerator Key="Number1" Modifiers="Control">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="Invoked">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </KeyboardAccelerator>
-        <KeyboardAccelerator Key="Number2" Modifiers="Control">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="Invoked">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </KeyboardAccelerator>
-        <KeyboardAccelerator Key="Number3" Modifiers="Control">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="Invoked">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.DefaultKeyboardAcceleratorInvokedCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </KeyboardAccelerator>
+        <KeyboardAccelerator
+            Key="Number1"
+            Invoked="KeyboardAccelerator_Invoked"
+            Modifiers="Control" />
+        <KeyboardAccelerator
+            Key="Number2"
+            Invoked="KeyboardAccelerator_Invoked"
+            Modifiers="Control" />
+        <KeyboardAccelerator
+            Key="Number3"
+            Invoked="KeyboardAccelerator_Invoked"
+            Modifiers="Control" />
     </UserControl.KeyboardAccelerators>
 
     <Grid>
@@ -146,6 +135,7 @@
             HorizontalContentAlignment="Center"
             VerticalContentAlignment="Center"
             IsItemClickEnabled="True"
+            ItemClick="ListView_ItemClick"
             ItemContainerStyle="{StaticResource SuggestedActionsContainerStyle}"
             ItemsSource="{x:Bind ViewModel.Items}"
             ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -153,11 +143,6 @@
             ScrollViewer.VerticalScrollBarVisibility="Disabled"
             ScrollViewer.VerticalScrollMode="Disabled"
             SelectionMode="None">
-            <i:Interaction.Behaviors>
-                <icore:EventTriggerBehavior EventName="ItemClick">
-                    <icore:InvokeCommandAction Command="{x:Bind ViewModel.ItemClickCommand}" />
-                </icore:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
 
             <ListView.ItemContainerTransitions>
                 <TransitionCollection>

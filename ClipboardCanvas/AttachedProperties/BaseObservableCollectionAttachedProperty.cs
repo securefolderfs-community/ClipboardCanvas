@@ -1,7 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using Microsoft.UI.Xaml;
 using System.Collections.Specialized;
-using System.Diagnostics;
-using Windows.UI.Xaml;
+using System.Collections.ObjectModel;
 
 namespace ClipboardCanvas.AttachedProperties
 {

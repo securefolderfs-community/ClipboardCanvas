@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Input;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media.Imaging;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media.Imaging;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {

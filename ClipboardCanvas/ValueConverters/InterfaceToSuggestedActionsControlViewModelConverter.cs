@@ -1,5 +1,5 @@
 ﻿using System;
-using Windows.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Data;
 using ClipboardCanvas.ViewModels.UserControls;
 
 namespace ClipboardCanvas.ValueConverters

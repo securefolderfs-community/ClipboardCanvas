@@ -1,9 +1,9 @@
-﻿using Microsoft.Toolkit.Uwp;
-using Microsoft.Toolkit.Uwp.Notifications;
+﻿using CommunityToolkit.WinUI.Notifications;
 using System.Threading;
 using Windows.UI.Notifications;
 
 using ClipboardCanvas.Enums;
+using ClipboardCanvas.GlobalizationExtensions;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 
 namespace ClipboardCanvas.Services.Implementation
@@ -24,11 +24,11 @@ namespace ClipboardCanvas.Services.Implementation
                         {
                             new AdaptiveText()
                             {
-                                Text = "AutopasteWorking".GetLocalized()
+                                Text = "AutopasteWorking".GetLocalized2()
                             },
                             new AdaptiveText()
                             {
-                                Text = "AutopasteContentBeingPasted".GetLocalized()
+                                Text = "AutopasteContentBeingPasted".GetLocalized2()
                             }
                         }
                     }
@@ -53,11 +53,11 @@ namespace ClipboardCanvas.Services.Implementation
                         {
                             new AdaptiveText()
                             {
-                                Text = "AutopasteFinishedWorking".GetLocalized()
+                                Text = "AutopasteFinishedWorking".GetLocalized2()
                             },
                             new AdaptiveText()
                             {
-                                Text = "AutopasteContentPasted".GetLocalized()
+                                Text = "AutopasteContentPasted".GetLocalized2()
                             }
                         }
                     }
@@ -80,11 +80,11 @@ namespace ClipboardCanvas.Services.Implementation
                         {
                             new AdaptiveText()
                             {
-                                Text = "AutopastePastingFailed".GetLocalized()
+                                Text = "AutopastePastingFailed".GetLocalized2()
                             },
                             new AdaptiveText()
                             {
-                                Text = string.Format("AutopasteContentPastingFailed".GetLocalized(), result?.ErrorCode ?? OperationErrorCode.UnknownFailed)
+                                Text = string.Format("AutopasteContentPastingFailed".GetLocalized2(), result?.ErrorCode ?? OperationErrorCode.UnknownFailed)
                             }
                         }
                     }

@@ -1,18 +1,18 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using ClipboardCanvas.GlobalizationExtensions;
 using System;
 using System.Linq;
 using System.Windows.Input;
-using Windows.System;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using System.Collections.Generic;
-using Windows.ApplicationModel.Core;
-using Microsoft.Toolkit.Uwp;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using Microsoft.UI.Dispatching;
 
+using ClipboardCanvas.GlobalizationExtensions;
 using ClipboardCanvas.Enums;
 using ClipboardCanvas.EventArguments.CollectionPreview;
 using ClipboardCanvas.EventArguments.Collections;
@@ -26,6 +26,9 @@ using ClipboardCanvas.Services;
 using ClipboardCanvas.DataModels.Navigation;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Helpers;
+using Windows.System;
+using DispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue;
+using CommunityToolkit.WinUI;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {
@@ -112,7 +115,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public string SplitButtonMainOptionText
         {
-            get => UserSettings.UseInfiniteCanvasAsDefault ? "OpenNewInfiniteCanvas".GetLocalized() : "OpenNewCanvas".GetLocalized();
+            get => UserSettings.UseInfiniteCanvasAsDefault ? "OpenNewInfiniteCanvas".GetLocalized2() : "OpenNewCanvas".GetLocalized2();
         }
 
         public bool SplitButtonShowInfiniteCanvasOption
@@ -445,7 +448,7 @@ namespace ClipboardCanvas.ViewModels.Pages
                 return;
             }
 
-            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(async () =>
+            await DispatcherQueue.GetForCurrentThread().EnqueueAsync(async () =>
             {
                 var itemToAdd = await CollectionPreviewItemViewModel.GetCollectionPreviewItemModel(AssociatedCollectionModel, e.itemChanged);
                 Items.Add(itemToAdd);
@@ -454,7 +457,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private async void AssociatedCollectionModel_OnCollectionItemRemovedEvent(object sender, CollectionItemRemovedEventArgs e)
         {
-            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(() =>
+            await DispatcherQueue.GetForCurrentThread().EnqueueAsync(() =>
             {
                 var itemToRemove = Items.FirstOrDefault((item) => item.CollectionItemViewModel.AssociatedItem.Path == e.itemChanged.AssociatedItem.Path);
 
@@ -467,7 +470,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private async void AssociatedCollectionModel_OnCollectionItemRenamedEvent(object sender, CollectionItemRenamedEventArgs e)
         {
-            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(async () =>
+            await DispatcherQueue.GetForCurrentThread().EnqueueAsync(async () =>
             { 
                 var itemToChange = Items.FirstOrDefault((item) => item.CollectionItemViewModel.AssociatedItem.Path == e.oldPath);
 
@@ -482,7 +485,7 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         private async void AssociatedCollectionModel_OnCollectionItemContentsChangedEvent(object sender, CollectionItemContentsChangedEventArgs e)
         {
-            await CoreApplication.MainView.DispatcherQueue.EnqueueAsync(async () =>
+            await DispatcherQueue.GetForCurrentThread().EnqueueAsync(async () =>
             {
                 var itemToChange = Items.FirstOrDefault((item) => item.CollectionItemViewModel.AssociatedItem.Path == e.itemChanged.AssociatedItem.Path);
 

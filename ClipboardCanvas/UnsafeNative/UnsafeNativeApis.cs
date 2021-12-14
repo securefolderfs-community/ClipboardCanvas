@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Text;
 using static ClipboardCanvas.UnsafeNative.UnsafeNativeDataModels;
 
 namespace ClipboardCanvas.UnsafeNative
@@ -19,7 +18,6 @@ namespace ClipboardCanvas.UnsafeNative
             uint dwFlagsAndAttributes,
             IntPtr hTemplateFile
         );
-
 
         [DllImport("api-ms-win-core-file-fromapp-l1-1-0.dll", CharSet = CharSet.Auto,
         CallingConvention = CallingConvention.StdCall,

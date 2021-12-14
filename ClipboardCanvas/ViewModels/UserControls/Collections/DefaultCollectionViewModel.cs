@@ -1,5 +1,5 @@
 ﻿using Windows.Storage;
-using Microsoft.Toolkit.Uwp;
+using ClipboardCanvas.GlobalizationExtensions;
 
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
@@ -10,7 +10,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
     {
         #region Properties
 
-        public override string DisplayName => "DefaultCollection".GetLocalized();
+        public override string DisplayName => "DefaultCollection".GetLocalized2();
 
         #endregion
 

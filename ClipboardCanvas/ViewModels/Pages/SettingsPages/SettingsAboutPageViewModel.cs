@@ -3,13 +3,13 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Storage;
 using Windows.System;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Windows.ApplicationModel.DataTransfer;
 using Octokit;
 using System.Linq;
-using Microsoft.Toolkit.Uwp;
+using ClipboardCanvas.GlobalizationExtensions;
 
 using ClipboardCanvas.ViewModels.Dialogs;
 using ClipboardCanvas.Services;
@@ -32,7 +32,7 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         public string AppVersionText
         {
-            get => string.Format("SettingsAboutPageAppVersion".GetLocalized(), ApplicationService.AppVersion);
+            get => string.Format("SettingsAboutPageAppVersion".GetLocalized2(), ApplicationService.AppVersion);
         }
 
         private bool _PrivacyPolicyProgressRingLoad;
@@ -150,7 +150,7 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         private void ShowIntroductionScreen()
         {
-            DialogService.CloseAllDialogs();
+            DialogService.CloseDialog();
             _view.IntroductionPanelLoad = true;
         }
 
@@ -161,7 +161,7 @@ namespace ClipboardCanvas.ViewModels.Pages.SettingsPages
 
         private async Task ShowChangeLog()
         {
-            DialogService.CloseAllDialogs();
+            DialogService.CloseDialog();
             await DialogService.ShowDialog(new UpdateChangeLogDialogViewModel());
         }
 
