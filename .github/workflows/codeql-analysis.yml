@@ -40,13 +40,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-      
-    - name: "Set .NET target"
-      uses: UseDotNet@2
-      with:
-        packageType: 'sdk'
-        version: '6.0.x'
-        includePreviewVersions: True
 
     # Initializes the CodeQL tools for scanning.
     - name: "Initialize CodeQL"
