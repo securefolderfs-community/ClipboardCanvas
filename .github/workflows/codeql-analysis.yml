@@ -18,12 +18,12 @@ on:
     # The branches below must be a subset of the branches above
     branches: [ master ]
   schedule:
-    - cron: '27 21 * * 2'
+    - cron: '37 21 * * 2'
 
 jobs:
   analyze:
     name: Analyze
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     permissions:
       actions: read
       contents: read
@@ -50,6 +50,28 @@ jobs:
         # By default, queries listed here will override any specified in a config file.
         # Prefix the list here with "+" to use these queries and those in the config file.
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v1
+      with:
+        nuget-version: '5.x'
+        
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1
+      
+    - name: NuGet Caching
+      uses: actions/cache@v2
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/ClipboardCanvas/Package.appxmanifest') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+          
+    - name: Restore NuGet for Solution
+      run: nuget restore -LockedMode ClipboardCanvas.sln
+      
+    - name: Perform Project Build
+      run: |
+        msbuild ClipboardCanvas.sln -nologo -nr:false -m -t:build -t:_GenerateAppxPackage -p:Configuration=Release -p:Platform=x64 -p:AppxBundle=Always -p:AppxBundlePlatforms=x64
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
