@@ -237,6 +237,9 @@
   <data name="CollectionIsBeingInitialized" xml:space="preserve">
     <value>The Collection is being initialized</value>
   </data>
+  <data name="CollectionItemsMissing" xml:space="preserve">
+    <value>We've noticed some items went missing. We're reloading the Collection for you.</value>
+  </data>
   <data name="CollectionPreview" xml:space="preserve">
     <value>Collection Preview:</value>
   </data>

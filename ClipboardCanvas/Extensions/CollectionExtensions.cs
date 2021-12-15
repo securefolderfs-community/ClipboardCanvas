@@ -11,7 +11,12 @@ namespace ClipboardCanvas.Extensions
 
         public static void AddFront<T>(this IList<T> list, T item) => list.Insert(0, item);
 
-        public static bool AddIfNotThere<T>(this IList<T> list, T item)
+        public static bool ContainsOnly<T>(this IEnumerable<T> enumerable, T item)
+        {
+            return enumerable.Count() == 1 && enumerable.Contains(item);
+        }
+
+        public static bool AddIfNotPresent<T>(this IList<T> list, T item)
         {
             if (!list.Contains(item))
             {

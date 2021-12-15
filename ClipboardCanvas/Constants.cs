@@ -34,6 +34,8 @@
         {
             public const int CONTROL_LOAD_DELAY = 10;
 
+            public const bool USE_GETLOCALIZED2 = true;
+
             public static class CanvasContent
             {
                 public const long FALLBACK_TEXTLOAD_MAX_FILESIZE = 1048576L;

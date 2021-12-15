@@ -258,7 +258,7 @@
                     Visibility="{x:Bind ViewModel.EnableAutopaste, Mode=OneWay}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
-                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Orientation="Horizontal" Spacing="4">

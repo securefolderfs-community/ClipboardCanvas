@@ -143,7 +143,7 @@ namespace ClipboardCanvas.Helpers
                                 matchCount++;
                                 break;
                             case "twitter:image":
-                                metaInfo.ImageUrls.AddIfNotThere(string.IsNullOrEmpty(metaInfo.IconUrl) ? tagContent.Value : metaInfo.IconUrl);
+                                metaInfo.ImageUrls.AddIfNotPresent(string.IsNullOrEmpty(metaInfo.IconUrl) ? tagContent.Value : metaInfo.IconUrl);
                                 matchCount++;
                                 break;
                             case "icon":
@@ -165,7 +165,7 @@ namespace ClipboardCanvas.Helpers
                                 matchCount++;
                                 break;
                             case "og:image":
-                                metaInfo.ImageUrls.AddIfNotThere(string.IsNullOrEmpty(metaInfo.IconUrl) ? tagContent.Value : metaInfo.IconUrl);
+                                metaInfo.ImageUrls.AddIfNotPresent(string.IsNullOrEmpty(metaInfo.IconUrl) ? tagContent.Value : metaInfo.IconUrl);
                                 matchCount++;
                                 break;
                             case "og:icon":

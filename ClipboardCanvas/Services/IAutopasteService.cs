@@ -7,6 +7,8 @@ namespace ClipboardCanvas.Services
     {
         void UpdateAutopasteTarget(IAutopasteTarget autopasteTarget);
 
+        bool IsAutopasteTarget(IAutopasteTarget autopasteTarget);
+
         Task InitializeAutopaste();
     }
 }

@@ -40,7 +40,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules
             {
                 case 0: // Image
                     {
-                        if (dataPackage.ContainsOnly(StandardDataFormats.Bitmap))
+                        if (dataPackage.Contains(StandardDataFormats.Bitmap))
                         {
                             return false;
                         }
@@ -50,7 +50,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules
 
                 case 1: // Text
                     {
-                        if (dataPackage.ContainsOnly(StandardDataFormats.Text))
+                        if (dataPackage.Contains(StandardDataFormats.Text))
                         {
                             SafeWrapper<string> result = await dataPackage.SafeGetTextAsync();
 
@@ -65,7 +65,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules
 
                 case 2: // File
                     {
-                        if (dataPackage.ContainsOnly(StandardDataFormats.StorageItems))
+                        if (dataPackage.Contains(StandardDataFormats.StorageItems))
                         {
                             SafeWrapper<IReadOnlyList<IStorageItem>> result = await dataPackage.SafeGetStorageItemsAsync();
 
@@ -80,7 +80,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules
 
                 case 3: // Url
                     {
-                        if (dataPackage.ContainsOnly(StandardDataFormats.Text))
+                        if (dataPackage.Contains(StandardDataFormats.Text))
                         {
                             SafeWrapper<string> result = await dataPackage.SafeGetTextAsync();
 
@@ -95,7 +95,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules
 
                 case 4: // Folder
                     {
-                        if (dataPackage.ContainsOnly(StandardDataFormats.StorageItems))
+                        if (dataPackage.Contains(StandardDataFormats.StorageItems))
                         {
                             SafeWrapper<IReadOnlyList<IStorageItem>> result = await dataPackage.SafeGetStorageItemsAsync();
 

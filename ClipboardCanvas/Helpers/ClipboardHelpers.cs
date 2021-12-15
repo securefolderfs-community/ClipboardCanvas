@@ -47,10 +47,5 @@ namespace ClipboardCanvas.Helpers
         {
             return await SafeWrapperRoutines.SafeWrapAsync(() => dataPackage.GetBitmapAsync().AsTask());
         }
-
-        public static bool ContainsOnly(this DataPackageView dataPackage, string format)
-        {
-            return dataPackage.AvailableFormats.Contains(format);
-        }
     }
 }

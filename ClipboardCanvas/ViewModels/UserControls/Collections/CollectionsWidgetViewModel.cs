@@ -477,6 +477,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 return;
             }
 
+            IAutopasteService autopasteService = Ioc.Default.GetService<IAutopasteService>();
+            if (autopasteService.IsAutopasteTarget(baseCollectionViewModel))
+            {
+                // Also reset that collection as a Autopaste target if it was removed
+                autopasteService.UpdateAutopasteTarget(null);
+            }
+
             // Unhook events
             baseCollectionViewModel.OnCollectionOpenRequestedEvent -= BaseCollectionViewModel_OnCollectionOpenRequestedEvent;
             baseCollectionViewModel.OnOpenNewCanvasRequestedEvent -= BaseCollectionViewModel_OnOpenNewCanvasRequestedEvent;

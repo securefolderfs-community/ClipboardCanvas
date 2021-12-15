@@ -600,7 +600,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                     }
 
                     // We must reload items because some were missing
-                    OnTipTextUpdateRequestedEvent?.Invoke(this, new TipTextUpdateRequestedEventArgs("We've noticed some items went missing. We're reloading the Collection for you.", TimeSpan.FromMilliseconds(Constants.UI.CanvasContent.COLLECTION_RELOADING_TIP_DELAY)));
+                    OnTipTextUpdateRequestedEvent?.Invoke(this, new TipTextUpdateRequestedEventArgs("CollectionItemsMissing".GetLocalized2(), TimeSpan.FromMilliseconds(Constants.UI.CanvasContent.COLLECTION_RELOADING_TIP_DELAY)));
                     await InitializeCollectionItems();
 
                     if (canvasNavigationDirection == CanvasNavigationDirection.Forward)

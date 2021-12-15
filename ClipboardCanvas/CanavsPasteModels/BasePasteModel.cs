@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,12 +16,15 @@ using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.Contexts.Operations;
 using ClipboardCanvas.CanvasLoadModels;
 using ClipboardCanvas.Helpers;
+using ClipboardCanvas.Extensions;
 
 namespace ClipboardCanvas.CanavsPasteModels
 {
     public abstract class BasePasteModel : IPasteModel, ILoadModel
     {
         protected IStorageItem pastedItem;
+
+        protected string customName;
 
         protected ICanvasItemReceiverModel canvasItemReceiver;
 
@@ -90,7 +92,7 @@ namespace ClipboardCanvas.CanavsPasteModels
 
         protected async Task<SafeWrapperResult> SetDataFromDataPackageInternal(DataPackageView dataPackage)
         {
-            if (dataPackage.ContainsOnly(StandardDataFormats.StorageItems))
+            if (dataPackage.AvailableFormats.ContainsOnly(StandardDataFormats.StorageItems))
             {
                 SafeWrapper<IReadOnlyList<IStorageItem>> items = await dataPackage.SafeGetStorageItemsAsync();
 
@@ -120,10 +122,9 @@ namespace ClipboardCanvas.CanavsPasteModels
             }
             else
             {
-                if (pastedItem != null)
+                if (!string.IsNullOrWhiteSpace(customName))
                 {
-                    string pastedItemFileName = Path.GetFileName(pastedItem.Path);
-                    canvasItem = await canvasItemReceiver.CreateNewCanvasItem(pastedItemFileName);
+                    canvasItem = await canvasItemReceiver.CreateNewCanvasItem(customName);
                 }
                 else
                 {
