@@ -107,11 +107,12 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             });
         }
 
-        public override Task<bool> SetDataToDataPackage(DataPackage data)
+        public override async Task<bool> SetDataToDataPackage(DataPackage data)
         {
+            data.SetStorageItems((await SourceFile).ToListSingle());
             data.SetText(Text);
 
-            return Task.FromResult(true);
+            return true;
         }
 
         #endregion
