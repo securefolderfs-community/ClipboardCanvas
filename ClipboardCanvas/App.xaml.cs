@@ -11,6 +11,9 @@ using ClipboardCanvas.GlobalizationExtensions;
 
 using ClipboardCanvas.Services;
 using ClipboardCanvas.Services.Implementation;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
