@@ -12,6 +12,13 @@
     <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+	<AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+	<AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+	<GenerateTestArtifacts>False</GenerateTestArtifacts>
+	<AppxBundle>Always</AppxBundle>
+	<AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
+	<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Pages\MainWindowContentPage.xaml" />
