@@ -126,7 +126,7 @@ namespace ClipboardCanvas.Helpers.Filesystem
                 return new SafeWrapper<StorageFile>(null, parentFolder.Details);
             }
 
-            string fileName = Path.GetFileName(path);
+            string fileName = RemoveIllegalFileNameCharacters(Path.GetFileName(path));
 
             return await CreateFile(parentFolder, fileName, collision);
         }
@@ -138,7 +138,7 @@ namespace ClipboardCanvas.Helpers.Filesystem
                 return new SafeWrapper<StorageFile>(null, OperationErrorCode.InvalidArgument, new ArgumentNullException(), "The provided folder is null.");
             }
 
-            return await SafeWrapperRoutines.SafeWrapAsync(() => parentFolder.CreateFileAsync(fileName, collision).AsTask());
+            return await SafeWrapperRoutines.SafeWrapAsync(() => parentFolder.CreateFileAsync(RemoveIllegalFileNameCharacters(fileName), collision).AsTask());
         }
 
         public static async Task<SafeWrapper<StorageFolder>> CreateFolder(string path, CreationCollisionOption collision = CreationCollisionOption.GenerateUniqueName)
@@ -164,6 +164,11 @@ namespace ClipboardCanvas.Helpers.Filesystem
             }
 
             return await SafeWrapperRoutines.SafeWrapAsync(() => parentFolder.CreateFolderAsync(name, collision).AsTask());
+        }
+
+        private static string RemoveIllegalFileNameCharacters(string dangerousFileName)
+        {
+            return string.Join("_", dangerousFileName.Split(Path.GetInvalidFileNameChars()));
         }
     }
 }
