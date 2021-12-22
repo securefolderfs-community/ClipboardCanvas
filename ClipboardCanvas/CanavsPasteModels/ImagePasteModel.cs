@@ -16,6 +16,7 @@ using ClipboardCanvas.CanvasFileReceivers;
 using ClipboardCanvas.Contexts.Operations;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Helpers.Filesystem;
+using System.IO;
 
 namespace ClipboardCanvas.CanavsPasteModels
 {
@@ -90,8 +91,13 @@ namespace ClipboardCanvas.CanavsPasteModels
                 }
                 else // Just image
                 {
-
                     SafeWrapper<RandomAccessStreamReference> bitmap = await dataPackage.SafeGetBitmapAsync();
+                    SafeWrapper<Uri> uri = await dataPackage.SafeGetUriAsync();
+
+                    if (uri)
+                    {
+                        customName = Path.GetFileName(uri.Result.LocalPath);
+                    }
 
                     if (!bitmap)
                     {

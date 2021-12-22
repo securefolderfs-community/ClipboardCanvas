@@ -32,7 +32,7 @@
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
         DisplayName="Clipboard Canvas"
-        Description="A tool that helps you be productive, preview multiple files on Infinite Canvas, save storage space with smart Reference Files, and work uninterruptedly with AutoPaste."
+        Description="A tool that helps you be productive, preview multiple files on Infinite Canvas, save storage space with smart Reference Files, and work uninterruptedly with Autopaste."
         BackgroundColor="transparent"
         Square150x150Logo="Assets\AppIcon\Square150x150Logo.png"
         Square44x44Logo="Assets\AppIcon\Square44x44Logo.png">

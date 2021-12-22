@@ -47,5 +47,10 @@ namespace ClipboardCanvas.Helpers
         {
             return await SafeWrapperRoutines.SafeWrapAsync(() => dataPackage.GetBitmapAsync().AsTask());
         }
+
+        public static async Task<SafeWrapper<Uri>> SafeGetUriAsync(this DataPackageView dataPackage)
+        {
+            return await SafeWrapperRoutines.SafeWrapAsync(() => dataPackage.GetUriAsync().AsTask());
+        }
     }
 }
