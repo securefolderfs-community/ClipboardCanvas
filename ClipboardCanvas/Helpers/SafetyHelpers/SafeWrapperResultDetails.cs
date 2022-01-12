@@ -3,7 +3,7 @@ using ClipboardCanvas.Enums;
 
 namespace ClipboardCanvas.Helpers.SafetyHelpers
 {
-    public class SafeWrapperResultDetails
+    public sealed class SafeWrapperResultDetails
     {
         public readonly OperationErrorCode errorCode;
 

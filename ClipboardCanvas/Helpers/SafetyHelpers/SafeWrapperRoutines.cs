@@ -19,7 +19,7 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
 
             try
             {
-                return new SafeWrapper<T>(func.Invoke(), OperationErrorCode.Success, "Operation completed successfully");
+                return (func.Invoke(), SafeWrapperResult.SUCCESS);
             }
             catch (Exception e)
             {
@@ -36,7 +36,7 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
             try
             {
                 action.Invoke();
-                return new SafeWrapperResult(OperationErrorCode.Success, "Operation completed successfully");
+                return SafeWrapperResult.SUCCESS;
             }
             catch (Exception e)
             {
@@ -56,7 +56,7 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
 
             try
             {
-                return new SafeWrapper<T>(await func.Invoke(), OperationErrorCode.Success, "Operation completed successfully");
+                return (await func.Invoke(), SafeWrapperResult.SUCCESS);
             }
             catch (Exception e)
             {
@@ -73,7 +73,7 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
             try
             {
                 await func.Invoke();
-                return new SafeWrapperResult(OperationErrorCode.Success, "Operation completed successfully");
+                return SafeWrapperResult.SUCCESS;
             }
             catch (Exception e)
             {
@@ -232,5 +232,4 @@ namespace ClipboardCanvas.Helpers.SafetyHelpers
 
         #endregion
     }
-
 }
