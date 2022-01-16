@@ -1,7 +1,7 @@
 ## Translate Clipboard Canvas
 
 ### Adding a new language
- - Download and install Visual Studio 2019 and [Multilingual App Toolkit extension](https://marketplace.visualstudio.com/itemsitemName=MultilingualAppToolkit.MultilingualAppToolkit-18308).
+ - Download and install Visual Studio 2019 and [Multilingual App Toolkit extension](https://marketplace.visualstudio.com/items?itemName=MultilingualAppToolkit.MultilingualAppToolkit-18308).
  - Fork Clipboard Canvas and create a new branch for the localization.
  - Clone forked repo and open in Visual Studio 2019.
  - Right-click `ClipboardCanvas (Universal Windows)` and select Multilingual App Toolkit > Add translation language.
