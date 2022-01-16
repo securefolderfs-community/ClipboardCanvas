@@ -20,6 +20,12 @@
 	<AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
 	<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
+  <PropertyGroup Label="MultilingualAppToolkit">
+  	<MultilingualAppToolkitVersion>4.0</MultilingualAppToolkitVersion>
+  	<MultilingualFallbackLanguage>en</MultilingualFallbackLanguage>
+  	<TranslationReport Condition="'$(Configuration)' == 'Release'">true</TranslationReport>
+  	<SuppressPseudoWarning Condition="'$(Configuration)' == 'Debug'">true</SuppressPseudoWarning>
+  </PropertyGroup>
   <ItemGroup>
     <None Remove="Pages\MainWindowContentPage.xaml" />
   </ItemGroup>
