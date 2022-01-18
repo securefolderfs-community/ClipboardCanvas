@@ -8,333 +8,333 @@
       <group id="CLIPBOARDCANVAS/STRINGS/EN-US/RESOURCES.RESW" datatype="resx">
         <trans-unit id="AddCollection" translate="yes" xml:space="preserve">
           <source>Add a collection</source>
-          <target state="translated">Adaugă o colecție</target>
+          <target state="final">Adaugă o colecție</target>
         </trans-unit>
         <trans-unit id="AppRestartRequired" translate="yes" xml:space="preserve">
           <source>The app will need to be restarted in order to apply the changes.</source>
-          <target state="translated">Pentru a aplica schimbările va fi nevoie de o repornire a aplicației.</target>
+          <target state="final">Pentru a aplica schimbările va fi nevoie de o repornire a aplicației.</target>
         </trans-unit>
         <trans-unit id="Autopaste" translate="yes" xml:space="preserve">
           <source>Autopaste</source>
-          <target state="translated">Autolipire</target>
+          <target state="final">Autolipire</target>
         </trans-unit>
         <trans-unit id="AutopasteAddRule" translate="yes" xml:space="preserve">
           <source>Add rule</source>
-          <target state="translated">Adaugă o regulă</target>
+          <target state="final">Adaugă o regulă</target>
         </trans-unit>
         <trans-unit id="AutopasteContentBeingPasted" translate="yes" xml:space="preserve">
           <source>Content is being pasted</source>
-          <target state="translated">Conținutul este în curs de lipire</target>
+          <target state="final">Conținutul este în curs de lipire</target>
         </trans-unit>
         <trans-unit id="AutopasteContentPasted" translate="yes" xml:space="preserve">
           <source>The content has been pasted</source>
-          <target state="translated">Conținutul a fost lipit</target>
+          <target state="final">Conținutul a fost lipit</target>
         </trans-unit>
         <trans-unit id="AutopasteContentPastingFailed" translate="yes" xml:space="preserve">
           <source>Autopaste was unable to paste content. Error: {0}</source>
-          <target state="translated">Autolipirea nu a putut lipi conținutul. Eroare: {0}</target>
+          <target state="final">Autolipirea nu a putut lipi conținutul. Eroare: {0}</target>
         </trans-unit>
         <trans-unit id="AutopasteExcludeType" translate="yes" xml:space="preserve">
           <source>Exclude type</source>
-          <target state="translated">Excludere tip</target>
+          <target state="final">Excludere tip</target>
         </trans-unit>
         <trans-unit id="AutopasteFinishedWorking" translate="yes" xml:space="preserve">
           <source>Autopaste pasted successfully</source>
-          <target state="translated">Autolipirea a lipit cu succes</target>
+          <target state="final">Autolipirea a lipit cu succes</target>
         </trans-unit>
         <trans-unit id="AutopasteIsDisabled" translate="yes" xml:space="preserve">
           <source>Autopaste is disabled</source>
-          <target state="translated">Autolipirea este dezactivată</target>
+          <target state="final">Autolipirea este dezactivată</target>
         </trans-unit>
         <trans-unit id="AutopasteLargerThan" translate="yes" xml:space="preserve">
           <source>Larger than</source>
-          <target state="translated">Mai mare decât</target>
+          <target state="final">Mai mare decât</target>
         </trans-unit>
         <trans-unit id="AutopasteNoTarget" translate="yes" xml:space="preserve">
           <source>No target</source>
-          <target state="translated">Fără țintă</target>
+          <target state="final">Fără țintă</target>
         </trans-unit>
         <trans-unit id="AutopastePasteToTarget" translate="yes" xml:space="preserve">
           <source>Paste to:</source>
-          <target state="translated">Lipire în:</target>
+          <target state="final">Lipire în:</target>
         </trans-unit>
         <trans-unit id="AutopastePastingFailed" translate="yes" xml:space="preserve">
           <source>Autopaste failed</source>
-          <target state="translated">Autolipirea a eșuat</target>
+          <target state="final">Autolipirea a eșuat</target>
         </trans-unit>
         <trans-unit id="AutopasteRuleFileSize" translate="yes" xml:space="preserve">
           <source>File size...</source>
-          <target state="translated">Mărime fișier...</target>
+          <target state="final">Mărime fișier...</target>
         </trans-unit>
         <trans-unit id="AutopasteRuleSet" translate="yes" xml:space="preserve">
           <source>Rule set</source>
-          <target state="translated">Set de reguli</target>
+          <target state="final">Set de reguli</target>
         </trans-unit>
         <trans-unit id="AutopasteRuleTypeFilter" translate="yes" xml:space="preserve">
           <source>Type filter...</source>
-          <target state="translated">Filtru tip...</target>
+          <target state="final">Filtru tip...</target>
         </trans-unit>
         <trans-unit id="AutopasteSmallerThan" translate="yes" xml:space="preserve">
           <source>Smaller than</source>
-          <target state="translated">Mai mic decât</target>
+          <target state="final">Mai mic decât</target>
         </trans-unit>
         <trans-unit id="AutopasteTypeFile" translate="yes" xml:space="preserve">
           <source>File</source>
-          <target state="translated">Fișier</target>
+          <target state="final">Fișier</target>
         </trans-unit>
         <trans-unit id="AutopasteTypeFolder" translate="yes" xml:space="preserve">
           <source>Folder</source>
-          <target state="translated">Folder</target>
+          <target state="final">Folder</target>
         </trans-unit>
         <trans-unit id="AutopasteTypeImage" translate="yes" xml:space="preserve">
           <source>Image</source>
-          <target state="translated">Imagine</target>
+          <target state="final">Imagine</target>
         </trans-unit>
         <trans-unit id="AutopasteTypeText" translate="yes" xml:space="preserve">
           <source>Text</source>
-          <target state="translated">Text</target>
+          <target state="final">Text</target>
         </trans-unit>
         <trans-unit id="AutopasteTypeUrl" translate="yes" xml:space="preserve">
           <source>Url</source>
-          <target state="translated">URL</target>
+          <target state="final">URL</target>
         </trans-unit>
         <trans-unit id="AutopasteWorking" translate="yes" xml:space="preserve">
           <source>Autopaste is working</source>
-          <target state="translated">Autolipirea funcționează</target>
+          <target state="final">Autolipirea funcționează</target>
         </trans-unit>
         <trans-unit id="Cancel" translate="yes" xml:space="preserve">
           <source>Cancel</source>
-          <target state="translated">Anulare</target>
+          <target state="final">Anulare</target>
         </trans-unit>
         <trans-unit id="CanvasTypeInfoCurrentInfiniteCanvas" translate="yes" xml:space="preserve">
           <source>You're in Infinite Canvas mode</source>
-          <target state="translated">Ești în modul Canvas Infinit</target>
+          <target state="final">Ești în modul Canvas Infinit</target>
         </trans-unit>
         <trans-unit id="CanvasTypeInfoCurrentOneCanvas" translate="yes" xml:space="preserve">
           <source>You're in One Canvas mode</source>
-          <target state="translated">Ești în modul un Canvas</target>
+          <target state="final">Ești în modul un Canvas</target>
         </trans-unit>
         <trans-unit id="Change" translate="yes" xml:space="preserve">
           <source>Change</source>
-          <target state="translated">Modificare</target>
+          <target state="final">Modificare</target>
         </trans-unit>
         <trans-unit id="ChangeIcon" translate="yes" xml:space="preserve">
           <source>Change icon</source>
-          <target state="translated">Modificare pictogramă</target>
+          <target state="final">Modificare pictogramă</target>
         </trans-unit>
         <trans-unit id="ChangelogFetchingDataFromGitHub" translate="yes" xml:space="preserve">
           <source>Fetching data from GitHub</source>
-          <target state="translated">Preluare date de la GitHub</target>
+          <target state="final">Preluare date de la GitHub</target>
         </trans-unit>
         <trans-unit id="ChangelogFetchingError" translate="yes" xml:space="preserve">
           <source>An error occurred while trying to fetch Clipboard Canvas' release notes from GitHub</source>
-          <target state="translated">Am întâmpinat o eroare încercând să preluăm notele de lansare Clipboard Canvas de pe GitHub</target>
+          <target state="final">Am întâmpinat o eroare încercând să preluăm notele de lansare Clipboard Canvas de pe GitHub</target>
         </trans-unit>
         <trans-unit id="ChangelogTitle" translate="yes" xml:space="preserve">
           <source>Clipboard Canvas has been updated!</source>
-          <target state="translated">Clipboard Canvas a fost actualizat!</target>
+          <target state="final">Clipboard Canvas a fost actualizat!</target>
         </trans-unit>
         <trans-unit id="ChangelogViewOnGitHub" translate="yes" xml:space="preserve">
           <source>View on GitHub</source>
-          <target state="translated">Vezi pe GitHub</target>
+          <target state="final">Vezi pe GitHub</target>
         </trans-unit>
         <trans-unit id="ClipboardCanvasCrashReportIssue" translate="yes" xml:space="preserve">
           <source>Report this issue</source>
-          <target state="translated">Raportează această problemă</target>
+          <target state="final">Raportează această problemă</target>
         </trans-unit>
         <trans-unit id="ClipboardCanvasCrashSubtitle" translate="yes" xml:space="preserve">
           <source>We've encountered an issue that we couldn't recover from.</source>
-          <target state="translated">Am întâmpinat o problemă din care n-am putut să ne revenim.</target>
+          <target state="final">Am întâmpinat o problemă din care n-am putut să ne revenim.</target>
         </trans-unit>
         <trans-unit id="ClipboardCanvasCrashTitle" translate="yes" xml:space="preserve">
           <source>Clipboard Canvas crashed spectacularly!</source>
-          <target state="translated">Clipboard Canvas a avut un accident spectaculos!</target>
+          <target state="final">Clipboard Canvas a avut un accident spectaculos!</target>
         </trans-unit>
         <trans-unit id="CloseSearch" translate="yes" xml:space="preserve">
           <source>Close Search</source>
-          <target state="translated">Închidere Căutare</target>
+          <target state="final">Închidere Căutare</target>
         </trans-unit>
         <trans-unit id="CollectionErrorNotificationDescription" translate="yes" xml:space="preserve">
           <source>{0} Error: {1}</source>
-          <target state="translated">{0} Eroare: {1}</target>
+          <target state="final">{0} Eroare: {1}</target>
         </trans-unit>
         <trans-unit id="CollectionFolderNotFound" translate="yes" xml:space="preserve">
           <source>The folder associated with this collection was not found.</source>
-          <target state="translated">Folderul asociat cu această colecție nu a fost găsit.</target>
+          <target state="final">Folderul asociat cu această colecție nu a fost găsit.</target>
         </trans-unit>
         <trans-unit id="CollectionIsBeingInitialized" translate="yes" xml:space="preserve">
           <source>The Collection is being initialized</source>
-          <target state="translated">Colecția este în curs de inițializare</target>
+          <target state="final">Colecția este în curs de inițializare</target>
         </trans-unit>
         <trans-unit id="CollectionItemsMissing" translate="yes" xml:space="preserve">
           <source>We've noticed some items went missing. We're reloading the Collection for you.</source>
-          <target state="translated">Am văzut că unele elemente au fost date dispărute. Reîncărcăm Colecția pentru tine.</target>
+          <target state="final">Am văzut că unele elemente au fost date dispărute. Reîncărcăm Colecția pentru tine.</target>
         </trans-unit>
         <trans-unit id="CollectionPreview" translate="yes" xml:space="preserve">
           <source>Collection Preview:</source>
-          <target state="translated">Previzualizare Colecție:</target>
+          <target state="final">Previzualizare Colecție:</target>
         </trans-unit>
         <trans-unit id="Collections" translate="yes" xml:space="preserve">
           <source>Collections</source>
-          <target state="translated">Colecții</target>
+          <target state="final">Colecții</target>
         </trans-unit>
         <trans-unit id="CollectionTooltip" translate="yes" xml:space="preserve">
           <source>Double click to open this Collection.
 Right click for more options.</source>
-          <target state="translated">Dublu-clic pentru a deschide această Colecție.
+          <target state="final">Dublu-clic pentru a deschide această Colecție.
 Clic-dreapta pentru mai multe opțiuni.</target>
         </trans-unit>
         <trans-unit id="CollectionUnavailable" translate="yes" xml:space="preserve">
           <source>Collection unavailable</source>
-          <target state="translated">Colecție indisponibilă</target>
+          <target state="final">Colecție indisponibilă</target>
         </trans-unit>
         <trans-unit id="ContinueInRestrictedAccess" translate="yes" xml:space="preserve">
           <source>Continue in Restricted Access</source>
-          <target state="translated">Continuă în Acces restricționat</target>
+          <target state="final">Continuă în Acces restricționat</target>
         </trans-unit>
         <trans-unit id="CopyFile" translate="yes" xml:space="preserve">
           <source>Copy file</source>
-          <target state="translated">Copiere fișier</target>
+          <target state="final">Copiere fișier</target>
         </trans-unit>
         <trans-unit id="CopySelectedText" translate="yes" xml:space="preserve">
           <source>Copy selected text</source>
-          <target state="translated">Copiere text selectat</target>
+          <target state="final">Copiere text selectat</target>
         </trans-unit>
         <trans-unit id="CouldNotDeleteCollectionIcon" translate="yes" xml:space="preserve">
           <source>Current icon could not be deleted.</source>
-          <target state="translated">Pictograma curentă nu a putut fi ștearsă.</target>
+          <target state="final">Pictograma curentă nu a putut fi ștearsă.</target>
         </trans-unit>
         <trans-unit id="CouldNotRemoveCollectionIcon" translate="yes" xml:space="preserve">
           <source>Couldn't remove icon.</source>
-          <target state="translated">Nu s-a putut șterge pictograma.</target>
+          <target state="final">Nu s-a putut șterge pictograma.</target>
         </trans-unit>
         <trans-unit id="CouldNotRenameCollection" translate="yes" xml:space="preserve">
           <source>Couldn't rename Collection</source>
-          <target state="translated">Nu s-a putut redenumi Colecția</target>
+          <target state="final">Nu s-a putut redenumi Colecția</target>
         </trans-unit>
         <trans-unit id="CouldNotSetCollectionIcon" translate="yes" xml:space="preserve">
           <source>Couldn't set custom Collection icon.</source>
-          <target state="translated">Nu s-a putut seta o pictogramă personalizată pentru Colecție.</target>
+          <target state="final">Nu s-a putut seta o pictogramă personalizată pentru Colecție.</target>
         </trans-unit>
         <trans-unit id="CurrentCollection" translate="yes" xml:space="preserve">
           <source>Current Collection:</source>
-          <target state="translated">Colecție crentă:</target>
+          <target state="final">Colecția curentă:</target>
         </trans-unit>
         <trans-unit id="DefaultCollection" translate="yes" xml:space="preserve">
           <source>Default Collection</source>
-          <target state="translated">Colecție implicită</target>
+          <target state="final">Colecția implicită</target>
         </trans-unit>
         <trans-unit id="Delete" translate="yes" xml:space="preserve">
           <source>Delete</source>
-          <target state="translated">Ștergere</target>
+          <target state="final">Ștergere</target>
         </trans-unit>
         <trans-unit id="DeleteFile" translate="yes" xml:space="preserve">
           <source>Delete file</source>
-          <target state="translated">Ștergere fișier</target>
+          <target state="final">Ștergere fișier</target>
         </trans-unit>
         <trans-unit id="DeleteInfiniteCanvas" translate="yes" xml:space="preserve">
           <source>Delete Infinite Canvas</source>
-          <target state="translated">Ștergere Canvas Infinit</target>
+          <target state="final">Ștergere Canvas Infinit</target>
         </trans-unit>
         <trans-unit id="DeleteItem" translate="yes" xml:space="preserve">
           <source>Delete item</source>
-          <target state="translated">Ștergere element</target>
+          <target state="final">Ștergere element</target>
         </trans-unit>
         <trans-unit id="DeleteItemDescription" translate="yes" xml:space="preserve">
           <source>Are you sure you want to delete this item?</source>
-          <target state="translated">Sigur vrei să ștergi acest element?</target>
+          <target state="final">Sigur vrei să ștergi acest element?</target>
         </trans-unit>
         <trans-unit id="DeletePermanently" translate="yes" xml:space="preserve">
           <source>Permanently delete</source>
-          <target state="translated">Ștergere definitivă</target>
+          <target state="final">Ștergere definitivă</target>
         </trans-unit>
         <trans-unit id="DeleteReference" translate="yes" xml:space="preserve">
           <source>Delete Reference</source>
-          <target state="translated">Ștergere Referință</target>
+          <target state="final">Ștergere Referință</target>
         </trans-unit>
         <trans-unit id="DropOrPasteToAddContent" translate="yes" xml:space="preserve">
           <source>Drag and drop or paste to add content</source>
-          <target state="translated">Drag și drop sau lipește pentru a adăuga conținut</target>
+          <target state="final">Drag și drop sau lipește pentru a adăuga conținut</target>
         </trans-unit>
         <trans-unit id="EmptyTimelineSectionText" translate="yes" xml:space="preserve">
           <source>Recently pasted items will show up on your Timeline here</source>
-          <target state="translated">Elemente lipite recent vor apărea în Cronologie, chiar aici</target>
+          <target state="final">Elemente lipite recent vor apărea în Cronologie, chiar aici</target>
         </trans-unit>
         <trans-unit id="EnableAutopaste" translate="yes" xml:space="preserve">
           <source>Enable Autopaste</source>
-          <target state="translated">Activare autolipire</target>
+          <target state="final">Activare autolipire</target>
         </trans-unit>
         <trans-unit id="Error" translate="yes" xml:space="preserve">
           <source>Error</source>
-          <target state="translated">Eroare</target>
+          <target state="final">Eroare</target>
         </trans-unit>
         <trans-unit id="ErrorWhilstOverridingReference" translate="yes" xml:space="preserve">
           <source>Error whilst overriding reference. Error: {0}</source>
-          <target state="translated">Eroare în timpul suprascrierii referinței. Eroare: {0}</target>
+          <target state="final">Eroare în timpul suprascrierii referinței. Eroare: {0}</target>
         </trans-unit>
         <trans-unit id="FileSizeRuleDoesNotApplyToFolders" translate="yes" xml:space="preserve">
           <source>File size rule does not apply to folders.</source>
-          <target state="translated">Regula mărimii fișierelor nu se aplică la foldere.</target>
+          <target state="final">Regula mărimii fișierelor nu se aplică la foldere.</target>
         </trans-unit>
         <trans-unit id="FindNext" translate="yes" xml:space="preserve">
           <source>Find next</source>
-          <target state="translated">Găsire următor</target>
+          <target state="final">Găsire următor</target>
         </trans-unit>
         <trans-unit id="FindPrevious" translate="yes" xml:space="preserve">
           <source>Find previous</source>
-          <target state="translated">Găsire precedent</target>
+          <target state="final">Găsire precedent</target>
         </trans-unit>
         <trans-unit id="HomePageTargetAutopasteDescription" translate="yes" xml:space="preserve">
           <source>Right click desired collection and set it as an autopaste target.</source>
-          <target state="translated">Clic-dreapta pe colecția dorită și seteaz-o ca o țintă pentru autolipire.</target>
+          <target state="final">Clic-dreapta pe colecția dorită și seteaz-o ca o țintă pentru autolipire.</target>
         </trans-unit>
         <trans-unit id="HomePageTargetAutopasteTitle" translate="yes" xml:space="preserve">
           <source>Select autopaste target</source>
-          <target state="translated">Selectare țintă autolipire</target>
+          <target state="final">Selectare țintă autolipire</target>
         </trans-unit>
         <trans-unit id="InfiniteCanvasIsEmpty" translate="yes" xml:space="preserve">
           <source>Infinite Canvas is empty</source>
-          <target state="translated">Canvasul Infinit este gol</target>
+          <target state="final">Canvasul Infinit este gol</target>
         </trans-unit>
         <trans-unit id="InvalidFile" translate="yes" xml:space="preserve">
           <source>Invalid file.</source>
-          <target state="translated">Fișier invalid.</target>
+          <target state="final">Fișier invalid.</target>
         </trans-unit>
         <trans-unit id="NoItemsToPreview" translate="yes" xml:space="preserve">
           <source>There are no items to preview.</source>
-          <target state="translated">Nu există elemente de previzualizat.</target>
+          <target state="final">Nu există elemente de previzualizat.</target>
         </trans-unit>
         <trans-unit id="OOBECollectionPreviewDescription" translate="yes" xml:space="preserve">
           <source>Get a bird's eye view of your files. Quickly locate what you need thanks to search function in Collection Preview.</source>
-          <target state="translated">Ia o privire scurtă la fișierele tale. Lochează rapid toate fișierele de care ai nevoie mulțumită funcției de căutare în Previzualizare Colecție.</target>
+          <target state="final">Ia o privire scurtă la fișierele tale. Lochează rapid toate fișierele de care ai nevoie mulțumită funcției de căutare în Previzualizare Colecție.</target>
         </trans-unit>
         <trans-unit id="OOBECollectionPreviewTitle" translate="yes" xml:space="preserve">
           <source>Preview your Collections</source>
-          <target state="translated">Previzualizează-ți Colecțiile</target>
+          <target state="final">Previzualizează-ți Colecțiile</target>
         </trans-unit>
         <trans-unit id="OOBECollectionsDescription" translate="yes" xml:space="preserve">
           <source>Use Collections to swiftly move around your workspaces. Customize collections to fit your needs. Group your work in separate folders.</source>
-          <target state="translated">Utilizează Colecții pentru a te muta cu elan printre spații de lucru. Personalizează colecțiile nevoilor tale. Grupează-ți munca în foldere separate.</target>
+          <target state="final">Utilizează Colecții pentru a te muta cu elan printre spații de lucru. Personalizează colecțiile nevoilor tale. Grupează-ți munca în foldere separate.</target>
         </trans-unit>
         <trans-unit id="OOBECollectionsTitle" translate="yes" xml:space="preserve">
           <source>Manage your workspace using Collections</source>
-          <target state="translated">Gestionează-ți spațiul de lucru cu Colecții</target>
+          <target state="final">Ești gata să folosești Clipboard Canvas! Îți poți personaliza experiența în Setări.</target>
         </trans-unit>
         <trans-unit id="OOBEFinishDescription" translate="yes" xml:space="preserve">
           <source>You are now ready to start using Clipboard Canvas! You can customize your app experience by heading to Settings.</source>
-          <target state="translated">Ești gata să folosești Clipboard Canvas! Îți poți personaliza experiența în aplicație în Setări.</target>
+          <target state="final">Ești gata să folosești Clipboard Canvas! Îți poți personaliza experiența în aplicație în Setări.</target>
         </trans-unit>
         <trans-unit id="OOBEFinishTitle" translate="yes" xml:space="preserve">
           <source>You're good to go!</source>
-          <target state="translated">Ești gata de plecare!</target>
+          <target state="final">Ești gata de plecare!</target>
         </trans-unit>
         <trans-unit id="OOBEInfiniteCanvasDescription" translate="yes" xml:space="preserve">
           <source>View your files on limit-free canvas. Infinite Canvas is your desktop sticky board that allows you to manage your work in a flexible fashion. Drag around pasted files and take a full control of them.</source>
-          <target state="translated">Drag around pasted files and take a full control of them.Vezi fișierele tale pe un canvas fără limite. Pe bune. Canvasul Infinit este stickyboard-ul ecranului tău și te lasă să-ți gestionezi munca într-o manieră flexibilă.</target>
+          <target state="final">Vezi fișierele tale pe un canvas fără limite. Pe bune. Canvasul Infinit este stickyboard-ul ecranului tău care te lasă să-ți gestionezi munca într-o manieră flexibilă.</target>
         </trans-unit>
         <trans-unit id="OOBEInfiniteCanvasTitle" translate="yes" xml:space="preserve">
           <source>Infinite Canvas</source>
-          <target state="translated">Canvas Infinit</target>
+          <target state="final">Canvas Infinit</target>
         </trans-unit>
         <trans-unit id="OOBEOneCanvasDescription" translate="yes" xml:space="preserve">
           <source>Quickly paste and interact with your content on One Canvas. One Canvas gives you a fully-sized interactive preview of various files:
@@ -344,7 +344,7 @@ Clic-dreapta pentru mai multe opțiuni.</target>
  - Text preview
  - Markdown format preview
  - Folder and file preview</source>
-          <target state="translated">Lipește și interacționează rapid cu conținutul tău pe un Canvas. Un Canvas îți dă o previzualizare interactivă în mărime-completă a diverse fișiere:
+          <target state="final">Lipește și interacționează rapid cu conținutul tău pe un Canvas. Un Canvas îți dă o previzualizare interactivă în mărime-completă a diverse fișiere:
 
  - Previzualizare imagini
  - Previzualizare media
@@ -354,351 +354,351 @@ Clic-dreapta pentru mai multe opțiuni.</target>
         </trans-unit>
         <trans-unit id="OOBEOneCanvasTitle" translate="yes" xml:space="preserve">
           <source>One Canvas</source>
-          <target state="translated">Un Canvas</target>
+          <target state="final">Un Canvas</target>
         </trans-unit>
         <trans-unit id="OOBEReferenceFilesDescription" translate="yes" xml:space="preserve">
           <source>With Reference Files you don't have to worry about filling up your hard drive. Reference Files save space by holding a reference that points to original file. Thanks to Clipboard Canvas seamless integration, Reference Files work great in both One Canvas and Infinite Canvas.</source>
-          <target state="translated">Cu Fișiere de Referință, nu te îngrijora despre spațiu de stocare. Ele salvează spațiu ținând o referință care punctează la fișierul original. Mulțumită integrării fără-efort Clipboard Canvas, Fișierele de Referință merg bine și pe un Canvas, dar și pe Canvasul Infinit.</target>
+          <target state="final">Cu Fișiere de Referință, nu te îngrijora despre spațiu de stocare. Ele salvează spațiu ținând o referință care punctează la fișierul original. Mulțumită integrării fără-efort Clipboard Canvas, Fișierele de Referință merg bine și pe un Canvas, dar și pe Canvasul Infinit.</target>
         </trans-unit>
         <trans-unit id="OOBEReferenceFilesTitle" translate="yes" xml:space="preserve">
           <source>Save storage space with Reference Files</source>
-          <target state="translated">Salvează spațiu de stocare cu Fișiere de Referință</target>
+          <target state="final">Salvează spațiu de stocare cu Fișiere de Referință</target>
         </trans-unit>
         <trans-unit id="OOBETimelineDescription" translate="yes" xml:space="preserve">
           <source>Never miss a file or folder with Timeline on your homepage. Timeline keeps track of recently pasted items so you don't have to worry about anything sliding past unnoticed!</source>
-          <target state="translated">Nu rata un fișier sau folder cu Cronologia pe pagina de pornire. Cronologia are grijă de elemente lipite recent ca tu să n-ai grijă despre orice lucru care-ți poate scăpa!</target>
+          <target state="final">Nu rata un fișier sau folder mulțumită Cronologiei de pe pagina de pornire. Cronologia are grijă de elemente lipite recent ca tu să n-ai grijă despre fișiere ratate!</target>
         </trans-unit>
         <trans-unit id="OOBETimelineTitle" translate="yes" xml:space="preserve">
           <source>See a run-down of recent activity on your Timeline</source>
-          <target state="translated">Vezi o analiză a activității recente în Cronologia ta</target>
+          <target state="final">Vezi o analiză a activității recente în Cronologia ta</target>
         </trans-unit>
         <trans-unit id="OOBEWelcomeDescription" translate="yes" xml:space="preserve">
           <source>Thank you for trying out Clipboard Canvas! To get you started, this presentation will guide you through most notable features of the app.</source>
-          <target state="translated">Îți mulțumim pentru că încerci Clipboard Canvas! Ca să fi gata de pornire, prezentația asta te va ghida printre cele mai notabile funcționalități ale aplicației.</target>
+          <target state="final">Îți mulțumim pentru că încerci Clipboard Canvas! Ca să știi tot-tot, această prezentare te va ghida printre cele mai notabile funcționalități ale aplicației.</target>
         </trans-unit>
         <trans-unit id="OOBEWelcomeTitle" translate="yes" xml:space="preserve">
           <source>Welcome to Clipboard Canvas!</source>
-          <target state="translated">Bun venit la Clipboard Canvas!</target>
+          <target state="final">Bun venit la Clipboard Canvas!</target>
         </trans-unit>
         <trans-unit id="OpenCanvas" translate="yes" xml:space="preserve">
           <source>Open canvas</source>
-          <target state="translated">Deschidere canvas</target>
+          <target state="final">Deschidere canvas</target>
         </trans-unit>
         <trans-unit id="OpenCollectionLocation" translate="yes" xml:space="preserve">
           <source>Open Collection location</source>
-          <target state="translated">Deschidere locație Colecție</target>
+          <target state="final">Deschidere locație Colecție</target>
         </trans-unit>
         <trans-unit id="OpenContainingFolder" translate="yes" xml:space="preserve">
           <source>Open containing folder</source>
-          <target state="translated">Deschidere folder conținut</target>
+          <target state="final">Deschidere folder conținut</target>
         </trans-unit>
         <trans-unit id="OpenFile" translate="yes" xml:space="preserve">
           <source>Open file</source>
-          <target state="translated">Deschidere fișier</target>
+          <target state="final">Deschidere fișier</target>
         </trans-unit>
         <trans-unit id="OpenInfiniteCanvasFolder" translate="yes" xml:space="preserve">
           <source>Open Infinite Canvas folder</source>
-          <target state="translated">Deschidere folder Canvas Infinit</target>
+          <target state="final">Deschidere folder Canvas Infinit</target>
         </trans-unit>
         <trans-unit id="OpenNewCanvas" translate="yes" xml:space="preserve">
           <source>Open new Canvas</source>
-          <target state="translated">Deschidere Canvas nou</target>
+          <target state="final">Deschidere Canvas nou</target>
         </trans-unit>
         <trans-unit id="OpenNewInfiniteCanvas" translate="yes" xml:space="preserve">
           <source>Open new Infinite Canvas</source>
-          <target state="translated">Deschidere Canvas Infinit nou</target>
+          <target state="final">Deschidere Canvas Infinit nou</target>
         </trans-unit>
         <trans-unit id="OpenReferenceContainingFolder" translate="yes" xml:space="preserve">
           <source>Open reference containing folder</source>
-          <target state="translated">Deschidere folderul care conține referința</target>
+          <target state="final">Deschidere folder care conține referința</target>
         </trans-unit>
         <trans-unit id="OpenSettings" translate="yes" xml:space="preserve">
           <source>Open Settings</source>
-          <target state="translated">Deschidere Setări</target>
+          <target state="final">Deschidere Setări</target>
         </trans-unit>
         <trans-unit id="OperationCanceled" translate="yes" xml:space="preserve">
           <source>The operation was canceled.</source>
-          <target state="translated">Operația a fost anulată.</target>
+          <target state="final">Operația a fost anulată.</target>
         </trans-unit>
         <trans-unit id="OverwriteReference" translate="yes" xml:space="preserve">
           <source>Paste reference</source>
-          <target state="translated">Lipire referință</target>
+          <target state="final">Lipire referință</target>
         </trans-unit>
         <trans-unit id="PastedAsReference" translate="yes" xml:space="preserve">
           <source>File pasted as reference</source>
-          <target state="translated">Fișier lipit ca referință</target>
+          <target state="final">Fișier lipit ca referință</target>
         </trans-unit>
         <trans-unit id="PastedAsReferenceDescription" translate="yes" xml:space="preserve">
           <source>This file has been pasted as a reference to the original file. Clipboard Canvas loads the original file that the reference is pointing to.
 
 You can override the reference and copy the item directly to this collection by pressing the button below.</source>
-          <target state="translated">Acest fișier a fost lipit ca o referință a fișierului original. Clipboard Canvas încarcă fișierul original la care punctează referința.
+          <target state="final">Acest fișier a fost lipit ca o referință a fișierului original. Clipboard Canvas încarcă fișierul original spre care punctează referința.
 
 Poți suprascrie referința și copia elementul direct în această colecție apăsând butonul de mai jos.</target>
         </trans-unit>
         <trans-unit id="PasteFromClipboard" translate="yes" xml:space="preserve">
           <source>Paste from Clipboard</source>
-          <target state="translated">Lipire din Clipboard</target>
+          <target state="final">Lipire din Clipboard</target>
         </trans-unit>
         <trans-unit id="ReferenceFiles" translate="yes" xml:space="preserve">
           <source>Reference Files</source>
-          <target state="translated">Fișiere de Referință</target>
+          <target state="final">Fișiere de Referință</target>
         </trans-unit>
         <trans-unit id="ReloadCollection" translate="yes" xml:space="preserve">
           <source>Reload Collection</source>
-          <target state="translated">Reîncărcare Colecție</target>
+          <target state="final">Reîncărcare Colecție</target>
         </trans-unit>
         <trans-unit id="RemoveCollection" translate="yes" xml:space="preserve">
           <source>Remove Collection</source>
-          <target state="translated">Ștergere Colecție</target>
+          <target state="final">Ștergere Colecție</target>
         </trans-unit>
         <trans-unit id="RemoveFromTimelineSection" translate="yes" xml:space="preserve">
           <source>Remove from this section</source>
-          <target state="translated">Ștergere din această secțiune</target>
+          <target state="final">Ștergere din această secțiune</target>
         </trans-unit>
         <trans-unit id="RemoveIcon" translate="yes" xml:space="preserve">
           <source>Remove icon</source>
-          <target state="translated">Ștergere pictogramă</target>
+          <target state="final">Ștergere pictogramă</target>
         </trans-unit>
         <trans-unit id="Rename" translate="yes" xml:space="preserve">
           <source>Rename</source>
-          <target state="translated">Redenumire</target>
+          <target state="final">Redenumire</target>
         </trans-unit>
         <trans-unit id="ResetItemPositions" translate="yes" xml:space="preserve">
           <source>Reset item positions</source>
-          <target state="translated">Resetare poziții pictograme</target>
+          <target state="final">Resetare poziții pictograme</target>
         </trans-unit>
         <trans-unit id="RestartApplication" translate="yes" xml:space="preserve">
           <source>Restart Application</source>
-          <target state="translated">Repornire aplicație</target>
+          <target state="final">Repornire aplicație</target>
         </trans-unit>
         <trans-unit id="RestrictedAccess" translate="yes" xml:space="preserve">
           <source>Restricted Access</source>
-          <target state="translated">Acces restricționat</target>
+          <target state="final">Acces restricționat</target>
         </trans-unit>
         <trans-unit id="RestrictedAccessDescription1" translate="yes" xml:space="preserve">
           <source>Clipboard Canvas requires permission to access the file system for it to work correctly. Without the permission, some features will be disabled and/or limited.</source>
-          <target state="translated">Clipboard Canvas are nevoie de acces la sistemul de fișiere pentru a funcționa normal. Fără permisiune, unele funcționalități vor fi dezactivate și/sau limitate.</target>
+          <target state="final">Clipboard Canvas are nevoie de acces la sistemul de fișiere pentru a funcționa normal. Fără permisiune, unele funcționalități vor fi dezactivate și/sau limitate.</target>
         </trans-unit>
         <trans-unit id="RestrictedAccessDescription2" translate="yes" xml:space="preserve">
           <source>You can grant this permission by heading to settings, whereupon the app will be closed.</source>
-          <target state="translated">Poți permite asta în Setări, unde aplicația va fi închisă.</target>
+          <target state="final">Poți permite asta în Setări, unde aplicația va fi închisă.</target>
         </trans-unit>
         <trans-unit id="RestrictedAccessDescription3" translate="yes" xml:space="preserve">
           <source>You can also continue in Restricted Access mode with limited features.</source>
-          <target state="translated">Poți continua și în Acces restricționat cu funcționalitate limitată.</target>
+          <target state="final">Poți continua în Acces restricționat cu funcționalitate limitată.</target>
         </trans-unit>
         <trans-unit id="RestrictedAccessTitleTooltip" translate="yes" xml:space="preserve">
           <source>Clipboard Canvas is currently in Restricted Access mode. Click for more details.</source>
-          <target state="translated">Clipboard Canvas este momentan în mod de Acces restricționat. Clic pentru mai multe detalii.</target>
+          <target state="final">Clipboard Canvas este în Acces restricționat. Clic pentru mai multe detalii.</target>
         </trans-unit>
         <trans-unit id="Retry" translate="yes" xml:space="preserve">
           <source>Retry</source>
-          <target state="translated">Încearcă din nou</target>
+          <target state="final">Încearcă din nou</target>
         </trans-unit>
         <trans-unit id="Search" translate="yes" xml:space="preserve">
           <source>Search</source>
-          <target state="translated">Căutare</target>
+          <target state="final">Căutare</target>
         </trans-unit>
         <trans-unit id="SelectAll" translate="yes" xml:space="preserve">
           <source>Select all</source>
-          <target state="translated">Selectare totală</target>
+          <target state="final">Selectare totală</target>
         </trans-unit>
         <trans-unit id="SetAsAutopasteTarget" translate="yes" xml:space="preserve">
           <source>Set as Autopaste target</source>
-          <target state="translated">Setare ca țintă autolipire</target>
+          <target state="final">Setare ca țintă autolipire</target>
         </trans-unit>
         <trans-unit id="Settings" translate="yes" xml:space="preserve">
           <source>Settings</source>
-          <target state="translated">Setări</target>
+          <target state="final">Setări</target>
         </trans-unit>
         <trans-unit id="SettingsAbout" translate="yes" xml:space="preserve">
           <source>About</source>
-          <target state="translated">Despre</target>
+          <target state="final">Despre</target>
         </trans-unit>
         <trans-unit id="SettingsAboutPageAppVersion" translate="yes" xml:space="preserve">
           <source>Version {0}</source>
-          <target state="translated">Versiunea {0}</target>
+          <target state="final">Versiunea {0}</target>
         </trans-unit>
         <trans-unit id="SettingsAboutPageOpenLogLocation" translate="yes" xml:space="preserve">
           <source>Open log file location</source>
-          <target state="translated">Deschidere locație fișier log</target>
+          <target state="final">Deschidere locație fișier log</target>
         </trans-unit>
         <trans-unit id="SettingsAboutPagePrivacyPolicy" translate="yes" xml:space="preserve">
           <source>Privacy Policy</source>
-          <target state="translated">Politică de confidențialitate</target>
+          <target state="final">Politică de confidențialitate</target>
         </trans-unit>
         <trans-unit id="SettingsAboutPagePrivacyPolicyError" translate="yes" xml:space="preserve">
           <source>An error occurred while trying to load privacy policy</source>
-          <target state="translated">Am întâmpinat o eroare încercând să încărcăm politica de confidențialitate</target>
+          <target state="final">Am întâmpinat o eroare încercând să încărcăm politica de confidențialitate</target>
         </trans-unit>
         <trans-unit id="SettingsAboutPagePullingPrivacyPolicy" translate="yes" xml:space="preserve">
           <source>Pulling Clipboard Canvas' privacy policy from GitHub</source>
-          <target state="translated">Se preia politica de confidențialitate Clipboard Canvas din GitHub</target>
+          <target state="final">Se preia politica de confidențialitate Clipboard Canvas din GitHub</target>
         </trans-unit>
         <trans-unit id="SettingsAboutPageReleaseNotes" translate="yes" xml:space="preserve">
           <source>Release notes</source>
-          <target state="translated">Note de lansare</target>
+          <target state="final">Note de lansare</target>
         </trans-unit>
         <trans-unit id="SettingsAboutPageStarOnGitHub" translate="yes" xml:space="preserve">
           <source>Star Clipboard Canvas on GitHub</source>
-          <target state="translated">Star Clipboard Canvas pe GitHub</target>
+          <target state="final">Star Clipboard Canvas pe GitHub</target>
         </trans-unit>
         <trans-unit id="SettingsAboutPageSubmitFeedback" translate="yes" xml:space="preserve">
           <source>Submit feedback</source>
-          <target state="translated">Trimite feedback</target>
+          <target state="final">Trimite feedback</target>
         </trans-unit>
         <trans-unit id="SettingsAboutPageViewIntroductionPage" translate="yes" xml:space="preserve">
           <source>View introduction page</source>
-          <target state="translated">Vezi pagina de introducere</target>
+          <target state="final">Vezi pagina introductivă</target>
         </trans-unit>
         <trans-unit id="SettingsGeneral" translate="yes" xml:space="preserve">
           <source>General</source>
-          <target state="translated">General</target>
+          <target state="final">General</target>
         </trans-unit>
         <trans-unit id="SettingsGeneralPageDefaultLanguage" translate="yes" xml:space="preserve">
           <source>Windows default</source>
-          <target state="translated">Implicit Windows</target>
+          <target state="final">Implicit Windows</target>
         </trans-unit>
         <trans-unit id="SettingsGeneralPageInfiniteCanvasAsDefault" translate="yes" xml:space="preserve">
           <source>Use Infinite Canvas as default</source>
-          <target state="translated">Utilizează Canvasul Infinit ca setare implicită</target>
+          <target state="final">Utilizează Canvasul Infinit ca setare implicită</target>
         </trans-unit>
         <trans-unit id="SettingsGeneralPageLanguage" translate="yes" xml:space="preserve">
           <source>Language</source>
-          <target state="translated">Limbă</target>
+          <target state="final">Limbă</target>
         </trans-unit>
         <trans-unit id="SettingsGeneralPagePermanentDeletionAsDefault" translate="yes" xml:space="preserve">
           <source>Permanently delete items as default</source>
-          <target state="translated">Șterge elemente definitiv în mod implicit</target>
+          <target state="final">Șterge elemente definitiv în mod implicit</target>
         </trans-unit>
         <trans-unit id="SettingsGeneralPageShowDeleteConfirmation" translate="yes" xml:space="preserve">
           <source>Show confirmation dialog when deleting items</source>
-          <target state="translated">Afișează un dialog de confirmare la ștergerea elementelor</target>
+          <target state="final">Afișează un dialog de confirmare la ștergerea elementelor</target>
         </trans-unit>
         <trans-unit id="SettingsGeneralPageShowTimelineWidget" translate="yes" xml:space="preserve">
           <source>Show Timeline widget on the Homepage</source>
-          <target state="translated">Afișează widget Cronologie pe pagina de pornire</target>
+          <target state="final">Afișează widget Cronologie pe pagina de pornire</target>
         </trans-unit>
         <trans-unit id="SettingsNotifications" translate="yes" xml:space="preserve">
           <source>Notifications</source>
-          <target state="translated">Notificări</target>
+          <target state="final">Notificări</target>
         </trans-unit>
         <trans-unit id="SettingsNotificationsPageShowAutopasteFailedNotification" translate="yes" xml:space="preserve">
           <source>Show a notification when autopaste fails</source>
-          <target state="translated">Afișează o notificare când autolipirea eșuează</target>
+          <target state="final">Afișează o notificare când autolipirea eșuează</target>
         </trans-unit>
         <trans-unit id="SettingsNotificationsPageShowAutopasteNotification" translate="yes" xml:space="preserve">
           <source>Show a notification when autopaste starts pasting</source>
-          <target state="translated">Afișează o notificare când autolipirea începe a lipi</target>
+          <target state="final">Afișează o notificare când autolipirea începe a lipi</target>
         </trans-unit>
         <trans-unit id="SettingsNotificationsPageShowCrashNotification" translate="yes" xml:space="preserve">
           <source>Show error notification if app crashes</source>
-          <target state="translated">Afișează o notificare de eroare dacă aplicația are un accident</target>
+          <target state="final">Afișează o notificare de eroare dacă aplicația are un accident</target>
         </trans-unit>
         <trans-unit id="SettingsPasting" translate="yes" xml:space="preserve">
           <source>Pasting</source>
-          <target state="translated">Lipire</target>
+          <target state="final">Lipire</target>
         </trans-unit>
         <trans-unit id="SettingsPastingPageOpenNewCanvas" translate="yes" xml:space="preserve">
           <source>Open new canvas on paste</source>
-          <target state="translated">Deschide un canvas nou la lipire</target>
+          <target state="final">Deschide un canvas nou la lipire</target>
         </trans-unit>
         <trans-unit id="SettingsPastingPagePasteAsReference" translate="yes" xml:space="preserve">
           <source>Paste files as reference</source>
-          <target state="translated">Lipește fișierele ca referințe</target>
+          <target state="final">Lipește fișierele ca referințe</target>
         </trans-unit>
         <trans-unit id="SettingsPastingPageReferenceFilesInfo" translate="yes" xml:space="preserve">
           <source>Reference Files allow you to paste files without creating copies of them. With this setting enabled, every file is pasted as a reference.
 
 A reference file is created pointing to the original file which is seamlessly displayed by Clipboard Canvas.</source>
-          <target state="translated">Fișierele de Referință îți permite să lipești fișiere fără să creezi copii ale acestora. Cu această setare activată, fiecare fișier este lipit ca referință.
+          <target state="final">Fișierele de Referință îți permit să lipești fișiere fără să creezi copii ale acestora. Cu această setare activată, fiecare fișier este lipit ca o referință.
 
 Un fișier de referință este creat punctând la locația fișierului original care este afișat fără efort de către aplicație.</target>
         </trans-unit>
         <trans-unit id="SettingsPastingPageRestrictedAccessWarning" translate="yes" xml:space="preserve">
           <source>Cannot enable this setting while in Restricted Access mode.</source>
-          <target state="translated">Nu se poate activa această setare în modul Acces restricționat.</target>
+          <target state="final">Nu se poate activa această setare în modul Acces restricționat.</target>
         </trans-unit>
         <trans-unit id="SettingsPastingPageUseMarkdownAsDefault" translate="yes" xml:space="preserve">
           <source>Use markdown format instead of text files</source>
-          <target state="translated">Utilizează formatul markdown în favoarea fișierelor text</target>
+          <target state="final">Utilizează formatul markdown în favoarea fișierelor text</target>
         </trans-unit>
         <trans-unit id="ShowInCollection" translate="yes" xml:space="preserve">
           <source>Show in Collection</source>
-          <target state="translated">Afișează în Colecție</target>
+          <target state="final">Afișează în Colecție</target>
         </trans-unit>
         <trans-unit id="StatusCenter" translate="yes" xml:space="preserve">
           <source>Status Center</source>
-          <target state="translated">Centru de stare</target>
+          <target state="final">Centru de stare</target>
         </trans-unit>
         <trans-unit id="StatusCenterCompleted" translate="yes" xml:space="preserve">
           <source>Completed 0.00%</source>
-          <target state="translated">0.00% complet</target>
+          <target state="final">0.00% complet</target>
         </trans-unit>
         <trans-unit id="StatusCenterOperationCanceled" translate="yes" xml:space="preserve">
           <source>The operation was canceled</source>
-          <target state="translated">Operația a fost anulată</target>
+          <target state="final">Operația a fost anulată</target>
         </trans-unit>
         <trans-unit id="StatusCenterOperationCanceledTitle" translate="yes" xml:space="preserve">
           <source>Operation canceled</source>
-          <target state="translated">Operație anulată</target>
+          <target state="final">Operație anulată</target>
         </trans-unit>
         <trans-unit id="StatusCenterOperationComplete" translate="yes" xml:space="preserve">
           <source>The operation is complete</source>
-          <target state="translated">Operația a fost completată</target>
+          <target state="final">Operația a fost completată</target>
         </trans-unit>
         <trans-unit id="StatusCenterOperationCompleteTitle" translate="yes" xml:space="preserve">
           <source>Operation complete</source>
-          <target state="translated">Operație completă</target>
+          <target state="final">Operație completă</target>
         </trans-unit>
         <trans-unit id="StatusCenterOverwritingReferenceCanceled" translate="yes" xml:space="preserve">
           <source>Overwriting Reference was canceled</source>
-          <target state="translated">Suprascrierea Referinței a fost anulată</target>
+          <target state="final">Suprascrierea Referinței a fost anulată</target>
         </trans-unit>
         <trans-unit id="StatusCenterOverwritingReferenceComplete" translate="yes" xml:space="preserve">
           <source>Overwriting Reference complete</source>
-          <target state="translated">Suprascrierea Referinței completă</target>
+          <target state="final">Referința a fost suprascrisă cu succes</target>
         </trans-unit>
         <trans-unit id="StatusCenterPastingCanceled" translate="yes" xml:space="preserve">
           <source>Pasting was canceled</source>
-          <target state="translated">Lipirea a fost anulată</target>
+          <target state="final">Lipirea a fost anulată</target>
         </trans-unit>
         <trans-unit id="StatusCenterPastingComplete" translate="yes" xml:space="preserve">
           <source>Pasting complete</source>
-          <target state="translated">Lipire completă</target>
+          <target state="final">Lipire completă</target>
         </trans-unit>
         <trans-unit id="StatusCenterPercentCompleted" translate="yes" xml:space="preserve">
           <source>Completed {0}%</source>
-          <target state="translated">{0}% complet</target>
+          <target state="final">{0}% complet</target>
         </trans-unit>
         <trans-unit id="StatusCenterProcessing" translate="yes" xml:space="preserve">
           <source>Processing...</source>
-          <target state="translated">Se procesează...</target>
+          <target state="final">Se procesează...</target>
         </trans-unit>
         <trans-unit id="StatusCenterStarting" translate="yes" xml:space="preserve">
           <source>Starting...</source>
-          <target state="translated">Se inițializează...</target>
+          <target state="final">Se inițializează...</target>
         </trans-unit>
         <trans-unit id="SwitchToInfiniteCanvas" translate="yes" xml:space="preserve">
           <source>Switch to Infinite Canvas</source>
-          <target state="translated">Comută la Canvas Infinit</target>
+          <target state="final">Comută la Canvas Infinit</target>
         </trans-unit>
         <trans-unit id="SwitchToOneCanvas" translate="yes" xml:space="preserve">
           <source>Switch to One Canvas</source>
-          <target state="translated">Comută la un Canvas</target>
+          <target state="final">Comută la un Canvas</target>
         </trans-unit>
         <trans-unit id="Timeline" translate="yes" xml:space="preserve">
           <source>Timeline</source>
-          <target state="translated">Cronologie</target>
+          <target state="final">Cronologie</target>
         </trans-unit>
         <trans-unit id="UnknownError" translate="yes" xml:space="preserve">
           <source>An unknown error occurred.</source>
-          <target state="translated">Am dat de-o eroare necunoscută.</target>
+          <target state="final">O eroare necunoscută a fost întâmpinată.</target>
         </trans-unit>
         <trans-unit id="ViewOnGitHub" translate="yes" xml:space="preserve">
           <source>View on GitHub</source>
-          <target state="translated">Vezi pe GitHub</target>
+          <target state="final">Vezi pe GitHub</target>
         </trans-unit>
       </group>
     </body>
