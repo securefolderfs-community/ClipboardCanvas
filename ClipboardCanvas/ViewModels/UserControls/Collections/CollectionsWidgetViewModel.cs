@@ -22,6 +22,8 @@ using ClipboardCanvas.Services;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ViewModels.UserControls.InAppNotifications;
 
+#nullable enable
+
 namespace ClipboardCanvas.ViewModels.UserControls.Collections
 {
     public class CollectionsWidgetViewModel : ObservableObject, IDisposable
@@ -323,9 +325,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public static async Task ReloadAllCollections()
         {
-            ICollectionsSettingsService collectionsSettings = Ioc.Default.GetService<ICollectionsSettingsService>();
+            var collectionsSettings = Ioc.Default.GetService<ICollectionsSettingsService>();
 
-            List<CollectionConfigurationModel> collectionConfigurations = collectionsSettings.SavedCollections;
+            var collectionConfigurations = collectionsSettings?.SavedCollections;
 
             // Add default collection
             StorageFolder defaultCollectionFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Default Collection", CreationCollisionOption.OpenIfExists);
@@ -336,29 +338,30 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
                 throw new UnauthorizedAccessException("The default folder collection couldn't be retrieved!");
             }
 
-            if (collectionConfigurations == null)
-            {
-                collectionConfigurations = new List<CollectionConfigurationModel>();
-                collectionsSettings.SavedCollections = collectionConfigurations;
-            }
-
             bool defaultCollectionAdded = false;
 
-            foreach (var item in collectionConfigurations)
+            collectionConfigurations ??= new();
+            if (collectionsSettings != null)
             {
-                BaseCollectionViewModel baseCollection;
+                collectionsSettings.SavedCollections = collectionConfigurations;
 
-                if (!defaultCollectionAdded && item.collectionPath == Constants.Collections.DEFAULT_COLLECTION_TOKEN)
+                foreach (var item in collectionConfigurations)
                 {
-                    defaultCollectionAdded = true;
-                    baseCollection = new DefaultCollectionViewModel(defaultCollectionFolder);
-                }
-                else
-                {
-                    baseCollection = new StandardCollectionViewModel(item.collectionPath);
-                }
+                    BaseCollectionViewModel baseCollection;
 
-                await AddCollection(baseCollection, item, true);
+                    if (!defaultCollectionAdded &&
+                        item.collectionPath == Constants.Collections.DEFAULT_COLLECTION_TOKEN)
+                    {
+                        defaultCollectionAdded = true;
+                        baseCollection = new DefaultCollectionViewModel(defaultCollectionFolder);
+                    }
+                    else
+                    {
+                        baseCollection = new StandardCollectionViewModel(item.collectionPath);
+                    }
+
+                    await AddCollection(baseCollection, item, true);
+                }
             }
 
             if (!defaultCollectionAdded)
@@ -377,15 +380,23 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         public static void FallbackSetSelectedCollection()
         {
-            ICollectionsSettingsService collectionsSettings = Ioc.Default.GetService<ICollectionsSettingsService>();
-
-            string lastSelectedCollection = collectionsSettings.LastSelectedCollection;
-
-            if (string.IsNullOrWhiteSpace(lastSelectedCollection))
+            string lastSelectedCollection = string.Empty;
+            try
             {
-                // The last selected collection setting is not set
-                lastSelectedCollection = Constants.Collections.DEFAULT_COLLECTION_TOKEN;
-                collectionsSettings.LastSelectedCollection = lastSelectedCollection;
+                var collectionsSettings = Ioc.Default.GetRequiredService<ICollectionsSettingsService>();
+
+                lastSelectedCollection = collectionsSettings.LastSelectedCollection;
+
+                if (string.IsNullOrWhiteSpace(lastSelectedCollection))
+                {
+                    // The last selected collection setting is not set
+                    lastSelectedCollection = Constants.Collections.DEFAULT_COLLECTION_TOKEN;
+                    collectionsSettings.LastSelectedCollection = lastSelectedCollection;
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingHelpers.SafeLogExceptionToFile(ex);
             }
 
             if (lastSelectedCollection == Constants.Collections.DEFAULT_COLLECTION_TOKEN)
@@ -396,7 +407,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             else
             {
                 // Find the collection with the matching lastSelectedCollection setting
-                BaseCollectionViewModel baseCollectionViewModel = Collections.SingleOrDefault((item) => item.CollectionPath == lastSelectedCollection);
+                var baseCollectionViewModel = Collections.SingleOrDefault((item) => item.CollectionPath == lastSelectedCollection);
 
                 if (baseCollectionViewModel != null)
                 {
@@ -415,7 +426,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             return Collections.FirstOrDefault((item) => item.ConstructConfigurationModel().collectionPath == collectionConfigurationModel.collectionPath);
         }
 
-        public static BaseCollectionViewModel FindCollection(string collectionPath)
+        public static BaseCollectionViewModel? FindCollection(string collectionPath)
         {
             return Collections.FirstOrDefault((item) => item.CollectionPath == collectionPath);
         }

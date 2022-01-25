@@ -5,10 +5,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pg="using:ClipboardCanvas.Pages"
     xmlns:uc="using:ClipboardCanvas.UserControls"
     xmlns:uc2="using:ClipboardCanvas.UserControls.OOBE"
     mc:Ignorable="d">
 
-    <Frame x:Name="MainWindowFrame" />
+    <pg:MainWindowContentPage x:Name="MainPageHost" />
 
 </Window>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+    <TargetFramework>net6.0-windows10.0.20348.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <RootNamespace>ClipboardCanvas</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -25,6 +25,7 @@
   	<MultilingualFallbackLanguage>en</MultilingualFallbackLanguage>
   	<TranslationReport Condition="'$(Configuration)' == 'Release'">true</TranslationReport>
   	<SuppressPseudoWarning Condition="'$(Configuration)' == 'Debug'">true</SuppressPseudoWarning>
+  	<SupportedOSPlatformVersion>10.0.18362.0</SupportedOSPlatformVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Pages\MainWindowContentPage.xaml" />

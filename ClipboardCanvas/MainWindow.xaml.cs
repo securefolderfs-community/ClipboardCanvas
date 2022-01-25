@@ -22,7 +22,7 @@ namespace ClipboardCanvas
     {
         public static MainWindow Instance;
 
-        public MainWindowContentPage MainWindowContentPage => MainWindowFrame.Content as MainWindowContentPage;
+        public MainWindowContentPage MainWindowContentPage => MainPageHost;
 
         public static ApplicationViewTitleBar TitleBar { get; private set; }
 
@@ -30,24 +30,26 @@ namespace ClipboardCanvas
 
         public MainWindow()
         {
-            this.InitializeComponent();
             Instance = this;
-            MainWindowFrame.Navigate(typeof(MainWindowContentPage), null, new SuppressNavigationTransitionInfo());
+            this.InitializeComponent();
 
-            Initialize();
+            EnsureSafeInitialization();
         }
 
-        private void Initialize()
+        private void EnsureSafeInitialization()
         {
-            Title = "Clipboard Canvas";
-            ExtendsContentIntoTitleBar = true;
-            SetTitleBar(MainWindowContentPage.WindowTitleBar.DraggableRegion);
+            try
+            {
+                Title = "Clipboard Canvas";
+                ExtendsContentIntoTitleBar = true;
+                SetTitleBar(MainWindowContentPage.WindowTitleBar.DraggableRegion);
 
-            IntPtr hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-            int wndLong = User32.GetWindowLong(hwnd, User32.WindowLongFlags.GWL_STYLE);
-            User32.SetWindowLong(hwnd, User32.WindowLongFlags.GWL_STYLE, wndLong | (int)User32.WindowStyles.WS_SYSMENU);
-
-            ThemeHelper.Initialize();
+                ThemeHelper.Initialize();
+            }
+            catch (Exception ex)
+            {
+                LoggingHelpers.SafeLogExceptionToFile(ex);
+            }
         }
     }
 }

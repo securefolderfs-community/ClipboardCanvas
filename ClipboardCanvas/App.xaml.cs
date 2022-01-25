@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI.Notifications;
 using ClipboardCanvas.GlobalizationExtensions;
-
+using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.Services.Implementation;
 using Microsoft.AppCenter;
@@ -175,27 +175,7 @@ namespace ClipboardCanvas
 
         private void LogExceptionToFile(Exception e)
         {
-            string exceptionString = "";
-
-            exceptionString += DateTime.Now.ToString(Constants.FileSystem.EXCEPTION_BLOCK_DATE_FORMAT);
-            exceptionString += "\n";
-            exceptionString += $">>> HRESULT {e.HResult}\n";
-            exceptionString += $">>> MESSAGE {e.Message}\n";
-            exceptionString += $">>> STACKTRACE {e.StackTrace}\n";
-            exceptionString += $">>> INNER {e.InnerException}\n";
-            exceptionString += $">>> SOURCE {e.Source}\n\n";
-
-            ILogger logger;
-            try
-            {
-                logger = Ioc.Default.GetService<ILogger>(); // Try get Ioc logger
-            }
-            catch
-            {
-                logger = new ExceptionToFileLogger(); // Use default logger
-            }
-
-            logger.LogToFile(exceptionString);
+            LoggingHelpers.SafeLogExceptionToFile(e);
         }
 
         private void PushErrorNotification()

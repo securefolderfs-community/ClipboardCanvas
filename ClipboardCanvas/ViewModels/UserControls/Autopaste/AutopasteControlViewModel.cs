@@ -21,6 +21,8 @@ using ClipboardCanvas.Services;
 using ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
 
+#nullable enable
+
 namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 {
     public class AutopasteControlViewModel : ObservableObject, IRuleActions, IDisposable
@@ -137,7 +139,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
         {
             if (!string.IsNullOrEmpty(AutopasteSettingsService.AutopastePath))
             {
-                IAutopasteTarget autopasteTarget = CollectionsWidgetViewModel.FindCollection(AutopasteSettingsService.AutopastePath);
+                var autopasteTarget = CollectionsWidgetViewModel.FindCollection(AutopasteSettingsService.AutopastePath);
                 UpdateTarget(autopasteTarget);
             }
             
@@ -168,7 +170,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
             _itemAddedInternally = false;
         }
 
-        public void UpdateTarget(IAutopasteTarget autopasteTarget)
+        public void UpdateTarget(IAutopasteTarget? autopasteTarget)
         {
             this.AutopasteTarget = autopasteTarget;
             OnPropertyChanged(nameof(AutopasteTargetName));

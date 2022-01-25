@@ -21,6 +21,8 @@ using ClipboardCanvas.Services;
 using ClipboardCanvas.DisplayFrameEventArgs;
 using ClipboardCanvas.ViewModels.Widgets.Timeline;
 
+#nullable enable
+
 namespace ClipboardCanvas.ViewModels.UserControls
 {
     public class DisplayControlViewModel : ObservableObject, IDisposable
@@ -600,7 +602,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void UpdateCanvasPageNavigation()
         {
-            if (CurrentPage != DisplayPageType.CanvasPage)
+            if (CurrentPage != DisplayPageType.CanvasPage || NavigationToolBarControlModel?.NavigationControlModel == null)
             {
                 return;
             }
@@ -747,27 +749,22 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private void UpdateTitleBar()
         {
-            if (WindowTitleBarControlModel == null)
-            {
-                return;
-            }
-
             switch (CurrentPage)
             {
                 case DisplayPageType.Homepage:
-                    WindowTitleBarControlModel.SetTitleBarForCollectionsView();
+                    WindowTitleBarControlModel?.SetTitleBarForCollectionsView();
                     break;
 
                 case DisplayPageType.CanvasPage:
-                    WindowTitleBarControlModel.SetTitleBarForCanvasView(_currentCollectionModel.DisplayName);
+                    WindowTitleBarControlModel?.SetTitleBarForCanvasView(_currentCollectionModel.DisplayName);
                     break;
 
                 case DisplayPageType.CollectionPreviewPage:
-                    WindowTitleBarControlModel.SetTitleBarForCollectionPreview(_currentCollectionModel.DisplayName);
+                    WindowTitleBarControlModel?.SetTitleBarForCollectionPreview(_currentCollectionModel.DisplayName);
                     break;
 
                 default:
-                    WindowTitleBarControlModel.SetTitleBarForDefaultView();
+                    WindowTitleBarControlModel?.SetTitleBarForDefaultView();
                     break;
             }
         }

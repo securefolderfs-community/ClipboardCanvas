@@ -17,61 +17,77 @@ namespace ClipboardCanvas.Helpers
     {
         public static async Task CheckVersionAndShowDialog()
         {
-            IApplicationSettingsService applicationSettings = Ioc.Default.GetService<IApplicationSettingsService>();
-            IApplicationService applicationService = Ioc.Default.GetService<IApplicationService>();
-            IDialogService dialogService = Ioc.Default.GetService<IDialogService>();
-
-            string lastVersion = applicationSettings.LastVersionNumber;
-            string currentVersion = applicationService.AppVersion;
-
-            if (string.IsNullOrEmpty(lastVersion))
+            try
             {
-                // No version yet, Clipboard Canvas is freshly installed
-                // update the version setting with current version
-                applicationSettings.LastVersionNumber = currentVersion;
-            }
-            else
-            {
-                // Compare two versions
-                if (VersionHelpers.IsVersionDifferentThan(lastVersion, currentVersion))
+                IApplicationSettingsService applicationSettings = Ioc.Default.GetService<IApplicationSettingsService>();
+                IApplicationService applicationService = Ioc.Default.GetService<IApplicationService>();
+                IDialogService dialogService = Ioc.Default.GetService<IDialogService>();
+
+                string lastVersion = applicationSettings.LastVersionNumber;
+                string currentVersion = applicationService.AppVersion;
+
+                if (string.IsNullOrEmpty(lastVersion))
                 {
-                    // Update the last version number to be the current number
+                    // No version yet, Clipboard Canvas is freshly installed
+                    // update the version setting with current version
                     applicationSettings.LastVersionNumber = currentVersion;
-
-                    // Show the update dialog
-                    await dialogService.ShowDialog(new UpdateChangeLogDialogViewModel());
                 }
+                else
+                {
+                    // Compare two versions
+                    if (VersionHelpers.IsVersionDifferentThan(lastVersion, currentVersion))
+                    {
+                        // Update the last version number to be the current number
+                        applicationSettings.LastVersionNumber = currentVersion;
+
+                        // Show the update dialog
+                        await dialogService.ShowDialog(new UpdateChangeLogDialogViewModel());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingHelpers.SafeLogExceptionToFile(ex);
             }
         }
 
         public static async Task HandleFileSystemPermissionDialog(IWindowTitleBarControlModel windowTitleBar)
         {
-            IDialogService dialogService = Ioc.Default.GetService<IDialogService>();
-            IApplicationService applicationService = Ioc.Default.GetService<IApplicationService>();
-
-            string testForFolderOnFS = Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
-            SafeWrapper<StorageFolder> testFolderResult = await StorageHelpers.ToStorageItemWithError<StorageFolder>(testForFolderOnFS);
-
-            if (!testFolderResult)
+            try
             {
-                applicationService.IsInRestrictedAccessMode = true;
+                IDialogService dialogService = Ioc.Default.GetService<IDialogService>();
+                IApplicationService applicationService = Ioc.Default.GetService<IApplicationService>();
 
-                DialogResult dialogResult = await dialogService.ShowDialog(new FileSystemAccessDialogViewModel());
+                string testForFolderOnFS =
+                    Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+                SafeWrapper<StorageFolder> testFolderResult =
+                    await StorageHelpers.ToStorageItemWithError<StorageFolder>(testForFolderOnFS);
 
-                if (dialogResult == DialogResult.Primary)
+                if (!testFolderResult)
                 {
-                    // Restart the app
-                    await CoreApplication.RequestRestartAsync(string.Empty);
+                    applicationService.IsInRestrictedAccessMode = true;
+
+                    DialogResult dialogResult = await dialogService.ShowDialog(new FileSystemAccessDialogViewModel());
+
+                    if (dialogResult == DialogResult.Primary)
+                    {
+                        // Restart the app
+                        await CoreApplication.RequestRestartAsync(string.Empty);
+                    }
+                    else
+                    {
+                        // Continue in Restricted Access
+                        windowTitleBar.IsInRestrictedAccess = true;
+                    }
                 }
                 else
                 {
-                    // Continue in Restricted Access
-                    windowTitleBar.IsInRestrictedAccess = true;
+                    return;
                 }
             }
-            else
+            catch (Exception ex)
             {
-                return;
+                LoggingHelpers.SafeLogExceptionToFile(ex);
             }
         }
     }

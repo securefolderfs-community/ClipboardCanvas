@@ -12,7 +12,7 @@ namespace ClipboardCanvas.ValueConverters
                 return false;
             }
 
-            if (parameter is string strParam && strParam.ToLower() == "invert") // For debugging purposes
+            if (parameter is string strParam && strParam.ToLower() == "invert")
             {
                 return boolVal;
             }

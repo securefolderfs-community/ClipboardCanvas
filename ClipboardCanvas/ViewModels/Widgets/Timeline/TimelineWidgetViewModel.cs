@@ -138,45 +138,57 @@ namespace ClipboardCanvas.ViewModels.Widgets.Timeline
 
         public static async Task ReloadAllSections()
         {
-            if (!await CheckIfTimelineEnabled(false))
+            try
             {
-                return;
-            }
-
-            IsInitialized = true;
-            ITimelineSettingsService timelineSettingsService = Ioc.Default.GetService<ITimelineSettingsService>();
-            TimelineConfigurationModel configurationModel = timelineSettingsService.UserTimeline;
-
-            if (configurationModel != null)
-            {
-                List<TimelineSectionConfigurationModel> sortedSections = configurationModel.sections.OrderBy((x) => x.sectionDateTime).ToList();
-
-                foreach (var configurationSection in sortedSections)
+                if (!await CheckIfTimelineEnabled(false))
                 {
-                    var section = AddSection(configurationSection.sectionDateTime, true);
+                    return;
+                }
 
-                    foreach (var configurationSectionItem in configurationSection.items)
+                IsInitialized = true;
+                ITimelineSettingsService timelineSettingsService = Ioc.Default.GetService<ITimelineSettingsService>();
+                TimelineConfigurationModel configurationModel = timelineSettingsService.UserTimeline;
+
+                if (configurationModel != null)
+                {
+                    List<TimelineSectionConfigurationModel> sortedSections =
+                        configurationModel.sections.OrderBy((x) => x.sectionDateTime).ToList();
+
+                    foreach (var configurationSection in sortedSections)
                     {
-                        SafeWrapper<IStorageItem> item = await StorageHelpers.ToStorageItemWithError<IStorageItem>(configurationSectionItem?.collectionItemPath);
+                        var section = AddSection(configurationSection.sectionDateTime, true);
 
-                        if (item)
+                        foreach (var configurationSectionItem in configurationSection.items)
                         {
-                            BaseCollectionViewModel baseCollectionViewModel = CollectionsWidgetViewModel.FindCollection(configurationSectionItem.collectionConfigurationModel);
-                            if (baseCollectionViewModel != null)
+                            SafeWrapper<IStorageItem> item =
+                                await StorageHelpers.ToStorageItemWithError<IStorageItem>(configurationSectionItem
+                                    ?.collectionItemPath);
+
+                            if (item)
                             {
-                                CanvasItem canvasItem = new CanvasItem(item.Result);
-                                await section.AddItemBack(baseCollectionViewModel, canvasItem, true);
+                                BaseCollectionViewModel baseCollectionViewModel =
+                                    CollectionsWidgetViewModel.FindCollection(configurationSectionItem
+                                        .collectionConfigurationModel);
+                                if (baseCollectionViewModel != null)
+                                {
+                                    CanvasItem canvasItem = new CanvasItem(item.Result);
+                                    await section.AddItemBack(baseCollectionViewModel, canvasItem, true);
+                                }
                             }
                         }
                     }
                 }
+
+                RemoveEmptySections();
+                RemoveDuplicateSections();
+
+                // Add "Today" section
+                GetOrCreateTodaySection();
             }
-
-            RemoveEmptySections();
-            RemoveDuplicateSections();
-
-            // Add "Today" section
-            GetOrCreateTodaySection();
+            catch (Exception ex)
+            {
+                LoggingHelpers.SafeLogExceptionToFile(ex);
+            }
         }
 
         private static void RemoveEmptySections()

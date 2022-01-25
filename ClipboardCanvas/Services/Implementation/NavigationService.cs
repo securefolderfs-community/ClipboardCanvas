@@ -9,13 +9,15 @@ using ClipboardCanvas.Pages;
 using ClipboardCanvas.DisplayFrameEventArgs;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
 
+#nullable enable
+
 namespace ClipboardCanvas.Services.Implementation
 {
     public class NavigationService : INavigationService
     {
-        public Frame DisplayFrame { get; internal set; }
+        public Frame? DisplayFrame { get; internal set; }
 
-        public Func<bool> CheckCollectionAvailabilityBeforePageNavigation { get; internal set; }
+        public Func<bool>? CheckCollectionAvailabilityBeforePageNavigation { get; internal set; }
 
         public DisplayPageType CurrentPage { get; private set; }
 
@@ -39,7 +41,7 @@ namespace ClipboardCanvas.Services.Implementation
             BaseDisplayFrameParameterDataModel navigationParameter = new CanvasPageNavigationParameterModel(collection, (CanvasType)canvasType);
             LastPage = CurrentPage;
             CurrentPage = DisplayPageType.CanvasPage;
-            DisplayFrame.Navigate(typeof(CanvasPage), navigationParameter, transitionType.ToNavigationTransition());
+            DisplayFrame?.Navigate(typeof(CanvasPage), navigationParameter, transitionType.ToNavigationTransition());
 
             OnNavigationFinishedEvent?.Invoke(this, new NavigationFinishedEventArgs(true, null, collection, (CanvasType)canvasType, DisplayPageType.CanvasPage));
 
@@ -53,7 +55,7 @@ namespace ClipboardCanvas.Services.Implementation
                 canvasType = collection.AssociatedCanvasType;
             }
 
-            if (!CheckCollectionAvailabilityBeforePageNavigation())
+            if (!CheckCollectionAvailabilityBeforePageNavigation?.Invoke() ?? true)
             {
                 OnNavigationFinishedEvent?.Invoke(this, new NavigationFinishedEventArgs(false, null, collection, (CanvasType)canvasType, DisplayPageType.CanvasPage));
                 return false;

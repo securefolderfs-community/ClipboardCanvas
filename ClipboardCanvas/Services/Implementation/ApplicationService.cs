@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Windowing;
 
 using ClipboardCanvas.DataModels;
+using ClipboardCanvas.Helpers;
 
 namespace ClipboardCanvas.Services.Implementation
 {
@@ -36,8 +37,15 @@ namespace ClipboardCanvas.Services.Implementation
 
         public ApplicationService()
         {
-            MainWindow.Instance.Activated -= Current_Activated;
-            MainWindow.Instance.Activated += Current_Activated;
+            try
+            {
+                MainWindow.Instance.Activated -= Current_Activated;
+                MainWindow.Instance.Activated += Current_Activated;
+            }
+            catch (Exception ex)
+            {
+                LoggingHelpers.SafeLogExceptionToFile(ex);
+            }
         }
 
         private void Current_Activated(object sender, WindowActivatedEventArgs e)
