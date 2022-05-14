@@ -19,6 +19,9 @@
                     <x:Double x:Key="MediumWindowThreshold">641</x:Double>
                     <x:Double x:Key="LargeWindowThreshold">1008</x:Double>
 
+                    <SolidColorBrush x:Key="WindowCaptionBackground" Color="Transparent" />
+                    <SolidColorBrush x:Key="WindowCaptionBackgroundDisabled" Color="Transparent" />
+
                     <!--  Corner radius  -->
                     <CornerRadius x:Key="ControlCornerRadius">4</CornerRadius>
                 </ResourceDictionary>

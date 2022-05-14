@@ -1,14 +1,12 @@
 ﻿using System;
 using CommunityToolkit.Mvvm.ComponentModel;
-using ClipboardCanvas.GlobalizationExtensions;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 using ClipboardCanvas.Models;
-using Vanara.PInvoke;
+using ClipboardCanvas.GlobalizationExtensions;
 using ClipboardCanvas.Services;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Microsoft.UI.Xaml;
 
 namespace ClipboardCanvas.ViewModels.UserControls
 {
@@ -77,13 +75,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         #region Commands
 
-        public ICommand SwitchApplicationViewCommand { get; private set; }
-
-        public ICommand MinimizeCommand { get; private set; }
-
-        public ICommand RestoreOrMaximizeCommand { get; private set; }
-
-        public ICommand CloseCommand { get; private set; }
+        public ICommand SwitchApplicationViewCommand { get; }
 
         #endregion
 
@@ -93,9 +85,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             // Create commands
             SwitchApplicationViewCommand = new RelayCommand(SwitchApplicationView);
-            MinimizeCommand = new RelayCommand(Minimize);
-            RestoreOrMaximizeCommand = new RelayCommand(RestoreOrMaximize);
-            CloseCommand = new RelayCommand(Close);
         }
 
         #endregion
@@ -105,33 +94,6 @@ namespace ClipboardCanvas.ViewModels.UserControls
         private void SwitchApplicationView()
         {
             OnSwitchApplicationViewRequestedEvent?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void Minimize()
-        {
-            IntPtr hwnd = ApplicationService.GetHwnd(MainWindow.Instance);
-            User32.ShowWindow(hwnd, ShowWindowCommand.SW_MINIMIZE);
-        }
-
-        private void RestoreOrMaximize()
-        {
-            IntPtr hwnd = ApplicationService.GetHwnd(MainWindow.Instance);
-
-            User32.WindowStyles style = (User32.WindowStyles)User32.GetWindowLong(hwnd, User32.WindowLongFlags.GWL_STYLE);
-            if (style.HasFlag(User32.WindowStyles.WS_MAXIMIZE))
-            {
-                User32.ShowWindow(hwnd, ShowWindowCommand.SW_RESTORE);
-            }
-            else
-            {
-                User32.ShowWindow(hwnd, ShowWindowCommand.SW_MAXIMIZE);
-            }
-
-        }
-
-        private void Close()
-        {
-            Application.Current.Exit();
         }
 
         #endregion

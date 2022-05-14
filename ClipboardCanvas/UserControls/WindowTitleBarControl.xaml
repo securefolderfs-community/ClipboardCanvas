@@ -20,89 +20,14 @@
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
-
-        <Style
-            x:Key="WindowCloseButton"
-            BasedOn="{StaticResource WindowButton}"
-            TargetType="Button">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <ContentPresenter
-                            x:Name="ContentPresenter"
-                            Padding="{TemplateBinding Padding}"
-                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                            AutomationProperties.AccessibilityView="Raw"
-                            Background="{TemplateBinding Background}"
-                            BackgroundSizing="{TemplateBinding BackgroundSizing}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            Content="{TemplateBinding Content}"
-                            ContentTemplate="{TemplateBinding ContentTemplate}"
-                            ContentTransitions="{TemplateBinding ContentTransitions}"
-                            CornerRadius="{TemplateBinding CornerRadius}">
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="CommonStates">
-                                    <VisualState x:Name="Normal">
-                                        <Storyboard>
-                                            <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="PointerOver">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#ff2424" />
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPointerOver}" />
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPointerOver}" />
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Pressed">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#ff4747" />
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPressed}" />
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPressed}" />
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <PointerDownThemeAnimation Storyboard.TargetName="ContentPresenter" />
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Disabled">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource NavigationButtonDisabledBackgroundBrush}" />
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushDisabled}" />
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundDisabled}" />
-                                            </ObjectAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                        </ContentPresenter>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </UserControl.Resources>
 
     <Grid
         x:Name="CustomTitleBar"
         Padding="15,0,15,0"
         HorizontalAlignment="Stretch"
+        x:FieldModifier="public"
+        Background="Transparent"
         ColumnSpacing="8">
 
         <Grid.ColumnDefinitions>
@@ -120,17 +45,6 @@
             <!--  Title text underline  -->
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
-        <!--  Draggable region  -->
-        <Grid
-            x:Name="DraggableRegion"
-            Grid.ColumnSpan="3"
-            Margin="0,0,145,0"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            x:FieldModifier="public"
-            Background="Transparent"
-            Canvas.ZIndex="2" />
 
         <!--  Title text  -->
         <Grid
@@ -169,24 +83,6 @@
             </StackPanel>
         </Grid>
 
-        <!--  Restricted Access title text  -->
-        <TextBlock
-            x:Name="RestrictedAccess"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"
-            Padding="0,8,0,0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            x:Load="{x:Bind ViewModel.IsInRestrictedAccess, Mode=OneWay}"
-            Canvas.ZIndex="3"
-            FontSize="18"
-            FontWeight="Normal"
-            Opacity="0.6"
-            Tapped="RestrictedAccess_Tapped"
-            Text="{gxt:ResourceString Name=RestrictedAccess}"
-            ToolTipService.Placement="Bottom"
-            ToolTipService.ToolTip="{gxt:ResourceString Name=RestrictedAccessTitleTooltip}" />
-
         <!--  Underline  -->
         <Grid
             x:Name="TitleUnderline"
@@ -218,56 +114,5 @@
             Visibility="Collapsed">
             <FontIcon FontFamily="/Assets/Fonts/CalcMDL2.ttf#Calculator MDL2 Assets" Glyph="&#xEE49;" />
         </Button>
-
-        <Grid
-            Grid.Column="2"
-            Height="36"
-            Margin="0,0,-16,0"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Top"
-            Canvas.ZIndex="3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <Button
-                Grid.Column="0"
-                Command="{x:Bind ViewModel.MinimizeCommand}"
-                Style="{StaticResource WindowButton}">
-                <Button.Content>
-                    <FontIcon
-                        FontSize="13"
-                        FontWeight="Light"
-                        Glyph="&#xE921;"
-                        Opacity="0.8" />
-                </Button.Content>
-            </Button>
-            <Button
-                Grid.Column="1"
-                Command="{x:Bind ViewModel.RestoreOrMaximizeCommand}"
-                Style="{StaticResource WindowButton}">
-                <Button.Content>
-                    <FontIcon
-                        FontSize="13"
-                        FontWeight="Light"
-                        Glyph="&#xE922;"
-                        Opacity="0.8" />
-                </Button.Content>
-            </Button>
-            <Button
-                Grid.Column="2"
-                Command="{x:Bind ViewModel.CloseCommand}"
-                Style="{StaticResource WindowCloseButton}">
-                <Button.Content>
-                    <FontIcon
-                        FontSize="13"
-                        FontWeight="Light"
-                        Glyph="&#xE8BB;"
-                        Opacity="0.8" />
-                </Button.Content>
-            </Button>
-        </Grid>
     </Grid>
 </UserControl>

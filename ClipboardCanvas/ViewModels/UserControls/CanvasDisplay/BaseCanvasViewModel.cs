@@ -174,11 +174,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         #region Protected Helpers
 
-        protected virtual async Task OnPasteSucceeded(CanvasItem pastedItem)
+        protected virtual Task OnPasteSucceeded(CanvasItem pastedItem)
         {
-            // Add new item on Timeline
-            var todaySection = await TimelineService.GetOrCreateTodaySection();
-            await TimelineService.AddItemForSection(todaySection, AssociatedCollection, pastedItem);
+            _ = pastedItem;
+            return Task.CompletedTask;
         }
 
         protected virtual bool CanPasteAsReference()

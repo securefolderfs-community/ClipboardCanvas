@@ -219,7 +219,16 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
                 {
                     SafeWrapper<CanvasItem> pasteResult = (null, SafeWrapperResult.UNKNOWN_FAIL);
 
-                    if (_autopasteRoutineStarted && _autopasteDataQueue.Any((item) => item.Properties.SequenceEqual(clipboardData.Result.Properties)))
+                    clipboardData.Result.Properties.PrintEnumerable();
+
+                    if (clipboardData.Result.AvailableFormats.IsEmpty())
+                    {
+                        return;
+                    }
+
+                    if (_autopasteRoutineStarted && _autopasteDataQueue.Any(item => 
+                            (item.Properties.IsEmpty() && clipboardData.Result.Properties.IsEmpty())
+                            || item.Properties.SequenceEqual(clipboardData.Result.Properties)))
                     {
                         return; // Avoid duplicates where the event is called twice
                     }
