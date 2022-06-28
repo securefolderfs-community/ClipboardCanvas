@@ -22,6 +22,8 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public ISuggestedActionsControlModel SuggestedActionsControlModel { get; set; } = new SuggestedActionsControlViewModel();
 
+        public IAutopasteControlModel AutopasteControlModel => AutopasteControlViewModel;
+
         public AutopasteControlViewModel AutopasteControlViewModel { get; set; } = new AutopasteControlViewModel();
 
         private bool _IsStatusCenterButtonVisible;

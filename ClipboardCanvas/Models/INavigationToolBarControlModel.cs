@@ -8,6 +8,8 @@ namespace ClipboardCanvas.Models
 
         ISuggestedActionsControlModel SuggestedActionsControlModel { get; }
 
+        IAutopasteControlModel AutopasteControlModel { get; }
+
         bool IsStatusCenterButtonVisible { get; set; }
 
         void NotifyCurrentPageChanged(DisplayPageType pageType);

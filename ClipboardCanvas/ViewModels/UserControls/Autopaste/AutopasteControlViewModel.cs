@@ -16,6 +16,7 @@ using ClipboardCanvas.DataModels.Navigation;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Helpers.SafetyHelpers;
+using ClipboardCanvas.Models;
 using ClipboardCanvas.Models.Autopaste;
 using ClipboardCanvas.Services;
 using ClipboardCanvas.ViewModels.UserControls.Autopaste.Rules;
@@ -25,7 +26,7 @@ using ClipboardCanvas.ViewModels.UserControls.Collections;
 
 namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 {
-    public class AutopasteControlViewModel : ObservableObject, IRuleActions, IDisposable
+    public class AutopasteControlViewModel : ObservableObject, IAutopasteControlModel, IRuleActions, IDisposable
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
@@ -259,6 +260,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
                         }
 
                         pasteResult = await AutopasteTarget.PasteData(clipboardData, cancellationToken);
+
+                        var todaySection = await TimelineService.GetOrCreateTodaySection();
+                        var targetCollection = CollectionsWidgetViewModel.FindCollection(AutopasteSettingsService.AutopastePath);
+                        await TimelineService.AddItemForSection(todaySection, targetCollection, pasteResult);
                     }
                     catch (Exception ex)
                     {

@@ -292,8 +292,12 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         private async void CollectionsWidgetViewModel_OnCollectionItemAddedEvent(object sender, CollectionItemAddedEventArgs e)
         {
-            var todaySection = await TimelineService.GetOrCreateTodaySection();
-            await TimelineService.AddItemForSection(todaySection, e.baseCollectionViewModel, e.itemChanged);
+            // Autopaste will handle the timeline
+            if (!NavigationToolBarControlModel.AutopasteControlModel.EnableAutopaste)
+            {
+                var todaySection = await TimelineService.GetOrCreateTodaySection();
+                await TimelineService.AddItemForSection(todaySection, e.baseCollectionViewModel, e.itemChanged);
+            }
         }
 
         private void CollectionsControlViewModel_OnTipTextUpdateRequestedEvent(object sender, TipTextUpdateRequestedEventArgs e)

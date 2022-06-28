@@ -16,6 +16,8 @@ using ClipboardCanvas.EventArguments.CanvasControl;
 using ClipboardCanvas.ModelViews;
 using ClipboardCanvas.CanavsPasteModels;
 using ClipboardCanvas.DataModels;
+using ClipboardCanvas.Services;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 {
@@ -152,10 +154,10 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
             // Open file
             var action_openFile = new SuggestedActionsControlItemViewModel(
-                                    new AsyncRelayCommand(async () =>
-                                    {
-                                        await AssociatedCollection.CurrentCollectionItemViewModel.OpenFile();
-                                    }), "OpenFile".GetLocalized2(), "\uE8E5");
+                new AsyncRelayCommand(async () =>
+                {
+                    await AssociatedCollection.CurrentCollectionItemViewModel.OpenFile();
+                }), "OpenFile".GetLocalized2(), "\uE8E5");
 
             // Open directory
             var action_openContainingFolder = new SuggestedActionsControlItemViewModel(
@@ -163,6 +165,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
                 {
                     await AssociatedCollection.CurrentCollectionItemViewModel.OpenContainingFolder();
                 }), "OpenContainingFolder".GetLocalized2(), "\uE838");
+
+            // Show in collection
+            var action_showInCollection = new SuggestedActionsControlItemViewModel(
+                new RelayCommand(() =>
+                {
+                    var navigationService = Ioc.Default.GetService<INavigationService>();
+                    navigationService.OpenCollectionPreviewPage(AssociatedCollection);
+                }), "ShowInCollection".GetLocalized2(), "");
 
             actions.Add(action_openFile);
             actions.Add(action_openContainingFolder);

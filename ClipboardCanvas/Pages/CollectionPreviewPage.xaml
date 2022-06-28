@@ -45,7 +45,7 @@
             Modifiers="Control" />
     </Page.KeyboardAccelerators>
 
-    <Grid Padding="15,10,15,10">
+    <Grid Padding="12,10,12,6">
         <Grid.RowDefinitions>
             <!--  Grid of contents  -->
             <RowDefinition />

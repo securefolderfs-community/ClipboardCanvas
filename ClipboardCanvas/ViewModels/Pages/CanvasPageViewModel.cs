@@ -23,12 +23,16 @@ using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.ViewModels.UserControls.CanvasPreview;
 using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.GlobalizationExtensions;
+using ClipboardCanvas.Services;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace ClipboardCanvas.ViewModels.Pages
 {
     public class CanvasPageViewModel : ObservableObject, IPasteCanvasPageModel, IDisposable
     {
         #region Private Members
+
+        private INavigationService NavigationService { get; } = Ioc.Default.GetService<INavigationService>();
 
         private readonly ICanvasPageView _view;
 
@@ -95,6 +99,13 @@ namespace ClipboardCanvas.ViewModels.Pages
         {
             get => _CanvasRingLoad;
             set => SetProperty(ref _CanvasRingLoad, value);
+        }
+
+        private bool _ShowInCollectionLoad;
+        public bool ShowInCollectionLoad
+        {
+            get => _ShowInCollectionLoad;
+            set => SetProperty(ref _ShowInCollectionLoad, value);
         }
 
         private bool _InfiniteCanvasProgressLoad = false;
@@ -176,6 +187,8 @@ namespace ClipboardCanvas.ViewModels.Pages
 
         public ICommand SwitchCanvasModeCommand { get; private set; }
 
+        public ICommand ShowInCollectionCommand { get; private set; }
+
         #endregion
 
         #region Constructor
@@ -196,6 +209,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             OverrideReferenceCommand = new AsyncRelayCommand(OverrideReference);
             CanvasContextMenuOpeningCommand = new RelayCommand(CanvasContextMenuOpening);
             SwitchCanvasModeCommand = new RelayCommand(SwitchCanvasMode);
+            ShowInCollectionCommand = new RelayCommand(ShowInCollection);
         }
 
         #endregion
@@ -370,6 +384,12 @@ namespace ClipboardCanvas.ViewModels.Pages
             }
         }
 
+        private void ShowInCollection()
+        {
+            Dispose();
+            NavigationService.OpenCollectionPreviewPage(CollectionModel);
+        }
+
         #endregion
 
         #region Event Handlers
@@ -401,6 +421,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             if (e.contentType is not InfiniteCanvasContentType)
             {
                 NewCanvasScreenLoad = false;
+                ShowInCollectionLoad = false;
                 TipTextLoad = false;
                 PasteCanvasModel?.DiscardData();
             }
@@ -437,6 +458,7 @@ namespace ClipboardCanvas.ViewModels.Pages
             ShowOrHideCanvasLoadingProgress(false, e.contentType);
             _contentFinishedLoading = true;
             NewCanvasScreenLoad = false;
+            ShowInCollectionLoad = true;
             TipTextLoad = false;
             ErrorTextLoad = _isInTemporaryErrorLoadPhase;
 

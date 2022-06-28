@@ -34,15 +34,10 @@
             <RowDefinition Height="14*" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
 
         <!--  Main content  -->
         <Grid
             Grid.Row="0"
-            Grid.ColumnSpan="2"
             AllowDrop="True"
             Background="Transparent"
             DragEnter="Grid_DragEnter"
@@ -68,7 +63,6 @@
                 </Grid.RowDefinitions>
 
                 <!--  Title  -->
-
                 <Viewbox
                     x:Name="TitleTextViewBox"
                     MaxWidth="600"
@@ -148,102 +142,119 @@
             </uc:CanvasPreviewControl>
         </Grid>
 
-        <!--  Pasted as reference link button  -->
-        <HyperlinkButton
-            x:Name="PastedAsReference"
-            Grid.Row="1"
-            Grid.ColumnSpan="2"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            x:Load="{x:Bind ViewModel.PastedAsReferenceLoad, Mode=OneWay}"
-            Click="PastedAsReference_Click"
-            Content="{gxt:ResourceString Name=PastedAsReference}">
-            <FlyoutBase.AttachedFlyout>
-                <Flyout x:Name="LinkButtonFlyout" Placement="Top">
-                    <Grid RowSpacing="8">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
 
-                        <!--  Title  -->
-                        <TextBlock
-                            Grid.Row="0"
-                            FontSize="16"
-                            FontWeight="SemiBold"
-                            Text="{gxt:ResourceString Name=ReferenceFiles}" />
+            <!--  Pasted as reference link button  -->
+            <HyperlinkButton
+                x:Name="PastedAsReference"
+                Grid.ColumnSpan="3"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                x:Load="{x:Bind ViewModel.PastedAsReferenceLoad, Mode=OneWay}"
+                Click="PastedAsReference_Click"
+                Content="{gxt:ResourceString Name=PastedAsReference}">
+                <FlyoutBase.AttachedFlyout>
+                    <Flyout x:Name="LinkButtonFlyout" Placement="Top">
+                        <Grid RowSpacing="8">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                        <!--  Content text  -->
-                        <TextBlock
-                            Grid.Row="1"
-                            Width="300"
-                            Text="{gxt:ResourceString Name=PastedAsReferenceDescription}"
-                            TextTrimming="WordEllipsis"
-                            TextWrapping="Wrap" />
+                            <!--  Title  -->
+                            <TextBlock
+                                Grid.Row="0"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Text="{gxt:ResourceString Name=ReferenceFiles}" />
 
-                        <!--  Paste reference  -->
-                        <Button
-                            Grid.Row="2"
-                            Margin="0,16,0,0"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Center"
-                            AutomationProperties.Name="{gxt:ResourceString Name=OverwriteReference}"
-                            Command="{x:Bind ViewModel.OverrideReferenceCommand}"
-                            Content="{gxt:ResourceString Name=OverwriteReference}"
-                            IsEnabled="{x:Bind ViewModel.OverrideReferenceEnabled, Mode=OneWay}" />
-                    </Grid>
-                </Flyout>
-            </FlyoutBase.AttachedFlyout>
-        </HyperlinkButton>
+                            <!--  Content text  -->
+                            <TextBlock
+                                Grid.Row="1"
+                                Width="300"
+                                Text="{gxt:ResourceString Name=PastedAsReferenceDescription}"
+                                TextTrimming="WordEllipsis"
+                                TextWrapping="Wrap" />
 
-        <!--  Switch canvases link button  -->
-        <HyperlinkButton
-            x:Name="SwitchCanvasTypeLinkButton"
-            Grid.Row="1"
-            Grid.ColumnSpan="2"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            x:Load="{x:Bind ViewModel.NewCanvasScreenLoad, Mode=OneWay}"
-            Command="{x:Bind ViewModel.SwitchCanvasModeCommand}"
-            Content="{x:Bind ViewModel.SwitchCanvasModeText, Mode=OneWay}" />
+                            <!--  Paste reference  -->
+                            <Button
+                                Grid.Row="2"
+                                Margin="0,16,0,0"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="{gxt:ResourceString Name=OverwriteReference}"
+                                Command="{x:Bind ViewModel.OverrideReferenceCommand}"
+                                Content="{gxt:ResourceString Name=OverwriteReference}"
+                                IsEnabled="{x:Bind ViewModel.OverrideReferenceEnabled, Mode=OneWay}" />
+                        </Grid>
+                    </Flyout>
+                </FlyoutBase.AttachedFlyout>
+            </HyperlinkButton>
 
-        <!--  Infinite Canvas caption  -->
-        <TextBlock
-            x:Name="InfiniteCanvasCaption"
-            Grid.Row="1"
-            Grid.ColumnSpan="2"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            x:Load="{x:Bind ViewModel.InfiniteCanvasCaptionLoad, Mode=OneWay}"
-            Opacity="0.8"
-            Text="Infinite Canvas" />
+            <!--  Switch canvases link button  -->
+            <HyperlinkButton
+                x:Name="SwitchCanvasTypeLinkButton"
+                Grid.ColumnSpan="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                x:Load="{x:Bind ViewModel.NewCanvasScreenLoad, Mode=OneWay}"
+                Command="{x:Bind ViewModel.SwitchCanvasModeCommand}"
+                Content="{x:Bind ViewModel.SwitchCanvasModeText, Mode=OneWay}" />
 
-        <!--  Infinite Canvas progress  -->
-        <!--
-            TODO: Add smooth showing/hiding attached property >> when hide is requested,
-            hide only when the progress bar is not visible
-        -->
-        <muxc:ProgressBar
-            x:Name="InfiniteCanvasProgress"
-            Grid.Row="1"
-            Grid.ColumnSpan="2"
-            Width="200"
-            Margin="0,0,0,6"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Bottom"
-            x:Load="{x:Bind ViewModel.InfiniteCanvasProgressLoad, Mode=OneWay}"
-            IsIndeterminate="True" />
+            <!--  Infinite Canvas caption  -->
+            <TextBlock
+                x:Name="InfiniteCanvasCaption"
+                Grid.ColumnSpan="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                x:Load="{x:Bind ViewModel.InfiniteCanvasCaptionLoad, Mode=OneWay}"
+                Opacity="0.8"
+                Text="Infinite Canvas" />
 
-        <!--  Error text  -->
-        <TextBlock
-            x:Name="ErrorText"
-            Grid.Row="1"
-            Margin="15,0,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Center"
-            x:Load="{x:Bind ViewModel.ErrorTextLoad, Mode=OneWay}"
-            Opacity="0.8"
-            Text="{x:Bind ViewModel.ErrorText, Mode=OneWay}" />
+            <!--  Infinite Canvas progress  -->
+            <!--
+                TODO: Add smooth showing/hiding attached property >> when hide is requested,
+                hide only when the progress bar is not visible
+            -->
+            <muxc:ProgressBar
+                x:Name="InfiniteCanvasProgress"
+                Grid.ColumnSpan="2"
+                Width="200"
+                Margin="0,0,0,6"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                x:Load="{x:Bind ViewModel.InfiniteCanvasProgressLoad, Mode=OneWay}"
+                IsIndeterminate="True" />
+
+            <!--  Error text  -->
+            <TextBlock
+                x:Name="ErrorText"
+                Margin="15,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                x:Load="{x:Bind ViewModel.ErrorTextLoad, Mode=OneWay}"
+                Opacity="0.8"
+                Text="{x:Bind ViewModel.ErrorText, Mode=OneWay}" />
+
+            <!--  Show in collection  -->
+            <Button
+                x:Name="ShowInCollection"
+                Grid.ColumnSpan="2"
+                Margin="0,-6,20,0"
+                HorizontalAlignment="Right"
+                VerticalContentAlignment="Center"
+                x:Load="{x:Bind ViewModel.ShowInCollectionLoad, Mode=OneWay}"
+                Command="{x:Bind ViewModel.ShowInCollectionCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <FontIcon FontSize="15" Glyph="&#xF0E2;" />
+                    <TextBlock Text="{gxt:ResourceString Name=ShowInCollection}" />
+                </StackPanel>
+            </Button>
+        </Grid>
     </Grid>
 </Page>
