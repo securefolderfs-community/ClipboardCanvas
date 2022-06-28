@@ -97,6 +97,10 @@ namespace ClipboardCanvas.CanavsPasteModels
                     if (uri)
                     {
                         customName = Path.GetFileName(uri.Result.LocalPath);
+                        if (!Path.HasExtension(customName))
+                        {
+                            customName = $"{customName}.png";
+                        }
                     }
 
                     if (!bitmap)
