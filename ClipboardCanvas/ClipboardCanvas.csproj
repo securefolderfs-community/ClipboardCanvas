@@ -1,4 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows10.0.20348.0</TargetFramework>
@@ -9,26 +10,29 @@
     <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-	<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-	<AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-	<AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
-	<GenerateTestArtifacts>False</GenerateTestArtifacts>
-	<AppxBundle>Always</AppxBundle>
-	<AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
-	<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+    <GenerateTestArtifacts>False</GenerateTestArtifacts>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
   <PropertyGroup Label="MultilingualAppToolkit">
-  	<MultilingualAppToolkitVersion>4.0</MultilingualAppToolkitVersion>
-  	<MultilingualFallbackLanguage>en</MultilingualFallbackLanguage>
-  	<TranslationReport Condition="'$(Configuration)' == 'Release'">true</TranslationReport>
-  	<SuppressPseudoWarning Condition="'$(Configuration)' == 'Debug'">true</SuppressPseudoWarning>
-  	<SupportedOSPlatformVersion>10.0.18362.0</SupportedOSPlatformVersion>
+    <MultilingualAppToolkitVersion>4.0</MultilingualAppToolkitVersion>
+    <MultilingualFallbackLanguage>en-US</MultilingualFallbackLanguage>
+    <TranslationReport Condition="'$(Configuration)' == 'Release'">true</TranslationReport>
+    <SuppressPseudoWarning Condition="'$(Configuration)' == 'Debug'">true</SuppressPseudoWarning>
   </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Multilingual App Toolkit\Microsoft.Multilingual.PriResources.targets" Label="MultilingualAppToolkit" Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\Multilingual App Toolkit\v$(MultilingualAppToolkitVersion)\Microsoft.Multilingual.PriResources.targets')" />
+  <Target Name="MATPrerequisite" BeforeTargets="PrepareForBuild" Condition="!Exists('$(MSBuildExtensionsPath)\Microsoft\Multilingual App Toolkit\Microsoft.Multilingual.PriResources.targets')" Label="MultilingualAppToolkit">
+    <Warning Text="$(MSBuildProjectFile) is Multilingual build enabled, but the Multilingual App Toolkit is unavailable during the build. If building with Visual Studio, please check to ensure that toolkit is properly installed." />
+  </Target>
   <ItemGroup>
+    <None Remove="MultilingualResources\ClipboardCanvas.zh-CN.xlf" />
     <None Remove="Pages\MainWindowContentPage.xaml" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="ByteSize" Version="2.1.1" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="7.1.2" />
@@ -48,12 +52,14 @@
     <PackageReference Include="Vanara.Windows.Shell" Version="3.4.3" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
-
   <!-- Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
        Tools extension to be activated for this project even if the Windows App SDK Nuget
        package has not yet been restored -->
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnablePreviewMsixTooling)'=='true'">
     <ProjectCapability Include="Msix" />
+  </ItemGroup>
+  <ItemGroup>
+    <XliffResource Include="MultilingualResources\ClipboardCanvas.zh-CN.xlf" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\MainWindowContentPage.xaml">
