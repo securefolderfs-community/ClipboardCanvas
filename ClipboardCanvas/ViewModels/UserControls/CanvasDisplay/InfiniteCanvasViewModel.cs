@@ -579,7 +579,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         private async Task SetAsAutopasteTarget()
         {
-            var autopasteTargetBridge = new AutopasteTargetWrapper(AssociatedCollection.DisplayName +  " - " + "OOBEInfiniteCanvasTitle".GetLocalized2(), (await SourceItem).Path,
+            var autopasteTargetBridge = new AutopasteTargetWrapper("OOBEInfiniteCanvasTitle".GetLocalized2() + " - " + AssociatedCollection.DisplayName, (await SourceItem).Path,
                 async (dataPackage, cancellationToken) =>
                 {
                     var result = await TryPasteData(dataPackage, cancellationToken);

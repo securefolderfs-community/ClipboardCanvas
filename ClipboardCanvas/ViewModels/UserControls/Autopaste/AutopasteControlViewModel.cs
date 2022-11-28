@@ -154,7 +154,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
                         return;
 
                     var parentFolder = Path.GetDirectoryName(destinationFolder.Path);
-                    autopasteTarget = new AutopasteTargetWrapper(parentFolder + " - " + "OOBEInfiniteCanvasTitle".GetLocalized2(), destinationFolder.Path,
+                    autopasteTarget = new AutopasteTargetWrapper("OOBEInfiniteCanvasTitle".GetLocalized2() + " - " + Path.GetFileName(parentFolder), destinationFolder.Path,
                         async (dataPackageView, cancellationToken) =>
                         {
                             var pastedItemContentType = await BaseContentTypeModel.GetContentTypeFromDataPackage(dataPackageView);

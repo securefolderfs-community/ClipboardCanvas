@@ -261,21 +261,27 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <StackPanel Orientation="Horizontal" Spacing="4">
+                    <Grid ColumnSpacing="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
                         <TextBlock
+                            Grid.Column="0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             FontWeight="SemiBold"
                             Text="{gxt:ResourceString Name=AutopastePasteToTarget}" />
 
                         <TextBlock
+                            Grid.Column="1"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             Opacity="0.8"
                             Text="{x:Bind ViewModel.AutopasteTargetName, Mode=OneWay}"
                             TextTrimming="CharacterEllipsis"
                             ToolTipService.ToolTip="{x:Bind ViewModel.AutopasteTargetName, Mode=OneWay}" />
-                    </StackPanel>
+                    </Grid>
 
                     <HyperlinkButton
                         Grid.Column="2"
