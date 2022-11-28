@@ -10,8 +10,6 @@ namespace ClipboardCanvas.Models.Autopaste
 {
     public interface IAutopasteTarget : INotifyPropertyChanged
     {
-        ICollectionModel CollectionModel { get; }
-
         string DisplayName { get; }
 
         string TargetPath { get; }

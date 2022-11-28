@@ -31,7 +31,11 @@ using ClipboardCanvas.ViewModels.ContextMenu;
 using ClipboardCanvas.ViewModels.UserControls.CanvasPreview;
 using ClipboardCanvas.Contexts.Operations;
 using ClipboardCanvas.Enums;
+using ClipboardCanvas.Extensions;
+using ClipboardCanvas.Models.Autopaste;
+using ClipboardCanvas.Services;
 using ClipboardCanvas.UnsafeNative;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Vanara.PInvoke;
 
 namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
@@ -40,7 +44,9 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
     {
         #region Private Members
 
-        private FilesystemChangeWatcher _filesystemChangeWatcher;
+        private CanvasItem? _lastPastedItem;
+
+        private FilesystemChangeWatcher2 _filesystemChangeWatcher;
 
         private bool _isFilesystemWatcherReady;
 
@@ -74,6 +80,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             }
         }
 
+        public IAutopasteService AutopasteService { get; } = Ioc.Default.GetRequiredService<IAutopasteService>();
+
         #endregion
 
         #region Constructor
@@ -89,6 +97,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
         public override async Task<SafeWrapperResult> TryPasteData(DataPackageView dataPackage, CancellationToken cancellationToken)
         {
+            _lastPastedItem = null;
             this.cancellationToken = cancellationToken;
             SafeWrapperResult fetchDataToViewResult = SafeWrapperResult.SUCCESS;
 
@@ -140,6 +149,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
 
                 // Paste data
                 SafeWrapper<CanvasItem> pastedItem = await canvasPasteModel.PasteData(dataPackage, UserSettings.AlwaysPasteFilesAsReference, cancellationToken);
+                _lastPastedItem = pastedItem.Result;
 
                 // We don't need IPasteModel anymore, so dispose it
                 canvasPasteModel.Dispose();
@@ -391,6 +401,14 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
         {
             ContextMenuItems.Clear();
 
+            // Set as Autopaste target
+            ContextMenuItems.Add(new MenuFlyoutItemViewModel()
+            {
+                Command = new AsyncRelayCommand(SetAsAutopasteTarget),
+                IconGlyph = "\uE77F",
+                Text = "SetAsAutopasteTarget".GetLocalized2()
+            });
+
             // Reset position
             ContextMenuItems.Add(new MenuFlyoutItemViewModel()
             {
@@ -443,128 +461,132 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             });
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
-        private async void FilesystemChangeWatcher_OnChangeRegisteredEvent(object sender, ChangeRegisteredEventArgs e)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility",
+            Justification = "<Pending>")]
+        private async void FilesystemChangeWatcher_OnChangeRegisteredEvent(object sender, ChangeRegisteredEventArgs2 e)
         {
             // TODO: Regression - e.filesystemChangeReader.ReadBatchAsync() throws E_WRONG_THREAD
-            return;
-            await MainWindow.Instance.DispatcherQueue.EnqueueAsync(async () =>
+            try
             {
-                try
+                await MainWindow.Instance.DispatcherQueue.EnqueueAsync(async () =>
                 {
-                    // Get changes
-                    IEnumerable<StorageLibraryChange> changes = await e.filesystemChangeReader.ReadBatchAsync();
-
-                    // Accept changes
-                    await e.filesystemChangeReader.AcceptChangesAsync();
-
                     // Reflect changes
-                    foreach (var item in changes)
+                    if (FileHelpers.IsPathEqualExtension(e.FullPath,
+                            Constants.FileSystem.INFINITE_CANVAS_CONFIGURATION_FILE_EXTENSION)
+                        || Path.GetFileName(e.FullPath) ==
+                        Constants.FileSystem.INFINITE_CANVAS_PREVIEW_IMAGE_FILENAME)
                     {
-                        if (FileHelpers.IsPathEqualExtension(item.Path, Constants.FileSystem.INFINITE_CANVAS_CONFIGURATION_FILE_EXTENSION)
-                                || Path.GetFileName(item.Path) == Constants.FileSystem.INFINITE_CANVAS_PREVIEW_IMAGE_FILENAME)
+                        return;
+                    }
+
+                    string itemParentFolder = Path.GetDirectoryName(e.FullPath);
+                    string watchedParentFolder = (await InfiniteCanvasItem.SourceItem).Path;
+                    if (itemParentFolder != watchedParentFolder)
+                    {
+                        return;
+                    }
+
+                    IStorageItem changedItem = await StorageHelpers.ToStorageItem<IStorageItem>(e.FullPath);
+
+                    switch (e.ChangeType)
+                    {
+                        case WatcherChangeTypes.Created:
                         {
-                            continue;
+                            if (changedItem == null ||
+                                InteractableCanvasControlModel.ContainsItem(
+                                    InteractableCanvasControlModel.FindItem(changedItem.Path)))
+                            {
+                                return;
+                            }
+
+                            BaseContentTypeModel contentType =
+                                await BaseContentTypeModel.GetContentType(changedItem, null);
+                            if (contentType != null)
+                            {
+                                CanvasItem canvasItem = new CanvasItem(changedItem);
+
+                                var interactableCanvasControlItem =
+                                    await InteractableCanvasControlModel.AddItem(AssociatedCollection, contentType,
+                                        canvasItem, _infiniteCanvasFileReceiver, cancellationToken);
+                                if (interactableCanvasControlItem != null)
+                                {
+                                    await interactableCanvasControlItem.LoadContent(true);
+                                }
+                            }
+
+                            break;
                         }
 
-                        string itemParentFolder = Path.GetDirectoryName(item.Path);
-                        string watchedParentFolder = (await InfiniteCanvasItem.SourceItem).Path;
-                        if (itemParentFolder != watchedParentFolder)
+                        case WatcherChangeTypes.Deleted:
                         {
-                            continue;
+                            InteractableCanvasControlModel.RemoveItem(InteractableCanvasControlModel.FindItem(e.FullPath));
+                            break;
                         }
 
-                        IStorageItem changedItem = await item.GetStorageItemAsync();
-
-                        switch (item.ChangeType)
+                        case WatcherChangeTypes.Renamed:
                         {
-                            case StorageLibraryChangeType.ChangeTrackingLost:
+                            if (changedItem != null)
+                            {
+                                string oldName = Path.GetFileName(e.OldPath);
+                                string newName = Path.GetFileName(e.FullPath);
+
+                                string oldParentPath = Path.GetDirectoryName(e.OldPath);
+                                string newParentPath = Path.GetDirectoryName(e.FullPath);
+
+                                if ((oldName != newName) && (oldParentPath == newParentPath))
                                 {
-                                    e.filesystemChangeTracker.Reset();
-                                    break;
-                                }
+                                    // Renamed
+                                    var interactableCanvasControlItem =
+                                        InteractableCanvasControlModel.FindItem(e.OldPath);
 
-                            case StorageLibraryChangeType.Created:
-                                {
-
-                                    if (changedItem == null || InteractableCanvasControlModel.ContainsItem(InteractableCanvasControlModel.FindItem(changedItem.Path)))
-                                    {
-                                        return;
-                                    }
-
-                                    BaseContentTypeModel contentType = await BaseContentTypeModel.GetContentType(changedItem, null);
-                                    if (contentType != null)
-                                    {
-                                        CanvasItem canvasItem = new CanvasItem(changedItem);
-
-                                        var interactableCanvasControlItem = await InteractableCanvasControlModel.AddItem(AssociatedCollection, contentType, canvasItem, _infiniteCanvasFileReceiver, cancellationToken);
-                                        if (interactableCanvasControlItem != null)
-                                        {
-                                            await interactableCanvasControlItem.LoadContent();
-                                        }
-                                    }
-                                    break;
-                                }
-
-                            case StorageLibraryChangeType.MovedOutOfLibrary:
-                            case StorageLibraryChangeType.Deleted:
-                                {
-                                    InteractableCanvasControlModel.RemoveItem(InteractableCanvasControlModel.FindItem(item?.Path));
-                                    break;
-                                }
-
-                            case StorageLibraryChangeType.MovedOrRenamed:
-                                {
-                                    if (changedItem != null)
-                                    {
-                                        string oldName = Path.GetFileName(item?.PreviousPath);
-                                        string newName = Path.GetFileName(item?.Path);
-
-                                        string oldParentPath = Path.GetDirectoryName(item?.PreviousPath);
-                                        string newParentPath = Path.GetDirectoryName(item?.Path);
-
-                                        if ((oldName != newName) && (oldParentPath == newParentPath))
-                                        {
-                                            // Renamed
-                                            var interactableCanvasControlItem = InteractableCanvasControlModel.FindItem(item?.PreviousPath);
-
-                                            if (interactableCanvasControlItem != null)
-                                            {
-                                                interactableCanvasControlItem.CanvasItem.DangerousUpdateItem(changedItem);
-                                                await interactableCanvasControlItem.InitializeDisplayName();
-
-                                                // Since it was renamed, configuration model needs to be updated too!
-                                                await SaveConfigurationModel();
-                                            }
-                                        }
-                                    }
-                                    break;
-                                }
-
-                            case StorageLibraryChangeType.ContentsReplaced:
-                            case StorageLibraryChangeType.ContentsChanged:
-                                {
-                                    var interactableCanvasControlItem = InteractableCanvasControlModel.FindItem(changedItem.Path);
                                     if (interactableCanvasControlItem != null)
                                     {
-                                        await interactableCanvasControlItem.LoadContent();
-                                        await InteractableCanvasControlModel.RegenerateCanvasPreview();
+                                        interactableCanvasControlItem.CanvasItem.DangerousUpdateItem(changedItem);
+                                        await interactableCanvasControlItem.InitializeDisplayName();
+
+                                        // Since it was renamed, configuration model needs to be updated too!
+                                        await SaveConfigurationModel();
                                     }
-                                    break;
                                 }
+                            }
+
+                            break;
+                        }
+
+                        case WatcherChangeTypes.Changed:
+                        {
+                            var interactableCanvasControlItem = InteractableCanvasControlModel.FindItem(e.FullPath);
+                            if (interactableCanvasControlItem != null)
+                            {
+                                await interactableCanvasControlItem.LoadContent();
+                                await InteractableCanvasControlModel.RegenerateCanvasPreview();
+                            }
+
+                            break;
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    // Wrong thread exception bug?
-                }
-            });
+                });
+            }
+            catch (Exception ex)
+            {
+                // Wrong thread exception bug?
+            }
         }
 
         #endregion
 
         #region Private Helpers
+
+        private async Task SetAsAutopasteTarget()
+        {
+            var autopasteTargetBridge = new AutopasteTargetWrapper(AssociatedCollection.DisplayName +  " - " + "OOBEInfiniteCanvasTitle".GetLocalized2(), (await SourceItem).Path,
+                async (dataPackage, cancellationToken) =>
+                {
+                    var result = await TryPasteData(dataPackage, cancellationToken);
+                    return new SafeWrapper<CanvasItem>(_lastPastedItem, result.Details);
+                });
+            AutopasteService.UpdateAutopasteTarget(autopasteTargetBridge);
+        }
 
         private bool AssertNoErrorInfiniteCanvas(SafeWrapperResult result)
         {
@@ -577,7 +599,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             {
                 _isFilesystemWatcherReady = true;
 
-                this._filesystemChangeWatcher = await FilesystemChangeWatcher.CreateNew(infiniteCanvasFolder);
+                this._filesystemChangeWatcher = new FilesystemChangeWatcher2(infiniteCanvasFolder.Path);
                 this._filesystemChangeWatcher.OnChangeRegisteredEvent += FilesystemChangeWatcher_OnChangeRegisteredEvent;
             }
         }

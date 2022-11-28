@@ -1,16 +1,9 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media.Animation;
-using System.ComponentModel;
-using Windows.ApplicationModel.Core;
-using Windows.UI.ViewManagement;
-
-using ClipboardCanvas.Helpers;
+﻿using ClipboardCanvas.Helpers;
 using ClipboardCanvas.Pages;
-using Vanara.PInvoke;
-using System;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
+using System;
 using WinRT.Interop;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -30,10 +23,6 @@ namespace ClipboardCanvas
         public AppWindow? AppWindow { get; private set; }
 
         public MainWindowContentPage MainWindowContentPage => MainPageHost;
-
-        public static ApplicationViewTitleBar TitleBar { get; private set; }
-
-        public static CoreApplicationViewTitleBar CoreTitleBar { get; private set; }
 
         public MainWindow()
         {

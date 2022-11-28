@@ -32,7 +32,7 @@
 
         public static class UI
         {
-            public const int CONTROL_LOAD_DELAY = 10;
+            public const int CONTROL_LOAD_DELAY = 50;
 
             public const bool USE_GETLOCALIZED2 = true;
 

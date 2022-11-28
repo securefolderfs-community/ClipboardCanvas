@@ -6,8 +6,6 @@
     xmlns:local="using:ClipboardCanvas"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pg="using:ClipboardCanvas.Pages"
-    xmlns:uc="using:ClipboardCanvas.UserControls"
-    xmlns:uc2="using:ClipboardCanvas.UserControls.OOBE"
     mc:Ignorable="d">
 
     <pg:MainWindowContentPage x:Name="MainPageHost" />

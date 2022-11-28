@@ -48,6 +48,7 @@
         <!--  In-app notification  -->
         <uc:InAppNotificationControl
             x:Name="MainInAppNotification"
+            Grid.Row="0"
             Grid.RowSpan="3"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Bottom"

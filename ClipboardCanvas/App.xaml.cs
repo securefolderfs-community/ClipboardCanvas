@@ -40,7 +40,6 @@ namespace ClipboardCanvas
         {
             this.InitializeComponent();
 
-
             // Configure exception handlers
             this.UnhandledException += App_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;

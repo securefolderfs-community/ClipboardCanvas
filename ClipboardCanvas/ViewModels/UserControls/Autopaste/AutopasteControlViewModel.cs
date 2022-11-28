@@ -9,12 +9,18 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.ApplicationModel.DataTransfer;
 using System.Collections.Specialized;
+using System.IO;
+using Windows.Storage;
+using ClipboardCanvas.CanvasFileReceivers;
+using ClipboardCanvas.Contexts.Operations;
 using ClipboardCanvas.GlobalizationExtensions;
 
 using ClipboardCanvas.DataModels;
+using ClipboardCanvas.DataModels.ContentDataModels;
 using ClipboardCanvas.DataModels.Navigation;
 using ClipboardCanvas.Extensions;
 using ClipboardCanvas.Helpers;
+using ClipboardCanvas.Helpers.Filesystem;
 using ClipboardCanvas.Helpers.SafetyHelpers;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.Models.Autopaste;
@@ -136,11 +142,34 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 
         #region Helpers
 
-        public Task Initialize()
+        public async Task Initialize()
         {
             if (!string.IsNullOrEmpty(AutopasteSettingsService.AutopastePath))
             {
-                var autopasteTarget = CollectionsWidgetViewModel.FindCollection(AutopasteSettingsService.AutopastePath);
+                IAutopasteTarget autopasteTarget = CollectionsWidgetViewModel.FindCollection(AutopasteSettingsService.AutopastePath);
+                if (autopasteTarget is null)
+                {
+                    var destinationFolder = await StorageHelpers.ToStorageItem<IStorageFolder>(AutopasteSettingsService.AutopastePath);
+                    if (destinationFolder is null)
+                        return;
+
+                    var parentFolder = Path.GetDirectoryName(destinationFolder.Path);
+                    autopasteTarget = new AutopasteTargetWrapper(parentFolder + " - " + "OOBEInfiniteCanvasTitle".GetLocalized2(), destinationFolder.Path,
+                        async (dataPackageView, cancellationToken) =>
+                        {
+                            var pastedItemContentType = await BaseContentTypeModel.GetContentTypeFromDataPackage(dataPackageView);
+                            if (pastedItemContentType is InvalidContentTypeDataModel invalidContentType)
+                            {
+                                return new SafeWrapper<CanvasItem>(null, invalidContentType.error);
+                            }
+
+                            var canvasItem = new InfiniteCanvasItem(destinationFolder, destinationFolder);
+                            var infiniteCanvasFileReceiver = new InfiniteCanvasFileReceiver(canvasItem);
+                            var canvasPasteModel = CanvasHelpers.GetPasteModelFromContentType(pastedItemContentType, infiniteCanvasFileReceiver, new StatusCenterOperationReceiver());
+                            return await canvasPasteModel.PasteData(dataPackageView, UserSettingsService.AlwaysPasteFilesAsReference, cancellationToken);
+                        });
+                }
+
                 UpdateTarget(autopasteTarget);
             }
             
@@ -159,8 +188,6 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
                 }
                 _itemAddedInternally = false;
             }
-
-            return Task.CompletedTask;
         }
 
         private void AddRuleToRuleset(BaseAutopasteRuleViewModel ruleViewModel)
@@ -263,7 +290,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Autopaste
 
                         var todaySection = await TimelineService.GetOrCreateTodaySection();
                         var targetCollection = CollectionsWidgetViewModel.FindCollection(AutopasteSettingsService.AutopastePath);
-                        await TimelineService.AddItemForSection(todaySection, targetCollection, pasteResult);
+                        if (targetCollection is not null)
+                            await TimelineService.AddItemForSection(todaySection, targetCollection, pasteResult);
                     }
                     catch (Exception ex)
                     {
