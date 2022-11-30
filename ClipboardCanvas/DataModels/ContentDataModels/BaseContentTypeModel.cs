@@ -196,19 +196,19 @@ namespace ClipboardCanvas.DataModels.ContentDataModels
             // Decide content type and initialize view model
 
             // From raw clipboard data
-            if (dataPackage.Contains(StandardDataFormats.Bitmap))
+            if (dataPackage.Contains("Art::GVML ClipFormat") || (dataPackage.Contains(StandardDataFormats.Bitmap) && !dataPackage.Contains("PowerPoint 12.0 Internal Theme")))
             {
                 // Image
                 return new ImageContentType();
             }
-            else if (dataPackage.Contains(StandardDataFormats.Text))
+            else if (dataPackage.Contains("Art::Text ClipFormat") || (dataPackage.Contains(StandardDataFormats.Text) && !dataPackage.Contains("PowerPoint 12.0 Internal Theme")))
             {
                 SafeWrapper<string> text = await dataPackage.SafeGetTextAsync();
 
                 if (!text)
                 {
                     Debugger.Break(); // What!?
-                    return new InvalidContentTypeDataModel(CannotReceiveClipboardDataResult);
+                    return new InvalidContentTypeDataModel(text);
                 }
 
                 // Check if it's url
