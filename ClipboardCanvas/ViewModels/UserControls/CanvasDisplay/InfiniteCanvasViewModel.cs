@@ -465,11 +465,13 @@ namespace ClipboardCanvas.ViewModels.UserControls.CanvasDisplay
             Justification = "<Pending>")]
         private async void FilesystemChangeWatcher_OnChangeRegisteredEvent(object sender, ChangeRegisteredEventArgs2 e)
         {
-            // TODO: Regression - e.filesystemChangeReader.ReadBatchAsync() throws E_WRONG_THREAD
             try
             {
                 await MainWindow.Instance.DispatcherQueue.EnqueueAsync(async () =>
                 {
+                    if (e.FullPath.EndsWith(".TMP") || e.FullPath.EndsWith("~tmp"))
+                        return;
+
                     // Reflect changes
                     if (FileHelpers.IsPathEqualExtension(e.FullPath,
                             Constants.FileSystem.INFINITE_CANVAS_CONFIGURATION_FILE_EXTENSION)

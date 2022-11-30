@@ -1,13 +1,27 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Threading;
-
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Graphics.Printing3D;
+using Windows.Storage;
+using ClipboardCanvas.CanvasFileReceivers;
+using ClipboardCanvas.Contexts.Operations;
+using ClipboardCanvas.DataModels;
+using ClipboardCanvas.DataModels.ContentDataModels;
+using ClipboardCanvas.Extensions;
+using ClipboardCanvas.GlobalizationExtensions;
 using ClipboardCanvas.Interfaces.Search;
 using ClipboardCanvas.Models;
 using ClipboardCanvas.ViewModels.UserControls.Collections;
 using ClipboardCanvas.Helpers;
+using ClipboardCanvas.ReferenceItems;
+using ClipboardCanvas.Services;
+using ClipboardCanvas.ViewModels.ContextMenu;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace ClipboardCanvas.ViewModels
 {
@@ -16,6 +30,8 @@ namespace ClipboardCanvas.ViewModels
         #region Private Members
 
         private CancellationTokenSource _cancellationTokenSource;
+
+        private IUserSettingsService UserSettingsService { get; } = Ioc.Default.GetRequiredService<IUserSettingsService>();
 
         #endregion
 
@@ -49,6 +65,9 @@ namespace ClipboardCanvas.ViewModels
             set => SetProperty(ref _IsCanvasPreviewVisible, value);
         }
 
+        public ObservableCollection<BaseMenuFlyoutItemViewModel> ContextMenuItems { get; }
+
+
         public TwoWayPropertyUpdater<IReadOnlyCanvasPreviewModel> TwoWayReadOnlyCanvasPreview { get; set; }
 
         public IReadOnlyCanvasPreviewModel ReadOnlyCanvasPreviewModel { get; private set; }
@@ -64,6 +83,7 @@ namespace ClipboardCanvas.ViewModels
         private CollectionPreviewItemViewModel()
         {
             this._cancellationTokenSource = new CancellationTokenSource();
+            this.ContextMenuItems = new();
 
             this.TwoWayReadOnlyCanvasPreview = new TwoWayPropertyUpdater<IReadOnlyCanvasPreviewModel>();
             this.TwoWayReadOnlyCanvasPreview.OnPropertyValueUpdatedEvent += TwoWayReadOnlyCanvasPreview_OnPropertyValueUpdatedEvent;
@@ -126,6 +146,7 @@ namespace ClipboardCanvas.ViewModels
                 CollectionItemViewModel = collectionItemViewModel
             };
 
+            await viewModel.LoadContextMenuItems();
             await viewModel.UpdateDisplayName();
 
             return viewModel;
@@ -134,6 +155,59 @@ namespace ClipboardCanvas.ViewModels
         public async Task UpdateDisplayName()
         {
             DisplayName = Path.GetFileName(await CanvasHelpers.SafeGetCanvasItemPath(CollectionItemViewModel));
+        }
+
+        #endregion
+
+        #region Private Helpers
+
+        private async Task LoadContextMenuItems()
+        {
+            if (!ContextMenuItems.IsEmpty())
+                return;
+
+            var sourceItem = await CollectionItemViewModel.SourceItem;
+            if (sourceItem is IStorageFolder && sourceItem.Name.EndsWith(Constants.FileSystem.INFINITE_CANVAS_EXTENSION))
+            {
+                ContextMenuItems.Add(new MenuFlyoutItemViewModel()
+                {
+                    Command = new AsyncRelayCommand(PasteToInfiniteCanvas),
+                    IconGlyph = "\uE77F",
+                    Text = "PasteFromClipboard".GetLocalized2()
+                });
+            }
+            else
+            {
+                ContextMenuItems.Add(new MenuFlyoutItemViewModel()
+                {
+                    Command = new AsyncRelayCommand(CopyFile),
+                    IconGlyph = "\uE8C8",
+                    Text = "CopyFile".GetLocalized2()
+                });
+            }
+        }
+
+        private async Task CopyFile()
+        {
+            DataPackage data = new DataPackage();
+            bool result = await ReadOnlyCanvasPreviewModel.SetDataToDataPackage(data);
+            ClipboardHelpers.CopyDataPackage(data);
+        }
+
+        private async Task PasteToInfiniteCanvas()
+        {
+            var clipboardData = ClipboardHelpers.GetClipboardData();
+            if (!clipboardData)
+                return;
+
+            var pastedItemContentType = await BaseContentTypeModel.GetContentTypeFromDataPackage(clipboardData);
+            if (pastedItemContentType is InvalidContentTypeDataModel)
+                return;
+
+            var canvasItem = new InfiniteCanvasItem(CollectionItemViewModel.AssociatedItem);
+            var infiniteCanvasFileReceiver = new InfiniteCanvasFileReceiver(canvasItem);
+            var canvasPasteModel = CanvasHelpers.GetPasteModelFromContentType(pastedItemContentType, infiniteCanvasFileReceiver, new StatusCenterOperationReceiver());
+            await canvasPasteModel.PasteData(clipboardData, UserSettingsService.AlwaysPasteFilesAsReference, default);
         }
 
         #endregion

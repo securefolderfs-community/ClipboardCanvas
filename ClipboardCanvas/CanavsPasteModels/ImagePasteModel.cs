@@ -73,46 +73,45 @@ namespace ClipboardCanvas.CanavsPasteModels
                         async () => await (RandomAccessStreamReference.CreateFromUri(new Uri(url))).OpenReadAsync());
                 }
             }
-            else if (dataPackage.Contains(StandardDataFormats.Bitmap))
+            else if (dataPackage.Contains(StandardDataFormats.Bitmap)) // Just image
             {
-                if (dataPackage.Contains(StandardDataFormats.StorageItems)) // File to image
+                SafeWrapper<RandomAccessStreamReference> bitmap = await dataPackage.SafeGetBitmapAsync();
+                SafeWrapper<Uri> uri = await dataPackage.SafeGetUriAsync();
+
+                if (uri)
                 {
-                    SafeWrapper<IReadOnlyList<IStorageItem>> items = await dataPackage.SafeGetStorageItemsAsync();
-
-                    if (!items)
+                    customName = Path.GetFileName(uri.Result.LocalPath);
+                    if (!Path.HasExtension(customName))
                     {
-                        return items;
+                        customName = $"{customName}.png";
                     }
-
-                    IsContentAsReference = _wasPastedAsReference;
-
-                    this.pastedItem = items.Result.First();
-                    return await SetDataFromExistingItem(pastedItem);
                 }
-                else // Just image
+
+                if (!bitmap)
                 {
-                    SafeWrapper<RandomAccessStreamReference> bitmap = await dataPackage.SafeGetBitmapAsync();
-                    SafeWrapper<Uri> uri = await dataPackage.SafeGetUriAsync();
-
-                    if (uri)
-                    {
-                        customName = Path.GetFileName(uri.Result.LocalPath);
-                        if (!Path.HasExtension(customName))
-                        {
-                            customName = $"{customName}.png";
-                        }
-                    }
-
-                    if (!bitmap)
-                    {
-                        return bitmap;
-                    }
-
-                    openedStream = await SafeWrapperRoutines.SafeWrapAsync(
-                        () => bitmap.Result.OpenReadAsync().AsTask());
+                    return bitmap;
                 }
+
+                openedStream = await SafeWrapperRoutines.SafeWrapAsync(
+                    () => bitmap.Result.OpenReadAsync().AsTask());
+
+            }
+            else if (dataPackage.Contains(StandardDataFormats.StorageItems)) // File to image
+            {
+                SafeWrapper<IReadOnlyList<IStorageItem>> items = await dataPackage.SafeGetStorageItemsAsync();
+
+                if (!items)
+                {
+                    return items;
+                }
+
+                IsContentAsReference = _wasPastedAsReference;
+
+                this.pastedItem = items.Result.First();
+                return await SetDataFromExistingItem(pastedItem);
             }
 
+            openedStream ??= new SafeWrapper<IRandomAccessStreamWithContentType>(null, ItemIsNotAFileResult);
             if (!openedStream)
             {
                 openedStream.Result?.Dispose();

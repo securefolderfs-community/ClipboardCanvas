@@ -482,7 +482,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
         {
             e.collectionModel.SetIndexOnNewCanvas();
             NavigationService.OpenCanvasPage(e.collectionModel);
-            await Task.Delay(300);
+            await Task.Delay(800);
 
             await PasteCanvasPageModel.PasteCanvasModel.TryPasteData(e.forwardedDataPackage, _canvasLoadCancellationTokenSource.Token);
         }

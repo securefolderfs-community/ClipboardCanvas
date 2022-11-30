@@ -59,7 +59,7 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
 
         protected bool isFilesystemWatcherReady;
 
-        protected FilesystemChangeWatcher filesystemChangeWatcher;
+        protected FilesystemChangeWatcher2 filesystemChangeWatcher;
 
         protected IDialogService DialogService { get; } = Ioc.Default.GetService<IDialogService>();
 
@@ -665,112 +665,105 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             }
         }
 
-        public virtual async Task SetupFilesystemWatcher()
+        public virtual Task SetupFilesystemWatcher()
         {
             if (!isFilesystemWatcherReady)
             {
                 isFilesystemWatcherReady = true;
 
-                this.filesystemChangeWatcher = await FilesystemChangeWatcher.CreateNew(collectionFolder);
+                this.filesystemChangeWatcher = new(collectionFolder.Path);
                 this.filesystemChangeWatcher.OnChangeRegisteredEvent += FilesystemChangeWatcher_OnChangeRegisteredEvent;
             }
+
+            return Task.CompletedTask;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
-        private async void FilesystemChangeWatcher_OnChangeRegisteredEvent(object sender, ChangeRegisteredEventArgs e)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility",
+            Justification = "<Pending>")]
+        private async void FilesystemChangeWatcher_OnChangeRegisteredEvent(object sender, ChangeRegisteredEventArgs2 e)
         {
-            // TODO: Regression - e.filesystemChangeReader.ReadBatchAsync() throws E_WRONG_THREAD
-            return;
-            await MainWindow.Instance.DispatcherQueue.EnqueueAsync(async () =>
+            try
             {
-                try
+                await MainWindow.Instance.DispatcherQueue.EnqueueAsync(async () =>
                 {
-                    // Get changes
-                    IEnumerable<StorageLibraryChange> changes = await e.filesystemChangeReader.ReadBatchAsync();
-
-                    // Accept changes
-                    await e.filesystemChangeReader.AcceptChangesAsync();
+                    if (e.FullPath.EndsWith(".TMP") || e.FullPath.EndsWith("~tmp"))
+                        return;
 
                     // Reflect changes in collection
-                    foreach (var item in changes)
+                    string itemParentFolder = Path.GetDirectoryName(e.FullPath);
+                    string watchedParentFolder = collectionFolder.Path;
+                    if (itemParentFolder != watchedParentFolder)
+                        return;
+
+                    IStorageItem changedItem = await StorageHelpers.ToStorageItem<IStorageItem>(e.FullPath);
+
+                    switch (e.ChangeType)
                     {
-                        string itemParentFolder = Path.GetDirectoryName(item.Path);
-                        string watchedParentFolder = collectionFolder.Path;
-                        if (itemParentFolder != watchedParentFolder)
+                        case WatcherChangeTypes.Created:
                         {
-                            continue;
+                            // Add new collection item
+                            if (changedItem != null && !CollectionItems.Any((i) => e.FullPath == i.AssociatedItem.Path))
+                            {
+                                var collectionItem = new CollectionItemViewModel(changedItem);
+                                AddCollectionItem(collectionItem);
+                            }
+
+                            break;
                         }
 
-                        IStorageItem changedItem = await item.GetStorageItemAsync();
-
-                        switch (item.ChangeType)
+                        case WatcherChangeTypes.Deleted:
                         {
-                            case StorageLibraryChangeType.ChangeTrackingLost:
+                            // Remove the collection item
+                            var collectionItem = FindCollectionItem(e.FullPath);
+                            RemoveCollectionItem(collectionItem);
+                            break;
+                        }
+
+                        case WatcherChangeTypes.Renamed:
+                        {
+                            if (changedItem != null)
+                            {
+                                string oldName = Path.GetFileName(e.OldPath);
+                                string newName = Path.GetFileName(e.FullPath);
+
+                                string oldParentPath = Path.GetDirectoryName(e.OldPath);
+                                string newParentPath = Path.GetDirectoryName(e.FullPath);
+
+                                if ((oldName != newName) && (oldParentPath == newParentPath))
                                 {
-                                    e.filesystemChangeTracker.Reset();
-                                    break;
+                                    // Renamed
+                                    var collectionItem = FindCollectionItem(e.OldPath);
+                                    if (collectionItem is null)
+                                        break;
+
+                                    collectionItem.DangerousUpdateItem(changedItem);
+                                    OnCollectionItemRenamedEvent?.Invoke(this,
+                                        new CollectionItemRenamedEventArgs(this, collectionItem,
+                                            e.OldPath));
                                 }
+                            }
 
-                            case StorageLibraryChangeType.Created:
-                                {
-                                    // Add new collection item
-                                    if (changedItem != null && !CollectionItems.Any((i) => item?.Path == i.AssociatedItem.Path))
-                                    {
-                                        var collectionItem = new CollectionItemViewModel(changedItem);
-                                        AddCollectionItem(collectionItem);
-                                    }
-                                    break;
-                                }
+                            break;
+                        }
 
-                            case StorageLibraryChangeType.MovedOutOfLibrary:
-                            case StorageLibraryChangeType.Deleted:
-                                {
-                                    // Remove the collection item
-                                    var collectionItem = FindCollectionItem(item?.Path);
-                                    RemoveCollectionItem(collectionItem);
-                                    break;
-                                }
+                        case WatcherChangeTypes.Changed:
+                        {
+                            var collectionItem = FindCollectionItem(changedItem?.Path);
+                            if (collectionItem != null)
+                            {
+                                OnCollectionItemContentsChangedEvent?.Invoke(this,
+                                    new CollectionItemContentsChangedEventArgs(this, collectionItem));
+                            }
 
-                            case StorageLibraryChangeType.MovedOrRenamed:
-                                {
-                                    if (changedItem != null)
-                                    {
-                                        string oldName = Path.GetFileName(item?.PreviousPath);
-                                        string newName = Path.GetFileName(item?.Path);
-
-                                        string oldParentPath = Path.GetDirectoryName(item?.PreviousPath);
-                                        string newParentPath = Path.GetDirectoryName(item?.Path);
-
-                                        if ((oldName != newName) && (oldParentPath == newParentPath))
-                                        {
-                                            // Renamed
-                                            var collectionItem = FindCollectionItem(item?.PreviousPath);
-
-                                            collectionItem.DangerousUpdateItem(changedItem);
-                                            OnCollectionItemRenamedEvent?.Invoke(this, new CollectionItemRenamedEventArgs(this, collectionItem, item.PreviousPath));
-                                        }
-                                    }
-                                    break;
-                                }
-
-                            case StorageLibraryChangeType.ContentsReplaced:
-                            case StorageLibraryChangeType.ContentsChanged:
-                                {
-                                    var collectionItem = FindCollectionItem(changedItem?.Path);
-                                    if (collectionItem != null)
-                                    {
-                                        OnCollectionItemContentsChangedEvent?.Invoke(this, new CollectionItemContentsChangedEventArgs(this, collectionItem));
-                                    }
-                                    break;
-                                }
+                            break;
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    // Wrong thread exception bug?
-                }
-            });
+                });
+            }
+            catch (Exception ex)
+            {
+                // Wrong thread exception bug?
+            }
         }
 
         public virtual async Task<bool> InitializeCollectionItems()

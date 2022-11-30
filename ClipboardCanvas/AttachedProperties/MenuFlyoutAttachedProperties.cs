@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.Specialized;
 using System.Collections;
-
+using System.Linq;
 using ClipboardCanvas.Helpers;
 using ClipboardCanvas.ViewModels.ContextMenu;
 
@@ -36,7 +36,7 @@ namespace ClipboardCanvas.AttachedProperties
                 return;
             }
 
-            IEnumerable<MenuFlyoutItemBase> flyoutItems = FlyoutHelpers.GetMenuFlyoutItems(collection);
+            IEnumerable<MenuFlyoutItemBase> flyoutItems = FlyoutHelpers.GetMenuFlyoutItems(newItems.Cast<BaseMenuFlyoutItemViewModel>().ToList());
 
             menuFlyout.Items.Clear();
             foreach (var item in flyoutItems)

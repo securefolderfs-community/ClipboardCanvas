@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animvis="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    xmlns:ap="using:ClipboardCanvas.AttachedProperties"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:gxt="using:ClipboardCanvas.GlobalizationExtensions"
     xmlns:local="using:ClipboardCanvas.Pages"
@@ -130,6 +131,7 @@
                                 Grid.RowSpan="2"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
+                                Background="Transparent"
                                 CornerRadius="4">
 
                                 <Viewbox
@@ -145,11 +147,13 @@
                                             Background="Transparent" />
                                     </Grid>
                                 </Viewbox>
+                                <Grid.ContextFlyout>
+                                    <MenuFlyout ap:FlyoutItemsSourceAttachedProperty.Value="{x:Bind ContextMenuItems, Mode=OneWay}" />
+                                </Grid.ContextFlyout>
                             </Grid>
 
                             <!--  Shadow and Filename  -->
                             <Grid Grid.Row="1">
-
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="Auto" />
