@@ -682,6 +682,8 @@ namespace ClipboardCanvas.ViewModels.UserControls.Collections
             Justification = "<Pending>")]
         private async void FilesystemChangeWatcher_OnChangeRegisteredEvent(object sender, ChangeRegisteredEventArgs2 e)
         {
+            // Issue: items are pasted added to collection twice
+            return;
             try
             {
                 await MainWindow.Instance.DispatcherQueue.EnqueueAsync(async () =>

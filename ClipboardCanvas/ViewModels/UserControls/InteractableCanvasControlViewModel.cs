@@ -142,7 +142,7 @@ namespace ClipboardCanvas.ViewModels.UserControls
 
         public InteractableCanvasControlItemViewModel FindItem(string path)
         {
-            return Items.FirstOrDefault((item) => item.CanvasItem.AssociatedItem.Path == path);
+            return Items.FirstOrDefault((item) => item.CanvasItem.AssociatedItem.Path.Equals(path));
         }
 
         public InfiniteCanvasConfigurationModel ConstructConfigurationModel()
