@@ -1,0 +1,638 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddCollection" xml:space="preserve">
+    <value>Eine Sammlung hinzufügen</value>
+  </data>
+  <data name="AppRestartRequired" xml:space="preserve">
+    <value>Das Programm muss neu gestartet werden, um die Änderungen anzuwenden.</value>
+  </data>
+  <data name="Autopaste" xml:space="preserve">
+    <value>Autoeinfügen</value>
+  </data>
+  <data name="AutopasteAddRule" xml:space="preserve">
+    <value>Regel hinzufügen</value>
+  </data>
+  <data name="AutopasteContentBeingPasted" xml:space="preserve">
+    <value>Inhalt wird eingefügt</value>
+  </data>
+  <data name="AutopasteContentPasted" xml:space="preserve">
+    <value>Der Inhalt wurde eingefügt</value>
+  </data>
+  <data name="AutopasteContentPastingFailed" xml:space="preserve">
+    <value>Autoeinfügen konnte den Inhalt nicht einfügen. Fehler: {0}</value>
+  </data>
+  <data name="AutopasteExcludeType" xml:space="preserve">
+    <value>Typ auschließen</value>
+  </data>
+  <data name="AutopasteFinishedWorking" xml:space="preserve">
+    <value>Autoeinfügen erfolgreich</value>
+  </data>
+  <data name="AutopasteIsDisabled" xml:space="preserve">
+    <value>Autoeinfügen ist deaktiviert</value>
+  </data>
+  <data name="AutopasteLargerThan" xml:space="preserve">
+    <value>Größer als</value>
+  </data>
+  <data name="AutopasteNoTarget" xml:space="preserve">
+    <value>Kein Ziel</value>
+  </data>
+  <data name="AutopastePasteToTarget" xml:space="preserve">
+    <value>Einfügen in:</value>
+  </data>
+  <data name="AutopastePastingFailed" xml:space="preserve">
+    <value>Autoeinfügen fehlgeschlagen</value>
+  </data>
+  <data name="AutopasteRuleFileSize" xml:space="preserve">
+    <value>Dateigröße...</value>
+  </data>
+  <data name="AutopasteRuleSet" xml:space="preserve">
+    <value>Regelsatz</value>
+  </data>
+  <data name="AutopasteRuleTypeFilter" xml:space="preserve">
+    <value>Filter eingeben...</value>
+  </data>
+  <data name="AutopasteSmallerThan" xml:space="preserve">
+    <value>Kleiner als</value>
+  </data>
+  <data name="AutopasteTypeFile" xml:space="preserve">
+    <value>Datei</value>
+  </data>
+  <data name="AutopasteTypeFolder" xml:space="preserve">
+    <value>Ordner</value>
+  </data>
+  <data name="AutopasteTypeImage" xml:space="preserve">
+    <value>Bild</value>
+  </data>
+  <data name="AutopasteTypeText" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="AutopasteTypeUrl" xml:space="preserve">
+    <value>Url</value>
+  </data>
+  <data name="AutopasteWorking" xml:space="preserve">
+    <value>Autoeinfügen arbeitet</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="CanvasTypeInfoCurrentInfiniteCanvas" xml:space="preserve">
+    <value>Du bist im 'Unbegrenzte Leinwand'-Modus</value>
+  </data>
+  <data name="CanvasTypeInfoCurrentOneCanvas" xml:space="preserve">
+    <value>Du bist im 'Eine Leinwand'-Modus</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>Ändern</value>
+  </data>
+  <data name="ChangeIcon" xml:space="preserve">
+    <value>Icon ändern</value>
+  </data>
+  <data name="ChangelogFetchingDataFromGitHub" xml:space="preserve">
+    <value>Ruft Daten aus GitHub ab</value>
+  </data>
+  <data name="ChangelogFetchingError" xml:space="preserve">
+    <value>Beim Versuch des Abrufes der Versionshinweise aus GitHub ist ein Fehler aufgetreten</value>
+  </data>
+  <data name="ChangelogTitle" xml:space="preserve">
+    <value>Clipboard Canvas wurde aktualisiert!</value>
+  </data>
+  <data name="ChangelogViewOnGitHub" xml:space="preserve">
+    <value>In GitHub ansehen</value>
+  </data>
+  <data name="ClipboardCanvasCrashReportIssue" xml:space="preserve">
+    <value>Dieses Problem melden</value>
+  </data>
+  <data name="ClipboardCanvasCrashSubtitle" xml:space="preserve">
+    <value>Wir sind auf ein Problem gestoßen von dem wir uns nicht erholen konnten.</value>
+  </data>
+  <data name="ClipboardCanvasCrashTitle" xml:space="preserve">
+    <value>Clipboard Canvas ist spektakulär abgestürzt!</value>
+  </data>
+  <data name="CloseSearch" xml:space="preserve">
+    <value>Suche schließen</value>
+  </data>
+  <data name="CollectionErrorNotificationDescription" xml:space="preserve">
+    <value>{0} Fehler: {1}</value>
+  </data>
+  <data name="CollectionFolderNotFound" xml:space="preserve">
+    <value>Der mit dieser Sammlung assoziierte Ordner konnte nicht gefunden werden.</value>
+  </data>
+  <data name="CollectionIsBeingInitialized" xml:space="preserve">
+    <value>Die Sammlung wird initialisiert</value>
+  </data>
+  <data name="CollectionItemsMissing" xml:space="preserve">
+    <value>Wir haben festgestellt, dass einige Gegenstände fehlen. Wir laden die Sammlung für dich neu.</value>
+  </data>
+  <data name="CollectionPreview" xml:space="preserve">
+    <value>Sammlungsvorschau:</value>
+  </data>
+  <data name="Collections" xml:space="preserve">
+    <value>Sammlungen</value>
+  </data>
+  <data name="CollectionTooltip" xml:space="preserve">
+    <value>Doppelklick zum Öffnen dieser Sammlung.
+Rechtsklick für mehr Optionen.</value>
+  </data>
+  <data name="CollectionUnavailable" xml:space="preserve">
+    <value>Sammlung unverfügbar</value>
+  </data>
+  <data name="ContinueInRestrictedAccess" xml:space="preserve">
+    <value>Im beschränkten Zugang fortfahren</value>
+  </data>
+  <data name="CopyFile" xml:space="preserve">
+    <value>Datei kopieren</value>
+  </data>
+  <data name="CopySelectedText" xml:space="preserve">
+    <value>Ausgewählten Text kopieren</value>
+  </data>
+  <data name="CouldNotDeleteCollectionIcon" xml:space="preserve">
+    <value>Aktuelles Icon konnte nicht gelöscht werden.</value>
+  </data>
+  <data name="CouldNotRemoveCollectionIcon" xml:space="preserve">
+    <value>Icon konnte nicht entfernt werden</value>
+  </data>
+  <data name="CouldNotRenameCollection" xml:space="preserve">
+    <value>Sammlung konnte nicht umbenannt werden</value>
+  </data>
+  <data name="CouldNotSetCollectionIcon" xml:space="preserve">
+    <value>Eigenes Sammlungsicon konnte nicht gesetzt werden</value>
+  </data>
+  <data name="CurrentCollection" xml:space="preserve">
+    <value>Aktuelle Sammlung</value>
+  </data>
+  <data name="DefaultCollection" xml:space="preserve">
+    <value>Standardsammlung</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="DeleteFile" xml:space="preserve">
+    <value>Datei löschen</value>
+  </data>
+  <data name="DeleteInfiniteCanvas" xml:space="preserve">
+    <value>Unbegrenzte Leinwand löschen</value>
+  </data>
+  <data name="DeleteItem" xml:space="preserve">
+    <value>Gegenstand löschen</value>
+  </data>
+  <data name="DeleteItemDescription" xml:space="preserve">
+    <value>Bist du sicher, dass du diesen Gegenstand löschen möchtest?</value>
+  </data>
+  <data name="DeletePermanently" xml:space="preserve">
+    <value>Dauerhaft löschen</value>
+  </data>
+  <data name="DeleteReference" xml:space="preserve">
+    <value>Referenz löschen</value>
+  </data>
+  <data name="DropOrPasteToAddContent" xml:space="preserve">
+    <value>Ziehen und loslassen zum Einfügen von Inhalten</value>
+  </data>
+  <data name="EmptyTimelineSectionText" xml:space="preserve">
+    <value>Kürzlich eingefügte Gegenstände tauchen hier auf deiner Zeitleiste auf.</value>
+  </data>
+  <data name="EnableAutopaste" xml:space="preserve">
+    <value>Autoeinfügen aktivieren</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="ErrorWhilstOverridingReference" xml:space="preserve">
+    <value>Fehler beim Überschreiben der Referenz. Fehler: {0}</value>
+  </data>
+  <data name="FileSizeRuleDoesNotApplyToFolders" xml:space="preserve">
+    <value>Dateigrößenregel wird nicht auf Ordner angewandt.</value>
+  </data>
+  <data name="FindNext" xml:space="preserve">
+    <value>Nächste finden</value>
+  </data>
+  <data name="FindPrevious" xml:space="preserve">
+    <value>Vorherige finden</value>
+  </data>
+  <data name="HomePageTargetAutopasteDescription" xml:space="preserve">
+    <value>Rechtsklicke gewünschte Sammlung und setze sie als ein Autoeinfügen-Ziel</value>
+  </data>
+  <data name="HomePageTargetAutopasteTitle" xml:space="preserve">
+    <value>Autoeinfügen-Ziel auswählen</value>
+  </data>
+  <data name="InfiniteCanvasIsEmpty" xml:space="preserve">
+    <value>Unbegrenzte Leinwand ist leer</value>
+  </data>
+  <data name="InvalidFile" xml:space="preserve">
+    <value>Ungültige Datei.</value>
+  </data>
+  <data name="NoItemsToPreview" xml:space="preserve">
+    <value>Es gibt keine Gegenstände zur Vorschau.</value>
+  </data>
+  <data name="OOBECollectionPreviewDescription" xml:space="preserve">
+    <value>Wechsle in die Vogelperspektive deiner Dateien. Lokalisiere schnell was du brauchst, dank der Suchfunktion in der Sammlungsvorschau.</value>
+  </data>
+  <data name="OOBECollectionPreviewTitle" xml:space="preserve">
+    <value>Vorschau deiner Sammlung</value>
+  </data>
+  <data name="OOBECollectionsDescription" xml:space="preserve">
+    <value>Nutze Sammlungen, um dich rasch in deinen Arbeitsbereichen umherzubewegen. Passe Sie entsprechend deinen Wünschen an. Gruppiere deine Arbeit in getrennten Ordnern.</value>
+  </data>
+  <data name="OOBECollectionsTitle" xml:space="preserve">
+    <value>Verwalte deinen Arbeitsbereich mithilfe von Sammlungen</value>
+  </data>
+  <data name="OOBEFinishDescription" xml:space="preserve">
+    <value>Du bist nun bereit, Clipboard Canvas zu nutzen! Du kannst deine App-Erfahrung in den Einstellungen anpassen.</value>
+  </data>
+  <data name="OOBEFinishTitle" xml:space="preserve">
+    <value>Du bist startklar!</value>
+  </data>
+  <data name="OOBEInfiniteCanvasDescription" xml:space="preserve">
+    <value>Betrachte deine Dateien auf der grenzenlosen Leinwand. Die Unbegrenze Leinwand ist deine Desktop-Pinnwand, die dir erlaubt, deine Arbeit in flexibler Manier zu verwalten. Ziehe deine eingefügten Dateien umher und übernimm die volle Kontrolle über sie.</value>
+  </data>
+  <data name="OOBEInfiniteCanvasTitle" xml:space="preserve">
+    <value>Unbegrenzte Leinwand</value>
+  </data>
+  <data name="OOBEOneCanvasDescription" xml:space="preserve">
+    <value>Füge schnell Inhalt in deine 'Eine Leinwand' ein und interagiere mit ihm. 'Eine Leinwand' gibt dir eine vollformatige, interaktive Vorschau verschiedenster Dateien:
+
+- Bildvorschau
+- Medienvorschau
+- Textvorschau
+- Markdown-Format-Vorschau
+- Ordner- und Datei-Vorschau</value>
+  </data>
+  <data name="OOBEOneCanvasTitle" xml:space="preserve">
+    <value>'Eine Leinwand'</value>
+  </data>
+  <data name="OOBEReferenceFilesDescription" xml:space="preserve">
+    <value>Mit Referenz-Dateien brauchst du dich nicht um eine volle Festplatte zu sorgen. Referenzierte Dateien sparen Platz, indem sie eine auf die Originaldatei verweisende Referenz speichern. Dank Clipboard Canvas' nahtloser Integration funktionieren referenzierte Dateien sowohl in der 'Einen Leinwand' sowie der 'Unbegrenzten Leinwand' einwandfrei.</value>
+  </data>
+  <data name="OOBEReferenceFilesTitle" xml:space="preserve">
+    <value>Spare Speicherplatz mit Referenz-Dateien</value>
+  </data>
+  <data name="OOBETimelineDescription" xml:space="preserve">
+    <value>Verpasse keine(n) Datei oder Ordner mit der Zeitleiste auf deiner Startseite. Die Zeitleiste verfolgt kürzlich eingefügte Gegenstände, damit du dir keine Sorgen vor irgendetwas Unbemerktem machen musst.</value>
+  </data>
+  <data name="OOBETimelineTitle" xml:space="preserve">
+    <value>Erhalte eine Analyse der kürzlichen Aktivitäten auf deiner Zeitleiste</value>
+  </data>
+  <data name="OOBEWelcomeDescription" xml:space="preserve">
+    <value>Danke, dass du Clipboard Canvas ausprobierst! Um dir den Start zu erleichtern, wird dich diese Präsentation durch die wichtigsten Funktionen dieses Programms führen.</value>
+  </data>
+  <data name="OOBEWelcomeTitle" xml:space="preserve">
+    <value>Welcome to Clipboard Canvas!</value>
+  </data>
+  <data name="OpenCanvas" xml:space="preserve">
+    <value>Leinwand öffnen</value>
+  </data>
+  <data name="OpenCollectionLocation" xml:space="preserve">
+    <value>Sammlungsort öffnen</value>
+  </data>
+  <data name="OpenContainingFolder" xml:space="preserve">
+    <value>Enthaltenden Ordner öffnen</value>
+  </data>
+  <data name="OpenFile" xml:space="preserve">
+    <value>Datei öffnen</value>
+  </data>
+  <data name="OpenInfiniteCanvasFolder" xml:space="preserve">
+    <value>'Unbegrenzte Leinwand'-Ordner öffnen</value>
+  </data>
+  <data name="OpenNewCanvas" xml:space="preserve">
+    <value>Neue Leinwand öffnen</value>
+  </data>
+  <data name="OpenNewInfiniteCanvas" xml:space="preserve">
+    <value>Neue 'Unbegrenzte Leinwand' öffnen</value>
+  </data>
+  <data name="OpenReferenceContainingFolder" xml:space="preserve">
+    <value>Referenz-enthaltenden Ordner öffnen</value>
+  </data>
+  <data name="OpenSettings" xml:space="preserve">
+    <value>Einstellungen öffnen</value>
+  </data>
+  <data name="OperationCanceled" xml:space="preserve">
+    <value>Der Vorgang wurde abgebrochen.</value>
+  </data>
+  <data name="OverwriteReference" xml:space="preserve">
+    <value>Referenz einfügen</value>
+  </data>
+  <data name="PastedAsReference" xml:space="preserve">
+    <value>Datei als Referenz eingefügt</value>
+  </data>
+  <data name="PastedAsReferenceDescription" xml:space="preserve">
+    <value>Diese Datei wurde als Referenz auf die Originaldatei eingefügt. Clipboard Canvas lädt die referenzierte Originialdatei.
+
+Du kannst die Referenz überschreiben und den Gegenstand direkt in diese Sammlung kopieren, indem du den unteren Knopf drückst.</value>
+  </data>
+  <data name="PasteFromClipboard" xml:space="preserve">
+    <value>Aus der Zwischenablage einfügen</value>
+  </data>
+  <data name="ReferenceFiles" xml:space="preserve">
+    <value>Referenz-Dateien</value>
+  </data>
+  <data name="ReloadCollection" xml:space="preserve">
+    <value>Sammlung neu laden</value>
+  </data>
+  <data name="RemoveCollection" xml:space="preserve">
+    <value>Sammlung entfernen</value>
+  </data>
+  <data name="RemoveFromTimelineSection" xml:space="preserve">
+    <value>Aus dieser Sammlung entfernen</value>
+  </data>
+  <data name="RemoveIcon" xml:space="preserve">
+    <value>Icon entfernen</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Umbenennen</value>
+  </data>
+  <data name="ResetItemPositions" xml:space="preserve">
+    <value>Gegenstandspositionen zurücksetzen</value>
+  </data>
+  <data name="RestartApplication" xml:space="preserve">
+    <value>Programm neustarten</value>
+  </data>
+  <data name="RestrictedAccess" xml:space="preserve">
+    <value>Beschränkter Zugang</value>
+  </data>
+  <data name="RestrictedAccessDescription1" xml:space="preserve">
+    <value>Clipboard Canvas benötigt die Berechtigung, auf das Dateisystem zuzugreifen, um richtig zu funktionieren. Ohne die Berechtigung werden einige Funktionen gesperrt oder limitiert.</value>
+  </data>
+  <data name="RestrictedAccessDescription2" xml:space="preserve">
+    <value>Du kannst die Berechtigung in den Einstellungen erteilen, woraufhin das Programm geschlossen wird.</value>
+  </data>
+  <data name="RestrictedAccessDescription3" xml:space="preserve">
+    <value>Du kannst auch im 'Beschränkter Zugang'-Modus fortfahren. Klicke für mehr Informationen.</value>
+  </data>
+  <data name="RestrictedAccessTitleTooltip" xml:space="preserve">
+    <value>Clipboard Canvas ist zurzeit im 'Beschränkter Zugang'-Modus. Klicke für mehr Informationen.</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>Erneut versuchen</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Suche</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Alles auswählen</value>
+  </data>
+  <data name="SetAsAutopasteTarget" xml:space="preserve">
+    <value>Als Autoeinfügen-Ziel setzen</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="SettingsAbout" xml:space="preserve">
+    <value>Über</value>
+  </data>
+  <data name="SettingsAboutPageAppVersion" xml:space="preserve">
+    <value>Version {0}</value>
+  </data>
+  <data name="SettingsAboutPageOpenLogLocation" xml:space="preserve">
+    <value>Protokolldateien-Speicherort öffnen</value>
+  </data>
+  <data name="SettingsAboutPagePrivacyPolicy" xml:space="preserve">
+    <value>Datenschutzerklärung</value>
+  </data>
+  <data name="SettingsAboutPagePrivacyPolicyError" xml:space="preserve">
+    <value>Beim Laden der Datenschutzerklärung ist ein Fehler aufgetreten</value>
+  </data>
+  <data name="SettingsAboutPagePullingPrivacyPolicy" xml:space="preserve">
+    <value>Lädt Clipboard Canvas' Datenschutzerklärung aus GitHub</value>
+  </data>
+  <data name="SettingsAboutPageReleaseNotes" xml:space="preserve">
+    <value>Versionshinweise</value>
+  </data>
+  <data name="SettingsAboutPageStarOnGitHub" xml:space="preserve">
+    <value>Clipboard Canvas in GitHub einen Stern geben</value>
+  </data>
+  <data name="SettingsAboutPageSubmitFeedback" xml:space="preserve">
+    <value>Rückmeldung abgeben</value>
+  </data>
+  <data name="SettingsAboutPageViewIntroductionPage" xml:space="preserve">
+    <value>Einführungsansicht anzeigen</value>
+  </data>
+  <data name="SettingsGeneral" xml:space="preserve">
+    <value>Allgemein</value>
+  </data>
+  <data name="SettingsGeneralPageDefaultLanguage" xml:space="preserve">
+    <value>Windows' Standard</value>
+  </data>
+  <data name="SettingsGeneralPageInfiniteCanvasAsDefault" xml:space="preserve">
+    <value>'Unbegrenzte Leinwand' als Standard nutzen</value>
+  </data>
+  <data name="SettingsGeneralPageLanguage" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+  <data name="SettingsGeneralPagePermanentDeletionAsDefault" xml:space="preserve">
+    <value>Dateien standardmäßig dauerhaft löschen</value>
+  </data>
+  <data name="SettingsGeneralPageShowDeleteConfirmation" xml:space="preserve">
+    <value>Bestätigungsdialog beim Löschen von Gegenständen anzeigen</value>
+  </data>
+  <data name="SettingsGeneralPageShowTimelineWidget" xml:space="preserve">
+    <value>Zeitleistenwidget auf der Startseite anzeigen</value>
+  </data>
+  <data name="SettingsNotifications" xml:space="preserve">
+    <value>Benachrichtigungen</value>
+  </data>
+  <data name="SettingsNotificationsPageShowAutopasteFailedNotification" xml:space="preserve">
+    <value>Eine Benachrichtigung bei fehlerhaftem Autoeinfügen anzeigen</value>
+  </data>
+  <data name="SettingsNotificationsPageShowAutopasteNotification" xml:space="preserve">
+    <value>Eine Benachrichtigung bei beginnendem Autoeinfügen anzeigen</value>
+  </data>
+  <data name="SettingsNotificationsPageShowCrashNotification" xml:space="preserve">
+    <value>Bei Programmabstürzen Fehlermeldung anzeigen</value>
+  </data>
+  <data name="SettingsPasting" xml:space="preserve">
+    <value>Einfügen</value>
+  </data>
+  <data name="SettingsPastingPageOpenNewCanvas" xml:space="preserve">
+    <value>Beim Einfügen eine neue Leinwand öffnen</value>
+  </data>
+  <data name="SettingsPastingPagePasteAsReference" xml:space="preserve">
+    <value>Dateien als Referenz einfügen</value>
+  </data>
+  <data name="SettingsPastingPageReferenceFilesInfo" xml:space="preserve">
+    <value>Referenz-Dateien erlauben dir das Einfügen von Dateien ohne Kopien dieser zu erstellen. Wird diese Einstellung aktiviert, wird jede Datei als Referenz eingefügt.
+
+Eine auf die Originaldatei verweisende Referenz-Datei wird erstellt, welche nahtlos durch Clipboard Canvas dargestellt wird.</value>
+  </data>
+  <data name="SettingsPastingPageRestrictedAccessWarning" xml:space="preserve">
+    <value>Diese Einstellung kann im 'Beschränkter Zugang'-Modus nicht aktiviert werden.</value>
+  </data>
+  <data name="SettingsPastingPageUseMarkdownAsDefault" xml:space="preserve">
+    <value>Markdown-Format statt Textdatei verwenden</value>
+  </data>
+  <data name="ShowInCollection" xml:space="preserve">
+    <value>In Sammlung anzeigen</value>
+  </data>
+  <data name="StatusCenter" xml:space="preserve">
+    <value>Status-Center</value>
+  </data>
+  <data name="StatusCenterCompleted" xml:space="preserve">
+    <value>0.00% abgeschlossen</value>
+  </data>
+  <data name="StatusCenterOperationCanceled" xml:space="preserve">
+    <value>Der Vorgang wurde abgebrochen</value>
+  </data>
+  <data name="StatusCenterOperationCanceledTitle" xml:space="preserve">
+    <value>Vorgang abgebrochen</value>
+  </data>
+  <data name="StatusCenterOperationComplete" xml:space="preserve">
+    <value>Der Vorgang ist abgeschlossen</value>
+  </data>
+  <data name="StatusCenterOperationCompleteTitle" xml:space="preserve">
+    <value>Vorgang abgeschlossen</value>
+  </data>
+  <data name="StatusCenterOverwritingReferenceCanceled" xml:space="preserve">
+    <value>Überschreiben der Referenz abgebrochen</value>
+  </data>
+  <data name="StatusCenterOverwritingReferenceComplete" xml:space="preserve">
+    <value>Überschreiben der Referenz erfolgreich</value>
+  </data>
+  <data name="StatusCenterPastingCanceled" xml:space="preserve">
+    <value>Einfügen wurde abgebrochen</value>
+  </data>
+  <data name="StatusCenterPastingComplete" xml:space="preserve">
+    <value>Einfügen erfolgreich</value>
+  </data>
+  <data name="StatusCenterPercentCompleted" xml:space="preserve">
+    <value>{0}% abgeschlossen</value>
+  </data>
+  <data name="StatusCenterProcessing" xml:space="preserve">
+    <value>Arbeitet...</value>
+  </data>
+  <data name="StatusCenterStarting" xml:space="preserve">
+    <value>Startet...</value>
+  </data>
+  <data name="String" xml:space="preserve">
+    <value>Willkommen in Clipboard Canvas!</value>
+  </data>
+  <data name="SwitchToInfiniteCanvas" xml:space="preserve">
+    <value>Zur 'Unbegrenzten Leinwand' wechseln</value>
+  </data>
+  <data name="SwitchToOneCanvas" xml:space="preserve">
+    <value>Zur Einen Leinwand' wechseln</value>
+  </data>
+  <data name="Timeline" xml:space="preserve">
+    <value>Zeitleiste</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>Ein unbekannter Fehler ist aufgetreten.</value>
+  </data>
+  <data name="ViewOnGitHub" xml:space="preserve">
+    <value>In GitHub ansehen</value>
+  </data>
+</root>
