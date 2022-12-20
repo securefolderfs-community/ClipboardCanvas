@@ -47,7 +47,7 @@
     <GenerateTestArtifacts>False</GenerateTestArtifacts>
     <DefaultLanguage>en-US</DefaultLanguage>
     <AppxBundleAutoResourcePackageQualifiers>Scale|DXFeatureLevel</AppxBundleAutoResourcePackageQualifiers>
-    <AppxDefaultResourceQualifiers>Language=en-US;pt-PT;ro-RO;ru-RU;zh-CN</AppxDefaultResourceQualifiers>
+    <AppxDefaultResourceQualifiers>Language=en-US;de-DE;pt-PT;ro-RO;ru-RU;zh-CN</AppxDefaultResourceQualifiers>
     <AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
     <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
@@ -132,6 +132,7 @@
     <Content Include="Images\Wide310x150Logo.scale-150.png" />
     <Content Include="Images\Wide310x150Logo.scale-200.png" />
     <Content Include="Images\Wide310x150Logo.scale-400.png" />
+    <None Include="Package.StoreAssociation.xml" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

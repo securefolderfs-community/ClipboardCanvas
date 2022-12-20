@@ -36,7 +36,7 @@ namespace ClipboardCanvas.AttachedProperties
                 return;
             }
 
-            IEnumerable<MenuFlyoutItemBase> flyoutItems = FlyoutHelpers.GetMenuFlyoutItems(newItems.Cast<BaseMenuFlyoutItemViewModel>().ToList());
+            IEnumerable<MenuFlyoutItemBase> flyoutItems = FlyoutHelpers.GetMenuFlyoutItems(collection);
 
             menuFlyout.Items.Clear();
             foreach (var item in flyoutItems)

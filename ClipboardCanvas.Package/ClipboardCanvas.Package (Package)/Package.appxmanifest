@@ -25,6 +25,7 @@
 
   <Resources>
 	<Resource Language="en-US"/>
+	<Resource Language="de-DE"/>
 	<Resource Language="pt-PT"/>
 	<Resource Language="ro-RO"/>
 	<Resource Language="ru-RU"/>
