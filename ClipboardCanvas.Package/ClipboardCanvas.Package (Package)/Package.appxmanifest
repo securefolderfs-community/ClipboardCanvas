@@ -9,7 +9,7 @@
   <Identity
     Name="3515d2dyno.ClipboardCanvas"
     Publisher="CN=5D7DCD3D-745C-4E03-AC4D-F5BFEB54F40E"
-    Version="2.4.0.0" />
+    Version="2.4.1.0" />
 
   <Properties>
     <DisplayName>Clipboard Canvas</DisplayName>
