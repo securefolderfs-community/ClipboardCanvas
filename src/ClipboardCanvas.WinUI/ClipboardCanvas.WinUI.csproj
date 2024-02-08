@@ -37,7 +37,13 @@
 	  
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="ResourceDictionaries\Brushes.xaml" />
+    <None Remove="ResourceDictionaries\ButtonStyles.xaml" />
+    <None Remove="UserControls\DynamicRibbon.xaml" />
+    <None Remove="UserControls\FloatingCardControl.xaml" />
     <None Remove="UserControls\MainAppHost.xaml" />
+    <None Remove="UserControls\NavigationSurfaceControl.xaml" />
+    <None Remove="UserControls\Navigation\FrameNavigationControl.xaml" />
     <None Remove="UserControls\TitleBarControl.xaml" />
   </ItemGroup>
 
@@ -53,6 +59,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.0.240109" />
+    <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.0.240109" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.3" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.3" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230913002" />
@@ -83,6 +90,45 @@
 
   <ItemGroup>
     <Folder Include="UserControls\Host\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Images\TestImage.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Page Update="ResourceDictionaries\Brushes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UserControls\FloatingCardControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="ResouceDictionaries\ButtonStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UserControls\NavigationSurfaceControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UserControls\DynamicRibbon.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UserControls\Navigation\FrameNavigationControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

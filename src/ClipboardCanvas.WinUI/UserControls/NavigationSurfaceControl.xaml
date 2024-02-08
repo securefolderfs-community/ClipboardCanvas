@@ -1,0 +1,31 @@
+<UserControl
+    x:Class="ClipboardCanvas.WinUI.UserControls.NavigationSurfaceControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:ClipboardCanvas.WinUI.UserControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <local:FloatingCardControl>
+        <StackPanel Orientation="Horizontal" Spacing="4">
+            <!--  Back button  -->
+            <Button Command="{x:Bind BackCommand, Mode=OneWay}" Style="{StaticResource NavigationButtonStyle}">
+                <FontIcon Glyph="&#xE76B;" />
+            </Button>
+
+            <!--  Home button  -->
+            <Button
+                Width="88"
+                Command="{x:Bind HomeCommand, Mode=OneWay}"
+                Style="{StaticResource NavigationButtonStyle}">
+                <FontIcon Glyph="&#xE80F;" />
+            </Button>
+
+            <!--  Forward button  -->
+            <Button Command="{x:Bind ForwardCommand, Mode=OneWay}" Style="{StaticResource NavigationButtonStyle}">
+                <FontIcon Glyph="&#xE76C;" />
+            </Button>
+        </StackPanel>
+    </local:FloatingCardControl>
+</UserControl>

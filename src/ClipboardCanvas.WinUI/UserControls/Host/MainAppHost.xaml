@@ -6,6 +6,7 @@
     xmlns:local="using:ClipboardCanvas.WinUI.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="using:ClipboardCanvas.WinUI.UserControls"
+    xmlns:ucn="using:ClipboardCanvas.WinUI.UserControls.Navigation"
     mc:Ignorable="d">
 
     <!--  Root  -->
@@ -16,13 +17,37 @@
         </Grid.RowDefinitions>
 
         <!--  Titlebar  -->
-        <Grid Grid.Row="0">
-            <uc:TitleBarControl
-                x:Name="CustomTitleBar"
-                x:FieldModifier="public"
-                Canvas.ZIndex="10" />
-        </Grid>
+        <uc:TitleBarControl
+            x:Name="CustomTitleBar"
+            Grid.Row="0"
+            HorizontalAlignment="Left"
+            x:FieldModifier="public"
+            Canvas.ZIndex="10" />
 
-        <!-- Main Content -->
+        <!--  Dynamic Ribbon  -->
+        <uc:DynamicRibbon
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Margin="32,24"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Canvas.ZIndex="9" />
+
+        <!--  Main Content  -->
+        <ucn:MainNavigationControl Grid.Row="1" />
+        <Image
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Source="ms-appx:///Images/TestImage.jpg" />
+
+        <!--  Navigation Surface  -->
+        <Grid
+            Grid.Row="1"
+            Padding="32,24"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Canvas.ZIndex="10">
+            <uc:NavigationSurfaceControl />
+        </Grid>
     </Grid>
 </UserControl>

@@ -29,7 +29,7 @@ namespace ClipboardCanvas.WinUI.Helpers
 #endif
 
 #if UNPACKAGED
-            var settingsFolderPath = Path.Combine(Directory.GetCurrentDirectory(), SecureFolderFS.UI.Constants.FileNames.SETTINGS_FOLDER_NAME);
+            var settingsFolderPath = Path.Combine(Directory.GetCurrentDirectory(), ClipboardCanvas.UI.Constants.FileNames.SETTINGS_FOLDER_NAME);
 #else
             var settingsFolderPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, UI.Constants.FileNames.SETTINGS_FOLDER_NAME);
 #endif

@@ -1,0 +1,29 @@
+<UserControl
+    x:Class="ClipboardCanvas.WinUI.UserControls.FloatingCardControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ctwui="using:CommunityToolkit.WinUI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tm="using:CommunityToolkit.WinUI.Media"
+    mc:Ignorable="d">
+
+    <Border>
+        <ctwui:Effects.Shadow>
+            <tm:AttachedCardShadow
+                BlurRadius="21"
+                CornerRadius="8"
+                Opacity="0.16" />
+        </ctwui:Effects.Shadow>
+
+        <Grid
+            Padding="4"
+            Background="{ThemeResource FloatingCardBrush}"
+            CornerRadius="8">
+            <ContentControl
+                VerticalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                Content="{x:Bind CardContent, Mode=OneWay}" />
+        </Grid>
+    </Border>
+</UserControl>

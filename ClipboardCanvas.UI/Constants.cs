@@ -13,7 +13,7 @@
 
         public static class Application
         {
-            public const string MAIN_WINDOW_ID = "SecureFolderFS_mainwindow";
+            public const string MAIN_WINDOW_ID = "ClipboardCanvas_mainwindow";
             public const string EXCEPTION_BLOCK_DATE_FORMAT = "dd.MM.yyyy HH_mm_ss";
             public const string DEFAULT_CULTURE_STRING = "en-US";
         }
