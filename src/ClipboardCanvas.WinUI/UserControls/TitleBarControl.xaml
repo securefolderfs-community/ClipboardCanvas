@@ -1,0 +1,23 @@
+<UserControl
+    x:Class="ClipboardCanvas.WinUI.UserControls.TitleBarControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:ClipboardCanvas.WinUI.UserControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Border
+        Height="32"
+        Padding="16,6"
+        Canvas.ZIndex="10"
+        IsHitTestVisible="True"
+        IsTabStop="False">
+
+        <!--  Title  -->
+        <TextBlock
+            VerticalAlignment="Center"
+            FontSize="12"
+            Text="{x:Bind Title, Mode=OneWay}" />
+    </Border>
+</UserControl>
