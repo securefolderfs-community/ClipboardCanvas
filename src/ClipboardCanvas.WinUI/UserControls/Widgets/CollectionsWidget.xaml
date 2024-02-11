@@ -1,0 +1,95 @@
+<UserControl
+    x:Class="ClipboardCanvas.WinUI.UserControls.Widgets.CollectionsWidget"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:ClipboardCanvas.WinUI.UserControls.Widgets"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:ClipboardCanvas.Sdk.ViewModels.Widgets"
+    mc:Ignorable="d">
+
+    <StackPanel>
+        <!--  Title  -->
+        <TextBlock
+            FontSize="28"
+            FontWeight="SemiBold"
+            Text="Collections" />
+
+        <!--  Main content  -->
+        <ListView
+            AllowDrop="True"
+            CanReorderItems="True"
+            IsItemClickEnabled="False"
+            ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
+            ReorderMode="Enabled"
+            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+            ScrollViewer.HorizontalScrollMode="Auto"
+            ScrollViewer.VerticalScrollBarVisibility="Disabled"
+            ScrollViewer.VerticalScrollMode="Disabled"
+            SelectionMode="Single">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="vm:CollectionItemViewModel">
+                    <Grid Width="204" Height="128">
+                        <Button
+                            Padding="0"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            CornerRadius="8">
+
+                            <Grid
+                                x:Name="RootGrid"
+                                Padding="8,16"
+                                CornerRadius="{ThemeResource ControlCornerRadius}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+
+                                <!--  Collection icon  -->
+                                <FontIcon
+                                    Grid.Row="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="36"
+                                    Glyph="&#xF0E2;" />
+
+                                <!--  Collection name  -->
+                                <TextBlock
+                                    Grid.Row="1"
+                                    HorizontalAlignment="Center"
+                                    FontSize="18"
+                                    Text="{x:Bind Name, Mode=OneWay}"
+                                    TextTrimming="CharacterEllipsis" />
+                            </Grid>
+                        </Button>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <!--  Spacing  -->
+                    <Setter Property="Margin" Value="8,0,8,15" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <ListViewItemPresenter
+                                    x:Name="Root"
+                                    RevealBackground="{ThemeResource GridViewItemRevealBackground}"
+                                    RevealBorderBrush="{ThemeResource GridViewItemRevealBorderBrush}"
+                                    RevealBorderThickness="0" />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
+    </StackPanel>
+</UserControl>

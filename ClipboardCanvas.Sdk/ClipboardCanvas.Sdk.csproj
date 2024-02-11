@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="OwlCore.Storage" Version="0.9.3" />
   </ItemGroup>
 
   <ItemGroup>
