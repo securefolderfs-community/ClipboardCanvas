@@ -22,8 +22,6 @@ namespace ClipboardCanvas.WinUI.Views
         public HomeView()
         {
             InitializeComponent();
-            ViewModel = new();
-            _ = ViewModel.InitAsync();
         }
 
         /// <inheritdoc/>

@@ -1,9 +1,10 @@
-﻿using ClipboardCanvas.Sdk.Services;
+﻿using ClipboardCanvas.Sdk.Models;
+using ClipboardCanvas.Sdk.Services;
+using ClipboardCanvas.Sdk.ViewModels.Views;
 using ClipboardCanvas.Shared.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
-using OwlCore.Storage;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,17 +12,20 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 {
     public sealed partial class CollectionItemViewModel : ObservableObject, IAsyncInitialize
     {
+        private readonly INavigationService _navigationService;
+        private readonly ICanvasSourceModel _canvasSourceModel;
+        private readonly CanvasViewModel _canvasViewModel;
+
         [ObservableProperty] private string? _Name;
         [ObservableProperty] private IImage? _Icon;
 
         private IFileExplorerService FileExplorerService { get; } = Ioc.Default.GetRequiredService<IFileExplorerService>();
 
-        public IFolder Folder { get; }
-
-        public CollectionItemViewModel(IFolder folder, string? name = null)
+        public CollectionItemViewModel(INavigationService navigationService, ICanvasSourceModel canvasSourceModel)
         {
-            Folder = folder;
-            Name = name ?? folder.Name;
+            _navigationService = navigationService;
+            _canvasSourceModel = canvasSourceModel;
+            _canvasViewModel = new(canvasSourceModel);
         }
 
         /// <inheritdoc/>
@@ -31,15 +35,16 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         }
 
         [RelayCommand]
-        private Task OpenCollectionAsync(CancellationToken cancellationToken)
+        private async Task OpenCollectionAsync(CancellationToken cancellationToken)
         {
-            return Task.CompletedTask;
+            // Each vm will bind to the same view but will bind to different data (each canvas vm)
+            await _navigationService.NavigateAsync(_canvasViewModel);
         }
 
         [RelayCommand]
         private Task ShowInFileExplorerAsync(CancellationToken cancellationToken)
         {
-            return FileExplorerService.OpenInFileExplorerAsync(Folder, cancellationToken);
+            return FileExplorerService.OpenInFileExplorerAsync(_canvasSourceModel, cancellationToken);
         }
 
         [RelayCommand]

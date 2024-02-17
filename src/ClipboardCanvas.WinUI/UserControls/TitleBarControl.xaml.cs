@@ -13,12 +13,12 @@ namespace ClipboardCanvas.WinUI.UserControls
             InitializeComponent();
         }
 
-        public string Title
+        public string? Title
         {
-            get => (string)GetValue(TitleProperty);
+            get => (string?)GetValue(TitleProperty);
             set => SetValue(TitleProperty, value);
         }
         public static readonly DependencyProperty TitleProperty =
-            DependencyProperty.Register(nameof(Title), typeof(string), typeof(TitleBarControl), new PropertyMetadata("Clipboard Canvas"));
+            DependencyProperty.Register(nameof(Title), typeof(string), typeof(TitleBarControl), new PropertyMetadata(null));
     }
 }

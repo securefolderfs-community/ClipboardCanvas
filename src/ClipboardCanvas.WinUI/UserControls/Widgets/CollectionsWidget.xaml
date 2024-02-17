@@ -36,6 +36,7 @@
                         PointerPressed="CollectionItem_PointerPressed"
                         Tapped="CollectionItem_Tapped">
 
+                        <!--  TODO: Is shadow needed here? It's currently not working anyway...  -->
                         <ctwui:Effects.Shadow>
                             <tm:AttachedCardShadow
                                 BlurRadius="21"

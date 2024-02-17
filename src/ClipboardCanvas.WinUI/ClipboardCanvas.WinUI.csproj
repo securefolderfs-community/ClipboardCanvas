@@ -47,6 +47,7 @@
     <None Remove="UserControls\Navigation\FrameNavigationControl.xaml" />
     <None Remove="UserControls\TitleBarControl.xaml" />
     <None Remove="UserControls\Widgets\CollectionsWidget.xaml" />
+    <None Remove="Views\CanvasView.xaml" />
     <None Remove="Views\HomeView.xaml" />
   </ItemGroup>
 
@@ -99,6 +100,9 @@
     <None Update="Images\TestImage.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\CanvasView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="ResourceDictionaries\ListViews.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

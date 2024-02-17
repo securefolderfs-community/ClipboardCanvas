@@ -10,13 +10,13 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls
 {
     public sealed partial class NavigationViewModel : ObservableObject
     {
-        private readonly INavigationService _navigationService;
-
         [ObservableProperty] private bool _IsNavigationVisible;
+        public INavigationService NavigationService { get; }
 
         public NavigationViewModel(INavigationService navigationService)
         {
-            _navigationService = navigationService;
+            NavigationService = navigationService;
+            IsNavigationVisible = true;
         }
 
         [RelayCommand]
@@ -35,7 +35,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls
         private async Task NavigateHomeAsync(CancellationToken cancellationToken)
         {
             IsNavigationVisible = false;
-            await _navigationService.TryNavigateAsync(() => new HomeViewModel());
+            await NavigationService.TryNavigateAsync(() => new HomeViewModel(this));
         }
     }
 }

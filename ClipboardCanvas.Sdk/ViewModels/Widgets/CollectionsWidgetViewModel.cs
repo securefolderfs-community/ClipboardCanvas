@@ -24,10 +24,10 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         /// <inheritdoc/>
         public override Task InitAsync(CancellationToken cancellationToken = default)
         {
-            Items.Add(new(new MemoryFolder("", "Other")));
-            Items.Add(new(new MemoryFolder("", "Vacations")));
-            Items.Add(new(new MemoryFolder("", "Work")));
-            Items.Add(new(new MemoryFolder("", "Media")));
+            //Items.Add(new(new MemoryFolder("", "Other"), null));
+            //Items.Add(new(new MemoryFolder("", "Vacations"), null));
+            //Items.Add(new(new MemoryFolder("", "Work"), null));
+            //Items.Add(new(new MemoryFolder("", "Media"), null));
 
             return Task.CompletedTask;
         }
@@ -39,7 +39,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             if (folder is null)
                 return;
 
-            Items.Add(new CollectionItemViewModel(folder).WithInitAsync(cancellationToken));
+            //Items.Add(new CollectionItemViewModel(folder).WithInitAsync(cancellationToken));
         }
     }
 }

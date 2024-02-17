@@ -15,4 +15,8 @@
     <ProjectReference Include="..\ClipboardCanvas.Shared\ClipboardCanvas.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="AppModels\" />
+  </ItemGroup>
+
 </Project>

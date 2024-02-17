@@ -12,7 +12,8 @@ namespace ClipboardCanvas.WinUI.UserControls.Navigation
         /// <inheritdoc/>
         public override Dictionary<Type, Type> TypeBinding { get; } = new()
         {
-            { typeof(HomeViewModel), typeof(HomeView) } 
+            { typeof(HomeViewModel), typeof(HomeView) },
+            { typeof(CanvasViewModel), typeof(CanvasView) }
         };
 
         /// <inheritdoc/>

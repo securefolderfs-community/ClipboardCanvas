@@ -10,6 +10,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
 {
     public sealed partial class MainAppViewModel : ObservableObject, IAsyncInitialize
     {
+        [ObservableProperty] private string _AppTitle;
+
         public INavigationService NavigationService { get; } = Ioc.Default.GetRequiredService<INavigationService>();
 
         public NavigationViewModel NavigationViewModel { get; }
@@ -17,12 +19,20 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
         public MainAppViewModel()
         {
             NavigationViewModel = new(NavigationService);
+            AppTitle = "Clipboard Canvas";
+
+            NavigationService.NavigationChanged += NavigationService_NavigationChanged;
         }
 
         /// <inheritdoc/>
         public Task InitAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
+        }
+
+        private void NavigationService_NavigationChanged(object? sender, IViewDesignation? e)
+        {
+            AppTitle = e?.Title ?? AppTitle;
         }
     }
 }
