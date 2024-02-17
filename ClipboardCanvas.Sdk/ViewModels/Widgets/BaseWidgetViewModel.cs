@@ -7,7 +7,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 {
     public abstract partial class BaseWidgetViewModel : ObservableObject, IAsyncInitialize, IViewable
     {
-        [ObservableProperty] private string _Title;
+        [ObservableProperty] private string? _Title;
 
         /// <inheritdoc/>
         public abstract Task InitAsync(CancellationToken cancellationToken = default);

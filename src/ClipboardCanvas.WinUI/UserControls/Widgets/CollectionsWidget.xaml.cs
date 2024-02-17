@@ -16,6 +16,42 @@ namespace ClipboardCanvas.WinUI.UserControls.Widgets
             InitializeComponent();
         }
 
+        private void CollectionItem_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            if (sender is not Border control)
+                return;
+
+            control.Background = (Brush)Resources["ButtonBackgroundPointerOver"];
+            control.BorderBrush = (Brush)Resources["ButtonBorderBrushPointerOver"];
+        }
+
+        private void CollectionItem_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            if (sender is not Border control)
+                return;
+
+            control.Background = (Brush)Resources["ButtonBackground"];
+            control.BorderBrush = (Brush)Resources["ButtonBorderBrush"];
+        }
+
+        private void CollectionItem_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (sender is not Border control)
+                return;
+
+            control.Background = (Brush)Resources["ButtonBackgroundPressed"];
+            control.BorderBrush = (Brush)Resources["ButtonBorderBrushPressed"];
+        }
+
+        private void CollectionItem_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (sender is not Border control)
+                return;
+
+            control.Background = (Brush)Resources["ButtonBackgroundPointerOver"];
+            control.BorderBrush = (Brush)Resources["ButtonBorderBrushPointerOver"];
+        }
+
         public IList? ItemsSource
         {
             get => (IList?)GetValue(ItemsSourceProperty);
@@ -23,32 +59,5 @@ namespace ClipboardCanvas.WinUI.UserControls.Widgets
         }
         public static readonly DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register(nameof(ItemsSource), typeof(IList), typeof(CollectionsWidget), new PropertyMetadata(null));
-
-        private void RootGrid_PointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            if (sender is not Grid rootGrid)
-                return;
-
-            rootGrid.Background = (Brush)Resources["ButtonBackgroundPressed"];
-            rootGrid.BorderBrush = (Brush)Resources["ButtonBorderBrushPressed"];
-        }
-
-        private void RootGrid_PointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            if (sender is not Grid rootGrid)
-                return;
-
-            rootGrid.Background = (Brush)Resources["ButtonBackgroundPointerOver"];
-            rootGrid.BorderBrush = (Brush)Resources["ButtonBorderBrushPointerOver"];
-        }
-
-        private void RootGrid_PointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            if (sender is not Grid rootGrid)
-                return;
-
-            rootGrid.Background = (Brush)Resources["ButtonBackground"];
-            rootGrid.BorderBrush = (Brush)Resources["ButtonBorderBrush"];
-        }
     }
 }

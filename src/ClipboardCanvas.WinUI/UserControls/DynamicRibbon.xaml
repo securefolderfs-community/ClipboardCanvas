@@ -5,7 +5,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.WinUI.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vc="using:ClipboardCanvas.WinUI.ValueConverters"
     mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <vc:NullToBoolConverter x:Key="NullToBoolConverter" />
+    </UserControl.Resources>
 
     <local:FloatingCardControl>
         <CommandBar
@@ -18,11 +23,13 @@
             <CommandBar.Content>
                 <!--  File name  -->
                 <TextBlock
+                    x:Name="Title"
                     Margin="8,14,8,0"
                     VerticalAlignment="Center"
+                    x:Load="{x:Bind ToolBarTitle, Mode=OneWay, Converter={StaticResource NullToBoolConverter}}"
                     FontSize="12"
                     Opacity="0.7"
-                    Text="FileName.png" />
+                    Text="{x:Bind ToolBarTitle, Mode=OneWay}" />
             </CommandBar.Content>
 
             <!--  Actions  -->

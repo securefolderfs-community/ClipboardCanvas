@@ -10,6 +10,11 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
     {
         public ObservableCollection<CollectionItemViewModel> Items { get; } = new();
 
+        public CollectionsWidgetViewModel()
+        {
+            Title = "Collections";
+        }
+
         /// <inheritdoc/>
         public override Task InitAsync(CancellationToken cancellationToken = default)
         {

@@ -32,7 +32,8 @@
             Margin="32,24"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
-            Canvas.ZIndex="9" />
+            Canvas.ZIndex="9"
+            ToolBarTitle="FileName.png" />
 
         <!--  Main Content  -->
         <ucn:MainNavigationControl Grid.Row="0" Grid.RowSpan="3" />
