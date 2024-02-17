@@ -1,5 +1,6 @@
 ﻿using ClipboardCanvas.Sdk.ViewModels.Widgets;
 using ClipboardCanvas.Shared.ComponentModel;
+using ClipboardCanvas.Shared.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Threading;
@@ -7,17 +8,32 @@ using System.Threading.Tasks;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Views
 {
-    public sealed partial class HomeViewModel : ObservableObject, IAsyncInitialize
+    public sealed partial class HomeViewModel : ObservableObject, IViewDesignation, IAsyncInitialize
     {
+        [ObservableProperty] private string _Title;
+
         public ObservableCollection<BaseWidgetViewModel> Widgets { get; } = new();
 
-        /// <inheritdoc/>
-        public async Task InitAsync(CancellationToken cancellationToken = default)
+        public HomeViewModel()
         {
-            var widget = new CollectionsWidgetViewModel();
-            Widgets.Add(widget);
+            Title = "Clipboard Canvas";
+        }
 
-            await widget.InitAsync(cancellationToken);
+        /// <inheritdoc/>
+        public Task InitAsync(CancellationToken cancellationToken = default)
+        {
+            Widgets.Add(new CollectionsWidgetViewModel().WithInitAsync(cancellationToken));
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc/>
+        public void OnAppearing()
+        {
+        }
+
+        /// <inheritdoc/>
+        public void OnDisappearing()
+        {
         }
     }
 }

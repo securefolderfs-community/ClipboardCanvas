@@ -1,3 +1,7 @@
+using ClipboardCanvas.Sdk.ViewModels.Views;
+using ClipboardCanvas.UI.Helpers;
+using ClipboardCanvas.UI.Utils;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -11,5 +15,22 @@ namespace ClipboardCanvas.WinUI.UserControls.Host
         {
             InitializeComponent();
         }
+
+        private void Navigation_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (sender is not INavigationControl navigationControl)
+                return;
+
+            ViewModel.NavigationService.SetupNavigation(navigationControl);
+            _ = ViewModel.InitAsync();
+        }
+
+        public MainAppViewModel ViewModel
+        {
+            get => (MainAppViewModel)GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
+        }
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register(nameof(ViewModel), typeof(MainAppViewModel), typeof(MainAppHost), new PropertyMetadata(null));
     }
 }

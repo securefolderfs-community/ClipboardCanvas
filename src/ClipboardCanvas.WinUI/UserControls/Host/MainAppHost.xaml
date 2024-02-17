@@ -36,8 +36,10 @@
             ToolBarTitle="FileName.png" />
 
         <!--  Main Content  -->
-        <ucn:MainNavigationControl Grid.Row="0" Grid.RowSpan="3" />
-        <vw:HomeView Grid.Row="0" Grid.RowSpan="3" />
+        <ucn:MainNavigationControl
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            Loaded="Navigation_Loaded" />
 
         <!--  Navigation Surface  -->
         <Grid
@@ -46,7 +48,10 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
             Canvas.ZIndex="10">
-            <uc:NavigationSurfaceControl />
+            <uc:NavigationSurfaceControl
+                BackCommand="{x:Bind ViewModel.NavigationViewModel.NavigateBackCommand}"
+                ForwardCommand="{x:Bind ViewModel.NavigationViewModel.NavigateForwardCommand}"
+                HomeCommand="{x:Bind ViewModel.NavigationViewModel.NavigateHomeCommand}" />
         </Grid>
     </Grid>
 </UserControl>

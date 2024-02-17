@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using ClipboardCanvas.Sdk.Services;
+using ClipboardCanvas.Shared.Extensions;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 
@@ -38,10 +39,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             if (folder is null)
                 return;
 
-            var collection = new CollectionItemViewModel(folder);
-            Items.Add(collection);
-
-            _ = collection.InitAsync(cancellationToken);
+            Items.Add(new CollectionItemViewModel(folder).WithInitAsync(cancellationToken));
         }
     }
 }

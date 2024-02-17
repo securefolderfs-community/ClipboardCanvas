@@ -13,5 +13,5 @@
         <MicaBackdrop />
     </winuiex:WindowEx.SystemBackdrop>
 
-    <uch:MainAppHost x:Name="AppControl" />
+    <uch:MainAppHost x:Name="AppControl" ViewModel="{x:Bind MainViewModel.AppViewModel, Mode=OneWay}" />
 </winuiex:WindowEx>

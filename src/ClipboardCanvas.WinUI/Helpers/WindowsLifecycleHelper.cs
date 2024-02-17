@@ -44,8 +44,13 @@ namespace ClipboardCanvas.WinUI.Helpers
         protected override IServiceCollection ConfigureServices(IModifiableFolder settingsFolder)
         {
             return new ServiceCollection()
-                .AddSingleton<IFileExplorerService, WindowsFileExplorerService>()
-                ;
+                    
+                    // Singleton services
+                    .AddSingleton<IFileExplorerService, WindowsFileExplorerService>()
+
+                    // Transient services
+                    .AddTransient<INavigationService, WindowsNavigationService>()
+                    ;
         }
     }
 }

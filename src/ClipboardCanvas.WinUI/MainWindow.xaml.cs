@@ -1,3 +1,4 @@
+using ClipboardCanvas.Sdk.ViewModels;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using WinUIEx;
@@ -14,6 +15,8 @@ namespace ClipboardCanvas.WinUI
     {
         private static MainWindow? _Instance;
         public static MainWindow Instance => _Instance ??= new();
+
+        public MainViewModel MainViewModel { get; } = new();
 
         public MainWindow()
         {
