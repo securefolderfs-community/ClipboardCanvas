@@ -8,12 +8,12 @@
     xmlns:ts="using:ClipboardCanvas.WinUI.TemplateSelectors"
     xmlns:ucw="using:ClipboardCanvas.WinUI.UserControls.Widgets"
     xmlns:vm="using:ClipboardCanvas.Sdk.ViewModels.Widgets"
-    Margin="0,32,0,0"
+    Margin="0,40,0,0"
     mc:Ignorable="d">
 
     <Page.Resources>
         <DataTemplate x:Key="CollectionsWidgetTemplate" x:DataType="vm:CollectionsWidgetViewModel">
-            <ucw:CollectionsWidget ItemsSource="{x:Bind Items}" />
+            <ucw:CollectionsWidget AddCollectionCommand="{x:Bind AddCollectionCommand}" ItemsSource="{x:Bind Items}" />
         </DataTemplate>
     </Page.Resources>
 
@@ -27,7 +27,7 @@
                         FontWeight="SemiBold"
                         Text="{x:Bind Title, Mode=OneWay}" />
 
-                    <!--  Title  -->
+                    <!--  Content  -->
                     <ContentControl
                         HorizontalContentAlignment="Stretch"
                         VerticalContentAlignment="Stretch"

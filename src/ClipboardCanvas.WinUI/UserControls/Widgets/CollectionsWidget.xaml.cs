@@ -1,8 +1,10 @@
+using ClipboardCanvas.Sdk.ViewModels.Widgets;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System.Collections;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using System.Collections;
+using System.Windows.Input;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -43,13 +45,16 @@ namespace ClipboardCanvas.WinUI.UserControls.Widgets
             control.BorderBrush = (Brush)Resources["ButtonBorderBrushPressed"];
         }
 
-        private void CollectionItem_Tapped(object sender, TappedRoutedEventArgs e)
+        private async void CollectionItem_Tapped(object sender, TappedRoutedEventArgs e)
         {
             if (sender is not Border control)
                 return;
 
             control.Background = (Brush)Resources["ButtonBackgroundPointerOver"];
             control.BorderBrush = (Brush)Resources["ButtonBorderBrushPointerOver"];
+
+            if (control.DataContext is CollectionItemViewModel viewModel)
+                await viewModel.OpenCollectionCommand.ExecuteAsync(null);
         }
 
         public IList? ItemsSource
@@ -59,5 +64,13 @@ namespace ClipboardCanvas.WinUI.UserControls.Widgets
         }
         public static readonly DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register(nameof(ItemsSource), typeof(IList), typeof(CollectionsWidget), new PropertyMetadata(null));
+
+        public ICommand? AddCollectionCommand
+        {
+            get => (ICommand?)GetValue(AddCollectionCommandProperty);
+            set => SetValue(AddCollectionCommandProperty, value);
+        }
+        public static readonly DependencyProperty AddCollectionCommandProperty =
+            DependencyProperty.Register(nameof(AddCollectionCommand), typeof(ICommand), typeof(CollectionsWidget), new PropertyMetadata(null));
     }
 }

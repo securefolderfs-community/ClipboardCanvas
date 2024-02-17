@@ -1,4 +1,6 @@
-﻿using ClipboardCanvas.UI.Helpers;
+﻿using ClipboardCanvas.Sdk.Services;
+using ClipboardCanvas.UI.Helpers;
+using ClipboardCanvas.WinUI.ServiceImplementation;
 using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Storage;
 using OwlCore.Storage.SystemIO;
@@ -42,7 +44,7 @@ namespace ClipboardCanvas.WinUI.Helpers
         protected override IServiceCollection ConfigureServices(IModifiableFolder settingsFolder)
         {
             return new ServiceCollection()
-                // TODO: Add services
+                .AddSingleton<IFileExplorerService, WindowsFileExplorerService>()
                 ;
         }
     }
