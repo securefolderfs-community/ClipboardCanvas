@@ -34,7 +34,22 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Canvas.ZIndex="9"
-            ToolBarTitle="FileName.png" />
+            ToolBarTitle="FileName.png">
+            <anim:Implicit.ShowAnimations>
+                <anim:TranslationAnimation
+                    EasingMode="EaseInOut"
+                    From="0,-45,0"
+                    To="0"
+                    Duration="0:0:0.4" />
+            </anim:Implicit.ShowAnimations>
+            <anim:Implicit.HideAnimations>
+                <anim:TranslationAnimation
+                    EasingMode="EaseInOut"
+                    From="0"
+                    To="0,-45,0"
+                    Duration="0:0:0.3" />
+            </anim:Implicit.HideAnimations>
+        </uc:DynamicRibbon>
 
         <!--  Main Content  -->
         <ucn:MainNavigationControl
@@ -46,16 +61,29 @@
         <Grid
             Grid.Row="2"
             Padding="32,24"
-            HorizontalAlignment="Center"
+            HorizontalAlignment="Stretch"
             VerticalAlignment="Bottom"
             Canvas.ZIndex="10">
             <uc:NavigationSurfaceControl
+                HorizontalAlignment="Center"
                 BackCommand="{x:Bind ViewModel.NavigationViewModel.NavigateBackCommand}"
                 ForwardCommand="{x:Bind ViewModel.NavigationViewModel.NavigateForwardCommand}"
                 HomeCommand="{x:Bind ViewModel.NavigationViewModel.NavigateHomeCommand}"
                 Visibility="{x:Bind ViewModel.NavigationViewModel.IsNavigationVisible, Mode=OneWay}">
-                <anim:Implicit.ShowAnimations />
-                <anim:Implicit.HideAnimations />
+                <anim:Implicit.ShowAnimations>
+                    <anim:TranslationAnimation
+                        EasingMode="EaseInOut"
+                        From="0,32,0"
+                        To="0"
+                        Duration="0:0:0.4" />
+                </anim:Implicit.ShowAnimations>
+                <anim:Implicit.HideAnimations>
+                    <anim:TranslationAnimation
+                        EasingMode="EaseInOut"
+                        From="0,-48,0"
+                        To="0,32,0"
+                        Duration="0:0:0.3" />
+                </anim:Implicit.HideAnimations>
             </uc:NavigationSurfaceControl>
         </Grid>
     </Grid>
