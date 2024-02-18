@@ -8,6 +8,6 @@
     mc:Ignorable="d">
 
     <Grid>
-        <TextBlock Text="New canvas" />
+        <Image Source="ms-appx:///Images/TestImage.jpg" />
     </Grid>
 </Page>

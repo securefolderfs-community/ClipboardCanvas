@@ -11,6 +11,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls
     public sealed partial class NavigationViewModel : ObservableObject
     {
         [ObservableProperty] private bool _IsNavigationVisible;
+
         public INavigationService NavigationService { get; }
 
         public NavigationViewModel(INavigationService navigationService)
