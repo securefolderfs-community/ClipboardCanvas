@@ -1,5 +1,6 @@
 ﻿using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Sdk.Services;
+using ClipboardCanvas.Sdk.ViewModels.Controls;
 using ClipboardCanvas.Sdk.ViewModels.Views;
 using ClipboardCanvas.Shared.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -12,7 +13,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 {
     public sealed partial class CollectionItemViewModel : ObservableObject, IAsyncInitialize
     {
-        private readonly INavigationService _navigationService;
+        private readonly NavigationViewModel _navigationViewModel;
         private readonly ICanvasSourceModel _canvasSourceModel;
         private readonly CanvasViewModel _canvasViewModel;
 
@@ -21,11 +22,12 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 
         private IFileExplorerService FileExplorerService { get; } = Ioc.Default.GetRequiredService<IFileExplorerService>();
 
-        public CollectionItemViewModel(INavigationService navigationService, ICanvasSourceModel canvasSourceModel)
+        public CollectionItemViewModel(ICanvasSourceModel canvasSourceModel, NavigationViewModel navigationViewModel)
         {
-            _navigationService = navigationService;
             _canvasSourceModel = canvasSourceModel;
-            _canvasViewModel = new(canvasSourceModel);
+            _navigationViewModel = navigationViewModel;
+            _canvasViewModel = new(canvasSourceModel, navigationViewModel);
+            Name = canvasSourceModel.Name;
         }
 
         /// <inheritdoc/>
@@ -38,7 +40,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         private async Task OpenCollectionAsync(CancellationToken cancellationToken)
         {
             // Each vm will bind to the same view but will bind to different data (each canvas vm)
-            await _navigationService.NavigateAsync(_canvasViewModel);
+            await _navigationViewModel.NavigationService.NavigateAsync(_canvasViewModel);
         }
 
         [RelayCommand]

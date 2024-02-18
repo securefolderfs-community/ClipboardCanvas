@@ -1,5 +1,6 @@
 ﻿using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.UI.Helpers;
+using ClipboardCanvas.UI.ServiceImplementation;
 using ClipboardCanvas.WinUI.ServiceImplementation;
 using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Storage;
@@ -47,6 +48,7 @@ namespace ClipboardCanvas.WinUI.Helpers
                     
                     // Singleton services
                     .AddSingleton<IFileExplorerService, WindowsFileExplorerService>()
+                    .AddSingleton<IStorageService, SystemStorageService>()
 
                     // Transient services
                     .AddTransient<INavigationService, WindowsNavigationService>()

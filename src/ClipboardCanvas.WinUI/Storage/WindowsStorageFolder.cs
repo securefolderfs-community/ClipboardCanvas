@@ -71,6 +71,7 @@ namespace ClipboardCanvas.WinUI.Storage
                         break;
                     }
 
+                case StorableType.None:
                 default:
                     yield break;
             }

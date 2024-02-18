@@ -26,7 +26,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
         /// <inheritdoc/>
         public Task InitAsync(CancellationToken cancellationToken = default)
         {
-            Widgets.Add(new CollectionsWidgetViewModel().WithInitAsync(cancellationToken));
+            Widgets.Add(new CollectionsWidgetViewModel(_navigationViewModel).WithInitAsync(cancellationToken));
             return Task.CompletedTask;
         }
 

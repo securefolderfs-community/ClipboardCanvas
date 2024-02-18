@@ -5,6 +5,7 @@
         <ResourceDictionary x:Key="Light">
             <AcrylicBrush
                 x:Key="FloatingCardBrush"
+                FallbackColor="#D3D3D3"
                 TintColor="#D3D3D3"
                 TintLuminosityOpacity="0.2"
                 TintOpacity="0.35" />
@@ -14,8 +15,9 @@
         <ResourceDictionary x:Key="Dark">
             <AcrylicBrush
                 x:Key="FloatingCardBrush"
-                TintColor="#D3D3D3"
-                TintLuminosityOpacity="0.2"
+                FallbackColor="#FF2C2C2C"
+                TintColor="#FF2C2C2C"
+                TintLuminosityOpacity="0.4"
                 TintOpacity="0.2" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
