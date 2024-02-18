@@ -9,6 +9,12 @@
                 TintColor="#D3D3D3"
                 TintLuminosityOpacity="0.2"
                 TintOpacity="0.35" />
+
+            <LinearGradientBrush x:Key="RibbonShadowBrush" StartPoint="0.5,0" EndPoint="0.5,1">
+                <GradientStop Offset="0.0" Color="#F3F3F3" />
+                <GradientStop Offset="0.3" Color="#CCFFFFFF" />
+                <GradientStop Offset="1" Color="#01F3F3F3" />
+            </LinearGradientBrush>
         </ResourceDictionary>
 
         <!--  DARK  -->
@@ -19,6 +25,12 @@
                 TintColor="#FF2C2C2C"
                 TintLuminosityOpacity="0.4"
                 TintOpacity="0.2" />
+
+            <LinearGradientBrush x:Key="RibbonShadowBrush" StartPoint="0.5,0" EndPoint="0.5,1">
+                <GradientStop Offset="0.0" Color="#202020" />
+                <GradientStop Offset="0.3" Color="#DD202020" />
+                <GradientStop Offset="1" Color="#01202020" />
+            </LinearGradientBrush>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

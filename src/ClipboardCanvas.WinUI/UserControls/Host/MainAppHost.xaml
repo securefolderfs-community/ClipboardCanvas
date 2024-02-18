@@ -42,16 +42,8 @@
             Grid.RowSpan="2"
             Height="96"
             VerticalAlignment="Top"
-            Canvas.ZIndex="8">
-
-            <Rectangle.Fill>
-                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                    <GradientStop Offset="0.0" Color="White" />
-                    <GradientStop Offset="0.3" Color="#CCFFFFFF" />
-                    <GradientStop Offset="1" Color="Transparent" />
-                </LinearGradientBrush>
-            </Rectangle.Fill>
-        </Rectangle>
+            Canvas.ZIndex="8"
+            Fill="{ThemeResource RibbonShadowBrush}" />
 
         <!--  Main Content  -->
         <ucn:MainNavigationControl
