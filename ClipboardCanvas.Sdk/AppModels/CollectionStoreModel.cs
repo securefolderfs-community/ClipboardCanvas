@@ -74,7 +74,7 @@ namespace ClipboardCanvas.Sdk.AppModels
         /// <inheritdoc/>
         public async Task LoadAsync(CancellationToken cancellationToken = default)
         {
-            await Task.WhenAll(CollectionPersistenceService.LoadAsync(cancellationToken), CollectionPersistenceService.LoadAsync(cancellationToken));
+            await CollectionPersistenceService.LoadAsync(cancellationToken);
 
             // Clear previous collections
             Items.Clear();

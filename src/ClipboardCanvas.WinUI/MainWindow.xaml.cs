@@ -1,6 +1,10 @@
+using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.Sdk.ViewModels;
+using ClipboardCanvas.Shared.Extensions;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
 using WinUIEx;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -55,10 +59,15 @@ namespace ClipboardCanvas.WinUI
             AppWindow.Closing += AppWindow_Closing;
         }
 
-        private void AppWindow_Closing(AppWindow sender, AppWindowClosingEventArgs args)
+        private async void AppControl_Loaded(object sender, RoutedEventArgs e)
         {
-            //var settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
-            //await settingsService.TrySaveAsync();
+            await MainViewModel.InitAsync();
+        }
+
+        private async void AppWindow_Closing(AppWindow sender, AppWindowClosingEventArgs args)
+        {
+            var settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+            await settingsService.TrySaveAsync();
         }
     }
 }

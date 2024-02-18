@@ -20,6 +20,10 @@ namespace ClipboardCanvas.UI.ServiceImplementation
         }
 
         /// <inheritdoc/>
-        public IList<CollectionDataModel>? SavedCollections { get; set; }
+        public IList<CollectionDataModel>? SavedCollections
+        {
+            get => GetSetting<List<CollectionDataModel>?>();
+            set => SetSetting(value);
+        }
     }
 }

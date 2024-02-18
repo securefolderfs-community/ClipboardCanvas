@@ -18,5 +18,12 @@
             public const string EXCEPTION_BLOCK_DATE_FORMAT = "dd.MM.yyyy HH_mm_ss";
             public const string DEFAULT_CULTURE_STRING = "en-US";
         }
+
+        public static class AppThemes
+        {
+            public const string LIGHT_THEME = "LIGHT";
+            public const string DARK_THEME = "DARK";
+            public const string THEME_PREFERENCE_SETTING = "ImmersiveTheme";
+        }
     }
 }

@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using System.Threading;
 using System.Threading.Tasks;
+using ClipboardCanvas.Sdk.Models;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Views
 {
@@ -16,9 +17,9 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
 
         public NavigationViewModel NavigationViewModel { get; }
 
-        public MainAppViewModel()
+        public MainAppViewModel(ICollectionStoreModel collectionStoreModel)
         {
-            NavigationViewModel = new(NavigationService);
+            NavigationViewModel = new(collectionStoreModel, NavigationService);
             AppTitle = "Clipboard Canvas";
 
             NavigationService.NavigationChanged += NavigationService_NavigationChanged;

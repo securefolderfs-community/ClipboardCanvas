@@ -47,9 +47,10 @@ namespace ClipboardCanvas.WinUI.Helpers
             return new ServiceCollection()
                     
                     // Singleton services
-                    .AddSingleton<ICollectionPersistenceService, CollectionPersistenceService>()
+                    .AddSingleton<ICollectionPersistenceService, CollectionPersistenceService>(_ => new(settingsFolder))
                     .AddSingleton<IFileExplorerService, WindowsFileExplorerService>()
                     .AddSingleton<IStorageService, SystemStorageService>()
+                    .AddSingleton<ISettingsService, SettingsService>(_ => new(settingsFolder))
 
                     // Transient services
                     .AddTransient<INavigationService, WindowsNavigationService>()

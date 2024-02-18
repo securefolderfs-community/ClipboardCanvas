@@ -6,19 +6,22 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
+using ClipboardCanvas.Sdk.Models;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Views
 {
     public sealed partial class HomeViewModel : ObservableObject, IViewDesignation, IAsyncInitialize
     {
+        private readonly ICollectionStoreModel _collectionStoreModel;
         private readonly NavigationViewModel _navigationViewModel;
 
         [ObservableProperty] private string? _Title;
 
         public ObservableCollection<BaseWidgetViewModel> Widgets { get; } = new();
 
-        public HomeViewModel(NavigationViewModel navigationViewModel)
+        public HomeViewModel(ICollectionStoreModel collectionStoreModel, NavigationViewModel navigationViewModel)
         {
+            _collectionStoreModel = collectionStoreModel;
             _navigationViewModel = navigationViewModel;
             Title = "Clipboard Canvas";
         }
@@ -26,7 +29,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
         /// <inheritdoc/>
         public Task InitAsync(CancellationToken cancellationToken = default)
         {
-            Widgets.Add(new CollectionsWidgetViewModel(_navigationViewModel).WithInitAsync(cancellationToken));
+            Widgets.Add(new CollectionsWidgetViewModel(_collectionStoreModel, _navigationViewModel).WithInitAsync(cancellationToken));
             return Task.CompletedTask;
         }
 

@@ -6,15 +6,17 @@ using ClipboardCanvas.Shared.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 {
-    public sealed partial class CollectionItemViewModel : ObservableObject, IAsyncInitialize
+    public sealed partial class CollectionItemViewModel : ObservableObject, IEquatable<ICanvasSourceModel>, IAsyncInitialize
     {
+        private readonly ICollectionStoreModel _collectionStoreModel;
         private readonly NavigationViewModel _navigationViewModel;
-        private readonly ICanvasSourceModel _canvasSourceModel;
+        private readonly ICanvasSourceModel _collectionModel;
         private readonly CanvasViewModel _canvasViewModel;
 
         [ObservableProperty] private string? _Name;
@@ -22,18 +24,25 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 
         private IFileExplorerService FileExplorerService { get; } = Ioc.Default.GetRequiredService<IFileExplorerService>();
 
-        public CollectionItemViewModel(ICanvasSourceModel canvasSourceModel, NavigationViewModel navigationViewModel)
+        public CollectionItemViewModel(ICollectionStoreModel collectionStoreModel, ICanvasSourceModel collectionModel, NavigationViewModel navigationViewModel)
         {
-            _canvasSourceModel = canvasSourceModel;
+            _collectionStoreModel = collectionStoreModel;
+            _collectionModel = collectionModel;
             _navigationViewModel = navigationViewModel;
-            _canvasViewModel = new(canvasSourceModel, navigationViewModel);
-            Name = canvasSourceModel.Name;
+            _canvasViewModel = new(collectionModel, navigationViewModel);
+            Name = collectionModel.Name;
         }
 
         /// <inheritdoc/>
         public Task InitAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
+        }
+
+        /// <inheritdoc/>
+        public bool Equals(ICanvasSourceModel? other)
+        {
+            return other?.Id == _collectionModel.Id;
         }
 
         [RelayCommand]
@@ -46,7 +55,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         [RelayCommand]
         private Task ShowInFileExplorerAsync(CancellationToken cancellationToken)
         {
-            return FileExplorerService.OpenInFileExplorerAsync(_canvasSourceModel, cancellationToken);
+            return FileExplorerService.OpenInFileExplorerAsync(_collectionModel, cancellationToken);
         }
 
         [RelayCommand]
@@ -56,9 +65,10 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         }
 
         [RelayCommand]
-        private Task RemoveAsync(CancellationToken cancellationToken)
+        private async Task RemoveAsync(CancellationToken cancellationToken)
         {
-            return Task.CompletedTask;
+            _collectionStoreModel.Remove(_collectionModel);
+            await _collectionStoreModel.SaveAsync(cancellationToken);
         }
     }
 }
