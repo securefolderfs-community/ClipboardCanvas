@@ -47,6 +47,7 @@ namespace ClipboardCanvas.WinUI.Helpers
             return new ServiceCollection()
                     
                     // Singleton services
+                    .AddSingleton<ICollectionPersistenceService, CollectionPersistenceService>()
                     .AddSingleton<IFileExplorerService, WindowsFileExplorerService>()
                     .AddSingleton<IStorageService, SystemStorageService>()
 

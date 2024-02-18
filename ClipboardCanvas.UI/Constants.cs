@@ -5,6 +5,7 @@
         public static class FileNames
         {
             public const string SETTINGS_FOLDER_NAME = "settings";
+            public const string SAVED_COLLECTIONS_FILENAME = "saved_collections.json";
             public const string APPLICATION_SETTINGS_FILENAME = "application_settings.json";
             public const string USER_SETTINGS_FILENAME = "user_settings.json";
             public const string ICON_ASSET_PATH = "Assets/AppAssets/AppIcon.ico";

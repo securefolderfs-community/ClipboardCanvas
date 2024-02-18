@@ -27,11 +27,12 @@ namespace ClipboardCanvas.Sdk.AppModels
         public string Id => Inner.Id;
 
         /// <inheritdoc/>
-        public string Name => Inner.Name;
+        public string Name { get; }
 
-        public CollectionModel(IModifiableFolder folder)
+        public CollectionModel(IModifiableFolder folder, string? name = null)
         {
             Inner = folder;
+            Name = name ?? folder.Name;
             _cachedCanvases = new();
         }
 
