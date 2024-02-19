@@ -11,31 +11,21 @@
         <StackPanel
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Orientation="Vertical">
-            <FontIcon
-                Margin="0,24"
-                FontSize="64"
-                Glyph="&#xE77F;" />
+            Orientation="Vertical"
+            Spacing="24">
+            <FontIcon FontSize="64" Glyph="&#xE77F;" />
             <TextBlock
                 FontSize="36"
                 FontWeight="SemiBold"
                 Text="Paste or drop items"
                 TextAlignment="Center" />
             <StackPanel
-                Margin="0,16"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Orientation="Vertical">
-                <HyperlinkButton>
-                    <HyperlinkButton.Content>
-                        <TextBlock Text="Use Infinite Canvas" />
-                    </HyperlinkButton.Content>
-                </HyperlinkButton>
-                <HyperlinkButton>
-                    <HyperlinkButton.Content>
-                        <TextBlock Text="Open Quick Canvas" TextAlignment="Center" />
-                    </HyperlinkButton.Content>
-                </HyperlinkButton>
+                Orientation="Vertical"
+                Spacing="8">
+                <HyperlinkButton Content="Use Infinite Canvas" />
+                <HyperlinkButton Content="Open Quick Canvas" />
             </StackPanel>
         </StackPanel>
     </Grid>
