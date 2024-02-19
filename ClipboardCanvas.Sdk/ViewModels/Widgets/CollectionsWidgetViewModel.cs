@@ -37,7 +37,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         {
             Items.Clear();
             foreach (var item in _collectionStoreModel)
-                Items.Add(new(_collectionStoreModel, item, _navigationViewModel));
+                Items.Add(new CollectionItemViewModel(_collectionStoreModel, item, _navigationViewModel).WithInitAsync(cancellationToken));
 
             return Task.CompletedTask;
         }
@@ -58,7 +58,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add when e.NewItems is not null && e.NewItems[0] is ICanvasSourceModel collectionModel:
-                    Items.Add(new(_collectionStoreModel, collectionModel, _navigationViewModel));
+                    Items.Add(new CollectionItemViewModel(_collectionStoreModel, collectionModel, _navigationViewModel).WithInitAsync());
                     break;
 
                 case NotifyCollectionChangedAction.Remove when e.OldItems is not null && e.OldItems[0] is ICanvasSourceModel collectionModel:
