@@ -4,7 +4,6 @@ using ClipboardCanvas.Shared.ComponentModel;
 using ClipboardCanvas.Shared.Enums;
 using ClipboardCanvas.Shared.Helpers;
 using ClipboardCanvas.WinUI.Imaging;
-using Microsoft.UI.Xaml.Controls;
 using OwlCore.Storage;
 using System.IO;
 using System.Threading;
@@ -53,7 +52,7 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
 
             ulong total = unclassified + documents + images + media + audio;
             if (total == 0UL)
-                return new IconImage(new FontIcon() { Glyph = "\uF0E2" });
+                return new IconImage("\uF0E2");
 
             var unclassified2 = (unclassified * 100f) / total;
             var documents2 = (documents * 100f) / total;
@@ -70,7 +69,7 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
             else if (IsMajority(audio2, unclassified2, documents2, images2, media2)) glyph = "\uE8D6";
             else glyph = "\uF0E2";
 
-            return new IconImage(new FontIcon() { Glyph = glyph });
+            return new IconImage(glyph);
         }
 
         private static bool IsMajority(float first, params float[] other)

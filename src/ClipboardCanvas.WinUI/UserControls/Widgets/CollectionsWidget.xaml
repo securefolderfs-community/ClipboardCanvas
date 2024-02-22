@@ -6,13 +6,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tm="using:CommunityToolkit.WinUI.Media"
-    xmlns:vc="using:ClipboardCanvas.WinUI.ValueConverters"
+    xmlns:uc="using:ClipboardCanvas.WinUI.UserControls"
     xmlns:vm="using:ClipboardCanvas.Sdk.ViewModels.Widgets"
     mc:Ignorable="d">
-
-    <UserControl.Resources>
-        <vc:ImageConverter x:Key="ImageConverter" />
-    </UserControl.Resources>
 
     <StackPanel Orientation="Horizontal">
         <!--  Main content  -->
@@ -56,23 +52,18 @@
                             </Grid.RowDefinitions>
 
                             <!--  Collection icon  -->
-                            <ContentControl
+                            <uc:ImageControl
                                 Grid.Row="0"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                Content="{x:Bind Icon, Mode=OneWay, Converter={StaticResource ImageConverter}}" />
-                            <!--<FontIcon
-                                Grid.Row="0"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                FontSize="32"
-                                Glyph="&#xF0E2;" />-->
+                                HeightHint="32"
+                                Image="{x:Bind Icon, Mode=OneWay}" />
 
                             <!--  Collection name  -->
                             <TextBlock
                                 Grid.Row="1"
                                 HorizontalAlignment="Center"
-                                FontSize="16"
+                                FontSize="13"
                                 Text="{x:Bind Name, Mode=OneWay}"
                                 TextTrimming="CharacterEllipsis" />
                         </Grid>

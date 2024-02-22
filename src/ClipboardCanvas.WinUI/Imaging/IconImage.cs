@@ -1,13 +1,12 @@
 ﻿using ClipboardCanvas.Shared.ComponentModel;
-using Microsoft.UI.Xaml.Controls;
 
 namespace ClipboardCanvas.WinUI.Imaging
 {
     internal sealed class IconImage : IImage
     {
-        public FontIcon IconGlyph { get; }
+        public string IconGlyph { get; }
 
-        public IconImage(FontIcon iconGlyph)
+        public IconImage(string iconGlyph)
         {
             IconGlyph = iconGlyph;
         }
