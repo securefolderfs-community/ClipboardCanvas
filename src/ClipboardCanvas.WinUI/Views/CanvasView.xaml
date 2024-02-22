@@ -8,6 +8,25 @@
     mc:Ignorable="d">
 
     <Grid>
-        <Image Source="ms-appx:///Images/TestImage.jpg" />
+        <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Orientation="Vertical"
+            Spacing="24">
+            <FontIcon FontSize="64" Glyph="&#xE77F;" />
+            <TextBlock
+                FontSize="36"
+                FontWeight="SemiBold"
+                Text="Paste or drop items"
+                TextAlignment="Center" />
+            <StackPanel
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Vertical"
+                Spacing="8">
+                <HyperlinkButton Content="Use Infinite Canvas" />
+                <HyperlinkButton Content="Open Quick Canvas" />
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Page>
