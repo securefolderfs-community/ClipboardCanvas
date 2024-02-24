@@ -10,7 +10,10 @@
     <local:FloatingCardControl>
         <StackPanel Orientation="Horizontal" Spacing="4">
             <!--  Back button  -->
-            <Button Command="{x:Bind BackCommand, Mode=OneWay}" Style="{StaticResource NavigationButtonStyle}">
+            <Button
+                Command="{x:Bind BackCommand, Mode=OneWay}"
+                IsEnabled="{x:Bind IsBackEnabled, Mode=OneWay}"
+                Style="{StaticResource NavigationButtonStyle}">
                 <FontIcon Glyph="&#xE76B;" />
             </Button>
 
@@ -23,7 +26,10 @@
             </Button>
 
             <!--  Forward button  -->
-            <Button Command="{x:Bind ForwardCommand, Mode=OneWay}" Style="{StaticResource NavigationButtonStyle}">
+            <Button
+                Command="{x:Bind ForwardCommand, Mode=OneWay}"
+                IsEnabled="{x:Bind IsForwardEnabled, Mode=OneWay}"
+                Style="{StaticResource NavigationButtonStyle}">
                 <FontIcon Glyph="&#xE76C;" />
             </Button>
         </StackPanel>
