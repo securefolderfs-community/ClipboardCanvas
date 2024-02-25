@@ -1,4 +1,6 @@
-﻿using ClipboardCanvas.Sdk.Models;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using ClipboardCanvas.Sdk.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
@@ -10,6 +12,12 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
         public TextCanvasViewModel(ICanvasSourceModel collectionModel)
             : base(collectionModel)
         {
+        }
+
+        /// <inheritdoc/>
+        public override Task InitAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.CompletedTask;
         }
     }
 }

@@ -9,7 +9,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
 {
     public abstract class BaseCanvasViewModel : ObservableObject, IAsyncInitialize, IDisposable
     {
-        protected ICanvasSourceModel CollectionModel { get; }
+        public ICanvasSourceModel CollectionModel { get; }
 
         protected BaseCanvasViewModel(ICanvasSourceModel collectionModel)
         {

@@ -40,6 +40,9 @@
     <None Remove="ResourceDictionaries\Brushes.xaml" />
     <None Remove="ResourceDictionaries\Buttons.xaml" />
     <None Remove="ResourceDictionaries\ListViews.xaml" />
+    <None Remove="UserControls\CanvasDisplayControl.xaml" />
+    <None Remove="UserControls\Canvases\ImageCanvasControl.xaml" />
+    <None Remove="UserControls\Canvases\TextCanvasControl.xaml" />
     <None Remove="UserControls\DynamicRibbon.xaml" />
     <None Remove="UserControls\FloatingCardControl.xaml" />
     <None Remove="UserControls\ImageControl.xaml" />
@@ -101,6 +104,15 @@
     <None Update="Images\TestImage.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="UserControls\Canvases\ImageCanvasControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UserControls\Canvases\TextCanvasControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UserControls\CanvasDisplayControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="UserControls\ImageControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
