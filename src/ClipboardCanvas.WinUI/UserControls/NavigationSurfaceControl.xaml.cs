@@ -37,5 +37,21 @@ namespace ClipboardCanvas.WinUI.UserControls
         }
         public static readonly DependencyProperty HomeCommandProperty =
             DependencyProperty.Register(nameof(HomeCommand), typeof(ICommand), typeof(NavigationSurfaceControl), new PropertyMetadata(null));
+
+        public bool IsForwardEnabled
+        {
+            get => (bool)GetValue(IsForwardEnabledProperty);
+            set => SetValue(IsForwardEnabledProperty, value);
+        }
+        public static readonly DependencyProperty IsForwardEnabledProperty =
+            DependencyProperty.Register(nameof(IsForwardEnabled), typeof(bool), typeof(NavigationSurfaceControl), new PropertyMetadata(true));
+
+        public bool IsBackEnabled
+        {
+            get => (bool)GetValue(IsBackEnabledProperty);
+            set => SetValue(IsBackEnabledProperty, value);
+        }
+        public static readonly DependencyProperty IsBackEnabledProperty =
+            DependencyProperty.Register(nameof(IsBackEnabled), typeof(bool), typeof(NavigationSurfaceControl), new PropertyMetadata(true));
     }
 }

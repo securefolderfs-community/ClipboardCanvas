@@ -40,8 +40,12 @@
     <None Remove="ResourceDictionaries\Brushes.xaml" />
     <None Remove="ResourceDictionaries\Buttons.xaml" />
     <None Remove="ResourceDictionaries\ListViews.xaml" />
+    <None Remove="UserControls\CanvasDisplayControl.xaml" />
+    <None Remove="UserControls\Canvases\ImageCanvasControl.xaml" />
+    <None Remove="UserControls\Canvases\TextCanvasControl.xaml" />
     <None Remove="UserControls\DynamicRibbon.xaml" />
     <None Remove="UserControls\FloatingCardControl.xaml" />
+    <None Remove="UserControls\ImageControl.xaml" />
     <None Remove="UserControls\MainAppHost.xaml" />
     <None Remove="UserControls\NavigationSurfaceControl.xaml" />
     <None Remove="UserControls\Navigation\FrameNavigationControl.xaml" />
@@ -82,8 +86,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ClipboardCanvas.Sdk\ClipboardCanvas.Sdk.csproj" />
-    <ProjectReference Include="..\..\ClipboardCanvas.UI\ClipboardCanvas.UI.csproj" />
+    <ProjectReference Include="..\ClipboardCanvas.Sdk\ClipboardCanvas.Sdk.csproj" />
+    <ProjectReference Include="..\ClipboardCanvas.UI\ClipboardCanvas.UI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -100,6 +104,18 @@
     <None Update="Images\TestImage.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="UserControls\Canvases\ImageCanvasControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UserControls\Canvases\TextCanvasControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UserControls\CanvasDisplayControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UserControls\ImageControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\CanvasView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

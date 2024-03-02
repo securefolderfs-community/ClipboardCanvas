@@ -24,6 +24,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 
         private IFileExplorerService FileExplorerService { get; } = Ioc.Default.GetRequiredService<IFileExplorerService>();
 
+        private IImageService ImageService { get; } = Ioc.Default.GetRequiredService<IImageService>();
+
         public CollectionItemViewModel(ICollectionStoreModel collectionStoreModel, ICanvasSourceModel collectionModel, NavigationViewModel navigationViewModel)
         {
             _collectionStoreModel = collectionStoreModel;
@@ -34,9 +36,10 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         }
 
         /// <inheritdoc/>
-        public Task InitAsync(CancellationToken cancellationToken = default)
+        public async Task InitAsync(CancellationToken cancellationToken = default)
         {
-            return Task.CompletedTask;
+            await _collectionModel.InitAsync(cancellationToken);
+            Icon = await ImageService.GetCollectionIconAsync(_collectionModel, cancellationToken);
         }
 
         /// <inheritdoc/>

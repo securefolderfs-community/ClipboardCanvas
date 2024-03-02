@@ -14,6 +14,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls
         private readonly ICollectionStoreModel _collectionStoreModel;
 
         [ObservableProperty] private bool _IsNavigationVisible;
+        [ObservableProperty] private bool _IsForwardEnabled;
+        [ObservableProperty] private bool _IsBackEnabled;
 
         public INavigationService NavigationService { get; }
 
@@ -22,6 +24,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls
             _collectionStoreModel = collectionStoreModel;
             NavigationService = navigationService;
             IsNavigationVisible = true;
+            IsForwardEnabled = true;
+            IsBackEnabled = true;
         }
 
         [RelayCommand]

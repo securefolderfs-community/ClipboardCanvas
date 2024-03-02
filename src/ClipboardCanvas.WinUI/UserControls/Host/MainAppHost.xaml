@@ -78,6 +78,8 @@
                 BackCommand="{x:Bind ViewModel.NavigationViewModel.NavigateBackCommand}"
                 ForwardCommand="{x:Bind ViewModel.NavigationViewModel.NavigateForwardCommand}"
                 HomeCommand="{x:Bind ViewModel.NavigationViewModel.NavigateHomeCommand}"
+                IsBackEnabled="{x:Bind ViewModel.NavigationViewModel.IsBackEnabled, Mode=OneWay}"
+                IsForwardEnabled="{x:Bind ViewModel.NavigationViewModel.IsForwardEnabled, Mode=OneWay}"
                 Visibility="{x:Bind ViewModel.NavigationViewModel.IsNavigationVisible, Mode=OneWay}">
                 <anim:Implicit.ShowAnimations>
                     <anim:TranslationAnimation
