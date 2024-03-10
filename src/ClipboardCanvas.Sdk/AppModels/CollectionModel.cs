@@ -129,16 +129,6 @@ namespace ClipboardCanvas.Sdk.AppModels
         }
 
         /// <inheritdoc/>
-        public async ValueTask DisposeAsync()
-        {
-            if (_folderWatcher is not null)
-            {
-                _folderWatcher.CollectionChanged -= FolderWatcher_CollectionChanged;
-                await _folderWatcher.DisposeAsync();
-            }
-        }
-
-        /// <inheritdoc/>
         public void Dispose()
         {
             if (_folderWatcher is not null)

@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using OwlCore.Storage;
 using System.Threading;
 using System.Threading.Tasks;
+using ClipboardCanvas.Shared.Extensions;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Views
 {
@@ -42,12 +43,23 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
         {
         }
 
-        public async Task DisplayAsync(IStorable source)
+        public void Reset()
         {
+            CurrentCanvasViewModel?.Dispose();
+            CurrentCanvasViewModel = null;
+        }
+
+        public async Task DisplayAsync(IStorable source, CancellationToken cancellationToken)
+        {
+            // TODO: Infrastructure strategy:
+            // For pasting: listen for changes from clipboard (service) and retrieve data friendly format (object, or IData/IFormat)
+            // For saving: add a method or use an existing one inside _canvasSourceModel to save items there, however, first check
+            // if CurrentCanvasViewModel can be cast to ICanvasSourceModel/IWrapper<ICanvasSourceModel>
+
             CurrentCanvasViewModel = new TextCanvasViewModel(_canvasSourceModel)
             {
                 Text = "Hello World"
-            };
+            }.WithInitAsync(cancellationToken);
         }
     }
 }

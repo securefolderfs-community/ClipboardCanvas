@@ -6,7 +6,10 @@ using ClipboardCanvas.Shared.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using OwlCore.Storage;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,6 +21,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         private readonly NavigationViewModel _navigationViewModel;
         private readonly ICanvasSourceModel _collectionModel;
         private readonly CanvasViewModel _canvasViewModel;
+        private List<IStorableChild> _items;
+        private int _index;
 
         [ObservableProperty] private string? _Name;
         [ObservableProperty] private IImage? _Icon;
@@ -32,6 +37,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             _collectionModel = collectionModel;
             _navigationViewModel = navigationViewModel;
             _canvasViewModel = new(collectionModel, navigationViewModel);
+            _items = new();
             Name = collectionModel.Name;
         }
 
@@ -40,6 +46,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         {
             await _collectionModel.InitAsync(cancellationToken);
             Icon = await ImageService.GetCollectionIconAsync(_collectionModel, cancellationToken);
+            _items = await _collectionModel.GetItemsAsync(StorableType.All, cancellationToken).ToListAsync(cancellationToken);
+            _index = _items.Count; // Count is out of bounds intentionally to put the index on new (empty) canvas
         }
 
         /// <inheritdoc/>
@@ -82,12 +90,23 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 
         private async Task GoBackAsync(CancellationToken cancellationToken)
         {
-            await _canvasViewModel.DisplayAsync(null);
+            _index -= _index <= 0 ? 0 : 1;
+            var itemToDisplay = _items[_index];
+
+            await _canvasViewModel.DisplayAsync(itemToDisplay, cancellationToken);
         }
 
-        private Task GoForwardAsync(CancellationToken cancellationToken)
+        private async Task GoForwardAsync(CancellationToken cancellationToken)
         {
-            return Task.CompletedTask;
+            _index += _index >= _items.Count ? 0 : 1;
+            if (_index >= _items.Count)
+            {
+                _canvasViewModel.Reset();
+                return;
+            }
+
+            var itemToDisplay = _items[_index];
+            await _canvasViewModel.DisplayAsync(itemToDisplay, cancellationToken);
         }
     }
 }
