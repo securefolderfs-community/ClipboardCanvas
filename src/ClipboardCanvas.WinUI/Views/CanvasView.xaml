@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:ClipboardCanvas.WinUI.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uc="using:ClipboardCanvas.WinUI.UserControls"
     mc:Ignorable="d">
 
     <Grid>
@@ -28,5 +29,7 @@
                 <HyperlinkButton Content="Open Quick Canvas" />
             </StackPanel>
         </StackPanel>
+
+        <uc:CanvasDisplayControl />
     </Grid>
 </Page>
