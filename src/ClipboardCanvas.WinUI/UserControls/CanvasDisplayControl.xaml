@@ -3,9 +3,26 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:ClipboardCanvas.WinUI.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ts="using:ClipboardCanvas.WinUI.TemplateSelectors"
+    xmlns:uc="using:ClipboardCanvas.WinUI.UserControls.Canvases"
+    xmlns:vm="using:ClipboardCanvas.Sdk.ViewModels.Controls.Canvases"
     mc:Ignorable="d">
 
-    <Grid />
+    <UserControl.Resources>
+        <DataTemplate x:Key="TextCanvasTemplate" x:DataType="vm:TextCanvasViewModel">
+            <uc:TextCanvasControl Text="{x:Bind Text, Mode=OneWay}" />
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <ContentControl Content="{x:Bind CanvasViewModel, Mode=OneWay}">
+            <ContentControl.ContentTemplateSelector>
+                <ts:CanvasTemplateSelector TextCanvasTemplate="{StaticResource TextCanvasTemplate}" />
+            </ContentControl.ContentTemplateSelector>
+            <ContentControl.ContentTransitions>
+                <ContentThemeTransition />
+            </ContentControl.ContentTransitions>
+        </ContentControl>
+    </Grid>
 </UserControl>

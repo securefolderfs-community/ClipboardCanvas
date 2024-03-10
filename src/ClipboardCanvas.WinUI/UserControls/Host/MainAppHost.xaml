@@ -75,9 +75,9 @@
             Canvas.ZIndex="10">
             <uc:NavigationSurfaceControl
                 HorizontalAlignment="Center"
-                BackCommand="{x:Bind ViewModel.NavigationViewModel.NavigateBackCommand}"
-                ForwardCommand="{x:Bind ViewModel.NavigationViewModel.NavigateForwardCommand}"
-                HomeCommand="{x:Bind ViewModel.NavigationViewModel.NavigateHomeCommand}"
+                BackCommand="{x:Bind ViewModel.NavigationViewModel.NavigateBackCommand, Mode=OneWay}"
+                ForwardCommand="{x:Bind ViewModel.NavigationViewModel.NavigateForwardCommand, Mode=OneWay}"
+                HomeCommand="{x:Bind ViewModel.NavigationViewModel.NavigateHomeCommand, Mode=OneWay}"
                 IsBackEnabled="{x:Bind ViewModel.NavigationViewModel.IsBackEnabled, Mode=OneWay}"
                 IsForwardEnabled="{x:Bind ViewModel.NavigationViewModel.IsForwardEnabled, Mode=OneWay}"
                 Visibility="{x:Bind ViewModel.NavigationViewModel.IsNavigationVisible, Mode=OneWay}">

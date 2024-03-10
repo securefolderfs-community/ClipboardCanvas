@@ -51,7 +51,11 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         [RelayCommand]
         private async Task OpenCollectionAsync(CancellationToken cancellationToken)
         {
-            // Each vm will bind to the same view but will bind to different data (each canvas vm)
+            // TODO: Check if IAsyncInitialize on CanvasViewModel is really needed. It might cause problems
+            // where the canvasVM is initialized first in other places
+            if (!_navigationViewModel.NavigationService.Views.Contains(_canvasViewModel))
+                _ = _canvasViewModel.InitAsync(cancellationToken);
+
             await _navigationViewModel.NavigationService.NavigateAsync(_canvasViewModel);
         }
 

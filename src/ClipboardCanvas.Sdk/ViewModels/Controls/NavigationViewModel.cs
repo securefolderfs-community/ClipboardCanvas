@@ -1,11 +1,11 @@
 ﻿using ClipboardCanvas.Sdk.Extensions;
+using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.Sdk.ViewModels.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Threading;
 using System.Threading.Tasks;
-using ClipboardCanvas.Sdk.Models;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Controls
 {
@@ -13,6 +13,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls
     {
         private readonly ICollectionStoreModel _collectionStoreModel;
 
+        [ObservableProperty] private IAsyncRelayCommand? _NavigateBackCommand;
+        [ObservableProperty] private IAsyncRelayCommand? _NavigateForwardCommand;
         [ObservableProperty] private bool _IsNavigationVisible;
         [ObservableProperty] private bool _IsForwardEnabled;
         [ObservableProperty] private bool _IsBackEnabled;
@@ -26,18 +28,6 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls
             IsNavigationVisible = true;
             IsForwardEnabled = true;
             IsBackEnabled = true;
-        }
-
-        [RelayCommand]
-        private Task NavigateBackAsync(CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
-        }
-
-        [RelayCommand]
-        private Task NavigateForwardAsync(CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
         }
 
         [RelayCommand]
