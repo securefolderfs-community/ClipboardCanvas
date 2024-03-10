@@ -15,14 +15,12 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Grid>
-        <ContentControl Content="{x:Bind CanvasViewModel, Mode=OneWay}">
-            <ContentControl.ContentTemplateSelector>
-                <ts:CanvasTemplateSelector TextCanvasTemplate="{StaticResource TextCanvasTemplate}" />
-            </ContentControl.ContentTemplateSelector>
-            <ContentControl.ContentTransitions>
-                <ContentThemeTransition />
-            </ContentControl.ContentTransitions>
-        </ContentControl>
-    </Grid>
+    <ContentControl
+        HorizontalContentAlignment="Stretch"
+        VerticalContentAlignment="Stretch"
+        Content="{x:Bind CanvasViewModel, Mode=OneWay}">
+        <ContentControl.ContentTemplateSelector>
+            <ts:CanvasTemplateSelector TextCanvasTemplate="{StaticResource TextCanvasTemplate}" />
+        </ContentControl.ContentTemplateSelector>
+    </ContentControl>
 </UserControl>

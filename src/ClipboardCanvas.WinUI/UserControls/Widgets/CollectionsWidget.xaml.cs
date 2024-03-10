@@ -53,7 +53,7 @@ namespace ClipboardCanvas.WinUI.UserControls.Widgets
             control.Background = (Brush)Resources["ButtonBackgroundPointerOver"];
             control.BorderBrush = (Brush)Resources["ButtonBorderBrushPointerOver"];
 
-            if (control.DataContext is CollectionItemViewModel viewModel)
+            if (control.DataContext is CollectionViewModel viewModel)
                 await viewModel.OpenCollectionCommand.ExecuteAsync(null);
         }
 

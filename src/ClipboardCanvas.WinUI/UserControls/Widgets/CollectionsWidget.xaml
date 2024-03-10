@@ -24,7 +24,7 @@
             ScrollViewer.VerticalScrollMode="Disabled"
             SelectionMode="Single">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="vm:CollectionItemViewModel">
+                <DataTemplate x:DataType="vm:CollectionViewModel">
                     <Border
                         Width="204"
                         Height="128"

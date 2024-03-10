@@ -3,7 +3,7 @@ using ClipboardCanvas.Sdk.ViewModels.Controls;
 using ClipboardCanvas.Sdk.ViewModels.Controls.Canvases;
 using ClipboardCanvas.Shared.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+using OwlCore.Storage;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -35,8 +35,6 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
         public void OnAppearing()
         {
             _navigationViewModel.IsNavigationVisible = true;
-            _navigationViewModel.NavigateBackCommand = new AsyncRelayCommand(GoBackAsync);
-            _navigationViewModel.NavigateForwardCommand = new AsyncRelayCommand(GoForwardAsync);
         }
 
         /// <inheritdoc/>
@@ -44,14 +42,12 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
         {
         }
 
-        private Task GoBackAsync(CancellationToken cancellationToken)
+        public async Task DisplayAsync(IStorable source)
         {
-            return Task.CompletedTask;
-        }
-
-        private Task GoForwardAsync(CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
+            CurrentCanvasViewModel = new TextCanvasViewModel(_canvasSourceModel)
+            {
+                Text = "Hello World"
+            };
         }
     }
 }

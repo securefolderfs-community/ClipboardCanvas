@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ctwui="using:CommunityToolkit.WinUI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:ClipboardCanvas.WinUI.UserControls.Canvases"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
@@ -14,20 +13,29 @@
         </Grid.RowDefinitions>
 
         <Border x:Name="ShadowTarget" />
-        <ScrollView Width="728" VerticalScrollBarVisibility="Hidden">
-            <StackPanel Orientation="Vertical" Spacing="16">
-                <StackPanel Height="100" />
+        <ScrollView
+            Width="728"
+            CornerRadius="0"
+            VerticalScrollBarVisibility="Hidden">
+            <Grid RowSpacing="16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <Rectangle Grid.Row="0" Height="100" />
                 <StackPanel
+                    Grid.Row="1"
                     Padding="24"
                     Background="White"
-                    CornerRadius="5"
+                    CornerRadius="4,4,0,0"
                     Orientation="Vertical">
 
                     <ctwui:Effects.Shadow>
                         <ctwui:AttachedDropShadow
                             BlurRadius="96"
                             CastTo="{x:Bind ShadowTarget}"
-                            CornerRadius="32" />
+                            CornerRadius="8" />
                     </ctwui:Effects.Shadow>
 
                     <RichTextBlock IsTextSelectionEnabled="True">
@@ -36,7 +44,7 @@
                         </Paragraph>
                     </RichTextBlock>
                 </StackPanel>
-            </StackPanel>
+            </Grid>
         </ScrollView>
     </Grid>
 </UserControl>

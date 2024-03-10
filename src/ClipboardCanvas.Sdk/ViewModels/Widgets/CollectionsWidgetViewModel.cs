@@ -21,7 +21,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 
         private IFileExplorerService FileExplorerService { get; } = Ioc.Default.GetRequiredService<IFileExplorerService>();
 
-        public ObservableCollection<CollectionItemViewModel> Items { get; } = new();
+        public ObservableCollection<CollectionViewModel> Items { get; } = new();
 
         public CollectionsWidgetViewModel(ICollectionStoreModel collectionStoreModel, NavigationViewModel navigationViewModel)
         {
@@ -37,7 +37,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         {
             Items.Clear();
             foreach (var item in _collectionStoreModel)
-                Items.Add(new CollectionItemViewModel(_collectionStoreModel, item, _navigationViewModel).WithInitAsync(cancellationToken));
+                Items.Add(new CollectionViewModel(_collectionStoreModel, item, _navigationViewModel).WithInitAsync(cancellationToken));
 
             return Task.CompletedTask;
         }
@@ -58,7 +58,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add when e.NewItems is not null && e.NewItems[0] is ICanvasSourceModel collectionModel:
-                    Items.Add(new CollectionItemViewModel(_collectionStoreModel, collectionModel, _navigationViewModel).WithInitAsync());
+                    Items.Add(new CollectionViewModel(_collectionStoreModel, collectionModel, _navigationViewModel).WithInitAsync());
                     break;
 
                 case NotifyCollectionChangedAction.Remove when e.OldItems is not null && e.OldItems[0] is ICanvasSourceModel collectionModel:

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 {
-    public sealed partial class CollectionItemViewModel : ObservableObject, IEquatable<ICanvasSourceModel>, IAsyncInitialize
+    public sealed partial class CollectionViewModel : ObservableObject, IEquatable<ICanvasSourceModel>, IAsyncInitialize
     {
         private readonly ICollectionStoreModel _collectionStoreModel;
         private readonly NavigationViewModel _navigationViewModel;
@@ -26,7 +26,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 
         private IImageService ImageService { get; } = Ioc.Default.GetRequiredService<IImageService>();
 
-        public CollectionItemViewModel(ICollectionStoreModel collectionStoreModel, ICanvasSourceModel collectionModel, NavigationViewModel navigationViewModel)
+        public CollectionViewModel(ICollectionStoreModel collectionStoreModel, ICanvasSourceModel collectionModel, NavigationViewModel navigationViewModel)
         {
             _collectionStoreModel = collectionStoreModel;
             _collectionModel = collectionModel;
@@ -57,6 +57,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
                 _ = _canvasViewModel.InitAsync(cancellationToken);
 
             await _navigationViewModel.NavigationService.NavigateAsync(_canvasViewModel);
+            _navigationViewModel.NavigateBackCommand = new AsyncRelayCommand(GoBackAsync);
+            _navigationViewModel.NavigateForwardCommand = new AsyncRelayCommand(GoForwardAsync);
         }
 
         [RelayCommand]
@@ -76,6 +78,16 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         {
             _collectionStoreModel.Remove(_collectionModel);
             await _collectionStoreModel.SaveAsync(cancellationToken);
+        }
+
+        private async Task GoBackAsync(CancellationToken cancellationToken)
+        {
+            await _canvasViewModel.DisplayAsync(null);
+        }
+
+        private Task GoForwardAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
         }
     }
 }
