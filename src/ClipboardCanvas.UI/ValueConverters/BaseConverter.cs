@@ -2,7 +2,9 @@
 
 namespace ClipboardCanvas.UI.ValueConverters
 {
-    // TODO: Needs docs
+    /// <summary>
+    /// Base class for value converters.
+    /// </summary>
     public abstract class BaseConverter
     {
         protected abstract object? TryConvert(object? value, Type targetType, object? parameter);

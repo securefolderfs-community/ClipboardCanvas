@@ -28,23 +28,23 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
                 var fileType = FileExtensionHelper.GetFileType(Path.GetExtension(item.Name));
                 switch (fileType)
                 {
-                    case FileType.Unclassified:
+                    case ContentType.Unclassified:
                         unclassified++;
                         break;
 
-                    case FileType.Document:
+                    case ContentType.Document:
                         documents++;
                         break;
 
-                    case FileType.Image:
+                    case ContentType.Image:
                         images++;
                         break;
 
-                    case FileType.Media:
+                    case ContentType.Media:
                         media++;
                         break;
 
-                    case FileType.Audio:
+                    case ContentType.Audio:
                         audio++;
                         break;
                 }

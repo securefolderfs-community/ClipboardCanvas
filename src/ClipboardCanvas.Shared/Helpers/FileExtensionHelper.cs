@@ -47,24 +47,24 @@ namespace ClipboardCanvas.Shared.Helpers
             ".ogg", ".wav"
         };
 
-        public static FileType GetFileType(string extension)
+        public static ContentType GetFileType(string extension)
         {
             if (!extension.StartsWith('.'))
                 extension = $".{extension}";
 
             if (DocumentExtensions.Contains(extension))
-                return FileType.Document;
+                return ContentType.Document;
 
             if (ImageExtensions.Contains(extension))
-                return FileType.Image;
+                return ContentType.Image;
 
             if (MediaExtensions.Contains(extension))
-                return FileType.Media;
+                return ContentType.Media;
 
             if (AudioExtensions.Contains(extension))
-                return FileType.Audio;
+                return ContentType.Audio;
 
-            return FileType.Unclassified;
+            return ContentType.Unclassified;
         }
     }
 }
