@@ -3,6 +3,7 @@ using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.Sdk.ViewModels.Controls;
 using ClipboardCanvas.Sdk.ViewModels.Views;
 using ClipboardCanvas.Shared.ComponentModel;
+using ClipboardCanvas.Shared.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
@@ -21,7 +22,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         private readonly NavigationViewModel _navigationViewModel;
         private readonly ICanvasSourceModel _collectionModel;
         private readonly CanvasViewModel _canvasViewModel;
-        private List<IStorableChild> _items;
+        private readonly List<IStorableChild> _items;
         private int _index;
 
         [ObservableProperty] private string? _Name;
@@ -46,7 +47,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         {
             await _collectionModel.InitAsync(cancellationToken);
             Icon = await ImageService.GetCollectionIconAsync(_collectionModel, cancellationToken);
-            _items = await _collectionModel.GetItemsAsync(StorableType.All, cancellationToken).ToListAsync(cancellationToken);
+            _items.Clear();
+            _items.AddRange(await _collectionModel.GetItemsAsync(StorableType.All, cancellationToken).ToArrayAsync(cancellationToken));
             _index = _items.Count; // Count is out of bounds intentionally to put the index on new (empty) canvas
         }
 
@@ -67,6 +69,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             await _navigationViewModel.NavigationService.NavigateAsync(_canvasViewModel);
             _navigationViewModel.NavigateBackCommand = new AsyncRelayCommand(GoBackAsync);
             _navigationViewModel.NavigateForwardCommand = new AsyncRelayCommand(GoForwardAsync);
+            UpdateNavigationButtons();
         }
 
         [RelayCommand]
@@ -88,11 +91,20 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             await _collectionStoreModel.SaveAsync(cancellationToken);
         }
 
+        private void UpdateNavigationButtons()
+        {
+            _navigationViewModel.IsForwardEnabled = _index < _items.Count;
+            _navigationViewModel.IsBackEnabled = _index > 0 && _items.Count > 0;
+        }
+
         private async Task GoBackAsync(CancellationToken cancellationToken)
         {
             _index -= _index <= 0 ? 0 : 1;
-            var itemToDisplay = _items[_index];
+            if (_items.IsEmpty())
+                return;
 
+            UpdateNavigationButtons();
+            var itemToDisplay = _items[_index];
             await _canvasViewModel.DisplayAsync(itemToDisplay, cancellationToken);
         }
 
@@ -102,6 +114,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             if (_index >= _items.Count)
             {
                 _canvasViewModel.Reset();
+                _navigationViewModel.IsForwardEnabled = false;
                 return;
             }
 

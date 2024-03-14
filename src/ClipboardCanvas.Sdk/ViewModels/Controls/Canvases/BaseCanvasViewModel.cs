@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
 {
-    public abstract class BaseCanvasViewModel : ObservableObject, IAsyncInitialize, IDisposable
+    public abstract partial class BaseCanvasViewModel : ObservableObject, IAsyncInitialize, IViewable, IDisposable
     {
-        public ICanvasSourceModel CollectionModel { get; }
+        [ObservableProperty] private string? _Title;
 
-        protected BaseCanvasViewModel(ICanvasSourceModel collectionModel)
+        public ICanvasSourceModel SourceModel { get; }
+
+        protected BaseCanvasViewModel(ICanvasSourceModel sourceModel)
         {
-            CollectionModel = collectionModel;
+            SourceModel = sourceModel;
         }
 
         /// <inheritdoc/>

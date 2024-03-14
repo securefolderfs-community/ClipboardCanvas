@@ -32,7 +32,6 @@
                         contract7NotPresent:CornerRadius="{ThemeResource ControlCornerRadius}"
                         contract7Present:BackgroundSizing="{TemplateBinding BackgroundSizing}"
                         contract7Present:CornerRadius="{TemplateBinding CornerRadius}"
-                        muxc:AnimatedIcon.State="Normal"
                         AutomationProperties.AccessibilityView="Raw"
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
@@ -61,9 +60,6 @@
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarButtonForegroundPointerOver}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
-                                    <VisualState.Setters>
-                                        <Setter Target="ContentPresenter.(muxc:AnimatedIcon.State)" Value="PointerOver" />
-                                    </VisualState.Setters>
                                 </VisualState>
 
                                 <VisualState x:Name="Pressed">
@@ -78,9 +74,6 @@
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarButtonForegroundPressed}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
-                                    <VisualState.Setters>
-                                        <Setter Target="ContentPresenter.(muxc:AnimatedIcon.State)" Value="Pressed" />
-                                    </VisualState.Setters>
                                 </VisualState>
 
                                 <VisualState x:Name="Disabled">
@@ -95,10 +88,6 @@
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarButtonForegroundDisabled}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
-                                    <VisualState.Setters>
-                                        <!--  DisabledVisual Should be handled by the control, not the animated icon.  -->
-                                        <Setter Target="ContentPresenter.(local:AnimatedIcon.State)" Value="Normal" />
-                                    </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
