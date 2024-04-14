@@ -12,14 +12,14 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
 {
     public sealed partial class HomeViewModel : ObservableObject, IViewDesignation, IAsyncInitialize
     {
-        private readonly ICollectionStoreModel _collectionStoreModel;
+        private readonly ICollectionSourceModel _collectionStoreModel;
         private readonly NavigationViewModel _navigationViewModel;
 
         [ObservableProperty] private string? _Title;
 
         public ObservableCollection<BaseWidgetViewModel> Widgets { get; } = new();
 
-        public HomeViewModel(ICollectionStoreModel collectionStoreModel, NavigationViewModel navigationViewModel)
+        public HomeViewModel(ICollectionSourceModel collectionStoreModel, NavigationViewModel navigationViewModel)
         {
             _collectionStoreModel = collectionStoreModel;
             _navigationViewModel = navigationViewModel;

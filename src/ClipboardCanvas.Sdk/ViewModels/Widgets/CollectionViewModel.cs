@@ -16,11 +16,11 @@ using System.Threading.Tasks;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 {
-    public sealed partial class CollectionViewModel : ObservableObject, IEquatable<ICanvasSourceModel>, IAsyncInitialize
+    public sealed partial class CollectionViewModel : ObservableObject, IEquatable<IDataSourceModel>, IAsyncInitialize
     {
-        private readonly ICollectionStoreModel _collectionStoreModel;
+        private readonly ICollectionSourceModel _collectionStoreModel;
         private readonly NavigationViewModel _navigationViewModel;
-        private readonly ICanvasSourceModel _collectionModel;
+        private readonly IDataSourceModel _collectionModel;
         private readonly CanvasViewModel _canvasViewModel;
         private readonly List<IStorableChild> _items;
         private int _index;
@@ -32,7 +32,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 
         private IImageService ImageService { get; } = Ioc.Default.GetRequiredService<IImageService>();
 
-        public CollectionViewModel(ICollectionStoreModel collectionStoreModel, ICanvasSourceModel collectionModel, NavigationViewModel navigationViewModel)
+        public CollectionViewModel(ICollectionSourceModel collectionStoreModel, IDataSourceModel collectionModel, NavigationViewModel navigationViewModel)
         {
             _collectionStoreModel = collectionStoreModel;
             _collectionModel = collectionModel;
@@ -53,7 +53,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         }
 
         /// <inheritdoc/>
-        public bool Equals(ICanvasSourceModel? other)
+        public bool Equals(IDataSourceModel? other)
         {
             return other?.Id == _collectionModel.Id;
         }

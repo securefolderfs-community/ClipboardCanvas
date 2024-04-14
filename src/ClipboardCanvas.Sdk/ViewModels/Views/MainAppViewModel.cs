@@ -17,7 +17,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
 
         public NavigationViewModel NavigationViewModel { get; }
 
-        public MainAppViewModel(ICollectionStoreModel collectionStoreModel)
+        public MainAppViewModel(ICollectionSourceModel collectionStoreModel)
         {
             NavigationViewModel = new(collectionStoreModel, NavigationService);
             AppTitle = "Clipboard Canvas";

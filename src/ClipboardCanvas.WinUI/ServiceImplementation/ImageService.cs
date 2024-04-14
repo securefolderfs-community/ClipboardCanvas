@@ -15,7 +15,7 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
     internal sealed class ImageService : IImageService
     {
         /// <inheritdoc/>
-        public async Task<IImage> GetCollectionIconAsync(ICanvasSourceModel collectionModel, CancellationToken cancellationToken)
+        public async Task<IImage> GetCollectionIconAsync(IDataSourceModel collectionModel, CancellationToken cancellationToken)
         {
             var unclassified = 0u;
             var documents = 0u;
@@ -60,8 +60,7 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
             var media2 = (media * 100f) / total;
             var audio2 = (audio * 100f) / total;
 
-            var glyph = string.Empty;
-
+            string glyph;
             if (IsMajority(unclassified2, documents2, images2, media2, audio2)) glyph = "\uF0E2";
             else if (IsMajority(documents2, unclassified2, images2, media2, audio2)) glyph = "\uE8A5";
             else if (IsMajority(images2, unclassified2, documents2, media2, audio2)) glyph = "\uE91B";

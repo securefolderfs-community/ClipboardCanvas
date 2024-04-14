@@ -1,24 +1,27 @@
 ﻿using ClipboardCanvas.Sdk.Models;
+using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.Sdk.ViewModels.Controls;
 using ClipboardCanvas.Sdk.ViewModels.Controls.Canvases;
 using ClipboardCanvas.Shared.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using OwlCore.Storage;
 using System.Threading;
 using System.Threading.Tasks;
-using ClipboardCanvas.Shared.Extensions;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Views
 {
     public sealed partial class CanvasViewModel : ObservableObject, IViewDesignation, IAsyncInitialize
     {
-        private readonly ICanvasSourceModel _canvasSourceModel;
+        private readonly IDataSourceModel _canvasSourceModel;
         private readonly NavigationViewModel _navigationViewModel;
 
         [ObservableProperty] private string? _Title;
         [ObservableProperty] private BaseCanvasViewModel? _CurrentCanvasViewModel;
 
-        public CanvasViewModel(ICanvasSourceModel canvasSourceModel, NavigationViewModel navigationViewModel)
+        private ICanvasService CanvasService { get; } = Ioc.Default.GetRequiredService<ICanvasService>();
+
+        public CanvasViewModel(IDataSourceModel canvasSourceModel, NavigationViewModel navigationViewModel)
         {
             _canvasSourceModel = canvasSourceModel;
             _navigationViewModel = navigationViewModel;
@@ -56,10 +59,10 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
             // For saving: add a method or use an existing one inside _canvasSourceModel to save items there, however, first check
             // if CurrentCanvasViewModel can be cast to ICanvasSourceModel/IWrapper<ICanvasSourceModel>
 
-            CurrentCanvasViewModel = new TextCanvasViewModel(_canvasSourceModel)
-            {
-                Text = "Hello World"
-            }.WithInitAsync(cancellationToken);
+            if (source is not IStorableChild storable)
+                return;
+
+            CurrentCanvasViewModel = await CanvasService.GetCanvasForStorableAsync(storable, _canvasSourceModel, cancellationToken);
         }
     }
 }

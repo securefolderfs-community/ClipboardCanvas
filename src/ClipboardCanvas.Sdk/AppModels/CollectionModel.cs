@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace ClipboardCanvas.Sdk.AppModels
 {
-    public sealed class CollectionModel : ICanvasSourceModel, IWrapper<IModifiableFolder>
+    public sealed class CollectionModel : IDataSourceModel, IWrapper<IModifiableFolder>
     {
         private readonly List<IStorableChild> _cachedCanvases;
         private IFolderWatcher? _folderWatcher;

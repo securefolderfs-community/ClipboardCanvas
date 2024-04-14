@@ -11,7 +11,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls
 {
     public sealed partial class NavigationViewModel : ObservableObject
     {
-        private readonly ICollectionStoreModel _collectionStoreModel;
+        private readonly ICollectionSourceModel _collectionStoreModel;
 
         [ObservableProperty] private IAsyncRelayCommand? _NavigateBackCommand;
         [ObservableProperty] private IAsyncRelayCommand? _NavigateForwardCommand;
@@ -21,7 +21,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls
 
         public INavigationService NavigationService { get; }
 
-        public NavigationViewModel(ICollectionStoreModel collectionStoreModel, INavigationService navigationService)
+        public NavigationViewModel(ICollectionSourceModel collectionStoreModel, INavigationService navigationService)
         {
             _collectionStoreModel = collectionStoreModel;
             NavigationService = navigationService;

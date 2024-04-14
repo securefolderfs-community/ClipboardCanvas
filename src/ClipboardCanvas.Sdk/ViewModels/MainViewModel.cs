@@ -15,13 +15,13 @@ namespace ClipboardCanvas.Sdk.ViewModels
     {
         [ObservableProperty] private MainAppViewModel _AppViewModel; // TODO: Limitation since the UI requires specific type for x:Bind on DependencyProperty
 
-        public ICollectionStoreModel CollectionStoreModel { get; }
+        public ICollectionSourceModel CollectionStoreModel { get; }
 
         private ISettingsService SettingsService { get; } = Ioc.Default.GetRequiredService<ISettingsService>();
 
         public MainViewModel()
         {
-            CollectionStoreModel = new CollectionStoreModel();
+            CollectionStoreModel = new CollectionSourceModel();
             _AppViewModel = new MainAppViewModel(CollectionStoreModel);
         }
 

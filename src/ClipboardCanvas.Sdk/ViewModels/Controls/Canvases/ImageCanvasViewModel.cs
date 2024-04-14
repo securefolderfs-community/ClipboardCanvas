@@ -1,16 +1,22 @@
 ﻿using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Shared.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using System.Threading;
 using System.Threading.Tasks;
+using ClipboardCanvas.Sdk.Services;
+using OwlCore.Storage;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
 {
-    public sealed partial class ImageCanvasViewModel : BaseCanvasViewModel
+    public partial class ImageCanvasViewModel : BaseCanvasViewModel
     {
         [ObservableProperty] private IImage? _Image;
+        protected IFile? imageFile;
 
-        public ImageCanvasViewModel(ICanvasSourceModel collectionModel)
+        private IImageService ImageService { get; } = Ioc.Default.GetRequiredService<IImageService>();
+
+        public ImageCanvasViewModel(IDataSourceModel collectionModel)
             : base(collectionModel)
         {
         }

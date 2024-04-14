@@ -9,7 +9,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
     {
         [ObservableProperty] private string? _Text;
 
-        public TextCanvasViewModel(ICanvasSourceModel collectionModel)
+        public TextCanvasViewModel(IDataSourceModel collectionModel)
             : base(collectionModel)
         {
         }

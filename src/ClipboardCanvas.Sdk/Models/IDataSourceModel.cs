@@ -5,9 +5,9 @@ using System;
 namespace ClipboardCanvas.Sdk.Models
 {
     /// <summary>
-    /// Represents a collection source where canvases reside.
+    /// Represents a data source where canvases reside.
     /// </summary>
-    public interface ICanvasSourceModel : IModifiableFolder, IAsyncInitialize, IDisposable
+    public interface IDataSourceModel : IModifiableFolder, IAsyncInitialize, IDisposable
     {
     }
 }

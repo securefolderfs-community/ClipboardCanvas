@@ -11,9 +11,9 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
     {
         [ObservableProperty] private string? _Title;
 
-        public ICanvasSourceModel SourceModel { get; }
+        public IDataSourceModel SourceModel { get; }
 
-        protected BaseCanvasViewModel(ICanvasSourceModel sourceModel)
+        protected BaseCanvasViewModel(IDataSourceModel sourceModel)
         {
             SourceModel = sourceModel;
         }

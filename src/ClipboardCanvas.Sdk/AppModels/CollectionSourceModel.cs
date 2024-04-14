@@ -12,8 +12,8 @@ using System.Threading.Tasks;
 
 namespace ClipboardCanvas.Sdk.AppModels
 {
-    /// <inheritdoc cref="ICollectionStoreModel"/>
-    public sealed partial class CollectionStoreModel : Collection<ICanvasSourceModel>, ICollectionStoreModel
+    /// <inheritdoc cref="ICollectionSourceModel"/>
+    public sealed class CollectionSourceModel : Collection<IDataSourceModel>, ICollectionSourceModel
     {
         private ICollectionPersistenceService CollectionPersistenceService { get; } = Ioc.Default.GetRequiredService<ICollectionPersistenceService>();
 
@@ -33,7 +33,7 @@ namespace ClipboardCanvas.Sdk.AppModels
         }
 
         /// <inheritdoc/>
-        protected override void InsertItem(int index, ICanvasSourceModel item)
+        protected override void InsertItem(int index, IDataSourceModel item)
         {
             // Update saved collections
             CollectionPersistenceService.SavedCollections ??= new List<CollectionDataModel>();
@@ -59,7 +59,7 @@ namespace ClipboardCanvas.Sdk.AppModels
         }
 
         /// <inheritdoc/>
-        protected override void SetItem(int index, ICanvasSourceModel item)
+        protected override void SetItem(int index, IDataSourceModel item)
         {
             if (CollectionPersistenceService.SavedCollections is null)
                 return;

@@ -16,14 +16,14 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 {
     public sealed partial class CollectionsWidgetViewModel : BaseWidgetViewModel, IAsyncInitialize
     {
-        private readonly ICollectionStoreModel _collectionStoreModel;
+        private readonly ICollectionSourceModel _collectionStoreModel;
         private readonly NavigationViewModel _navigationViewModel;
 
         private IFileExplorerService FileExplorerService { get; } = Ioc.Default.GetRequiredService<IFileExplorerService>();
 
         public ObservableCollection<CollectionViewModel> Items { get; } = new();
 
-        public CollectionsWidgetViewModel(ICollectionStoreModel collectionStoreModel, NavigationViewModel navigationViewModel)
+        public CollectionsWidgetViewModel(ICollectionSourceModel collectionStoreModel, NavigationViewModel navigationViewModel)
         {
             _collectionStoreModel = collectionStoreModel;
             _navigationViewModel = navigationViewModel;
@@ -57,11 +57,11 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         {
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add when e.NewItems is not null && e.NewItems[0] is ICanvasSourceModel collectionModel:
+                case NotifyCollectionChangedAction.Add when e.NewItems is not null && e.NewItems[0] is IDataSourceModel collectionModel:
                     Items.Add(new CollectionViewModel(_collectionStoreModel, collectionModel, _navigationViewModel).WithInitAsync());
                     break;
 
-                case NotifyCollectionChangedAction.Remove when e.OldItems is not null && e.OldItems[0] is ICanvasSourceModel collectionModel:
+                case NotifyCollectionChangedAction.Remove when e.OldItems is not null && e.OldItems[0] is IDataSourceModel collectionModel:
                     Items.RemoveMatch(x => x.Equals(collectionModel));
                     break;
 

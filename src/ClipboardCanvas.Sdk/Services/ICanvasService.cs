@@ -8,6 +8,6 @@ namespace ClipboardCanvas.Sdk.Services
 {
     public interface ICanvasService
     {
-        Task<BaseCanvasViewModel> GetViewModelForStorable(IStorableChild storable, ICanvasSourceModel sourceModel, CancellationToken cancellationToken);
+        Task<BaseCanvasViewModel> GetCanvasForStorableAsync(IStorableChild storable, IDataSourceModel sourceModel, CancellationToken cancellationToken);
     }
 }
