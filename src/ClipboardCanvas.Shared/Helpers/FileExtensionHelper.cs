@@ -6,12 +6,17 @@ namespace ClipboardCanvas.Shared.Helpers
 {
     public static class FileExtensionHelper
     {
-        public static string[] DocumentExtensions { get; } =
+        public static string[] TextExtensions { get; } =
         {
             // Text based
+            ".txt", ".md", ".markdown", ".rtf"
+        };
+
+        public static string[] DocumentExtensions { get; } =
+        {
+            // Document based
             ".doc", ".docx", ".html",
             ".odt", ".pdf", ".htm",
-            ".txt",
 
             // Sheet based
             ".xls", ".xlsx", ".ods",
@@ -47,24 +52,63 @@ namespace ClipboardCanvas.Shared.Helpers
             ".ogg", ".wav"
         };
 
-        public static ContentType GetFileType(string extension)
+        public static TypeHint GetTypeFromMime(string mimeType)
+        {
+            return Image()
+                   ?? PlainText()
+                   ?? Document()
+                   // TODO
+                   ?? TypeHint.Unclassified;
+
+            TypeHint? Document()
+            {
+                return mimeType.Equals("application/pdf")
+                    || mimeType.Equals("text/csv")
+                    || mimeType.Equals("application/msword")
+                    || mimeType.Equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+
+                    ? TypeHint.Document : null;
+            }
+
+            TypeHint? PlainText()
+            {
+                return mimeType.StartsWith("text/")
+                    && !mimeType.Equals("text/csv")
+                    //|| mimeType.StartsWith("")
+
+                    ? TypeHint.PlainText : null;
+            }
+
+            TypeHint? Image()
+            {
+                return mimeType.StartsWith("image/")
+                    //|| mimeType.StartsWith("")
+
+                    ? TypeHint.Image : null;
+            }
+        }
+
+        public static TypeHint GetTypeFromExtension(string extension)
         {
             if (!extension.StartsWith('.'))
                 extension = $".{extension}";
 
+            if (TextExtensions.Contains(extension))
+                return TypeHint.PlainText;
+
             if (DocumentExtensions.Contains(extension))
-                return ContentType.Document;
+                return TypeHint.Document;
 
             if (ImageExtensions.Contains(extension))
-                return ContentType.Image;
+                return TypeHint.Image;
 
             if (MediaExtensions.Contains(extension))
-                return ContentType.Media;
+                return TypeHint.Media;
 
             if (AudioExtensions.Contains(extension))
-                return ContentType.Audio;
+                return TypeHint.Audio;
 
-            return ContentType.Unclassified;
+            return TypeHint.Unclassified;
         }
     }
 }

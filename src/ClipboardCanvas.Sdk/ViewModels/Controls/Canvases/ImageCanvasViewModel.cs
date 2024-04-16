@@ -12,19 +12,31 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
     public partial class ImageCanvasViewModel : BaseCanvasViewModel
     {
         [ObservableProperty] private IImage? _Image;
-        protected IFile? imageFile;
 
         private IImageService ImageService { get; } = Ioc.Default.GetRequiredService<IImageService>();
 
-        public ImageCanvasViewModel(IDataSourceModel collectionModel)
+        /// <inheritdoc/>
+        public override IStorable? Storable { get; }
+
+        public ImageCanvasViewModel(IImage image, IDataSourceModel collectionModel)
             : base(collectionModel)
         {
+            Image = image;
+        }
+
+        public ImageCanvasViewModel(IFile imageFile, IDataSourceModel collectionModel)
+            : base(collectionModel)
+        {
+            Storable = imageFile;
         }
 
         /// <inheritdoc/>
-        public override Task InitAsync(CancellationToken cancellationToken = default)
+        public override async Task InitAsync(CancellationToken cancellationToken = default)
         {
-            return Task.CompletedTask;
+            if (Storable is not IFile file)
+                return;
+
+            Image = await ImageService.GetImageAsync(file, cancellationToken);
         }
     }
 }

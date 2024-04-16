@@ -1,5 +1,6 @@
 ﻿using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Shared.ComponentModel;
+using OwlCore.Storage;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,6 +11,14 @@ namespace ClipboardCanvas.Sdk.Services
     /// </summary>
     public interface IImageService
     {
+        /// <summary>
+        /// Reads the bitmap from provided <paramref name="file"/> and converts it to <see cref="IImage"/>.
+        /// </summary>
+        /// <param name="file">The image file to read.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> that cancels this action.</param>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous operation. Value is <see cref="IImage"/> representation of the bitmap file.</returns>
+        Task<IImage> GetImageAsync(IFile file, CancellationToken cancellationToken);
+
         /// <summary>
         /// Retrieves an image based on the contents of the <paramref name="collectionModel"/>.
         /// </summary>

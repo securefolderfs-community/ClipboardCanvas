@@ -111,6 +111,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         private async Task GoForwardAsync(CancellationToken cancellationToken)
         {
             _index += _index >= _items.Count ? 0 : 1;
+            UpdateNavigationButtons();
             if (_index >= _items.Count)
             {
                 _canvasViewModel.Reset();

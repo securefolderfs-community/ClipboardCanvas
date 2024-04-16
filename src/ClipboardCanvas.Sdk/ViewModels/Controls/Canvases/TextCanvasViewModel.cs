@@ -1,7 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using ClipboardCanvas.Sdk.Extensions;
 using ClipboardCanvas.Sdk.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
+using OwlCore.Storage;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
 {
@@ -9,15 +11,28 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
     {
         [ObservableProperty] private string? _Text;
 
-        public TextCanvasViewModel(IDataSourceModel collectionModel)
+        /// <inheritdoc/>
+        public override IStorable? Storable { get; }
+
+        public TextCanvasViewModel(string text, IDataSourceModel collectionModel)
             : base(collectionModel)
         {
+            Text = text;
+        }
+
+        public TextCanvasViewModel(IFile file, IDataSourceModel sourceModel)
+            : base(sourceModel)
+        {
+            Storable = file;
         }
 
         /// <inheritdoc/>
-        public override Task InitAsync(CancellationToken cancellationToken = default)
+        public override async Task InitAsync(CancellationToken cancellationToken = default)
         {
-            return Task.CompletedTask;
+            if (Storable is not IFile file)
+                return;
+
+            Text = await file.ReadAllTextAsync(null, cancellationToken);
         }
     }
 }

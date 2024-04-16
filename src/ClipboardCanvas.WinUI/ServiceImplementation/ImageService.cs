@@ -1,4 +1,5 @@
-﻿using ClipboardCanvas.Sdk.Models;
+﻿using System;
+using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.Shared.ComponentModel;
 using ClipboardCanvas.Shared.Enums;
@@ -8,12 +9,42 @@ using OwlCore.Storage;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Graphics.Imaging;
+using Windows.Storage.Streams;
+using ClipboardCanvas.WinUI.Helpers;
+using Microsoft.UI.Xaml.Media.Imaging;
+using MimeTypes;
 
 namespace ClipboardCanvas.WinUI.ServiceImplementation
 {
     /// <inheritdoc cref="IImageService"/>
     internal sealed class ImageService : IImageService
     {
+        /// <inheritdoc/>
+        public async Task<IImage> GetImageAsync(IFile file, CancellationToken cancellationToken)
+        {
+            await using var stream = await file.OpenStreamAsync(FileAccess.Read, cancellationToken);
+            using var winrtStream = stream.AsRandomAccessStream();
+            using var memStream = new InMemoryRandomAccessStream();
+
+            var mimeType = MimeTypeMap.GetMimeType(file.Id);
+            var decoderGuid = MimeHelpers.MimeToBitmapDecoder(mimeType);
+            var encoderGuid = MimeHelpers.MimeToBitmapEncoder(mimeType);
+
+            var decoder = await BitmapDecoder.CreateAsync(decoderGuid, winrtStream);
+            var encoder = await BitmapEncoder.CreateAsync(encoderGuid, memStream);
+
+            using var softwareBitmap = await decoder.GetSoftwareBitmapAsync().AsTask(cancellationToken);
+            encoder.SetSoftwareBitmap(softwareBitmap);
+
+            await encoder.FlushAsync().AsTask(cancellationToken);
+
+            var bitmap = new BitmapImage();
+            await bitmap.SetSourceAsync(memStream).AsTask(cancellationToken);
+
+            return new ImageBitmap(bitmap);
+        }
+
         /// <inheritdoc/>
         public async Task<IImage> GetCollectionIconAsync(IDataSourceModel collectionModel, CancellationToken cancellationToken)
         {
@@ -25,26 +56,27 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
 
             await foreach (var item in collectionModel.GetItemsAsync(StorableType.All, cancellationToken))
             {
-                var fileType = FileExtensionHelper.GetFileType(Path.GetExtension(item.Name));
+                var fileType = FileExtensionHelper.GetTypeFromExtension(Path.GetExtension(item.Name));
                 switch (fileType)
                 {
-                    case ContentType.Unclassified:
+                    case TypeHint.Unclassified:
                         unclassified++;
                         break;
 
-                    case ContentType.Document:
+                    case TypeHint.Document:
+                    case TypeHint.PlainText:
                         documents++;
                         break;
 
-                    case ContentType.Image:
+                    case TypeHint.Image:
                         images++;
                         break;
 
-                    case ContentType.Media:
+                    case TypeHint.Media:
                         media++;
                         break;
 
-                    case ContentType.Audio:
+                    case TypeHint.Audio:
                         audio++;
                         break;
                 }

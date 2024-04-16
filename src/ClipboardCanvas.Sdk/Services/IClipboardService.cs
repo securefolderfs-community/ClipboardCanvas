@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using ClipboardCanvas.Sdk.AppModels;
 
 namespace ClipboardCanvas.Sdk.Services
 {
@@ -57,7 +58,7 @@ namespace ClipboardCanvas.Sdk.Services
         /// <summary>
         /// Gets the type of the clipboard data.
         /// </summary>
-        ContentType PrimaryType { get; }
+        TypeClassification Classification { get; }
 
         /// <summary>
         /// Gets the text that is contained within the clipboard data.

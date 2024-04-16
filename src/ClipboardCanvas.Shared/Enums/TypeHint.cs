@@ -1,8 +1,9 @@
 ﻿namespace ClipboardCanvas.Shared.Enums
 {
-    public enum ContentType
+    public enum TypeHint
     {
         Unclassified,
+        PlainText,
         Document,
         UriLink,
         Storage,

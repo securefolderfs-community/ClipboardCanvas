@@ -1,4 +1,6 @@
-﻿namespace ClipboardCanvas.Sdk.AppModels
+﻿using ClipboardCanvas.Shared.Enums;
+
+namespace ClipboardCanvas.Sdk.AppModels
 {
     public struct TypeClassification
     {
@@ -8,13 +10,19 @@
         public string MimeType { get; }
 
         /// <summary>
+        /// Gets the hint which may or may not indicate the correct type.
+        /// </summary>
+        public TypeHint TypeHint { get; }
+
+        /// <summary>
         /// Gets the content extension, if any.
         /// </summary>
         public string? Extension { get; }
 
-        public TypeClassification(string mimeType, string? extension)
+        public TypeClassification(string mimeType, TypeHint typeHint, string? extension = null)
         {
             MimeType = mimeType;
+            TypeHint = typeHint;
             Extension = extension;
         }
     }

@@ -1,13 +1,14 @@
-﻿using ClipboardCanvas.Sdk.AppModels;
-using ClipboardCanvas.Sdk.Models;
+﻿using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.Sdk.ViewModels.Controls.Canvases;
+using ClipboardCanvas.Shared.Enums;
+using ClipboardCanvas.Shared.Helpers;
 using MimeTypes;
 using OwlCore.Storage;
 using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using ClipboardCanvas.Shared.Extensions;
 
 namespace ClipboardCanvas.WinUI.ServiceImplementation
 {
@@ -18,26 +19,15 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
         public async Task<BaseCanvasViewModel> GetCanvasForStorableAsync(IStorableChild storable, IDataSourceModel sourceModel, CancellationToken cancellationToken)
         {
             var mimeType = MimeTypeMap.GetMimeType(storable.Id);
-            var classification = new TypeClassification(mimeType, Path.GetExtension(storable.Id)); // TODO
+            var typeHint = FileExtensionHelper.GetTypeFromMime(mimeType);
+            await Task.CompletedTask;
 
-            if (mimeType.StartsWith("image/"))
-                return await ImageCanvasAsync(storable, sourceModel, cancellationToken);
-
-            if (mimeType.StartsWith("text/"))
-                return await TextCanvasAsync(storable, sourceModel, cancellationToken);
-
-            throw new NotImplementedException();
-            //return new DefaultCanvasViewModel();
-        }
-
-        private async Task<BaseCanvasViewModel> ImageCanvasAsync(IStorableChild storable, IDataSourceModel sourceModel, CancellationToken cancellationToken)
-        {
-            return new ImageCanvasViewModel(sourceModel);
-        }
-
-        private async Task<BaseCanvasViewModel> TextCanvasAsync(IStorableChild storable, IDataSourceModel sourceModel, CancellationToken cancellationToken)
-        {
-            return new TextCanvasViewModel(sourceModel);
+            return typeHint switch
+            {
+                TypeHint.Image => storable is IFile file ? new ImageCanvasViewModel(file, sourceModel).WithInitAsync() : null,
+                TypeHint.PlainText => storable is IFile file ? new TextCanvasViewModel(file, sourceModel).WithInitAsync() : null,
+                _ => (BaseCanvasViewModel?)null
+            } ?? throw new ArgumentOutOfRangeException(nameof(typeHint));
         }
     }
 }

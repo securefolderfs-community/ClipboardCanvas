@@ -13,6 +13,9 @@
         <DataTemplate x:Key="TextCanvasTemplate" x:DataType="vm:TextCanvasViewModel">
             <uc:TextCanvasControl Text="{x:Bind Text, Mode=OneWay}" />
         </DataTemplate>
+        <DataTemplate x:Key="ImageCanvasTemplate" x:DataType="vm:ImageCanvasViewModel">
+            <uc:ImageCanvasControl Image="{x:Bind Image, Mode=OneWay}"></uc:ImageCanvasControl>
+        </DataTemplate>
     </UserControl.Resources>
 
     <ContentControl
@@ -20,7 +23,7 @@
         VerticalContentAlignment="Stretch"
         Content="{x:Bind CanvasViewModel, Mode=OneWay}">
         <ContentControl.ContentTemplateSelector>
-            <ts:CanvasTemplateSelector TextCanvasTemplate="{StaticResource TextCanvasTemplate}" />
+            <ts:CanvasTemplateSelector TextCanvasTemplate="{StaticResource TextCanvasTemplate}" ImageCanvasTemplate="{StaticResource ImageCanvasTemplate}" />
         </ContentControl.ContentTemplateSelector>
     </ContentControl>
 </UserControl>
