@@ -114,6 +114,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             UpdateNavigationButtons();
             if (_index >= _items.Count)
             {
+                // If on new canvas...
                 _canvasViewModel.Reset();
                 _navigationViewModel.IsForwardEnabled = false;
                 return;

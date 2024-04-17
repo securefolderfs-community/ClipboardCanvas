@@ -8,11 +8,17 @@ namespace ClipboardCanvas.WinUI.TemplateSelectors
     {
         public DataTemplate? IconImageDataTemplate { get; set; }
 
+        public DataTemplate? ImageBitmapDataTemplate { get; set; }
+
+        public DataTemplate? PdfPageImageDataTemplate { get; set; }
+
         protected override DataTemplate? SelectTemplateCore(IImage? item, DependencyObject container)
         {
             return item switch
             {
                 IconImage => IconImageDataTemplate,
+                ImageBitmap => ImageBitmapDataTemplate,
+                PdfPageImage => PdfPageImageDataTemplate,
                 _ => base.SelectTemplateCore(item, container)
             };
         }

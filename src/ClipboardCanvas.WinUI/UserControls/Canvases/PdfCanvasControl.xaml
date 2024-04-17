@@ -1,0 +1,73 @@
+<UserControl
+    x:Class="ClipboardCanvas.WinUI.UserControls.Canvases.PdfCanvasControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ctwui="using:CommunityToolkit.WinUI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uc="using:ClipboardCanvas.WinUI.UserControls"
+    xmlns:vm="using:ClipboardCanvas.Sdk.ViewModels.Controls.Documents"
+    mc:Ignorable="d">
+
+    <ScrollViewer
+        CornerRadius="0"
+        HorizontalScrollBarVisibility="Auto"
+        HorizontalScrollMode="Auto"
+        VerticalScrollMode="Enabled"
+        ZoomMode="Enabled">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Rectangle Grid.Row="0" Height="100" />
+            <Border x:Name="ShadowTarget" Grid.Row="1" />
+            <ItemsControl
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                ItemsSource="{x:Bind PagesSource, Mode=OneWay}">
+                <ctwui:Effects.Shadow>
+                    <ctwui:AttachedDropShadow
+                        BlurRadius="32"
+                        CastTo="{x:Bind ShadowTarget}"
+                        CornerRadius="8"
+                        Opacity="0.3" />
+                </ctwui:Effects.Shadow>
+
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:PdfPageViewModel">
+                        <Grid Margin="0,0,0,16" CornerRadius="4">
+                            <uc:ImageControl Image="{x:Bind PageImage, Mode=OneWay}" />
+                            <ItemsControl ItemsSource="{x:Bind OcrText}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <Canvas />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:OcrStringViewModel">
+                                        <TextBlock
+                                            Foreground="Transparent"
+                                            IsTextSelectionEnabled="True"
+                                            Text="{x:Bind Text}">
+                                            <TextBlock.RenderTransform>
+                                                <CompositeTransform TranslateX="{x:Bind Rectangle.X}" TranslateY="{x:Bind Rectangle.Y}" />
+                                            </TextBlock.RenderTransform>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

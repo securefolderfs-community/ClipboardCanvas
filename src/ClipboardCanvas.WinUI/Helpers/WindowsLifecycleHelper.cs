@@ -51,6 +51,8 @@ namespace ClipboardCanvas.WinUI.Helpers
                     .AddSingleton<IFileExplorerService, WindowsFileExplorerService>()
                     .AddSingleton<IStorageService, SystemStorageService>()
                     .AddSingleton<IClipboardService, ClipboardService>()
+                    .AddSingleton<ITextRecognitionService, OcrService>()
+                    .AddSingleton<IDocumentService, DocumentService>()
                     .AddSingleton<ICanvasService, CanvasService>()
                     .AddSingleton<IImageService, ImageService>()
                     .AddSingleton<ISettingsService, SettingsService>(_ => new(settingsFolder))

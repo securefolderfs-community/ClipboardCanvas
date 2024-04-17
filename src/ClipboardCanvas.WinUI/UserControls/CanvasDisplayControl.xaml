@@ -14,7 +14,10 @@
             <uc:TextCanvasControl Text="{x:Bind Text, Mode=OneWay}" />
         </DataTemplate>
         <DataTemplate x:Key="ImageCanvasTemplate" x:DataType="vm:ImageCanvasViewModel">
-            <uc:ImageCanvasControl Image="{x:Bind Image, Mode=OneWay}"></uc:ImageCanvasControl>
+            <uc:ImageCanvasControl Image="{x:Bind Image, Mode=OneWay}" />
+        </DataTemplate>
+        <DataTemplate x:Key="PdfCanvasTemplate" x:DataType="vm:PdfCanvasViewModel">
+            <uc:PdfCanvasControl PagesSource="{x:Bind Pages, Mode=OneWay}" />
         </DataTemplate>
     </UserControl.Resources>
 
@@ -23,7 +26,10 @@
         VerticalContentAlignment="Stretch"
         Content="{x:Bind CanvasViewModel, Mode=OneWay}">
         <ContentControl.ContentTemplateSelector>
-            <ts:CanvasTemplateSelector TextCanvasTemplate="{StaticResource TextCanvasTemplate}" ImageCanvasTemplate="{StaticResource ImageCanvasTemplate}" />
+            <ts:CanvasTemplateSelector
+                ImageCanvasTemplate="{StaticResource ImageCanvasTemplate}"
+                PdfCanvasTemplate="{StaticResource PdfCanvasTemplate}"
+                TextCanvasTemplate="{StaticResource TextCanvasTemplate}" />
         </ContentControl.ContentTemplateSelector>
     </ContentControl>
 </UserControl>

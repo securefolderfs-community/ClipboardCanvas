@@ -4,6 +4,7 @@ using System.IO;
 
 namespace ClipboardCanvas.WinUI.Imaging
 {
+    /// <inheritdoc cref="IImage"/>
     public sealed class ImageBitmap : IImage
     {
         public BitmapImage Source { get; }
@@ -17,6 +18,11 @@ namespace ClipboardCanvas.WinUI.Imaging
         {
             Source = new BitmapImage();
             Source.SetSource(stream.AsRandomAccessStream());
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
         }
     }
 }

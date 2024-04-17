@@ -21,7 +21,7 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
     internal sealed class ImageService : IImageService
     {
         /// <inheritdoc/>
-        public async Task<IImage> GetImageAsync(IFile file, CancellationToken cancellationToken)
+        public async Task<IImage> ReadImageAsync(IFile file, CancellationToken cancellationToken)
         {
             await using var stream = await file.OpenStreamAsync(FileAccess.Read, cancellationToken);
             using var winrtStream = stream.AsRandomAccessStream();

@@ -11,7 +11,14 @@
 
     <UserControl.Resources>
         <DataTemplate x:Key="IconImageDataTemplate" x:DataType="im:IconImage">
+            <!--  {Binding} is required here  -->
             <FontIcon FontSize="{Binding HeightHint, Mode=OneWay, ElementName=RootControl}" Glyph="{x:Bind IconGlyph}" />
+        </DataTemplate>
+        <DataTemplate x:Key="ImageBitmapDataTemplate" x:DataType="im:ImageBitmap">
+            <Image Source="{x:Bind Source, Mode=OneWay}" />
+        </DataTemplate>
+        <DataTemplate x:Key="PdfPageImageDataTemplate" x:DataType="im:PdfPageImage">
+            <Image Source="{x:Bind ImageSource, Mode=OneWay}" />
         </DataTemplate>
     </UserControl.Resources>
 
@@ -20,7 +27,10 @@
         VerticalContentAlignment="Stretch"
         Content="{x:Bind Image, Mode=OneWay}">
         <ContentControl.ContentTemplateSelector>
-            <ts:ImageTemplateSelector IconImageDataTemplate="{StaticResource IconImageDataTemplate}" />
+            <ts:ImageTemplateSelector
+                IconImageDataTemplate="{StaticResource IconImageDataTemplate}"
+                ImageBitmapDataTemplate="{StaticResource ImageBitmapDataTemplate}"
+                PdfPageImageDataTemplate="{StaticResource PdfPageImageDataTemplate}" />
         </ContentControl.ContentTemplateSelector>
     </ContentControl>
 </UserControl>

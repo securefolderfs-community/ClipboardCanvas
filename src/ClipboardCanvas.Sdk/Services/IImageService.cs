@@ -17,7 +17,7 @@ namespace ClipboardCanvas.Sdk.Services
         /// <param name="file">The image file to read.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> that cancels this action.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation. Value is <see cref="IImage"/> representation of the bitmap file.</returns>
-        Task<IImage> GetImageAsync(IFile file, CancellationToken cancellationToken);
+        Task<IImage> ReadImageAsync(IFile file, CancellationToken cancellationToken);
 
         /// <summary>
         /// Retrieves an image based on the contents of the <paramref name="collectionModel"/>.

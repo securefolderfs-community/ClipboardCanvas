@@ -8,10 +8,6 @@
     mc:Ignorable="d">
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
         <Border x:Name="ShadowTarget" />
         <ScrollView
             Width="728"
@@ -33,9 +29,10 @@
 
                     <ctwui:Effects.Shadow>
                         <ctwui:AttachedDropShadow
-                            BlurRadius="96"
+                            BlurRadius="32"
                             CastTo="{x:Bind ShadowTarget}"
-                            CornerRadius="8" />
+                            CornerRadius="8"
+                            Opacity="0.3" />
                     </ctwui:Effects.Shadow>
 
                     <RichTextBlock IsTextSelectionEnabled="True">

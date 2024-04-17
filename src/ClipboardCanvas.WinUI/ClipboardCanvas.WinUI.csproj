@@ -42,6 +42,7 @@
     <None Remove="ResourceDictionaries\ListViews.xaml" />
     <None Remove="UserControls\CanvasDisplayControl.xaml" />
     <None Remove="UserControls\Canvases\ImageCanvasControl.xaml" />
+    <None Remove="UserControls\Canvases\PdfCanvasControl.xaml" />
     <None Remove="UserControls\Canvases\TextCanvasControl.xaml" />
     <None Remove="UserControls\DynamicRibbon.xaml" />
     <None Remove="UserControls\FloatingCardControl.xaml" />
@@ -73,7 +74,7 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230913002" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
     <PackageReference Include="MimeTypeMapOfficial" Version="1.0.17" />
-    <PackageReference Include="WinUIEx" Version="2.3.3" />
+    <PackageReference Include="WinUIEx" Version="2.3.4" />
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.0" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
@@ -106,6 +107,9 @@
     <None Update="Images\TestImage.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="UserControls\Canvases\PdfCanvasControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="UserControls\Canvases\ImageCanvasControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

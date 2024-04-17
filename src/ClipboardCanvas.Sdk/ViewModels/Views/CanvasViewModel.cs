@@ -57,11 +57,12 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
             // TODO: Infrastructure strategy:
             // For pasting: listen for changes from clipboard (service) and retrieve data friendly format (object, or IData/IFormat)
             // For saving: add a method or use an existing one inside _canvasSourceModel to save items there, however, first check
-            // if CurrentCanvasViewModel can be cast to ICanvasSourceModel/IWrapper<ICanvasSourceModel>
+            // if CurrentCanvasViewModel can be cast to ICanvasSourceModel/IWrapper<ICanvasSourceModel>/InfiniteCanvasViewModel
 
             if (source is not IStorableChild storable)
                 return;
 
+            CurrentCanvasViewModel?.Dispose();
             CurrentCanvasViewModel = await CanvasService.GetCanvasForStorableAsync(storable, _canvasSourceModel, cancellationToken);
         }
     }

@@ -36,7 +36,13 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
             if (Storable is not IFile file)
                 return;
 
-            Image = await ImageService.GetImageAsync(file, cancellationToken);
+            Image = await ImageService.ReadImageAsync(file, cancellationToken);
+        }
+
+        /// <inheritdoc/>
+        public override void Dispose()
+        {
+            Image?.Dispose();
         }
     }
 }
