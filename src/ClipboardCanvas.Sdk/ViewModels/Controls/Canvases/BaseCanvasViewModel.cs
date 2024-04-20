@@ -11,6 +11,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
     public abstract partial class BaseCanvasViewModel : ObservableObject, IAsyncInitialize, IViewable, IDisposable
     {
         [ObservableProperty] private string? _Title;
+        [ObservableProperty] private bool _IsImmersed;
 
         public IDataSourceModel SourceModel { get; }
 

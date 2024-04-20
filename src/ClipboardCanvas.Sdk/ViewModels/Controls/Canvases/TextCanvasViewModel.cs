@@ -1,9 +1,9 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using ClipboardCanvas.Sdk.Extensions;
+﻿using ClipboardCanvas.Sdk.Extensions;
 using ClipboardCanvas.Sdk.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using OwlCore.Storage;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
 {

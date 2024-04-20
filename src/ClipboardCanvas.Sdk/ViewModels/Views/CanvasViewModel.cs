@@ -44,12 +44,15 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
         /// <inheritdoc/>
         public void OnDisappearing()
         {
-        }
-
-        public void Reset()
-        {
             CurrentCanvasViewModel?.Dispose();
             CurrentCanvasViewModel = null;
+        }
+
+        public void ChangeImmersion(bool isImmersed)
+        {
+            _navigationViewModel.IsNavigationVisible = !isImmersed;
+            if (CurrentCanvasViewModel is not null)
+                CurrentCanvasViewModel.IsImmersed = isImmersed;
         }
 
         public async Task DisplayAsync(IStorable source, CancellationToken cancellationToken)

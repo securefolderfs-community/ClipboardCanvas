@@ -20,13 +20,14 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
         public async Task<BaseCanvasViewModel> GetCanvasForStorableAsync(IStorableChild storable, IDataSourceModel sourceModel, CancellationToken cancellationToken)
         {
             var mimeType = MimeTypeMap.GetMimeType(storable.Id);
-            var typeHint = FileExtensionHelper.GetTypeFromMime(mimeType);
+            var typeHint = FileTypeHelper.GetTypeFromMime(mimeType);
             var classification = new TypeClassification(mimeType, typeHint, Path.GetExtension(storable.Id));
 
             var viewModel = typeHint switch
             {
                 TypeHint.Image => storable is IFile file ? new ImageCanvasViewModel(file, sourceModel) : null,
                 TypeHint.PlainText => storable is IFile file ? new TextCanvasViewModel(file, sourceModel) : null,
+                TypeHint.Media => storable is IFile file ? new VideoCanvasViewModel(file, sourceModel) : null,
                 TypeHint.Document => MatchDocument(storable, sourceModel, classification),
 
                 _ => MatchText(storable, sourceModel, classification)

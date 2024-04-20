@@ -12,7 +12,7 @@
         <vc:NullToBoolConverter x:Key="NullToBoolConverter" />
     </Page.Resources>
 
-    <Grid>
+    <Grid Tapped="Root_Tapped">
         <StackPanel
             x:Name="NewCanvas"
             HorizontalAlignment="Center"

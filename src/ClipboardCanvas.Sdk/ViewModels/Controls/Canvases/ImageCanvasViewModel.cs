@@ -13,7 +13,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
     {
         [ObservableProperty] private IImage? _Image;
 
-        private IImageService ImageService { get; } = Ioc.Default.GetRequiredService<IImageService>();
+        private IMediaService MediaService { get; } = Ioc.Default.GetRequiredService<IMediaService>();
 
         /// <inheritdoc/>
         public override IStorable? Storable { get; }
@@ -36,7 +36,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
             if (Storable is not IFile file)
                 return;
 
-            Image = await ImageService.ReadImageAsync(file, cancellationToken);
+            Image = await MediaService.ReadImageAsync(file, cancellationToken);
         }
 
         /// <inheritdoc/>

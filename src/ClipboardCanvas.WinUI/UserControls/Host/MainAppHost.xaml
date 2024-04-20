@@ -82,18 +82,23 @@
                 IsForwardEnabled="{x:Bind ViewModel.NavigationViewModel.IsForwardEnabled, Mode=OneWay}"
                 Visibility="{x:Bind ViewModel.NavigationViewModel.IsNavigationVisible, Mode=OneWay}">
                 <anim:Implicit.ShowAnimations>
+                    <anim:OpacityAnimation
+                        Delay="0:0:0.05"
+                        From="0"
+                        To="1"
+                        Duration="0:0:0.1" />
                     <anim:TranslationAnimation
                         EasingMode="EaseInOut"
-                        From="0,32,0"
+                        From="0,50,0"
                         To="0"
                         Duration="0:0:0.4" />
                 </anim:Implicit.ShowAnimations>
                 <anim:Implicit.HideAnimations>
                     <anim:TranslationAnimation
-                        EasingMode="EaseInOut"
-                        From="0,-48,0"
-                        To="0,32,0"
-                        Duration="0:0:0.3" />
+                        EasingMode="EaseIn"
+                        From="0,-60,0"
+                        To="0,0,0"
+                        Duration="0:0:0.25" />
                 </anim:Implicit.HideAnimations>
             </uc:NavigationSurfaceControl>
         </Grid>

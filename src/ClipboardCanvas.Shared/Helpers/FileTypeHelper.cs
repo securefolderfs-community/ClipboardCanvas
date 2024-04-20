@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ClipboardCanvas.Shared.Helpers
 {
-    public static class FileExtensionHelper
+    public static class FileTypeHelper
     {
         public static string[] TextExtensions { get; } =
         {
@@ -57,8 +57,22 @@ namespace ClipboardCanvas.Shared.Helpers
             return Image()
                    ?? PlainText()
                    ?? Document()
+                   ?? Media()
                    // TODO
                    ?? TypeHint.Unclassified;
+
+            TypeHint? Media()
+            {
+                return mimeType.Equals("video/x-msvideo")
+                    || mimeType.Equals("video/mp4")
+                    || mimeType.Equals("video/mpeg")
+                    || mimeType.Equals("video/ogg")
+                    || mimeType.Equals("video/webm")
+                    || mimeType.Equals("video/3gpp")
+                    || mimeType.Equals("video/3gpp2")
+
+                    ? TypeHint.Media : null;
+            }
 
             TypeHint? Document()
             {

@@ -9,7 +9,7 @@ namespace ClipboardCanvas.Sdk.Services
     /// <summary>
     /// A service used to manage app image assets.
     /// </summary>
-    public interface IImageService
+    public interface IMediaService
     {
         /// <summary>
         /// Reads the bitmap from provided <paramref name="file"/> and converts it to <see cref="IImage"/>.
@@ -26,5 +26,7 @@ namespace ClipboardCanvas.Sdk.Services
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> that cancels this action.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation. Value is <see cref="IImage"/> representation of the collection icon.</returns>
         Task<IImage> GetCollectionIconAsync(IDataSourceModel collectionModel, CancellationToken cancellationToken);
+
+        Task<IMediaSource> GetVideoPlaybackAsync(IFile file, CancellationToken cancellationToken);
     }
 }

@@ -30,7 +30,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 
         private IFileExplorerService FileExplorerService { get; } = Ioc.Default.GetRequiredService<IFileExplorerService>();
 
-        private IImageService ImageService { get; } = Ioc.Default.GetRequiredService<IImageService>();
+        private IMediaService ImageService { get; } = Ioc.Default.GetRequiredService<IMediaService>();
 
         public CollectionViewModel(ICollectionSourceModel collectionStoreModel, IDataSourceModel collectionModel, NavigationViewModel navigationViewModel)
         {
@@ -110,16 +110,21 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 
         private async Task GoForwardAsync(CancellationToken cancellationToken)
         {
+            // Increase by 1, only if not on new canvas
             _index += _index >= _items.Count ? 0 : 1;
+
+            // Update navigation buttons
             UpdateNavigationButtons();
+
+            // If on new canvas...
             if (_index >= _items.Count)
             {
-                // If on new canvas...
-                _canvasViewModel.Reset();
-                _navigationViewModel.IsForwardEnabled = false;
+                _canvasViewModel.CurrentCanvasViewModel?.Dispose();
+                _canvasViewModel.CurrentCanvasViewModel = null;
                 return;
             }
 
+            // Otherwise, display the next item...
             var itemToDisplay = _items[_index];
             await _canvasViewModel.DisplayAsync(itemToDisplay, cancellationToken);
         }

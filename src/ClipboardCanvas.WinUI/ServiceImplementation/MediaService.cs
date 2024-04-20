@@ -1,24 +1,27 @@
-﻿using System;
-using ClipboardCanvas.Sdk.Models;
+﻿using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.Shared.ComponentModel;
 using ClipboardCanvas.Shared.Enums;
 using ClipboardCanvas.Shared.Helpers;
+using ClipboardCanvas.WinUI.AppModels;
+using ClipboardCanvas.WinUI.Helpers;
 using ClipboardCanvas.WinUI.Imaging;
+using Microsoft.UI.Xaml.Media.Imaging;
+using MimeTypes;
 using OwlCore.Storage;
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
+using Windows.Media.Core;
 using Windows.Storage.Streams;
-using ClipboardCanvas.WinUI.Helpers;
-using Microsoft.UI.Xaml.Media.Imaging;
-using MimeTypes;
+using IMediaSource = ClipboardCanvas.Sdk.Models.IMediaSource;
 
 namespace ClipboardCanvas.WinUI.ServiceImplementation
 {
-    /// <inheritdoc cref="IImageService"/>
-    internal sealed class ImageService : IImageService
+    /// <inheritdoc cref="IMediaService"/>
+    internal sealed class MediaService : IMediaService
     {
         /// <inheritdoc/>
         public async Task<IImage> ReadImageAsync(IFile file, CancellationToken cancellationToken)
@@ -56,7 +59,8 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
 
             await foreach (var item in collectionModel.GetItemsAsync(StorableType.All, cancellationToken))
             {
-                var fileType = FileExtensionHelper.GetTypeFromExtension(Path.GetExtension(item.Name));
+                var mime = MimeTypeMap.GetMimeType(item.Id);
+                var fileType = FileTypeHelper.GetTypeFromMime(mime);
                 switch (fileType)
                 {
                     case TypeHint.Unclassified:
@@ -101,6 +105,16 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
             else glyph = "\uF0E2";
 
             return new IconImage(glyph);
+        }
+
+        /// <inheritdoc/>
+        public async Task<IMediaSource> GetVideoPlaybackAsync(IFile file, CancellationToken cancellationToken)
+        {
+            var stream = await file.OpenStreamAsync(FileAccess.Read, cancellationToken);
+            var mime = MimeTypeMap.GetMimeType(file.Id);
+
+            var mediaSource = MediaSource.CreateFromStream(stream.AsRandomAccessStream(), mime);
+            return new VideoSource(mediaSource, stream);
         }
 
         private static bool IsMajority(float first, params float[] other)

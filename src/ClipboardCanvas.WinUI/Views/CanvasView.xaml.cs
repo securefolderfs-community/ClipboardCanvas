@@ -1,6 +1,7 @@
 using ClipboardCanvas.Sdk.ViewModels.Views;
 using ClipboardCanvas.Shared.Extensions;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -13,6 +14,8 @@ namespace ClipboardCanvas.WinUI.Views
     /// </summary>
     public sealed partial class CanvasView : Page
     {
+        private bool _isImmersed;
+
         public CanvasViewModel? ViewModel
         {
             get => DataContext.TryCast<CanvasViewModel>();
@@ -31,6 +34,15 @@ namespace ClipboardCanvas.WinUI.Views
                 ViewModel = viewModel;
 
             base.OnNavigatedTo(e);
+        }
+
+        private void Root_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (ViewModel?.CurrentCanvasViewModel is null)
+                return;
+
+            _isImmersed = !_isImmersed;
+            ViewModel?.ChangeImmersion(_isImmersed);
         }
     }
 }
