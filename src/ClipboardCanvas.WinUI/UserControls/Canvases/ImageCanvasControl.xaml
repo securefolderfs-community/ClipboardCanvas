@@ -3,9 +3,94 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:imedia="using:Microsoft.Xaml.Interactions.Media"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="using:ClipboardCanvas.WinUI.UserControls"
     mc:Ignorable="d">
 
-    <uc:ImageControl Image="{x:Bind Image, Mode=OneWay}" />
+    <Grid>
+        <!--<i:Interaction.Behaviors>
+        -->
+        <!--  If immersed  -->
+        <!--
+            <icore:DataTriggerBehavior
+                Binding="{x:Bind IsImmersed, Mode=OneWay}"
+                ComparisonCondition="Equal"
+                Value="True">
+                <imedia:ControlStoryboardAction ControlStoryboardOption="Play">
+                    <imedia:ControlStoryboardAction.Storyboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="MainImage"
+                                Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                From="0.92"
+                                To="1"
+                                Duration="0:0:0.35">
+                                <DoubleAnimation.EasingFunction>
+                                    <QuadraticEase EasingMode="EaseInOut" />
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation
+                                Storyboard.TargetName="MainImage"
+                                Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                From="0.92"
+                                To="1"
+                                Duration="0:0:0.35">
+                                <DoubleAnimation.EasingFunction>
+                                    <QuadraticEase EasingMode="EaseInOut" />
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </imedia:ControlStoryboardAction.Storyboard>
+                </imedia:ControlStoryboardAction>
+            </icore:DataTriggerBehavior>
+
+        -->
+        <!--  If not immersed  -->
+        <!--
+            <icore:DataTriggerBehavior
+                Binding="{x:Bind IsImmersed, Mode=OneWay}"
+                ComparisonCondition="Equal"
+                Value="False">
+                <imedia:ControlStoryboardAction ControlStoryboardOption="Play">
+                    <imedia:ControlStoryboardAction.Storyboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="MainImage"
+                                Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                From="1"
+                                To="0.92"
+                                Duration="0:0:0.35">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase EasingMode="EaseInOut" Power="2" />
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation
+                                Storyboard.TargetName="MainImage"
+                                Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                From="1"
+                                To="0.92"
+                                Duration="0:0:0.35">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase EasingMode="EaseInOut" Power="2" />
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </imedia:ControlStoryboardAction.Storyboard>
+                </imedia:ControlStoryboardAction>
+            </icore:DataTriggerBehavior>
+        </i:Interaction.Behaviors>-->
+
+        <uc:AnimatedCornerRadiusControl x:Name="MainImage" RenderTransformOrigin="0.5,0.5">
+            <uc:AnimatedCornerRadiusControl.RenderTransform>
+                <ScaleTransform />
+            </uc:AnimatedCornerRadiusControl.RenderTransform>
+
+            <uc:AnimatedCornerRadiusControl.ControlContent>
+                <uc:ImageControl Image="{x:Bind Image, Mode=OneWay}" />
+            </uc:AnimatedCornerRadiusControl.ControlContent>
+        </uc:AnimatedCornerRadiusControl>
+    </Grid>
 </UserControl>

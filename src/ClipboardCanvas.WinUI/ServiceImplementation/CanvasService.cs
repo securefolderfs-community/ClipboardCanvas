@@ -3,11 +3,10 @@ using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.Sdk.ViewModels.Controls.Canvases;
 using ClipboardCanvas.Shared.Enums;
-using ClipboardCanvas.Shared.Helpers;
-using MimeTypes;
+using ClipboardCanvas.WinUI.Helpers;
 using OwlCore.Storage;
 using System;
-using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,38 +18,33 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
         /// <inheritdoc/>
         public async Task<BaseCanvasViewModel> GetCanvasForStorableAsync(IStorableChild storable, IDataSourceModel sourceModel, CancellationToken cancellationToken)
         {
-            var mimeType = MimeTypeMap.GetMimeType(storable.Id);
-            var typeHint = FileTypeHelper.GetTypeFromMime(mimeType);
-            var classification = new TypeClassification(mimeType, typeHint, Path.GetExtension(storable.Id));
-
-            var viewModel = typeHint switch
+            var classification = FileTypeHelper.GetClassification(storable);
+            var viewModel = classification.TypeHint switch
             {
                 TypeHint.Image => storable is IFile file ? new ImageCanvasViewModel(file, sourceModel) : null,
-                TypeHint.PlainText => storable is IFile file ? new TextCanvasViewModel(file, sourceModel) : null,
+                TypeHint.PlainText => storable is IFile file ? MatchText(file, sourceModel, classification) : null,
                 TypeHint.Media => storable is IFile file ? new VideoCanvasViewModel(file, sourceModel) : null,
-                TypeHint.Document => MatchDocument(storable, sourceModel, classification),
+                TypeHint.Document => storable is IFile file ? MatchDocument(file, sourceModel, classification) : null,
 
-                _ => MatchText(storable, sourceModel, classification)
-            } ?? throw new ArgumentOutOfRangeException(nameof(typeHint)); // TODO: Return fallback canvas
+                _ => null,
+            } ?? throw new ArgumentOutOfRangeException(nameof(classification.TypeHint)); // TODO: Return fallback canvas
 
             await viewModel.InitAsync(cancellationToken);
             return viewModel;
         }
 
-        private static BaseCanvasViewModel? MatchText(IStorableChild storable, IDataSourceModel sourceModel, TypeClassification classification)
+        private static BaseCanvasViewModel? MatchText(IFile file, IDataSourceModel sourceModel, TypeClassification classification)
         {
-            _ = storable;
-            _ = sourceModel;
-            _ = classification;
+            if (classification.Extension is not null && FileTypeHelper.CodeExtensions.Contains(classification.Extension))
+                return new CodeCanvasViewModel(file, sourceModel);
 
-            // TODO: Read arbitrary file into a text canvas, if possible
-            return null;
+            return new TextCanvasViewModel(file, sourceModel);
         }
 
-        private static BaseCanvasViewModel? MatchDocument(IStorableChild storable, IDataSourceModel sourceModel, TypeClassification classification)
+        private static BaseCanvasViewModel? MatchDocument(IFile file, IDataSourceModel sourceModel, TypeClassification classification)
         {
-            if (classification.MimeType == "application/pdf" && storable is IFile pdfFile)
-                return new PdfCanvasViewModel(pdfFile, sourceModel);
+            if (classification.MimeType == "application/pdf")
+                return new PdfCanvasViewModel(file, sourceModel);
 
             return null;
         }

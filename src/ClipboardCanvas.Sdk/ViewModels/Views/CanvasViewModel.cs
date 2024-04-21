@@ -44,8 +44,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
         /// <inheritdoc/>
         public void OnDisappearing()
         {
-            CurrentCanvasViewModel?.Dispose();
-            CurrentCanvasViewModel = null;
+            // The canvas is not disposed here since we want the state to be remembered
+            // when navigating back to the canvas
         }
 
         public void ChangeImmersion(bool isImmersed)

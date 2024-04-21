@@ -2,7 +2,6 @@
 using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.Shared.ComponentModel;
 using ClipboardCanvas.Shared.Enums;
-using ClipboardCanvas.Shared.Helpers;
 using ClipboardCanvas.WinUI.AppModels;
 using ClipboardCanvas.WinUI.Helpers;
 using ClipboardCanvas.WinUI.Imaging;
@@ -59,9 +58,8 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
 
             await foreach (var item in collectionModel.GetItemsAsync(StorableType.All, cancellationToken))
             {
-                var mime = MimeTypeMap.GetMimeType(item.Id);
-                var fileType = FileTypeHelper.GetTypeFromMime(mime);
-                switch (fileType)
+                var typeHint = FileTypeHelper.GetType(item);
+                switch (typeHint)
                 {
                     case TypeHint.Unclassified:
                         unclassified++;
