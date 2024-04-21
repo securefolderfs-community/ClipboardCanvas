@@ -34,20 +34,26 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Canvas.ZIndex="9"
-            ToolBarTitle="FileName.png">
+            ToolBarTitle="{x:Bind ViewModel.RibbonViewModel.RibbonTitle, Mode=OneWay}"
+            Visibility="{x:Bind ViewModel.RibbonViewModel.IsRibbonVisible, Mode=OneWay}">
             <anim:Implicit.ShowAnimations>
+                <anim:OpacityAnimation
+                    Delay="0:0:0.05"
+                    From="0"
+                    To="1"
+                    Duration="0:0:0.1" />
                 <anim:TranslationAnimation
                     EasingMode="EaseInOut"
-                    From="0,-45,0"
+                    From="0,-50,0"
                     To="0"
                     Duration="0:0:0.4" />
             </anim:Implicit.ShowAnimations>
             <anim:Implicit.HideAnimations>
                 <anim:TranslationAnimation
-                    EasingMode="EaseInOut"
-                    From="0"
-                    To="0,-45,0"
-                    Duration="0:0:0.3" />
+                    EasingMode="EaseIn"
+                    From="0,0,0"
+                    To="0,-60,0"
+                    Duration="0:0:0.25" />
             </anim:Implicit.HideAnimations>
         </uc:DynamicRibbon>
 
@@ -58,7 +64,24 @@
             Height="96"
             VerticalAlignment="Top"
             Canvas.ZIndex="8"
-            Fill="{ThemeResource RibbonShadowBrush}" />
+            Fill="{ThemeResource RibbonShadowBrush}"
+            Visibility="{x:Bind ViewModel.RibbonViewModel.IsRibbonVisible, Mode=OneWay}">
+            <anim:Implicit.ShowAnimations>
+                <anim:TranslationAnimation
+                    EasingMode="EaseInOut"
+                    From="0,-50,0"
+                    To="0"
+                    Duration="0:0:0.4" />
+            </anim:Implicit.ShowAnimations>
+            <anim:Implicit.HideAnimations>
+                <anim:TranslationAnimation
+                    Delay="0:0:0.1"
+                    EasingMode="EaseIn"
+                    From="0,0,0"
+                    To="0,-120,0"
+                    Duration="0:0:0.4" />
+            </anim:Implicit.HideAnimations>
+        </Rectangle>
 
         <!--  Main Content  -->
         <ucn:MainNavigationControl

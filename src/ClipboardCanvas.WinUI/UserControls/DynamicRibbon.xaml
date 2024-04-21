@@ -50,7 +50,6 @@
                     </AppBarButton.Icon>
                 </AppBarButton>
             </CommandBar.PrimaryCommands>
-
             <CommandBar.SecondaryCommands>
                 <AppBarButton Label="More commands!" />
             </CommandBar.SecondaryCommands>

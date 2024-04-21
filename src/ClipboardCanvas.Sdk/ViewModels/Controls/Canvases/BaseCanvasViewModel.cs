@@ -3,6 +3,7 @@ using ClipboardCanvas.Shared.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using OwlCore.Storage;
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,7 +16,14 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
 
         public IDataSourceModel SourceModel { get; }
 
-        public abstract IStorable? Storable { get; }
+        public virtual IStorable? Storable { get; }
+
+        protected BaseCanvasViewModel(IStorable storable, IDataSourceModel sourceModel)
+            : this(sourceModel)
+        {
+            Storable = storable;
+            Title = Path.GetFileName(storable.Id);
+        }
 
         protected BaseCanvasViewModel(IDataSourceModel sourceModel)
         {

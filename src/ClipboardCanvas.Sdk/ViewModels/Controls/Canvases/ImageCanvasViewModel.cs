@@ -15,9 +15,6 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
 
         private IMediaService MediaService { get; } = Ioc.Default.GetRequiredService<IMediaService>();
 
-        /// <inheritdoc/>
-        public override IStorable? Storable { get; }
-
         public ImageCanvasViewModel(IImage image, IDataSourceModel collectionModel)
             : base(collectionModel)
         {
@@ -25,9 +22,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
         }
 
         public ImageCanvasViewModel(IFile imageFile, IDataSourceModel collectionModel)
-            : base(collectionModel)
+            : base(imageFile, collectionModel)
         {
-            Storable = imageFile;
         }
 
         /// <inheritdoc/>

@@ -14,9 +14,6 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
 {
     public class PdfCanvasViewModel : BaseCanvasViewModel
     {
-        /// <inheritdoc/>
-        public override IStorable? Storable { get; }
-
         /// <summary>
         /// Gets the collection of displayable pages.
         /// </summary>
@@ -25,9 +22,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
         private IDocumentService DocumentService { get; } = Ioc.Default.GetRequiredService<IDocumentService>();
 
         public PdfCanvasViewModel(IFile pdfFile, IDataSourceModel sourceModel)
-            : base(sourceModel)
+            : base(pdfFile, sourceModel)
         {
-            Storable = pdfFile;
             Pages = new();
         }
 

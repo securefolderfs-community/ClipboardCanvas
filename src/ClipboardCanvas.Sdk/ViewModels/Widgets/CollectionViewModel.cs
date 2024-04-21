@@ -1,6 +1,7 @@
 ﻿using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.Sdk.ViewModels.Controls;
+using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
 using ClipboardCanvas.Sdk.ViewModels.Views;
 using ClipboardCanvas.Shared.ComponentModel;
 using ClipboardCanvas.Shared.Extensions;
@@ -18,6 +19,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 {
     public sealed partial class CollectionViewModel : ObservableObject, IEquatable<IDataSourceModel>, IAsyncInitialize
     {
+        private readonly IAsyncRelayCommand _navigateBackCommand;
+        private readonly IAsyncRelayCommand _navigateForwardCommand;
         private readonly ICollectionSourceModel _collectionStoreModel;
         private readonly NavigationViewModel _navigationViewModel;
         private readonly IDataSourceModel _collectionModel;
@@ -32,11 +35,15 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 
         private IMediaService ImageService { get; } = Ioc.Default.GetRequiredService<IMediaService>();
 
+        private RibbonViewModel RibbonViewModel { get; } = Ioc.Default.GetRequiredService<RibbonViewModel>();
+
         public CollectionViewModel(ICollectionSourceModel collectionStoreModel, IDataSourceModel collectionModel, NavigationViewModel navigationViewModel)
         {
             _collectionStoreModel = collectionStoreModel;
             _collectionModel = collectionModel;
             _navigationViewModel = navigationViewModel;
+            _navigateBackCommand = new AsyncRelayCommand(GoBackAsync);
+            _navigateForwardCommand = new AsyncRelayCommand(GoForwardAsync);
             _canvasViewModel = new(collectionModel, navigationViewModel);
             _items = new();
             Name = collectionModel.Name;
@@ -67,8 +74,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
                 _ = _canvasViewModel.InitAsync(cancellationToken);
 
             await _navigationViewModel.NavigationService.NavigateAsync(_canvasViewModel);
-            _navigationViewModel.NavigateBackCommand = new AsyncRelayCommand(GoBackAsync);
-            _navigationViewModel.NavigateForwardCommand = new AsyncRelayCommand(GoForwardAsync);
+            _navigationViewModel.NavigateBackCommand = _navigateBackCommand;
+            _navigationViewModel.NavigateForwardCommand = _navigateForwardCommand;
             UpdateNavigationButtons();
         }
 
@@ -104,6 +111,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
                 return;
 
             UpdateNavigationButtons();
+            RibbonViewModel.IsRibbonVisible = true;
             var itemToDisplay = _items[_index];
             await _canvasViewModel.DisplayAsync(itemToDisplay, cancellationToken);
         }
@@ -121,6 +129,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             {
                 _canvasViewModel.CurrentCanvasViewModel?.Dispose();
                 _canvasViewModel.CurrentCanvasViewModel = null;
+                RibbonViewModel.IsRibbonVisible = false;
                 return;
             }
 

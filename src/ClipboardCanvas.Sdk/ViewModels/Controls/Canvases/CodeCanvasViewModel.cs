@@ -10,17 +10,13 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
 {
     public partial class CodeCanvasViewModel : BaseCanvasViewModel
     {
-        /// <inheritdoc/>
-        public override IStorable? Storable { get; }
-
         [ObservableProperty] private string? _Text;
         [ObservableProperty] private string? _Language;
 
         public CodeCanvasViewModel(IFile codeFile, IDataSourceModel sourceModel)
-            : base(sourceModel)
+            : base(codeFile, sourceModel)
         {
             Language = Path.GetExtension(codeFile.Id);
-            Storable = codeFile;
         }
 
         /// <inheritdoc/>

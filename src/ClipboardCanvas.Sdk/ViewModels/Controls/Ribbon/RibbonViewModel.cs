@@ -8,12 +8,10 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon
 {
     public sealed partial class RibbonViewModel : ObservableObject, IAsyncInitialize
     {
-        [ObservableProperty] private string? _FileName;
+        [ObservableProperty] private string? _RibbonTitle;
         [ObservableProperty] private bool _IsRibbonVisible;
-
-        public ObservableCollection<RibbonActionViewModel> PrimaryActions { get; } = new();
-
-        public ObservableCollection<RibbonActionViewModel> SecondaryActions { get; } = new();
+        [ObservableProperty] private ObservableCollection<RibbonItemViewModel>? _PrimaryActions;
+        [ObservableProperty] private ObservableCollection<RibbonItemViewModel>? _SecondaryActions;
 
         /// <inheritdoc/>
         public Task InitAsync(CancellationToken cancellationToken = default)

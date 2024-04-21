@@ -11,19 +11,15 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
     {
         [ObservableProperty] private string? _Text;
 
-        /// <inheritdoc/>
-        public override IStorable? Storable { get; }
-
         public TextCanvasViewModel(string text, IDataSourceModel collectionModel)
             : base(collectionModel)
         {
             Text = text;
         }
 
-        public TextCanvasViewModel(IFile file, IDataSourceModel sourceModel)
-            : base(sourceModel)
+        public TextCanvasViewModel(IFile textFile, IDataSourceModel sourceModel)
+            : base(textFile, sourceModel)
         {
-            Storable = file;
         }
 
         /// <inheritdoc/>

@@ -1,11 +1,12 @@
-﻿using ClipboardCanvas.Sdk.Services;
+﻿using ClipboardCanvas.Sdk.Models;
+using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.Sdk.ViewModels.Controls;
+using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
 using ClipboardCanvas.Shared.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using System.Threading;
 using System.Threading.Tasks;
-using ClipboardCanvas.Sdk.Models;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Views
 {
@@ -14,6 +15,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
         [ObservableProperty] private string _AppTitle;
 
         public INavigationService NavigationService { get; } = Ioc.Default.GetRequiredService<INavigationService>();
+
+        public RibbonViewModel RibbonViewModel { get; } = Ioc.Default.GetRequiredService<RibbonViewModel>();
 
         public NavigationViewModel NavigationViewModel { get; }
 

@@ -33,7 +33,6 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls
         [RelayCommand]
         private async Task NavigateHomeAsync(CancellationToken cancellationToken)
         {
-            IsNavigationVisible = false;
             await NavigationService.TryNavigateAsync(() => new HomeViewModel(_collectionStoreModel, this));
         }
     }

@@ -7,6 +7,8 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using ClipboardCanvas.Sdk.Models;
+using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Views
 {
@@ -16,13 +18,15 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
         private readonly NavigationViewModel _navigationViewModel;
 
         [ObservableProperty] private string? _Title;
+        [ObservableProperty] private ObservableCollection<BaseWidgetViewModel> _Widgets;
 
-        public ObservableCollection<BaseWidgetViewModel> Widgets { get; } = new();
+        private RibbonViewModel RibbonViewModel { get; } = Ioc.Default.GetRequiredService<RibbonViewModel>();
 
         public HomeViewModel(ICollectionSourceModel collectionStoreModel, NavigationViewModel navigationViewModel)
         {
             _collectionStoreModel = collectionStoreModel;
             _navigationViewModel = navigationViewModel;
+            Widgets = new();
             Title = "Clipboard Canvas";
         }
 
@@ -36,6 +40,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
         /// <inheritdoc/>
         public void OnAppearing()
         {
+            RibbonViewModel.IsRibbonVisible = false;
             _navigationViewModel.IsNavigationVisible = false;
         }
 

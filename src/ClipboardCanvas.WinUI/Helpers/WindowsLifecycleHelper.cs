@@ -1,4 +1,6 @@
 ﻿using ClipboardCanvas.Sdk.Services;
+using ClipboardCanvas.Sdk.ViewModels.Controls;
+using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
 using ClipboardCanvas.UI.Helpers;
 using ClipboardCanvas.UI.ServiceImplementation;
 using ClipboardCanvas.WinUI.ServiceImplementation;
@@ -45,6 +47,10 @@ namespace ClipboardCanvas.WinUI.Helpers
         protected override IServiceCollection ConfigureServices(IModifiableFolder settingsFolder)
         {
             return new ServiceCollection()
+
+                    // View models
+                    .AddSingleton<RibbonViewModel>()
+                    .AddSingleton<NavigationViewModel>()
                     
                     // Singleton services
                     .AddSingleton<ICollectionPersistenceService, CollectionPersistenceService>(_ => new(settingsFolder))

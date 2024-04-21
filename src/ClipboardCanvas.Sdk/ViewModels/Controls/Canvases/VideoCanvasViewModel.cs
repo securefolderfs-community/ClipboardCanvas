@@ -10,17 +10,9 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
 {
     public partial class VideoCanvasViewModel : BaseCanvasViewModel
     {
-        //[ObservableProperty] private double _Volume;
-        //[ObservableProperty] private bool _IsPlaying;
-        [ObservableProperty] private bool _IsLooping;
-        //[ObservableProperty] private TimeSpan _TotalTime;
-        //[ObservableProperty] private TimeSpan _CurrentTime;
         [ObservableProperty] private IMediaSource? _MediaSource;
 
         private IMediaService MediaService { get; } = Ioc.Default.GetRequiredService<IMediaService>();
-
-        /// <inheritdoc/>
-        public override IStorable? Storable { get; }
 
         public VideoCanvasViewModel(IMediaSource mediaSource, IDataSourceModel sourceModel)
             : base(sourceModel)
@@ -29,9 +21,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
         }
 
         public VideoCanvasViewModel(IFile videoFile, IDataSourceModel sourceModel)
-            : base(sourceModel)
+            : base(videoFile, sourceModel)
         {
-            Storable = videoFile;
         }
 
         /// <inheritdoc/>

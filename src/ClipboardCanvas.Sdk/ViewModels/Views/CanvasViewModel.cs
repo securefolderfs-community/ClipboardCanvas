@@ -2,6 +2,7 @@
 using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.Sdk.ViewModels.Controls;
 using ClipboardCanvas.Sdk.ViewModels.Controls.Canvases;
+using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
 using ClipboardCanvas.Shared.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
@@ -21,6 +22,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
 
         private ICanvasService CanvasService { get; } = Ioc.Default.GetRequiredService<ICanvasService>();
 
+        private RibbonViewModel RibbonViewModel { get; } = Ioc.Default.GetRequiredService<RibbonViewModel>();
+
         public CanvasViewModel(IDataSourceModel canvasSourceModel, NavigationViewModel navigationViewModel)
         {
             _canvasSourceModel = canvasSourceModel;
@@ -38,6 +41,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
         /// <inheritdoc/>
         public void OnAppearing()
         {
+            RibbonViewModel.IsRibbonVisible = CurrentCanvasViewModel is not null;
             _navigationViewModel.IsNavigationVisible = true;
         }
 
@@ -50,7 +54,9 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
 
         public void ChangeImmersion(bool isImmersed)
         {
+            RibbonViewModel.IsRibbonVisible = !isImmersed;
             _navigationViewModel.IsNavigationVisible = !isImmersed;
+
             if (CurrentCanvasViewModel is not null)
                 CurrentCanvasViewModel.IsImmersed = isImmersed;
         }
