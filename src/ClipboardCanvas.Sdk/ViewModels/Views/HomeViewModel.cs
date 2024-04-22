@@ -1,14 +1,14 @@
-﻿using ClipboardCanvas.Sdk.ViewModels.Controls;
+﻿using ClipboardCanvas.Sdk.Models;
+using ClipboardCanvas.Sdk.ViewModels.Controls;
+using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
 using ClipboardCanvas.Sdk.ViewModels.Widgets;
 using ClipboardCanvas.Shared.ComponentModel;
 using ClipboardCanvas.Shared.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
-using ClipboardCanvas.Sdk.Models;
-using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
-using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Views
 {

@@ -4,13 +4,14 @@ using ClipboardCanvas.Sdk.ViewModels.Controls;
 using ClipboardCanvas.Sdk.ViewModels.Controls.Canvases;
 using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
 using ClipboardCanvas.Shared.ComponentModel;
+using ClipboardCanvas.Shared.Enums;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using OwlCore.Storage;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ClipboardCanvas.Shared.Enums;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Views
 {
@@ -86,27 +87,23 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
             if (data is null)
                 return;
 
-            await (data.Classification.TypeHint switch
+            var sourceModel = CurrentCanvasViewModel as IDataSourceModel ?? _canvasSourceModel;
+            var canvasViewModel = data.Classification.TypeHint switch
             {
-                TypeHint.Storage => StorageAsync(),
-                TypeHint.Image => ImageAsync(),
-                TypeHint.PlainText => TextAsync()
-            });
+                TypeHint.Image => await ImageCanvasViewModel.ParseAsync(data, sourceModel, cancellationToken),
+                TypeHint.PlainText => await TextCanvasViewModel.ParseAsync(data, sourceModel, cancellationToken),
+                TypeHint.Storage => await StorageAsync(),
+            };
 
-            async Task TextAsync()
+            CurrentCanvasViewModel?.Dispose();
+            CurrentCanvasViewModel = canvasViewModel;
+
+            async Task<BaseCanvasViewModel> StorageAsync()
             {
-                var text = await data.GetTextAsync(cancellationToken);
+                // TODO: Maybe use infinite canvas or only allow for one item to be pasted?
+                // Perhaps prompt the user to choose what to do?
 
-            }
-
-            async Task ImageAsync()
-            {
-
-            }
-
-            async Task StorageAsync()
-            {
-
+                throw new NotImplementedException();
             }
         }
     }

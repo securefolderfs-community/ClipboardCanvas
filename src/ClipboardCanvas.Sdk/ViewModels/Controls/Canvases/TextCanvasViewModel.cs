@@ -1,5 +1,6 @@
 ﻿using ClipboardCanvas.Sdk.Extensions;
 using ClipboardCanvas.Sdk.Models;
+using ClipboardCanvas.Sdk.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using OwlCore.Storage;
 using System.Threading;
@@ -11,8 +12,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
     {
         [ObservableProperty] private string? _Text;
 
-        public TextCanvasViewModel(string text, IDataSourceModel collectionModel)
-            : base(collectionModel)
+        public TextCanvasViewModel(string text, IDataSourceModel sourceModel)
+            : base(sourceModel)
         {
             Text = text;
         }
@@ -22,10 +23,22 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
         {
         }
 
+        public static async Task<TextCanvasViewModel> ParseAsync(IClipboardData data, IDataSourceModel sourceModel, CancellationToken cancellationToken)
+        {
+            var text = await data.GetTextAsync(cancellationToken);
+            var file = await sourceModel.CreateFileAsync("TODO", false, cancellationToken);
+            await file.WriteAllTextAsync(text, null, cancellationToken);
+
+            return new(file, sourceModel)
+            {
+                Text = text,
+            };
+        }
+
         /// <inheritdoc/>
         public override async Task InitAsync(CancellationToken cancellationToken = default)
         {
-            if (Storable is not IFile file)
+            if (Storable is not IFile file || Text is null)
                 return;
 
             Text = await file.ReadAllTextAsync(null, cancellationToken);
