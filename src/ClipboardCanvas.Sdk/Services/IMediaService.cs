@@ -11,6 +11,8 @@ namespace ClipboardCanvas.Sdk.Services
     /// </summary>
     public interface IMediaService
     {
+        Task SaveImageAsync(IImage image, IFile destination, CancellationToken cancellationToken);
+
         /// <summary>
         /// Reads the bitmap from provided <paramref name="file"/> and converts it to <see cref="IImage"/>.
         /// </summary>

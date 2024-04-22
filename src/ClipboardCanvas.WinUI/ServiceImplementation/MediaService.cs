@@ -5,7 +5,6 @@ using ClipboardCanvas.Shared.Enums;
 using ClipboardCanvas.WinUI.AppModels;
 using ClipboardCanvas.WinUI.Helpers;
 using ClipboardCanvas.WinUI.Imaging;
-using Microsoft.UI.Xaml.Media.Imaging;
 using MimeTypes;
 using OwlCore.Storage;
 using System;
@@ -14,7 +13,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Media.Core;
-using Windows.Storage.Streams;
 using IMediaSource = ClipboardCanvas.Sdk.Models.IMediaSource;
 
 namespace ClipboardCanvas.WinUI.ServiceImplementation
@@ -23,28 +21,52 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
     internal sealed class MediaService : IMediaService
     {
         /// <inheritdoc/>
+        public async Task SaveImageAsync(IImage image, IFile destination, CancellationToken cancellationToken)
+        {
+            if (image is not ImageBitmap bitmap)
+                return;
+
+            await using var stream = await destination.OpenStreamAsync(FileAccess.ReadWrite, cancellationToken);
+            using var winrtStream = stream.AsRandomAccessStream();
+
+            var mimeType = MimeTypeMap.GetMimeType(destination.Id);
+            var encoderGuid = MimeHelpers.MimeToBitmapEncoder(mimeType);
+            var encoder = await BitmapEncoder.CreateAsync(encoderGuid, winrtStream).AsTask(cancellationToken);
+
+            encoder.SetSoftwareBitmap(bitmap.SoftwareBitmap);
+            encoder.IsThumbnailGenerated = true;
+
+            try
+            {
+                await encoder.FlushAsync();
+            }
+            catch (Exception err)
+            {
+                const int WINCODEC_ERR_UNSUPPORTEDOPERATION = unchecked((int)0x88982F81);
+                switch (err.HResult)
+                {
+                    case WINCODEC_ERR_UNSUPPORTEDOPERATION:
+                        // If the encoder does not support writing a thumbnail, then try again
+                        // but disable thumbnail generation.
+                        encoder.IsThumbnailGenerated = false;
+                        break;
+                    default:
+                        throw;
+                }
+            }
+
+            if (!encoder.IsThumbnailGenerated)
+                await encoder.FlushAsync();
+        }
+
+        /// <inheritdoc/>
         public async Task<IImage> ReadImageAsync(IFile file, CancellationToken cancellationToken)
         {
             await using var stream = await file.OpenStreamAsync(FileAccess.Read, cancellationToken);
             using var winrtStream = stream.AsRandomAccessStream();
-            using var memStream = new InMemoryRandomAccessStream();
 
             var mimeType = MimeTypeMap.GetMimeType(file.Id);
-            var decoderGuid = MimeHelpers.MimeToBitmapDecoder(mimeType);
-            var encoderGuid = MimeHelpers.MimeToBitmapEncoder(mimeType);
-
-            var decoder = await BitmapDecoder.CreateAsync(decoderGuid, winrtStream);
-            var encoder = await BitmapEncoder.CreateAsync(encoderGuid, memStream);
-
-            using var softwareBitmap = await decoder.GetSoftwareBitmapAsync().AsTask(cancellationToken);
-            encoder.SetSoftwareBitmap(softwareBitmap);
-
-            await encoder.FlushAsync().AsTask(cancellationToken);
-
-            var bitmap = new BitmapImage();
-            await bitmap.SetSourceAsync(memStream).AsTask(cancellationToken);
-
-            return new ImageBitmap(bitmap);
+            return await ImagingHelpers.GetBitmapFromStreamAsync(winrtStream, mimeType, cancellationToken);
         }
 
         /// <inheritdoc/>

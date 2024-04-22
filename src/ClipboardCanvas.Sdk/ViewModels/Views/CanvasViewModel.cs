@@ -6,9 +6,11 @@ using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
 using ClipboardCanvas.Shared.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
 using OwlCore.Storage;
 using System.Threading;
 using System.Threading.Tasks;
+using ClipboardCanvas.Shared.Enums;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Views
 {
@@ -21,6 +23,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
         [ObservableProperty] private BaseCanvasViewModel? _CurrentCanvasViewModel;
 
         private ICanvasService CanvasService { get; } = Ioc.Default.GetRequiredService<ICanvasService>();
+
+        private IClipboardService ClipboardService { get; } = Ioc.Default.GetRequiredService<IClipboardService>();
 
         private RibbonViewModel RibbonViewModel { get; } = Ioc.Default.GetRequiredService<RibbonViewModel>();
 
@@ -73,6 +77,37 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
 
             CurrentCanvasViewModel?.Dispose();
             CurrentCanvasViewModel = await CanvasService.GetCanvasForStorableAsync(storable, _canvasSourceModel, cancellationToken);
+        }
+
+        [RelayCommand]
+        private async Task PasteFromClipboardAsync(CancellationToken cancellationToken)
+        {
+            var data = await ClipboardService.GetContentAsync(cancellationToken);
+            if (data is null)
+                return;
+
+            await (data.Classification.TypeHint switch
+            {
+                TypeHint.Storage => StorageAsync(),
+                TypeHint.Image => ImageAsync(),
+                TypeHint.PlainText => TextAsync()
+            });
+
+            async Task TextAsync()
+            {
+                var text = await data.GetTextAsync(cancellationToken);
+
+            }
+
+            async Task ImageAsync()
+            {
+
+            }
+
+            async Task StorageAsync()
+            {
+
+            }
         }
     }
 }

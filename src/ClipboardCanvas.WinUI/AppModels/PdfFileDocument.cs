@@ -67,10 +67,10 @@ namespace ClipboardCanvas.WinUI.AppModels
             if (_cachedImage is not null)
                 return _cachedImage;
 
-            using var memStream = new InMemoryRandomAccessStream();
-            await _pdfPage.RenderToStreamAsync(memStream).AsTask(cancellationToken);
+            using var winrtStream = new InMemoryRandomAccessStream();
+            await _pdfPage.RenderToStreamAsync(winrtStream).AsTask(cancellationToken);
 
-            var decoder = await BitmapDecoder.CreateAsync(memStream).AsTask(cancellationToken);
+            var decoder = await BitmapDecoder.CreateAsync(winrtStream).AsTask(cancellationToken);
             var softwareBitmap = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied).AsTask(cancellationToken);
             
             var source = new SoftwareBitmapSource();

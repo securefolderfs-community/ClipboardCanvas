@@ -3,6 +3,7 @@ using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.Shared.ComponentModel;
 using ClipboardCanvas.Shared.Enums;
 using ClipboardCanvas.WinUI.Extensions;
+using ClipboardCanvas.WinUI.Helpers;
 using ClipboardCanvas.WinUI.Imaging;
 using ClipboardCanvas.WinUI.Storage;
 using OwlCore.Storage;
@@ -105,9 +106,10 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
             if (Classification.TypeHint == TypeHint.Image)
             {
                 var winrtStreamReference = await _dataPackage.GetBitmapAsync().AsTask(cancellationToken);
-                var winrtStream = await winrtStreamReference.OpenReadAsync().AsTask(cancellationToken);
+                using var winrtStream = await winrtStreamReference.OpenReadAsync().AsTask(cancellationToken);
 
-                return new ImageBitmap(winrtStream.AsStream());
+                var mimeType = winrtStream.ContentType;
+                return await ImagingHelpers.GetBitmapFromStreamAsync(winrtStream, mimeType, cancellationToken);
             }
 
             throw new InvalidOperationException("Could not retrieve image.");
@@ -169,16 +171,27 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
 
         public static ClipboardData Import(DataPackageView dataPackage)
         {
-            if (dataPackage.Contains(StandardDataFormats.Text))
-                return new ClipboardData(dataPackage, new TypeClassification("text/plain", TypeHint.PlainText));
+            if (dataPackage.Contains(StandardDataFormats.StorageItems))
+                return new(dataPackage, new("application/octet-stream", TypeHint.Storage));
 
             if (dataPackage.Contains(StandardDataFormats.Bitmap))
-                return new ClipboardData(dataPackage, new TypeClassification("image/png", TypeHint.Image));
+                return new(dataPackage, new("image/png", TypeHint.Image));
 
-            if (dataPackage.Contains(StandardDataFormats.StorageItems))
-                return new ClipboardData(dataPackage, new TypeClassification("application/octet-stream", TypeHint.Storage));
+            if (dataPackage.Contains(StandardDataFormats.Text))
+                return new(dataPackage, new("text/plain", TypeHint.PlainText));
 
-            return new ClipboardData(dataPackage, new TypeClassification("application/octet-stream", TypeHint.Unclassified));
+            if (dataPackage.Contains(StandardDataFormats.Rtf))
+                return new(dataPackage, new("application/rtf", TypeHint.Document));
+
+            if (dataPackage.Contains(StandardDataFormats.WebLink) 
+                || dataPackage.Contains(StandardDataFormats.Uri)
+                || dataPackage.Contains(StandardDataFormats.ApplicationLink))
+                return new(dataPackage, new("text/uri-list", TypeHint.UriLink));
+
+            if (dataPackage.Contains(StandardDataFormats.Html))
+                return new(dataPackage, new("text/html", TypeHint.Document));
+
+            return new ClipboardData(dataPackage, new("application/octet-stream", TypeHint.Unclassified));
         }
     }
 }
