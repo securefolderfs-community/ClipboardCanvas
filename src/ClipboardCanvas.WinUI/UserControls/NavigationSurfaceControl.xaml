@@ -15,6 +15,9 @@
                 IsEnabled="{x:Bind IsBackEnabled, Mode=OneWay}"
                 Style="{StaticResource NavigationButtonStyle}">
                 <FontIcon Glyph="&#xE76B;" />
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="Left" Invoked="KeyboardAccelerator_Invoked" />
+                </Button.KeyboardAccelerators>
             </Button>
 
             <!--  Home button  -->
@@ -23,6 +26,9 @@
                 Command="{x:Bind HomeCommand, Mode=OneWay}"
                 Style="{StaticResource NavigationButtonStyle}">
                 <FontIcon Glyph="&#xE80F;" />
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="Home" Invoked="KeyboardAccelerator_Invoked" />
+                </Button.KeyboardAccelerators>
             </Button>
 
             <!--  Forward button  -->
@@ -31,6 +37,9 @@
                 IsEnabled="{x:Bind IsForwardEnabled, Mode=OneWay}"
                 Style="{StaticResource NavigationButtonStyle}">
                 <FontIcon Glyph="&#xE76C;" />
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="Right" Invoked="KeyboardAccelerator_Invoked" />
+                </Button.KeyboardAccelerators>
             </Button>
         </StackPanel>
     </local:FloatingCardControl>

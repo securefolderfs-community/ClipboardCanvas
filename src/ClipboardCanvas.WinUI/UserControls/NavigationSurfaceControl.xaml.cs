@@ -1,6 +1,8 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using System.Windows.Input;
+using Windows.System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -12,6 +14,28 @@ namespace ClipboardCanvas.WinUI.UserControls
         public NavigationSurfaceControl()
         {
             InitializeComponent();
+        }
+
+        private async void KeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (!EnableAccelerators)
+                return;
+
+            args.Handled = true;
+            switch (args.KeyboardAccelerator.Key)
+            {
+                case VirtualKey.Left:
+                    BackCommand?.Execute(null);
+                    break;
+
+                case VirtualKey.Right:
+                    ForwardCommand?.Execute(null);
+                    break;
+
+                case VirtualKey.Home:
+                    HomeCommand?.Execute(null);
+                    break;
+            }
         }
 
         public ICommand? BackCommand
@@ -53,5 +77,13 @@ namespace ClipboardCanvas.WinUI.UserControls
         }
         public static readonly DependencyProperty IsBackEnabledProperty =
             DependencyProperty.Register(nameof(IsBackEnabled), typeof(bool), typeof(NavigationSurfaceControl), new PropertyMetadata(true));
+
+        public bool EnableAccelerators
+        {
+            get => (bool)GetValue(EnableAcceleratorsProperty);
+            set => SetValue(EnableAcceleratorsProperty, value);
+        }
+        public static readonly DependencyProperty EnableAcceleratorsProperty =
+            DependencyProperty.Register(nameof(EnableAccelerators), typeof(bool), typeof(NavigationSurfaceControl), new PropertyMetadata(true));
     }
 }

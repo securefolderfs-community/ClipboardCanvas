@@ -18,8 +18,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
     public sealed partial class CanvasViewModel : ObservableObject, IViewDesignation, IAsyncInitialize
     {
         private readonly IDataSourceModel _canvasSourceModel;
-        private readonly NavigationViewModel _navigationViewModel;
 
+        [ObservableProperty] NavigationViewModel _NavigationViewModel;
         [ObservableProperty] private string? _Title;
         [ObservableProperty] private BaseCanvasViewModel? _CurrentCanvasViewModel;
 
@@ -32,7 +32,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
         public CanvasViewModel(IDataSourceModel canvasSourceModel, NavigationViewModel navigationViewModel)
         {
             _canvasSourceModel = canvasSourceModel;
-            _navigationViewModel = navigationViewModel;
+            NavigationViewModel = navigationViewModel;
             Title = canvasSourceModel.Name;
         }
 
@@ -47,7 +47,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
         public void OnAppearing()
         {
             RibbonViewModel.IsRibbonVisible = CurrentCanvasViewModel is not null;
-            _navigationViewModel.IsNavigationVisible = true;
+            NavigationViewModel.IsNavigationVisible = true;
         }
 
         /// <inheritdoc/>
@@ -60,7 +60,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
         public void ChangeImmersion(bool isImmersed)
         {
             RibbonViewModel.IsRibbonVisible = !isImmersed;
-            _navigationViewModel.IsNavigationVisible = !isImmersed;
+            NavigationViewModel.IsNavigationVisible = !isImmersed;
 
             if (CurrentCanvasViewModel is not null)
                 CurrentCanvasViewModel.IsImmersed = isImmersed;
