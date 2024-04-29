@@ -78,6 +78,9 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
 
             CurrentCanvasViewModel?.Dispose();
             CurrentCanvasViewModel = await CanvasService.GetCanvasForStorableAsync(storable, _canvasSourceModel, cancellationToken);
+
+            RibbonViewModel.PrimaryActions = CurrentCanvasViewModel.PrimaryActions;
+            RibbonViewModel.SecondaryActions = CurrentCanvasViewModel.SecondaryActions;
         }
 
         [RelayCommand]
@@ -97,6 +100,9 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
 
             CurrentCanvasViewModel?.Dispose();
             CurrentCanvasViewModel = canvasViewModel;
+
+            RibbonViewModel.PrimaryActions = canvasViewModel.PrimaryActions;
+            RibbonViewModel.SecondaryActions = canvasViewModel.SecondaryActions;
 
             async Task<BaseCanvasViewModel> StorageAsync()
             {

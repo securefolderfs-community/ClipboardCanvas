@@ -1,4 +1,5 @@
-﻿using ClipboardCanvas.Sdk.Models;
+﻿using ClipboardCanvas.Sdk.Enums;
+using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Shared.ComponentModel;
 using OwlCore.Storage;
 using System.Threading;
@@ -30,5 +31,7 @@ namespace ClipboardCanvas.Sdk.Services
         Task<IImage> GetCollectionIconAsync(IDataSourceModel collectionModel, CancellationToken cancellationToken);
 
         Task<IMediaSource> GetVideoPlaybackAsync(IFile file, CancellationToken cancellationToken);
+
+        IImage GetIcon(IconType iconType);
     }
 }

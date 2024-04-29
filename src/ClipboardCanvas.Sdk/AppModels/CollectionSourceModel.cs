@@ -37,7 +37,7 @@ namespace ClipboardCanvas.Sdk.AppModels
         {
             // Update saved collections
             CollectionPersistenceService.SavedCollections ??= new List<CollectionDataModel>();
-            CollectionPersistenceService.SavedCollections.Insert(index, new(item.Id, item.Name));
+            CollectionPersistenceService.SavedCollections.Insert(index, new(item.Source.Id, item.Name));
 
             // Add to cache
             base.InsertItem(index, item);
@@ -64,7 +64,7 @@ namespace ClipboardCanvas.Sdk.AppModels
             if (CollectionPersistenceService.SavedCollections is null)
                 return;
 
-            CollectionPersistenceService.SavedCollections[index] = new(item.Id, item.Name);
+            CollectionPersistenceService.SavedCollections[index] = new(item.Source.Id, item.Name);
 
             var oldItem = this[index];
             base.SetItem(index, item);

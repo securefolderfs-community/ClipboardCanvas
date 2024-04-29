@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon
 {
-    public partial class RibbonItemViewModel : ObservableObject
+    public partial class ActionViewModel : ObservableObject
     {
         [ObservableProperty] private string? _Name;
         [ObservableProperty] private IImage? _Icon;

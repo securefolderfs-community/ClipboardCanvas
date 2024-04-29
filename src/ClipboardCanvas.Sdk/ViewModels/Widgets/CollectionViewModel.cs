@@ -11,58 +11,60 @@ using CommunityToolkit.Mvvm.Input;
 using OwlCore.Storage;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 {
-    public sealed partial class CollectionViewModel : ObservableObject, IEquatable<IDataSourceModel>, IAsyncInitialize
+    public sealed partial class CollectionViewModel : ObservableObject, IEquatable<IDataSourceModel>, IAsyncInitialize, IDisposable
     {
         private readonly IAsyncRelayCommand _navigateBackCommand;
         private readonly IAsyncRelayCommand _navigateForwardCommand;
-        private readonly ICollectionSourceModel _collectionStoreModel;
+        private readonly ICollectionSourceModel _collectionSourceModel;
         private readonly NavigationViewModel _navigationViewModel;
-        private readonly IDataSourceModel _collectionModel;
+        private readonly IDataSourceModel _sourceModel;
         private readonly CanvasViewModel _canvasViewModel;
         private readonly List<IStorableChild> _items;
-        private int _index;
+        private int _indexInCollection;
 
         [ObservableProperty] private string? _Name;
         [ObservableProperty] private IImage? _Icon;
 
         private IFileExplorerService FileExplorerService { get; } = Ioc.Default.GetRequiredService<IFileExplorerService>();
 
-        private IMediaService ImageService { get; } = Ioc.Default.GetRequiredService<IMediaService>();
+        private IMediaService MediaService { get; } = Ioc.Default.GetRequiredService<IMediaService>();
 
         private RibbonViewModel RibbonViewModel { get; } = Ioc.Default.GetRequiredService<RibbonViewModel>();
 
-        public CollectionViewModel(ICollectionSourceModel collectionStoreModel, IDataSourceModel collectionModel, NavigationViewModel navigationViewModel)
+        public CollectionViewModel(ICollectionSourceModel collectionSourceModel, IDataSourceModel dataSourceModel, NavigationViewModel navigationViewModel)
         {
-            _collectionStoreModel = collectionStoreModel;
-            _collectionModel = collectionModel;
+            _collectionSourceModel = collectionSourceModel;
+            _sourceModel = dataSourceModel;
             _navigationViewModel = navigationViewModel;
             _navigateBackCommand = new AsyncRelayCommand(GoBackAsync);
             _navigateForwardCommand = new AsyncRelayCommand(GoForwardAsync);
-            _canvasViewModel = new(collectionModel, navigationViewModel);
+            _canvasViewModel = new(dataSourceModel, navigationViewModel);
+            dataSourceModel.CollectionChanged += DataSourceModel_CollectionChanged;
             _items = new();
-            Name = collectionModel.Name;
+            Name = dataSourceModel.Name;
         }
 
         /// <inheritdoc/>
         public async Task InitAsync(CancellationToken cancellationToken = default)
         {
-            await _collectionModel.InitAsync(cancellationToken);
-            Icon = await ImageService.GetCollectionIconAsync(_collectionModel, cancellationToken);
+            await _sourceModel.InitAsync(cancellationToken);
+            Icon = await MediaService.GetCollectionIconAsync(_sourceModel, cancellationToken);
             _items.Clear();
-            _items.AddRange(await _collectionModel.GetItemsAsync(StorableType.All, cancellationToken).ToArrayAsync(cancellationToken));
-            _index = _items.Count; // Count is out of bounds intentionally to put the index on new (empty) canvas
+            _items.AddRange(await _sourceModel.Source.GetItemsAsync(StorableType.All, cancellationToken).ToArrayAsync(cancellationToken));
+            _indexInCollection = _items.Count; // Count is out of bounds intentionally to put the index on new (empty) canvas
         }
 
         /// <inheritdoc/>
         public bool Equals(IDataSourceModel? other)
         {
-            return other?.Id == _collectionModel.Id;
+            return other?.Source.Id == _sourceModel.Source.Id;
         }
 
         [RelayCommand]
@@ -82,7 +84,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         [RelayCommand]
         private Task ShowInFileExplorerAsync(CancellationToken cancellationToken)
         {
-            return FileExplorerService.OpenInFileExplorerAsync(_collectionModel, cancellationToken);
+            return FileExplorerService.OpenInFileExplorerAsync(_sourceModel.Source, cancellationToken);
         }
 
         [RelayCommand]
@@ -94,38 +96,32 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         [RelayCommand]
         private async Task RemoveAsync(CancellationToken cancellationToken)
         {
-            _collectionStoreModel.Remove(_collectionModel);
-            await _collectionStoreModel.SaveAsync(cancellationToken);
-        }
-
-        private void UpdateNavigationButtons()
-        {
-            _navigationViewModel.IsForwardEnabled = _index < _items.Count;
-            _navigationViewModel.IsBackEnabled = _index > 0 && _items.Count > 0;
+            _collectionSourceModel.Remove(_sourceModel);
+            await _collectionSourceModel.SaveAsync(cancellationToken);
         }
 
         private async Task GoBackAsync(CancellationToken cancellationToken)
         {
-            _index -= _index <= 0 ? 0 : 1;
+            _indexInCollection -= _indexInCollection <= 0 ? 0 : 1;
             if (_items.IsEmpty())
                 return;
 
             UpdateNavigationButtons();
             RibbonViewModel.IsRibbonVisible = true;
-            var itemToDisplay = _items[_index];
+            var itemToDisplay = _items[_indexInCollection];
             await _canvasViewModel.DisplayAsync(itemToDisplay, cancellationToken);
         }
 
         private async Task GoForwardAsync(CancellationToken cancellationToken)
         {
             // Increase by 1, only if not on new canvas
-            _index += _index >= _items.Count ? 0 : 1;
+            _indexInCollection += _indexInCollection >= _items.Count ? 0 : 1;
 
             // Update navigation buttons
             UpdateNavigationButtons();
 
             // If on new canvas...
-            if (_index >= _items.Count)
+            if (_indexInCollection >= _items.Count)
             {
                 _canvasViewModel.CurrentCanvasViewModel?.Dispose();
                 _canvasViewModel.CurrentCanvasViewModel = null;
@@ -134,8 +130,25 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             }
 
             // Otherwise, display the next item...
-            var itemToDisplay = _items[_index];
+            var itemToDisplay = _items[_indexInCollection];
             await _canvasViewModel.DisplayAsync(itemToDisplay, cancellationToken);
+        }
+
+        private void UpdateNavigationButtons()
+        {
+            _navigationViewModel.IsForwardEnabled = _indexInCollection < _items.Count;
+            _navigationViewModel.IsBackEnabled = _indexInCollection > 0 && _items.Count > 0;
+        }
+
+        private void DataSourceModel_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            _ = e;
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            _sourceModel.Dispose();
         }
     }
 }

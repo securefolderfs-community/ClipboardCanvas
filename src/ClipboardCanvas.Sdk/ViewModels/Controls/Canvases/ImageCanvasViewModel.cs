@@ -1,9 +1,15 @@
-﻿using ClipboardCanvas.Sdk.Models;
+﻿using ClipboardCanvas.Sdk.Enums;
+using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Sdk.Services;
+using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
 using ClipboardCanvas.Shared.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
+using MimeTypes;
 using OwlCore.Storage;
+using System;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,7 +35,40 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
         /// <inheritdoc/>
         public override async Task InitAsync(CancellationToken cancellationToken = default)
         {
-            if (Storable is not IFile file)
+            PrimaryActions = new()
+            {
+                new()
+                {
+                    Name = "Share",
+                    Icon = MediaService.GetIcon(IconType.Share),
+                    Command = new AsyncRelayCommand(async () =>
+                    {
+                        // TODO
+                        await Console.Out.WriteLineAsync();
+                    })
+                },
+                new()
+                {
+                    Name = "Open",
+                    Icon = MediaService.GetIcon(IconType.Open),
+                    Command = new AsyncRelayCommand(async () =>
+                    {
+                        await Console.Out.WriteLineAsync();
+                    })
+                },
+                new ToggleViewModel()
+                {
+                    Name = "Edit",
+                    Icon = MediaService.GetIcon(IconType.Edit),
+                    Command = new AsyncRelayCommand(async () =>
+                    {
+                        IsImmersed = !IsImmersed;
+                    })
+                }
+
+            };
+
+            if (Storable is not IFile file || Image is not null)
                 return;
 
             Image = await MediaService.ReadImageAsync(file, cancellationToken);
@@ -39,8 +78,11 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
         {
             var mediaService = Ioc.Default.GetRequiredService<IMediaService>();
             var image = await data.GetImageAsync(cancellationToken);
-            var file = await sourceModel.CreateFileAsync("TODO", false, cancellationToken);
+            if (sourceModel.Source is not IModifiableFolder modifiableFolder)
+                return new(image, sourceModel);
 
+            var extension = MimeTypeMap.GetExtension(data.Classification.MimeType, false);
+            var file = await modifiableFolder.CreateFileAsync("TODO" + extension, false, cancellationToken);
             await mediaService.SaveImageAsync(image, file, cancellationToken);
             return new(file, sourceModel)
             {

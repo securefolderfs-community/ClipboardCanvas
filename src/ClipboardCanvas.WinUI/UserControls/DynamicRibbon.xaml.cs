@@ -1,6 +1,8 @@
 using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
+using ClipboardCanvas.WinUI.Imaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -17,25 +19,49 @@ namespace ClipboardCanvas.WinUI.UserControls
             InitializeComponent();
         }
 
-        private static void ParseCommands(IList<RibbonItemViewModel>? items, IList<ICommandBarElement> destination)
+        private static void ParseCommands(IList<ActionViewModel>? items, IList<ICommandBarElement> destination)
         {
+            destination.Clear();
             if (items is null)
-            {
-                destination.Clear();
                 return;
+
+            foreach (var item in items)
+            {
+                switch (item)
+                {
+                    case ToggleViewModel toggle:
+                    {
+                        var element = new AppBarToggleButton();
+                        element.Icon = new FontIcon() { Glyph = (toggle.Icon as IconImage)?.IconGlyph };
+                        element.Label = toggle.Name;
+                        element.Command = toggle.Command;
+
+                        destination.Add(element);
+                        break;
+                    }
+
+                    case ActionViewModel action:
+                    {
+                        var element = new AppBarButton();
+                        element.Icon = new FontIcon() { Glyph = (action.Icon as IconImage)?.IconGlyph };
+                        element.Label = action.Name;
+                        element.Command = action.Command;
+
+                        destination.Add(element);
+                        break;
+                    }
+                }
             }
-
-
         }
 
         private void PrimaryItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            ParseCommands(PrimaryItems, Commands.PrimaryCommands);
+            ParseCommands(PrimaryActions, Commands.PrimaryCommands);
         }
 
         private void SecondaryItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            ParseCommands(SecondaryItems, Commands.SecondaryCommands);
+            ParseCommands(SecondaryActions, Commands.SecondaryCommands);
         }
 
         public string? ToolBarTitle
@@ -46,13 +72,13 @@ namespace ClipboardCanvas.WinUI.UserControls
         public static readonly DependencyProperty ToolBarTitleProperty =
             DependencyProperty.Register(nameof(ToolBarTitle), typeof(string), typeof(DynamicRibbon), new PropertyMetadata(null));
 
-        public IList<RibbonItemViewModel>? PrimaryItems
+        public IList<ActionViewModel>? PrimaryActions
         {
-            get => (IList<RibbonItemViewModel>?)GetValue(PrimaryItemsProperty);
-            set => SetValue(PrimaryItemsProperty, value);
+            get => (IList<ActionViewModel>?)GetValue(PrimaryActionsProperty);
+            set => SetValue(PrimaryActionsProperty, value);
         }
-        public static readonly DependencyProperty PrimaryItemsProperty =
-            DependencyProperty.Register(nameof(PrimaryItems), typeof(IList<RibbonItemViewModel>), typeof(DynamicRibbon), new PropertyMetadata(null, (s, e) =>
+        public static readonly DependencyProperty PrimaryActionsProperty =
+            DependencyProperty.Register(nameof(PrimaryActions), typeof(IList<ActionViewModel>), typeof(DynamicRibbon), new PropertyMetadata(null, (s, e) =>
             {
                 if (s is not DynamicRibbon ribbon)
                     return;
@@ -63,16 +89,16 @@ namespace ClipboardCanvas.WinUI.UserControls
                 if (e.NewValue is INotifyCollectionChanged notifiableNew)
                     notifiableNew.CollectionChanged += ribbon.PrimaryItems_CollectionChanged;
 
-                ParseCommands((IList<RibbonItemViewModel>?)e.NewValue, ribbon.Commands.PrimaryCommands);
+                ParseCommands((IList<ActionViewModel>?)e.NewValue, ribbon.Commands.PrimaryCommands);
             }));
 
-        public IList<RibbonItemViewModel>? SecondaryItems
+        public IList<ActionViewModel>? SecondaryActions
         {
-            get => (IList<RibbonItemViewModel>?)GetValue(SecondaryItemsProperty);
-            set => SetValue(SecondaryItemsProperty, value);
+            get => (IList<ActionViewModel>?)GetValue(SecondaryActionsProperty);
+            set => SetValue(SecondaryActionsProperty, value);
         }
-        public static readonly DependencyProperty SecondaryItemsProperty =
-            DependencyProperty.Register(nameof(SecondaryItems), typeof(IList<RibbonItemViewModel>), typeof(DynamicRibbon), new PropertyMetadata(null, (s, e) =>
+        public static readonly DependencyProperty SecondaryActionsProperty =
+            DependencyProperty.Register(nameof(SecondaryActions), typeof(IList<ActionViewModel>), typeof(DynamicRibbon), new PropertyMetadata(null, (s, e) =>
             {
                 if (s is not DynamicRibbon ribbon)
                     return;
@@ -83,7 +109,7 @@ namespace ClipboardCanvas.WinUI.UserControls
                 if (e.NewValue is INotifyCollectionChanged notifiableNew)
                     notifiableNew.CollectionChanged += ribbon.PrimaryItems_CollectionChanged;
 
-                ParseCommands((IList<RibbonItemViewModel>?)e.NewValue, ribbon.Commands.SecondaryCommands);
+                ParseCommands((IList<ActionViewModel>?)e.NewValue, ribbon.Commands.SecondaryCommands);
             }));
     }
 }

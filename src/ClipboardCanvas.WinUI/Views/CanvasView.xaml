@@ -31,8 +31,11 @@
                 VerticalAlignment="Center"
                 Orientation="Vertical"
                 Spacing="8">
-                <HyperlinkButton Content="Paste from clipboard" />
-                <HyperlinkButton Content="Use Infinite Canvas" />
+                <HyperlinkButton
+                    HorizontalAlignment="Center"
+                    Command="{x:Bind ViewModel.PasteFromClipboardCommand}"
+                    Content="Paste from clipboard" />
+                <HyperlinkButton HorizontalAlignment="Center" Content="Use Infinite Canvas" />
             </StackPanel>
         </StackPanel>
 

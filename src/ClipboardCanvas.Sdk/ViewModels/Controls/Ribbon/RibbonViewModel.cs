@@ -10,8 +10,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon
     {
         [ObservableProperty] private string? _RibbonTitle;
         [ObservableProperty] private bool _IsRibbonVisible;
-        [ObservableProperty] private ObservableCollection<RibbonItemViewModel>? _PrimaryActions;
-        [ObservableProperty] private ObservableCollection<RibbonItemViewModel>? _SecondaryActions;
+        [ObservableProperty] private ObservableCollection<ActionViewModel>? _PrimaryActions;
+        [ObservableProperty] private ObservableCollection<ActionViewModel>? _SecondaryActions;
 
         /// <inheritdoc/>
         public Task InitAsync(CancellationToken cancellationToken = default)

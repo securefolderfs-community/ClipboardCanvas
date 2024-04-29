@@ -34,6 +34,8 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Canvas.ZIndex="9"
+            PrimaryActions="{x:Bind ViewModel.RibbonViewModel.PrimaryActions, Mode=OneWay}"
+            SecondaryActions="{x:Bind ViewModel.RibbonViewModel.SecondaryActions, Mode=OneWay}"
             ToolBarTitle="{x:Bind ViewModel.RibbonViewModel.RibbonTitle, Mode=OneWay}"
             Visibility="{x:Bind ViewModel.RibbonViewModel.IsRibbonVisible, Mode=OneWay}">
             <anim:Implicit.ShowAnimations>

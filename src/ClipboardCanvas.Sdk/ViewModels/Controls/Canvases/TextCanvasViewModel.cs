@@ -23,18 +23,6 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
         {
         }
 
-        public static async Task<TextCanvasViewModel> ParseAsync(IClipboardData data, IDataSourceModel sourceModel, CancellationToken cancellationToken)
-        {
-            var text = await data.GetTextAsync(cancellationToken);
-            var file = await sourceModel.CreateFileAsync("TODO", false, cancellationToken);
-            await file.WriteAllTextAsync(text, null, cancellationToken);
-
-            return new(file, sourceModel)
-            {
-                Text = text,
-            };
-        }
-
         /// <inheritdoc/>
         public override async Task InitAsync(CancellationToken cancellationToken = default)
         {
@@ -42,6 +30,20 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
                 return;
 
             Text = await file.ReadAllTextAsync(null, cancellationToken);
+        }
+
+        public static async Task<TextCanvasViewModel> ParseAsync(IClipboardData data, IDataSourceModel sourceModel, CancellationToken cancellationToken)
+        {
+            var text = await data.GetTextAsync(cancellationToken);
+            if (sourceModel.Source is not IModifiableFolder modifiableFolder)
+                return new(text, sourceModel);
+
+            var file = await modifiableFolder.CreateFileAsync("TODO", false, cancellationToken);
+            await file.WriteAllTextAsync(text, null, cancellationToken);
+            return new(file, sourceModel)
+            {
+                Text = text,
+            };
         }
     }
 }

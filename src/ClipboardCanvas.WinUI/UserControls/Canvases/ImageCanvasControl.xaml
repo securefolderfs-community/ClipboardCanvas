@@ -11,10 +11,10 @@
     mc:Ignorable="d">
 
     <Grid>
-        <!--<i:Interaction.Behaviors>
-        -->
-        <!--  If immersed  -->
-        <!--
+        <i:Interaction.Behaviors>
+
+            <!--  If immersed  -->
+
             <icore:DataTriggerBehavior
                 Binding="{x:Bind IsImmersed, Mode=OneWay}"
                 ComparisonCondition="Equal"
@@ -47,9 +47,9 @@
                 </imedia:ControlStoryboardAction>
             </icore:DataTriggerBehavior>
 
-        -->
-        <!--  If not immersed  -->
-        <!--
+
+            <!--  If not immersed  -->
+
             <icore:DataTriggerBehavior
                 Binding="{x:Bind IsImmersed, Mode=OneWay}"
                 ComparisonCondition="Equal"
@@ -81,7 +81,7 @@
                     </imedia:ControlStoryboardAction.Storyboard>
                 </imedia:ControlStoryboardAction>
             </icore:DataTriggerBehavior>
-        </i:Interaction.Behaviors>-->
+        </i:Interaction.Behaviors>
 
         <uc:AnimatedCornerRadiusControl x:Name="MainImage" RenderTransformOrigin="0.5,0.5">
             <uc:AnimatedCornerRadiusControl.RenderTransform>

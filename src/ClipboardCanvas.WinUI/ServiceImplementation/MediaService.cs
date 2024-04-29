@@ -1,4 +1,5 @@
-﻿using ClipboardCanvas.Sdk.Models;
+﻿using ClipboardCanvas.Sdk.Enums;
+using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.Shared.ComponentModel;
 using ClipboardCanvas.Shared.Enums;
@@ -78,7 +79,7 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
             var media = 0u;
             var audio = 0u;
 
-            await foreach (var item in collectionModel.GetItemsAsync(StorableType.All, cancellationToken))
+            await foreach (var item in collectionModel.Source.GetItemsAsync(StorableType.All, cancellationToken))
             {
                 var typeHint = FileTypeHelper.GetType(item);
                 switch (typeHint)
@@ -149,6 +150,20 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
             }
 
             return true;
+        }
+
+        public IImage? GetIcon(IconType iconType)
+        {
+            var glyph = iconType switch
+            {
+                IconType.Share => "\uE72D",
+                _ => null
+            };
+
+            if (glyph is null)
+                return null;
+
+            return new IconImage(glyph);
         }
     }
 }
