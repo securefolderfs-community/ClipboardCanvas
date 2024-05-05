@@ -12,15 +12,8 @@ namespace ClipboardCanvas.WinUI.UserControls.Canvases
         public ImageCanvasControl()
         {
             InitializeComponent();
+            IsEditing = false;
         }
-
-        public bool IsImmersed
-        {
-            get => (bool)GetValue(IsImmersedProperty);
-            set => SetValue(IsImmersedProperty, value);
-        }
-        public static readonly DependencyProperty IsImmersedProperty =
-            DependencyProperty.Register(nameof(IsImmersed), typeof(bool), typeof(ImageCanvasControl), new PropertyMetadata(true));
 
         public IImage? Image
         {
@@ -29,5 +22,21 @@ namespace ClipboardCanvas.WinUI.UserControls.Canvases
         }
         public static readonly DependencyProperty ImageProperty =
             DependencyProperty.Register(nameof(Image), typeof(IImage), typeof(ImageCanvasControl), new PropertyMetadata(null));
+
+        public bool IsEditing
+        {
+            get => (bool)GetValue(IsEditingProperty);
+            set => SetValue(IsEditingProperty, value);
+        }
+        public static readonly DependencyProperty IsEditingProperty =
+            DependencyProperty.Register(nameof(IsEditing), typeof(bool), typeof(ImageCanvasControl), new PropertyMetadata(false));
+
+        public bool WasAltered
+        {
+            get => (bool)GetValue(WasAlteredProperty);
+            set => SetValue(WasAlteredProperty, value);
+        }
+        public static readonly DependencyProperty WasAlteredProperty =
+            DependencyProperty.Register(nameof(WasAltered), typeof(bool), typeof(ImageCanvasControl), new PropertyMetadata(false));
     }
 }

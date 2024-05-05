@@ -14,10 +14,16 @@
         <vc:BoolInvertConverter x:Key="BoolInvertConverter" />
 
         <DataTemplate x:Key="TextCanvasTemplate" x:DataType="vm:TextCanvasViewModel">
-            <uc:TextCanvasControl Text="{x:Bind Text, Mode=OneWay}" />
+            <uc:TextCanvasControl
+                IsEditing="{x:Bind IsEditing, Mode=OneWay}"
+                Text="{x:Bind Text, Mode=OneWay}"
+                WasAltered="{x:Bind WasAltered, Mode=OneWay}" />
         </DataTemplate>
         <DataTemplate x:Key="ImageCanvasTemplate" x:DataType="vm:ImageCanvasViewModel">
-            <uc:ImageCanvasControl Image="{x:Bind Image, Mode=OneWay}" IsImmersed="{x:Bind IsEditing, Mode=OneWay, Converter={StaticResource BoolInvertConverter}}" />
+            <uc:ImageCanvasControl
+                Image="{x:Bind Image, Mode=OneWay}"
+                IsEditing="{x:Bind IsEditing, Mode=OneWay}"
+                WasAltered="{x:Bind WasAltered, Mode=OneWay}" />
         </DataTemplate>
         <DataTemplate x:Key="VideoCanvasTemplate" x:DataType="vm:VideoCanvasViewModel">
             <uc:VideoCanvasControl IsImmersed="{x:Bind IsImmersed, Mode=OneWay}" MediaSource="{x:Bind MediaSource, Mode=OneWay}" />
@@ -27,9 +33,10 @@
         </DataTemplate>
         <DataTemplate x:Key="CodeCanvasTemplate" x:DataType="vm:CodeCanvasViewModel">
             <uc:CodeCanvasControl
-                IsReadOnly="True"
+                IsEditing="{x:Bind IsEditing, Mode=OneWay}"
                 Language="{x:Bind Language, Mode=OneWay}"
-                Text="{x:Bind Text, Mode=OneWay}" />
+                Text="{x:Bind Text, Mode=OneWay}"
+                WasAltered="{x:Bind WasAltered, Mode=OneWay}" />
         </DataTemplate>
     </UserControl.Resources>
 

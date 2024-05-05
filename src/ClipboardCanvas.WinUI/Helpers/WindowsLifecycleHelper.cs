@@ -1,5 +1,4 @@
 ﻿using ClipboardCanvas.Sdk.Services;
-using ClipboardCanvas.Sdk.ViewModels.Controls;
 using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
 using ClipboardCanvas.UI.Helpers;
 using ClipboardCanvas.UI.ServiceImplementation;
@@ -50,11 +49,11 @@ namespace ClipboardCanvas.WinUI.Helpers
 
                     // View models
                     .AddSingleton<RibbonViewModel>()
-                    .AddSingleton<NavigationViewModel>()
                     
                     // Singleton services
                     .AddSingleton<ICollectionPersistenceService, CollectionPersistenceService>(_ => new(settingsFolder))
                     .AddSingleton<IFileExplorerService, WindowsFileExplorerService>()
+                    .AddSingleton<IApplicationService, ApplicationService>()
                     .AddSingleton<IStorageService, SystemStorageService>()
                     .AddSingleton<IClipboardService, ClipboardService>()
                     .AddSingleton<ITextRecognitionService, OcrService>()

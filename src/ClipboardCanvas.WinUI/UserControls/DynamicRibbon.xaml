@@ -79,26 +79,8 @@
             </CommandBar.Content>
 
             <!--  Actions  -->
-            <CommandBar.PrimaryCommands>
-                <AppBarButton Label="Share">
-                    <AppBarButton.Icon>
-                        <FontIcon Glyph="&#xE72D;" />
-                    </AppBarButton.Icon>
-                </AppBarButton>
-                <AppBarButton Label="Open">
-                    <AppBarButton.Icon>
-                        <FontIcon Glyph="&#xE8E5;" />
-                    </AppBarButton.Icon>
-                </AppBarButton>
-                <AppBarToggleButton Label="Edit">
-                    <AppBarToggleButton.Icon>
-                        <FontIcon Glyph="&#xE70F;" />
-                    </AppBarToggleButton.Icon>
-                </AppBarToggleButton>
-            </CommandBar.PrimaryCommands>
-            <CommandBar.SecondaryCommands>
-                <AppBarButton Label="More commands!" />
-            </CommandBar.SecondaryCommands>
+            <CommandBar.PrimaryCommands />
+            <CommandBar.SecondaryCommands />
         </CommandBar>
     </local:FloatingCardControl>
 </UserControl>

@@ -12,6 +12,7 @@ namespace ClipboardCanvas.WinUI.UserControls.Canvases
         public CodeCanvasControl()
         {
             InitializeComponent();
+            CodeEditor.Editor.ReadOnly = !IsEditing;
         }
 
         private void CodeEditor_Tapped(object sender, TappedRoutedEventArgs e)
@@ -19,19 +20,27 @@ namespace ClipboardCanvas.WinUI.UserControls.Canvases
             e.Handled = true;
         }
 
-        public bool IsReadOnly
+        public bool IsEditing
         {
-            get => (bool)GetValue(IsReadOnlyProperty);
-            set => SetValue(IsReadOnlyProperty, value);
+            get => (bool)GetValue(IsEditingProperty);
+            set => SetValue(IsEditingProperty, value);
         }
-        public static readonly DependencyProperty IsReadOnlyProperty =
-            DependencyProperty.Register(nameof(IsReadOnly), typeof(bool), typeof(CodeCanvasControl), new PropertyMetadata(true, (s, e) => 
+        public static readonly DependencyProperty IsEditingProperty =
+            DependencyProperty.Register(nameof(IsEditing), typeof(bool), typeof(CodeCanvasControl), new PropertyMetadata(false, (s, e) => 
             {
                 if (s is not CodeCanvasControl control)
                     return;
 
-                control.CodeEditor.Editor.ReadOnly = (bool)e.NewValue;
+                control.CodeEditor.Editor.ReadOnly = !(bool)e.NewValue;
             }));
+
+        public bool WasAltered
+        {
+            get => (bool)GetValue(WasAlteredProperty);
+            set => SetValue(WasAlteredProperty, value);
+        }
+        public static readonly DependencyProperty WasAlteredProperty =
+            DependencyProperty.Register(nameof(WasAltered), typeof(bool), typeof(CodeCanvasControl), new PropertyMetadata(false));
 
         public string? Text
         {
@@ -68,10 +77,10 @@ namespace ClipboardCanvas.WinUI.UserControls.Canvases
                     {
                         ".cpp" => "cpp",
                         ".cs" => "csharp",
-                        ".js" or ".ts" or ".svelte" => "javascript",
+                        ".js" or ".ts" or ".svelte" or ".jsx" => "javascript",
                         ".html" or ".htm" => "html",
                         ".json" => "json",
-                        ".xml" => "xml",
+                        ".xml" or ".xaml" => "xml",
 
                         _ => null
                     };

@@ -12,11 +12,9 @@
 
     <Grid>
         <i:Interaction.Behaviors>
-
-            <!--  If immersed  -->
-
+            <!--  If is editing  -->
             <icore:DataTriggerBehavior
-                Binding="{x:Bind IsImmersed, Mode=OneWay}"
+                Binding="{x:Bind IsEditing, Mode=OneWay}"
                 ComparisonCondition="Equal"
                 Value="True">
                 <imedia:ControlStoryboardAction ControlStoryboardOption="Play">
@@ -25,21 +23,21 @@
                             <DoubleAnimation
                                 Storyboard.TargetName="MainImage"
                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                                From="0.92"
-                                To="1"
+                                From="1"
+                                To="0.92"
                                 Duration="0:0:0.35">
                                 <DoubleAnimation.EasingFunction>
-                                    <QuadraticEase EasingMode="EaseInOut" />
+                                    <PowerEase EasingMode="EaseInOut" Power="2" />
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
                             <DoubleAnimation
                                 Storyboard.TargetName="MainImage"
                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                                From="0.92"
-                                To="1"
+                                From="1"
+                                To="0.92"
                                 Duration="0:0:0.35">
                                 <DoubleAnimation.EasingFunction>
-                                    <QuadraticEase EasingMode="EaseInOut" />
+                                    <PowerEase EasingMode="EaseInOut" Power="2" />
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
                         </Storyboard>
@@ -47,11 +45,9 @@
                 </imedia:ControlStoryboardAction>
             </icore:DataTriggerBehavior>
 
-
-            <!--  If not immersed  -->
-
+            <!--  If is not editing  -->
             <icore:DataTriggerBehavior
-                Binding="{x:Bind IsImmersed, Mode=OneWay}"
+                Binding="{x:Bind IsEditing, Mode=OneWay}"
                 ComparisonCondition="Equal"
                 Value="False">
                 <imedia:ControlStoryboardAction ControlStoryboardOption="Play">
@@ -60,21 +56,21 @@
                             <DoubleAnimation
                                 Storyboard.TargetName="MainImage"
                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                                From="1"
-                                To="0.92"
+                                From="0.92"
+                                To="1"
                                 Duration="0:0:0.35">
                                 <DoubleAnimation.EasingFunction>
-                                    <PowerEase EasingMode="EaseInOut" Power="2" />
+                                    <QuadraticEase EasingMode="EaseInOut" />
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
                             <DoubleAnimation
                                 Storyboard.TargetName="MainImage"
                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                                From="1"
-                                To="0.92"
+                                From="0.92"
+                                To="1"
                                 Duration="0:0:0.35">
                                 <DoubleAnimation.EasingFunction>
-                                    <PowerEase EasingMode="EaseInOut" Power="2" />
+                                    <QuadraticEase EasingMode="EaseInOut" />
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
                         </Storyboard>

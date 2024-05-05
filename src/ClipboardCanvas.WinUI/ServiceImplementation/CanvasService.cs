@@ -19,15 +19,15 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
         public async Task<BaseCanvasViewModel> GetCanvasForStorableAsync(IStorableChild storable, IDataSourceModel sourceModel, CancellationToken cancellationToken)
         {
             var classification = FileTypeHelper.GetClassification(storable);
-            var viewModel = classification.TypeHint switch
+            var viewModel = (storable is IFile file ? classification.TypeHint switch
             {
-                TypeHint.Image => storable is IFile file ? new ImageCanvasViewModel(file, sourceModel) : null,
-                TypeHint.PlainText => storable is IFile file ? MatchText(file, sourceModel, classification) : null,
-                TypeHint.Media => storable is IFile file ? new VideoCanvasViewModel(file, sourceModel) : null,
-                TypeHint.Document => storable is IFile file ? MatchDocument(file, sourceModel, classification) : null,
+                TypeHint.Image => new ImageCanvasViewModel(file, sourceModel),
+                TypeHint.PlainText => MatchText(file, sourceModel, classification),
+                TypeHint.Media => new VideoCanvasViewModel(file, sourceModel),
+                TypeHint.Document => MatchDocument(file, sourceModel, classification),
 
                 _ => null,
-            } ?? throw new ArgumentOutOfRangeException(nameof(classification.TypeHint)); // TODO: Return fallback canvas
+            } : null) ?? throw new ArgumentOutOfRangeException(nameof(classification.TypeHint)); // TODO: Return fallback canvas
 
             await viewModel.InitAsync(cancellationToken);
             return viewModel;
