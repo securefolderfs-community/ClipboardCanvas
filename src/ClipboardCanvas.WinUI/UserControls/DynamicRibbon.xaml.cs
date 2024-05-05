@@ -2,10 +2,10 @@ using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
 using ClipboardCanvas.WinUI.Imaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System;
-using System.Collections;
+using OwlCore.Storage;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Windows.Input;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -63,6 +63,39 @@ namespace ClipboardCanvas.WinUI.UserControls
         {
             ParseCommands(SecondaryActions, Commands.SecondaryCommands);
         }
+
+        private void MenuFlyout_Opening(object sender, object e)
+        {
+            if (sender is not MenuFlyout menuFlyout)
+                return;
+
+            if (RenameCommand is null && CopyPathCommand is null && OpenInExplorerCommand is null)
+                menuFlyout.Hide();
+        }
+
+        public ICommand? RenameCommand
+        {
+            get => (ICommand?)GetValue(RenameCommandProperty);
+            set => SetValue(RenameCommandProperty, value);
+        }
+        public static readonly DependencyProperty RenameCommandProperty =
+            DependencyProperty.Register(nameof(RenameCommand), typeof(IStorableChild), typeof(DynamicRibbon), new PropertyMetadata(null));
+
+        public ICommand? CopyPathCommand
+        {
+            get => (ICommand?)GetValue(CopyPathCommandProperty);
+            set => SetValue(CopyPathCommandProperty, value);
+        }
+        public static readonly DependencyProperty CopyPathCommandProperty =
+            DependencyProperty.Register(nameof(CopyPathCommand), typeof(IStorableChild), typeof(DynamicRibbon), new PropertyMetadata(null));
+
+        public ICommand? OpenInExplorerCommand
+        {
+            get => (ICommand?)GetValue(OpenInExplorerCommandProperty);
+            set => SetValue(OpenInExplorerCommandProperty, value);
+        }
+        public static readonly DependencyProperty OpenInExplorerCommandProperty =
+            DependencyProperty.Register(nameof(OpenInExplorerCommand), typeof(IStorableChild), typeof(DynamicRibbon), new PropertyMetadata(null));
 
         public string? ToolBarTitle
         {

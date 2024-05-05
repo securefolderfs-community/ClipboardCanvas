@@ -32,6 +32,6 @@ namespace ClipboardCanvas.Sdk.Services
 
         Task<IMediaSource> GetVideoPlaybackAsync(IFile file, CancellationToken cancellationToken);
 
-        IImage GetIcon(IconType iconType);
+        IImage? GetIcon(IconType iconType);
     }
 }

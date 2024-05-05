@@ -6,15 +6,18 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ts="using:ClipboardCanvas.WinUI.TemplateSelectors"
     xmlns:uc="using:ClipboardCanvas.WinUI.UserControls.Canvases"
+    xmlns:vc="using:ClipboardCanvas.WinUI.ValueConverters"
     xmlns:vm="using:ClipboardCanvas.Sdk.ViewModels.Controls.Canvases"
     mc:Ignorable="d">
 
     <UserControl.Resources>
+        <vc:BoolInvertConverter x:Key="BoolInvertConverter" />
+
         <DataTemplate x:Key="TextCanvasTemplate" x:DataType="vm:TextCanvasViewModel">
             <uc:TextCanvasControl Text="{x:Bind Text, Mode=OneWay}" />
         </DataTemplate>
         <DataTemplate x:Key="ImageCanvasTemplate" x:DataType="vm:ImageCanvasViewModel">
-            <uc:ImageCanvasControl Image="{x:Bind Image, Mode=OneWay}" IsImmersed="{x:Bind IsImmersed, Mode=OneWay}" />
+            <uc:ImageCanvasControl Image="{x:Bind Image, Mode=OneWay}" IsImmersed="{x:Bind IsEditing, Mode=OneWay, Converter={StaticResource BoolInvertConverter}}" />
         </DataTemplate>
         <DataTemplate x:Key="VideoCanvasTemplate" x:DataType="vm:VideoCanvasViewModel">
             <uc:VideoCanvasControl IsImmersed="{x:Bind IsImmersed, Mode=OneWay}" MediaSource="{x:Bind MediaSource, Mode=OneWay}" />

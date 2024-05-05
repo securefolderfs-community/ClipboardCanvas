@@ -138,6 +138,23 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
             return new VideoSource(mediaSource, stream);
         }
 
+        /// <inheritdoc/>
+        public IImage? GetIcon(IconType iconType)
+        {
+            var glyph = iconType switch
+            {
+                IconType.Share => "\uE72D",
+                IconType.Edit => "\uE70F",
+                IconType.Open => "\uE8E5",
+                _ => null
+            };
+
+            if (glyph is null)
+                return null;
+
+            return new IconImage(glyph);
+        }
+
         private static bool IsMajority(float first, params float[] other)
         {
             if (first >= 50f)
@@ -150,20 +167,6 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
             }
 
             return true;
-        }
-
-        public IImage? GetIcon(IconType iconType)
-        {
-            var glyph = iconType switch
-            {
-                IconType.Share => "\uE72D",
-                _ => null
-            };
-
-            if (glyph is null)
-                return null;
-
-            return new IconImage(glyph);
         }
     }
 }

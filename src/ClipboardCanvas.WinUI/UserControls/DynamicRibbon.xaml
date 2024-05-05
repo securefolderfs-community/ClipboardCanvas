@@ -25,12 +25,57 @@
                 <!--  File name  -->
                 <TextBlock
                     x:Name="Title"
+                    MaxWidth="88"
                     Margin="8,14,8,0"
                     VerticalAlignment="Center"
                     x:Load="{x:Bind ToolBarTitle, Mode=OneWay, Converter={StaticResource NullToBoolConverter}}"
                     FontSize="12"
                     Opacity="0.7"
-                    Text="{x:Bind ToolBarTitle, Mode=OneWay}" />
+                    Text="{x:Bind ToolBarTitle, Mode=OneWay}"
+                    TextTrimming="CharacterEllipsis"
+                    ToolTipService.ToolTip="{x:Bind ToolBarTitle, Mode=OneWay}">
+                    <TextBlock.ContextFlyout>
+                        <MenuFlyout Opening="MenuFlyout_Opening">
+                            <MenuFlyoutItem
+                                x:Name="RenameOption"
+                                x:Load="{x:Bind RenameCommand, Mode=OneWay, Converter={StaticResource NullToBoolConverter}}"
+                                Command="{x:Bind RenameCommand, Mode=OneWay}"
+                                Text="Rename">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE8AC;" />
+                                </MenuFlyoutItem.Icon>
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="F2" />
+                                </MenuFlyoutItem.KeyboardAccelerators>
+                            </MenuFlyoutItem>
+
+                            <MenuFlyoutSeparator x:Name="Separator1" x:Load="{x:Bind RenameCommand, Mode=OneWay, Converter={StaticResource NullToBoolConverter}}" />
+
+                            <MenuFlyoutItem
+                                x:Name="CopyPathOption"
+                                x:Load="{x:Bind CopyPathCommand, Mode=OneWay, Converter={StaticResource NullToBoolConverter}}"
+                                Command="{x:Bind CopyPathCommand, Mode=OneWay}"
+                                Text="Copy path">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE62F;" />
+                                </MenuFlyoutItem.Icon>
+                                <MenuFlyoutItem.KeyboardAccelerators />
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem
+                                x:Name="OpenInExplorerOption"
+                                x:Load="{x:Bind OpenInExplorerCommand, Mode=OneWay, Converter={StaticResource NullToBoolConverter}}"
+                                Command="{x:Bind OpenInExplorerCommand, Mode=OneWay}"
+                                Text="Open in file explorer">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xEC50;" />
+                                </MenuFlyoutItem.Icon>
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="E" Modifiers="Control" />
+                                </MenuFlyoutItem.KeyboardAccelerators>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </TextBlock.ContextFlyout>
+                </TextBlock>
             </CommandBar.Content>
 
             <!--  Actions  -->

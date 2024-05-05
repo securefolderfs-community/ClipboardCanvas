@@ -62,10 +62,9 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
                     Icon = MediaService.GetIcon(IconType.Edit),
                     Command = new AsyncRelayCommand(async () =>
                     {
-                        IsImmersed = !IsImmersed;
+                        IsEditing = !IsEditing;
                     })
                 }
-
             };
 
             if (Storable is not IFile file || Image is not null)

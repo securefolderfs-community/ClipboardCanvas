@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:anim="using:CommunityToolkit.WinUI.Animations"
+    xmlns:animvis="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="using:ClipboardCanvas.WinUI.UserControls"
@@ -34,7 +35,10 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Canvas.ZIndex="9"
+            CopyPathCommand="{x:Bind ViewModel.RibbonViewModel.CopyPathCommand, Mode=OneWay}"
+            OpenInExplorerCommand="{x:Bind ViewModel.RibbonViewModel.OpenInExplorerCommand, Mode=OneWay}"
             PrimaryActions="{x:Bind ViewModel.RibbonViewModel.PrimaryActions, Mode=OneWay}"
+            RenameCommand="{x:Bind ViewModel.RibbonViewModel.RenameCommand, Mode=OneWay}"
             SecondaryActions="{x:Bind ViewModel.RibbonViewModel.SecondaryActions, Mode=OneWay}"
             ToolBarTitle="{x:Bind ViewModel.RibbonViewModel.RibbonTitle, Mode=OneWay}"
             Visibility="{x:Bind ViewModel.RibbonViewModel.IsRibbonVisible, Mode=OneWay}">
@@ -94,12 +98,14 @@
         <!--  Navigation Surface  -->
         <Grid
             Grid.Row="2"
+            Height="128"
             Padding="32,24"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Bottom"
             Canvas.ZIndex="10">
             <uc:NavigationSurfaceControl
                 HorizontalAlignment="Center"
+                VerticalAlignment="Center"
                 BackCommand="{x:Bind ViewModel.NavigationViewModel.NavigateBackCommand, Mode=OneWay}"
                 ForwardCommand="{x:Bind ViewModel.NavigationViewModel.NavigateForwardCommand, Mode=OneWay}"
                 HomeCommand="{x:Bind ViewModel.NavigationViewModel.NavigateHomeCommand, Mode=OneWay}"
@@ -121,11 +127,63 @@
                 <anim:Implicit.HideAnimations>
                     <anim:TranslationAnimation
                         EasingMode="EaseIn"
-                        From="0,-60,0"
-                        To="0,0,0"
+                        From="0,0,0"
+                        To="0,60,0"
                         Duration="0:0:0.25" />
                 </anim:Implicit.HideAnimations>
             </uc:NavigationSurfaceControl>
+            <uc:FloatingCardControl
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Visibility="{x:Bind ViewModel.NavigationViewModel.IsNavigationVisible, Mode=OneWay}">
+                <anim:Implicit.ShowAnimations>
+                    <anim:OpacityAnimation
+                        From="0"
+                        To="1"
+                        Duration="0:0:0.3" />
+                </anim:Implicit.ShowAnimations>
+                <anim:Implicit.HideAnimations>
+                    <anim:OpacityAnimation
+                        From="1"
+                        To="0"
+                        Duration="0:0:0.3" />
+                </anim:Implicit.HideAnimations>
+                <Button
+                    Width="32"
+                    Height="32"
+                    Padding="0"
+                    Style="{StaticResource NavigationButtonStyle}">
+                    <FontIcon Glyph="&#xE70E;" />
+                    <Button.Flyout>
+                        <MenuFlyout Placement="TopEdgeAlignedRight">
+                            <MenuFlyoutItem Text="Create text document">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE710;" />
+                                </MenuFlyoutItem.Icon>
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="N" Modifiers="Control" />
+                                </MenuFlyoutItem.KeyboardAccelerators>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem Text="Settings">
+                                <MenuFlyoutItem.Icon>
+                                    <AnimatedIcon>
+                                        <AnimatedIcon.Source>
+                                            <animvis:AnimatedSettingsVisualSource />
+                                        </AnimatedIcon.Source>
+                                        <AnimatedIcon.FallbackIconSource>
+                                            <SymbolIconSource Symbol="Setting" />
+                                        </AnimatedIcon.FallbackIconSource>
+                                    </AnimatedIcon>
+                                </MenuFlyoutItem.Icon>
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="S" Modifiers="Menu" />
+                                </MenuFlyoutItem.KeyboardAccelerators>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+            </uc:FloatingCardControl>
         </Grid>
     </Grid>
 </UserControl>

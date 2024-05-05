@@ -79,6 +79,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
             CurrentCanvasViewModel?.Dispose();
             CurrentCanvasViewModel = await CanvasService.GetCanvasForStorableAsync(storable, _canvasSourceModel, cancellationToken);
 
+            RibbonViewModel.RibbonTitle = CurrentCanvasViewModel.Title;
             RibbonViewModel.PrimaryActions = CurrentCanvasViewModel.PrimaryActions;
             RibbonViewModel.SecondaryActions = CurrentCanvasViewModel.SecondaryActions;
         }
@@ -101,6 +102,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
             CurrentCanvasViewModel?.Dispose();
             CurrentCanvasViewModel = canvasViewModel;
 
+            RibbonViewModel.RibbonTitle = canvasViewModel.Title;
             RibbonViewModel.PrimaryActions = canvasViewModel.PrimaryActions;
             RibbonViewModel.SecondaryActions = canvasViewModel.SecondaryActions;
 

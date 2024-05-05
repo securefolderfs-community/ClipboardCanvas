@@ -20,7 +20,7 @@ namespace ClipboardCanvas.WinUI.UserControls.Canvases
             set => SetValue(IsImmersedProperty, value);
         }
         public static readonly DependencyProperty IsImmersedProperty =
-            DependencyProperty.Register(nameof(IsImmersed), typeof(bool), typeof(ImageCanvasControl), new PropertyMetadata(false));
+            DependencyProperty.Register(nameof(IsImmersed), typeof(bool), typeof(ImageCanvasControl), new PropertyMetadata(true));
 
         public IImage? Image
         {
