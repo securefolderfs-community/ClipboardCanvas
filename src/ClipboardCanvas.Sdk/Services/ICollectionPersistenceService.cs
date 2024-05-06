@@ -7,7 +7,7 @@ namespace ClipboardCanvas.Sdk.Services
     /// <summary>
     /// Represents a service to manage collection-related data.
     /// </summary>
-    public interface ICollectionPersistenceService : IPersistable
+    public interface ICollectionPersistenceService : IPersistable, IAsyncInitialize
     {
         /// <summary>
         /// Gets or sets the list of saved collections.

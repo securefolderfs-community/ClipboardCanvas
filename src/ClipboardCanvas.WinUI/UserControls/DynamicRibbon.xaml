@@ -59,12 +59,14 @@
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE62F;" />
                                 </MenuFlyoutItem.Icon>
-                                <MenuFlyoutItem.KeyboardAccelerators />
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="C" Modifiers="Control,Shift" />
+                                </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem
-                                x:Name="OpenInExplorerOption"
-                                x:Load="{x:Bind OpenInExplorerCommand, Mode=OneWay, Converter={StaticResource NullToBoolConverter}}"
-                                Command="{x:Bind OpenInExplorerCommand, Mode=OneWay}"
+                                x:Name="ShowInExplorerOption"
+                                x:Load="{x:Bind ShowInExplorerCommand, Mode=OneWay, Converter={StaticResource NullToBoolConverter}}"
+                                Command="{x:Bind ShowInExplorerCommand, Mode=OneWay}"
                                 Text="Open in file explorer">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xEC50;" />

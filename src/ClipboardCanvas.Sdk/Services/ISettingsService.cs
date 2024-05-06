@@ -6,7 +6,7 @@ namespace ClipboardCanvas.Sdk.Services
     /// <summary>
     /// The main settings service to manage other settings services.
     /// </summary>
-    public interface ISettingsService : IPersistable
+    public interface ISettingsService : IPersistable, IAsyncInitialize
     {
         /// <summary>
         /// Gets the service which is used to store application-related settings.

@@ -69,7 +69,7 @@ namespace ClipboardCanvas.WinUI.UserControls
             if (sender is not MenuFlyout menuFlyout)
                 return;
 
-            if (RenameCommand is null && CopyPathCommand is null && OpenInExplorerCommand is null)
+            if (RenameCommand is null && CopyPathCommand is null && ShowInExplorerCommand is null)
                 menuFlyout.Hide();
         }
 
@@ -89,13 +89,13 @@ namespace ClipboardCanvas.WinUI.UserControls
         public static readonly DependencyProperty CopyPathCommandProperty =
             DependencyProperty.Register(nameof(CopyPathCommand), typeof(IStorableChild), typeof(DynamicRibbon), new PropertyMetadata(null));
 
-        public ICommand? OpenInExplorerCommand
+        public ICommand? ShowInExplorerCommand
         {
-            get => (ICommand?)GetValue(OpenInExplorerCommandProperty);
-            set => SetValue(OpenInExplorerCommandProperty, value);
+            get => (ICommand?)GetValue(ShowInExplorerCommandProperty);
+            set => SetValue(ShowInExplorerCommandProperty, value);
         }
-        public static readonly DependencyProperty OpenInExplorerCommandProperty =
-            DependencyProperty.Register(nameof(OpenInExplorerCommand), typeof(IStorableChild), typeof(DynamicRibbon), new PropertyMetadata(null));
+        public static readonly DependencyProperty ShowInExplorerCommandProperty =
+            DependencyProperty.Register(nameof(ShowInExplorerCommand), typeof(IStorableChild), typeof(DynamicRibbon), new PropertyMetadata(null));
 
         public string? ToolBarTitle
         {

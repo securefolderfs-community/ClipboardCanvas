@@ -28,7 +28,7 @@ namespace ClipboardCanvas.Sdk.ViewModels
         /// <inheritdoc/>
         public Task InitAsync(CancellationToken cancellationToken = default)
         {
-            return Task.WhenAll(SettingsService.TryLoadAsync(cancellationToken), CollectionStoreModel.TryLoadAsync(cancellationToken));
+            return Task.WhenAll(SettingsService.TryInitAsync(cancellationToken), CollectionStoreModel.TryInitAsync(cancellationToken));
         }
     }
 }

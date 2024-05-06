@@ -16,7 +16,7 @@ namespace ClipboardCanvas.WinUI.UserControls
             InitializeComponent();
         }
 
-        private async void KeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        private void KeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             if (!EnableAccelerators)
                 return;
@@ -34,6 +34,10 @@ namespace ClipboardCanvas.WinUI.UserControls
 
                 case VirtualKey.Home:
                     HomeCommand?.Execute(null);
+                    break;
+
+                default:
+                    args.Handled = false;
                     break;
             }
         }

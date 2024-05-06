@@ -3,6 +3,7 @@ using ClipboardCanvas.Sdk.Extensions;
 using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
+using ClipboardCanvas.Shared.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
 {
-    public sealed partial class TextCanvasViewModel : BaseCanvasViewModel
+    public sealed partial class TextCanvasViewModel : BaseCanvasViewModel, IPersistable
     {
         [ObservableProperty] private string? _Text;
 
@@ -33,6 +34,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
         /// <inheritdoc/>
         public override async Task InitAsync(CancellationToken cancellationToken = default)
         {
+            // TODO: Move to UI
             PrimaryActions = new()
             {
                 new()
@@ -49,19 +51,13 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
                 {
                     Name = "Open",
                     Icon = MediaService.GetIcon(IconType.Open),
-                    Command = new AsyncRelayCommand(async () =>
-                    {
-                        await Console.Out.WriteLineAsync();
-                    })
+                    Command = OpenCommand
                 },
                 new ToggleViewModel()
                 {
                     Name = "Edit",
                     Icon = MediaService.GetIcon(IconType.Edit),
-                    Command = new AsyncRelayCommand(async () =>
-                    {
-                        IsEditing = !IsEditing;
-                    })
+                    Command = EditCommand
                 }
             };
 
@@ -69,6 +65,22 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
                 return;
 
             Text = await file.ReadAllTextAsync(null, cancellationToken);
+        }
+
+        /// <inheritdoc/>
+        [RelayCommand]
+        public async Task SaveAsync(CancellationToken cancellationToken = default)
+        {
+            if (Storable is not IFile file)
+                return;
+
+            // Set WasAltered beforehand to account for any updates
+            WasAltered = false;
+
+            if (Text is null)
+                return;
+
+            await file.WriteAllTextAsync(Text, null, cancellationToken);
         }
 
         public static async Task<TextCanvasViewModel> ParseAsync(IClipboardData data, IDataSourceModel sourceModel, CancellationToken cancellationToken)

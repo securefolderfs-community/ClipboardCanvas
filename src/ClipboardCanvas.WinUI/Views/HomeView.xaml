@@ -30,7 +30,8 @@
                     <ContentControl
                         HorizontalContentAlignment="Stretch"
                         VerticalContentAlignment="Stretch"
-                        Content="{Binding}">
+                        Content="{Binding}"
+                        IsTabStop="False">
                         <ContentControl.ContentTemplateSelector>
                             <ts:WidgetsTemplateSelector CollectionsWidgetDataTemplate="{StaticResource CollectionsWidgetTemplate}" />
                         </ContentControl.ContentTemplateSelector>

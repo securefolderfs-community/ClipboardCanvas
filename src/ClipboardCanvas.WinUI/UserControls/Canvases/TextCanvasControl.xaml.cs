@@ -1,3 +1,4 @@
+using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -18,7 +19,7 @@ namespace ClipboardCanvas.WinUI.UserControls.Canvases
         private void EditingBox_Loaded(object sender, RoutedEventArgs e)
         {
             _surpressEvents = true;
-            EditingBox.Document.SetText(Microsoft.UI.Text.TextSetOptions.None, Text);
+            EditingBox.Document.SetText(TextSetOptions.None, Text);
             _surpressEvents = false;
         }
 
@@ -52,6 +53,16 @@ namespace ClipboardCanvas.WinUI.UserControls.Canvases
             set => SetValue(WasAlteredProperty, value);
         }
         public static readonly DependencyProperty WasAlteredProperty =
-            DependencyProperty.Register(nameof(WasAltered), typeof(bool), typeof(TextCanvasControl), new PropertyMetadata(false));
+            DependencyProperty.Register(nameof(WasAltered), typeof(bool), typeof(TextCanvasControl), new PropertyMetadata(false, (s, e) =>
+            {
+                if (s is not TextCanvasControl control)
+                    return;
+
+                if ((bool)e.OldValue && !(bool)e.NewValue && control.IsEditing)
+                {
+                    control.EditingBox.Document.GetText(TextGetOptions.None, out var text);
+                    control.Text = text;
+                }
+            }));
     }
 }

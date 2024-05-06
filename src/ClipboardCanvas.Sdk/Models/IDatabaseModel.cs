@@ -7,7 +7,7 @@ namespace ClipboardCanvas.Sdk.Models
     /// Represents a database to store data identified by <typeparamref name="TKey"/>.
     /// </summary>
     /// <typeparam name="TKey">The key to identify data with.</typeparam>
-    public interface IDatabaseModel<in TKey> : IPersistable, IDisposable
+    public interface IDatabaseModel<in TKey> : IPersistable, IAsyncInitialize, IDisposable
     {
         /// <summary>
         /// Gets a value from the database.

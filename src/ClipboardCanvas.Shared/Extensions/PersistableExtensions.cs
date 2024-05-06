@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 namespace ClipboardCanvas.Shared.Extensions
 {
     /// <summary>
-    /// Contains common extensions for <see cref="IPersistable"/>.
+    /// Contains common extensions for <see cref="IPersistable"/> and <see cref="IAsyncInitialize"/>.
     /// </summary>
     public static class PersistableExtensions
     {
         /// <summary>
-        /// Tries to asynchronously load persisted data into memory.
+        /// Tries to asynchronously initialize <see cref="IAsyncInitialize"/>
         /// </summary>
-        /// <param name="persistable">The <see cref="IPersistable"/> instance to use.</param>
+        /// <param name="asyncInitialize">The <see cref="IAsyncInitialize"/> instance to use.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> that cancels this action.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation. If successful, returns true; otherwise false.</returns>
-        public static async Task<bool> TryLoadAsync(this IPersistable persistable, CancellationToken cancellationToken = default)
+        public static async Task<bool> TryInitAsync(this IAsyncInitialize asyncInitialize, CancellationToken cancellationToken = default)
         {
             try
             {
-                await persistable.LoadAsync(cancellationToken);
+                await asyncInitialize.InitAsync(cancellationToken);
                 return true;
             }
             catch (Exception)
@@ -46,6 +46,13 @@ namespace ClipboardCanvas.Shared.Extensions
             {
                 return false;
             }
+        }
+
+        public static T WithInitAsync<T>(this T asyncInitialize, CancellationToken cancellationToken = default)
+            where T : IAsyncInitialize
+        {
+            _ = asyncInitialize.InitAsync(cancellationToken);
+            return asyncInitialize;
         }
     }
 }

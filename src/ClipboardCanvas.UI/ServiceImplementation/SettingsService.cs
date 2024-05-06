@@ -23,9 +23,9 @@ namespace ClipboardCanvas.UI.ServiceImplementation
         }
 
         /// <inheritdoc/>
-        public Task LoadAsync(CancellationToken cancellationToken = default)
+        public Task InitAsync(CancellationToken cancellationToken = default)
         {
-            return Task.WhenAll(AppSettings.LoadAsync(cancellationToken), UserSettings.LoadAsync(cancellationToken));
+            return Task.WhenAll(AppSettings.InitAsync(cancellationToken), UserSettings.InitAsync(cancellationToken));
         }
 
         /// <inheritdoc/>

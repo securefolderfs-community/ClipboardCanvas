@@ -84,7 +84,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         [RelayCommand]
         private Task ShowInFileExplorerAsync(CancellationToken cancellationToken)
         {
-            return FileExplorerService.OpenInFileExplorerAsync(_sourceModel.Source, cancellationToken);
+            return FileExplorerService.OpenInFileExplorerAsync(_sourceModel.Source, null, cancellationToken);
         }
 
         [RelayCommand]

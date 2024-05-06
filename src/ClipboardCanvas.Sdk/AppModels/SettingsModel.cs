@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace ClipboardCanvas.Sdk.AppModels
 {
     /// <inheritdoc cref="IPersistable"/>
-    public abstract class SettingsModel : IPersistable, INotifyPropertyChanged
+    public abstract class SettingsModel : IPersistable, IAsyncInitialize, INotifyPropertyChanged
     {
         /// <summary>
         /// Gets the <see cref="IDatabaseModel{TKey}"/> where settings are stored.
@@ -21,9 +21,9 @@ namespace ClipboardCanvas.Sdk.AppModels
         public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <inheritdoc/>
-        public virtual Task LoadAsync(CancellationToken cancellationToken = default)
+        public virtual Task InitAsync(CancellationToken cancellationToken = default)
         {
-            return SettingsDatabase.LoadAsync(cancellationToken);
+            return SettingsDatabase.InitAsync(cancellationToken);
         }
 
         /// <inheritdoc/>

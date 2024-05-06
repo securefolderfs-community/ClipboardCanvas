@@ -20,9 +20,10 @@ namespace ClipboardCanvas.Sdk.Services
         /// Opens provided <paramref name="folder"/> in file explorer.
         /// </summary>
         /// <param name="folder">The folder to open file explorer in.</param>
+        /// <param name="highlight">The optional item to highlight.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> that cancels this action.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
-        Task OpenInFileExplorerAsync(IFolder folder, CancellationToken cancellationToken = default);
+        Task OpenInFileExplorerAsync(IFolder folder, IStorableChild? highlight = null, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Awaits the user input and picks single folder from the file explorer dialog.

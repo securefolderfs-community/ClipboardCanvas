@@ -78,10 +78,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
 
             CurrentCanvasViewModel?.Dispose();
             CurrentCanvasViewModel = await CanvasService.GetCanvasForStorableAsync(storable, _canvasSourceModel, cancellationToken);
-
-            RibbonViewModel.RibbonTitle = CurrentCanvasViewModel.Title;
-            RibbonViewModel.PrimaryActions = CurrentCanvasViewModel.PrimaryActions;
-            RibbonViewModel.SecondaryActions = CurrentCanvasViewModel.SecondaryActions;
+            BindRibbon();
         }
 
         [RelayCommand]
@@ -101,10 +98,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
 
             CurrentCanvasViewModel?.Dispose();
             CurrentCanvasViewModel = canvasViewModel;
-
-            RibbonViewModel.RibbonTitle = canvasViewModel.Title;
-            RibbonViewModel.PrimaryActions = canvasViewModel.PrimaryActions;
-            RibbonViewModel.SecondaryActions = canvasViewModel.SecondaryActions;
+            BindRibbon();
 
             async Task<BaseCanvasViewModel> StorageAsync()
             {
@@ -113,6 +107,20 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
 
                 throw new NotImplementedException();
             }
+        }
+
+        [Obsolete("This method will be replaced in the future")]
+        private void BindRibbon()
+        {
+            if (CurrentCanvasViewModel is null)
+                return;
+
+            // TODO: Find a better way to bind
+            RibbonViewModel.RibbonTitle = CurrentCanvasViewModel.Title;
+            RibbonViewModel.PrimaryActions = CurrentCanvasViewModel.PrimaryActions;
+            RibbonViewModel.SecondaryActions = CurrentCanvasViewModel.SecondaryActions;
+            RibbonViewModel.CopyPathCommand = CurrentCanvasViewModel.CopyPathCommand;
+            RibbonViewModel.ShowInExplorerCommand = CurrentCanvasViewModel.ShowInExplorerCommand;
         }
     }
 }

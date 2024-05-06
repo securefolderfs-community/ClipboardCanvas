@@ -50,7 +50,9 @@
                     </RichTextBlock>
                     <RichEditBox
                         x:Name="EditingBox"
+                        Padding="0"
                         x:Load="{x:Bind IsEditing, Mode=OneWay}"
+                        BorderThickness="0"
                         IsTextPredictionEnabled="True"
                         Loaded="EditingBox_Loaded"
                         TextChanged="EditingBox_TextChanged" />

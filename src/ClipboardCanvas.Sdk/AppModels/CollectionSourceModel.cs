@@ -72,9 +72,9 @@ namespace ClipboardCanvas.Sdk.AppModels
         }
 
         /// <inheritdoc/>
-        public async Task LoadAsync(CancellationToken cancellationToken = default)
+        public async Task InitAsync(CancellationToken cancellationToken = default)
         {
-            await CollectionPersistenceService.LoadAsync(cancellationToken);
+            await CollectionPersistenceService.InitAsync(cancellationToken);
 
             // Clear previous collections
             Items.Clear();

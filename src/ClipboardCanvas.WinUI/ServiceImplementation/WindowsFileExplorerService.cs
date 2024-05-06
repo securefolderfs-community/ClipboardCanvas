@@ -1,4 +1,5 @@
 ﻿using ClipboardCanvas.Sdk.Services;
+using ClipboardCanvas.WinUI.Storage;
 using OwlCore.Storage;
 using OwlCore.Storage.SystemIO;
 using System;
@@ -14,15 +15,26 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
     internal sealed class WindowsFileExplorerService : IFileExplorerService
     {
         /// <inheritdoc/>
-        public Task OpenAppFolderAsync(CancellationToken cancellationToken = default)
+        public async Task OpenAppFolderAsync(CancellationToken cancellationToken = default)
         {
-            return Launcher.LaunchFolderAsync(ApplicationData.Current.LocalFolder).AsTask(cancellationToken);
+            await Launcher.LaunchFolderAsync(ApplicationData.Current.LocalFolder).AsTask(cancellationToken);
         }
 
         /// <inheritdoc/>
-        public Task OpenInFileExplorerAsync(IFolder folder, CancellationToken cancellationToken = default)
+        public async Task OpenInFileExplorerAsync(IFolder folder, IStorableChild? highlight, CancellationToken cancellationToken = default)
         {
-            return Launcher.LaunchFolderPathAsync(folder.Id).AsTask(cancellationToken);
+            var options = new FolderLauncherOptions();
+            if (highlight is not null)
+            {
+                var windowsStorable = (IStorageItem?)(highlight as WindowsStorageFile)?.storage ?? (highlight as WindowsStorageFolder)?.storage;
+                windowsStorable ??= highlight is IFile
+                        ? await StorageFile.GetFileFromPathAsync(highlight.Id)
+                        : await StorageFolder.GetFolderFromPathAsync(highlight.Id);
+                
+                options.ItemsToSelect.Add(windowsStorable);
+            }
+
+            await Launcher.LaunchFolderPathAsync(folder.Id, options).AsTask(cancellationToken);
         }
 
         /// <inheritdoc/>

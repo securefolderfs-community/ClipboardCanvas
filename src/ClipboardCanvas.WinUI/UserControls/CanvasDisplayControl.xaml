@@ -16,14 +16,14 @@
         <DataTemplate x:Key="TextCanvasTemplate" x:DataType="vm:TextCanvasViewModel">
             <uc:TextCanvasControl
                 IsEditing="{x:Bind IsEditing, Mode=OneWay}"
-                Text="{x:Bind Text, Mode=OneWay}"
-                WasAltered="{x:Bind WasAltered, Mode=OneWay}" />
+                Text="{x:Bind Text, Mode=TwoWay}"
+                WasAltered="{x:Bind WasAltered, Mode=TwoWay}" />
         </DataTemplate>
         <DataTemplate x:Key="ImageCanvasTemplate" x:DataType="vm:ImageCanvasViewModel">
             <uc:ImageCanvasControl
                 Image="{x:Bind Image, Mode=OneWay}"
                 IsEditing="{x:Bind IsEditing, Mode=OneWay}"
-                WasAltered="{x:Bind WasAltered, Mode=OneWay}" />
+                WasAltered="{x:Bind WasAltered, Mode=TwoWay}" />
         </DataTemplate>
         <DataTemplate x:Key="VideoCanvasTemplate" x:DataType="vm:VideoCanvasViewModel">
             <uc:VideoCanvasControl IsImmersed="{x:Bind IsImmersed, Mode=OneWay}" MediaSource="{x:Bind MediaSource, Mode=OneWay}" />
@@ -34,16 +34,17 @@
         <DataTemplate x:Key="CodeCanvasTemplate" x:DataType="vm:CodeCanvasViewModel">
             <uc:CodeCanvasControl
                 IsEditing="{x:Bind IsEditing, Mode=OneWay}"
-                Language="{x:Bind Language, Mode=OneWay}"
-                Text="{x:Bind Text, Mode=OneWay}"
-                WasAltered="{x:Bind WasAltered, Mode=OneWay}" />
+                LanguageHint="{x:Bind Language, Mode=OneWay}"
+                Text="{x:Bind Text, Mode=TwoWay}"
+                WasAltered="{x:Bind WasAltered, Mode=TwoWay}" />
         </DataTemplate>
     </UserControl.Resources>
 
     <ContentControl
         HorizontalContentAlignment="Stretch"
         VerticalContentAlignment="Stretch"
-        Content="{x:Bind CanvasViewModel, Mode=OneWay}">
+        Content="{x:Bind CanvasViewModel, Mode=OneWay}"
+        KeyboardAcceleratorPlacementMode="Hidden">
         <ContentControl.ContentTemplateSelector>
             <ts:CanvasTemplateSelector
                 CodeCanvasTemplate="{StaticResource CodeCanvasTemplate}"
@@ -52,5 +53,11 @@
                 TextCanvasTemplate="{StaticResource TextCanvasTemplate}"
                 VideoCanvasTemplate="{StaticResource VideoCanvasTemplate}" />
         </ContentControl.ContentTemplateSelector>
+        <ContentControl.KeyboardAccelerators>
+            <KeyboardAccelerator
+                Key="S"
+                Invoked="KeyboardAccelerator_Invoked"
+                Modifiers="Control" />
+        </ContentControl.KeyboardAccelerators>
     </ContentControl>
 </UserControl>

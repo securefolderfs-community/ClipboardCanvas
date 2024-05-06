@@ -27,9 +27,13 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
 
         public virtual IStorable? Storable { get; }
 
+        protected IFileExplorerService FileExplorerService { get; } = Ioc.Default.GetRequiredService<IFileExplorerService>();
+
         protected IApplicationService ApplicationService { get; } = Ioc.Default.GetRequiredService<IApplicationService>();
 
-        protected IFileExplorerService FileExplorerService { get; } = Ioc.Default.GetRequiredService<IFileExplorerService>();
+        protected IClipboardService ClipboardService { get; } = Ioc.Default.GetRequiredService<IClipboardService>();
+
+        protected IOverlayService OverlayService { get; } = Ioc.Default.GetRequiredService<IOverlayService>();
 
         protected BaseCanvasViewModel(IStorable storable, IDataSourceModel sourceModel)
             : this(sourceModel)
@@ -58,7 +62,28 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
         [RelayCommand]
         protected virtual async Task ShowInExplorerAsync(CancellationToken cancellationToken)
         {
-            await FileExplorerService.OpenInFileExplorerAsync(SourceModel.Source, cancellationToken);
+            await FileExplorerService.OpenInFileExplorerAsync(SourceModel.Source, Storable as IStorableChild, cancellationToken);
+        }
+
+        [RelayCommand]
+        protected virtual async Task CopyPathAsync(CancellationToken cancellationToken)
+        {
+            if (Storable is not null)
+                await ClipboardService.SetTextAsync(Storable.Id, cancellationToken);
+        }
+
+        [RelayCommand]
+        protected virtual Task EditAsync(CancellationToken cancellationToken)
+        {
+            if (IsEditing && WasAltered && this is IPersistable persistable)
+            {
+                // TODO: Display a dialog asking the user if they want to save or discard the changes
+                //var result = await OverlayService.ShowAsync(...);
+            }
+            else
+                IsEditing = !IsEditing;
+
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc/>

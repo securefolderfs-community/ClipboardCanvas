@@ -52,7 +52,7 @@ namespace ClipboardCanvas.Sdk.AppModels.Database
         }
 
         /// <inheritdoc/>
-        public override async Task LoadAsync(CancellationToken cancellationToken = default)
+        public override async Task InitAsync(CancellationToken cancellationToken = default)
         {
             try
             {
@@ -120,7 +120,7 @@ namespace ClipboardCanvas.Sdk.AppModels.Database
         protected override async Task ProcessChangeAsync(string changedItem)
         {
             if (_databaseFile?.Id == changedItem)
-                await LoadAsync();
+                await InitAsync();
         }
 
         private async Task EnsureSettingsFileAsync(CancellationToken cancellationToken)

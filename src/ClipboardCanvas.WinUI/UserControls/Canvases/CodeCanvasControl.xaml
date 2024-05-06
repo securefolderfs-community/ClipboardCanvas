@@ -18,6 +18,7 @@
         <wue:CodeEditorControl
             x:Name="CodeEditor"
             Grid.Column="1"
+            Loaded="CodeEditor_Loaded"
             Tapped="CodeEditor_Tapped" />
     </Grid>
 </UserControl>

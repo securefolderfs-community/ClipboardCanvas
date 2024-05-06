@@ -6,7 +6,7 @@ namespace ClipboardCanvas.Sdk.Services.Settings
     /// <summary>
     /// An interface to manage user preferences and settings.
     /// </summary>
-    public interface IUserSettings : IPersistable, INotifyPropertyChanged
+    public interface IUserSettings : IPersistable, IAsyncInitialize, INotifyPropertyChanged
     {
     }
 }

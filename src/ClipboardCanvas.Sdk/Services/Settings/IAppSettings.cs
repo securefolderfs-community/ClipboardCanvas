@@ -6,7 +6,7 @@ namespace ClipboardCanvas.Sdk.Services.Settings
     /// <summary>
     /// An interface for storing application configuration and settings.
     /// </summary>
-    public interface IAppSettings : IPersistable, INotifyPropertyChanged
+    public interface IAppSettings : IPersistable, IAsyncInitialize, INotifyPropertyChanged
     {
         /// <summary>
         /// Gets or sets the value containing information about the app theme.

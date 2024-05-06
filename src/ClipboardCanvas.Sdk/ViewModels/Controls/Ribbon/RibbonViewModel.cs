@@ -13,7 +13,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon
         [ObservableProperty] private ObservableCollection<ActionViewModel>? _PrimaryActions;
         [ObservableProperty] private ObservableCollection<ActionViewModel>? _SecondaryActions;
         [ObservableProperty] private IAsyncRelayCommand<string>? _RenameCommand;
-        [ObservableProperty] private IAsyncRelayCommand? _OpenInExplorerCommand;
+        [ObservableProperty] private IAsyncRelayCommand? _ShowInExplorerCommand;
         [ObservableProperty] private IAsyncRelayCommand? _CopyPathCommand;
 
         /// <inheritdoc/>

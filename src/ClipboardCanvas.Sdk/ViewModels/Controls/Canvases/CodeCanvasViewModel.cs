@@ -3,6 +3,7 @@ using ClipboardCanvas.Sdk.Extensions;
 using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
+using ClipboardCanvas.Shared.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
 {
-    public partial class CodeCanvasViewModel : BaseCanvasViewModel
+    public partial class CodeCanvasViewModel : BaseCanvasViewModel, IPersistable
     {
         [ObservableProperty] private string? _Text;
         [ObservableProperty] private string? _Language;
@@ -66,6 +67,22 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
                 return;
 
             Text = await file.ReadAllTextAsync(null, cancellationToken);
+        }
+
+        /// <inheritdoc/>
+        [RelayCommand]
+        public async Task SaveAsync(CancellationToken cancellationToken = default)
+        {
+            if (Storable is not IFile file)
+                return;
+
+            // Set WasAltered beforehand to account for any updates
+            WasAltered = false;
+
+            if (Text is null)
+                return;
+
+            await file.WriteAllTextAsync(Text, null, cancellationToken);
         }
     }
 }

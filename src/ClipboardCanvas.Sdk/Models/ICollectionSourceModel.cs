@@ -7,7 +7,7 @@ namespace ClipboardCanvas.Sdk.Models
     /// <summary>
     /// Manages the list of user-saved collections.
     /// </summary>
-    public interface ICollectionSourceModel : ICollection<IDataSourceModel>, INotifyCollectionChanged, IPersistable
+    public interface ICollectionSourceModel : ICollection<IDataSourceModel>, IPersistable, IAsyncInitialize, INotifyCollectionChanged
     {
     }
 }
