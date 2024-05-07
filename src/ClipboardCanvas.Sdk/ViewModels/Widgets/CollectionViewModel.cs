@@ -1,7 +1,6 @@
 ﻿using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.Sdk.ViewModels.Controls;
-using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
 using ClipboardCanvas.Sdk.ViewModels.Views;
 using ClipboardCanvas.Shared.ComponentModel;
 using ClipboardCanvas.Shared.Extensions;
@@ -20,8 +19,6 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 {
     public sealed partial class CollectionViewModel : ObservableObject, IEquatable<IDataSourceModel>, IAsyncInitialize, IDisposable
     {
-        private readonly IAsyncRelayCommand _navigateBackCommand;
-        private readonly IAsyncRelayCommand _navigateForwardCommand;
         private readonly ICollectionSourceModel _collectionSourceModel;
         private readonly NavigationViewModel _navigationViewModel;
         private readonly IDataSourceModel _sourceModel;
@@ -43,8 +40,6 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             _collectionSourceModel = collectionSourceModel;
             _sourceModel = dataSourceModel;
             _navigationViewModel = navigationViewModel;
-            _navigateBackCommand = new AsyncRelayCommand(GoBackAsync);
-            _navigateForwardCommand = new AsyncRelayCommand(GoForwardAsync);
             _canvasViewModel = new(dataSourceModel, navigationViewModel);
             dataSourceModel.CollectionChanged += DataSourceModel_CollectionChanged;
             _items = new();
@@ -76,8 +71,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
                 _ = _canvasViewModel.InitAsync(cancellationToken);
 
             await _navigationViewModel.NavigationService.NavigateAsync(_canvasViewModel);
-            _navigationViewModel.NavigateBackCommand = _navigateBackCommand;
-            _navigationViewModel.NavigateForwardCommand = _navigateForwardCommand;
+            _navigationViewModel.NavigateBackCommand = GoBackCommand;
+            _navigationViewModel.NavigateForwardCommand = GoForwardCommand;
             UpdateNavigationButtons();
         }
 
@@ -100,6 +95,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             await _collectionSourceModel.SaveAsync(cancellationToken);
         }
 
+        [RelayCommand]
         private async Task GoBackAsync(CancellationToken cancellationToken)
         {
             _indexInCollection -= _indexInCollection <= 0 ? 0 : 1;
@@ -112,6 +108,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             await _canvasViewModel.DisplayAsync(itemToDisplay, cancellationToken);
         }
 
+        [RelayCommand]
         private async Task GoForwardAsync(CancellationToken cancellationToken)
         {
             // Increase by 1, only if not on new canvas
@@ -142,13 +139,36 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 
         private void DataSourceModel_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            _ = e;
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                if (e.NewItems is null)
+                    return;
+
+                var isNewCanvas = _indexInCollection == _items.Count;
+                foreach (IStorableChild item in e.NewItems)
+                    _items.Add(item);
+
+                if (isNewCanvas)
+                    _indexInCollection = _items.Count;
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                if (e.OldItems is null)
+                    return;
+
+                var isNewCanvas = _indexInCollection == _items.Count;
+                foreach (IStorable item in e.OldItems)
+                    _items.RemoveMatch((x) => x.Id == item.Id);
+
+                if (isNewCanvas)
+                    _indexInCollection = _items.Count;
+            }
         }
 
         /// <inheritdoc/>
         public void Dispose()
         {
-            _sourceModel.Dispose();
+            _canvasViewModel.CurrentCanvasViewModel?.Dispose();
         }
     }
 }

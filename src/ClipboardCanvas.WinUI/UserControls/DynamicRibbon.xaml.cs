@@ -1,4 +1,4 @@
-using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
+using ClipboardCanvas.Sdk.ViewModels.Controls.Menu;
 using ClipboardCanvas.WinUI.Imaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -19,7 +19,7 @@ namespace ClipboardCanvas.WinUI.UserControls
             InitializeComponent();
         }
 
-        private static void ParseCommands(IList<ActionViewModel>? items, IList<ICommandBarElement> destination)
+        private static void ParseCommands(IList<MenuItemViewModel>? items, IList<ICommandBarElement> destination)
         {
             destination.Clear();
             if (items is null)
@@ -29,7 +29,7 @@ namespace ClipboardCanvas.WinUI.UserControls
             {
                 switch (item)
                 {
-                    case ToggleViewModel toggle:
+                    case MenuToggleViewModel toggle:
                     {
                         var element = new AppBarToggleButton();
                         element.Icon = new FontIcon() { Glyph = (toggle.Icon as IconImage)?.IconGlyph };
@@ -40,7 +40,7 @@ namespace ClipboardCanvas.WinUI.UserControls
                         break;
                     }
 
-                    case ActionViewModel action:
+                    case MenuActionViewModel action:
                     {
                         var element = new AppBarButton();
                         element.Icon = new FontIcon() { Glyph = (action.Icon as IconImage)?.IconGlyph };
@@ -105,13 +105,13 @@ namespace ClipboardCanvas.WinUI.UserControls
         public static readonly DependencyProperty ToolBarTitleProperty =
             DependencyProperty.Register(nameof(ToolBarTitle), typeof(string), typeof(DynamicRibbon), new PropertyMetadata(null));
 
-        public IList<ActionViewModel>? PrimaryActions
+        public IList<MenuItemViewModel>? PrimaryActions
         {
-            get => (IList<ActionViewModel>?)GetValue(PrimaryActionsProperty);
+            get => (IList<MenuItemViewModel>?)GetValue(PrimaryActionsProperty);
             set => SetValue(PrimaryActionsProperty, value);
         }
         public static readonly DependencyProperty PrimaryActionsProperty =
-            DependencyProperty.Register(nameof(PrimaryActions), typeof(IList<ActionViewModel>), typeof(DynamicRibbon), new PropertyMetadata(null, (s, e) =>
+            DependencyProperty.Register(nameof(PrimaryActions), typeof(IList<MenuItemViewModel>), typeof(DynamicRibbon), new PropertyMetadata(null, (s, e) =>
             {
                 if (s is not DynamicRibbon ribbon)
                     return;
@@ -122,16 +122,16 @@ namespace ClipboardCanvas.WinUI.UserControls
                 if (e.NewValue is INotifyCollectionChanged notifiableNew)
                     notifiableNew.CollectionChanged += ribbon.PrimaryItems_CollectionChanged;
 
-                ParseCommands((IList<ActionViewModel>?)e.NewValue, ribbon.Commands.PrimaryCommands);
+                ParseCommands((IList<MenuItemViewModel>?)e.NewValue, ribbon.Commands.PrimaryCommands);
             }));
 
-        public IList<ActionViewModel>? SecondaryActions
+        public IList<MenuItemViewModel>? SecondaryActions
         {
-            get => (IList<ActionViewModel>?)GetValue(SecondaryActionsProperty);
+            get => (IList<MenuItemViewModel>?)GetValue(SecondaryActionsProperty);
             set => SetValue(SecondaryActionsProperty, value);
         }
         public static readonly DependencyProperty SecondaryActionsProperty =
-            DependencyProperty.Register(nameof(SecondaryActions), typeof(IList<ActionViewModel>), typeof(DynamicRibbon), new PropertyMetadata(null, (s, e) =>
+            DependencyProperty.Register(nameof(SecondaryActions), typeof(IList<MenuItemViewModel>), typeof(DynamicRibbon), new PropertyMetadata(null, (s, e) =>
             {
                 if (s is not DynamicRibbon ribbon)
                     return;
@@ -142,7 +142,7 @@ namespace ClipboardCanvas.WinUI.UserControls
                 if (e.NewValue is INotifyCollectionChanged notifiableNew)
                     notifiableNew.CollectionChanged += ribbon.PrimaryItems_CollectionChanged;
 
-                ParseCommands((IList<ActionViewModel>?)e.NewValue, ribbon.Commands.SecondaryCommands);
+                ParseCommands((IList<MenuItemViewModel>?)e.NewValue, ribbon.Commands.SecondaryCommands);
             }));
     }
 }

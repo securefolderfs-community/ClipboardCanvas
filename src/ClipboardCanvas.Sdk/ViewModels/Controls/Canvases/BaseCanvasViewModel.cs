@@ -1,6 +1,6 @@
 ﻿using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Sdk.Services;
-using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
+using ClipboardCanvas.Sdk.ViewModels.Controls.Menu;
 using ClipboardCanvas.Shared.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
@@ -20,8 +20,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
         [ObservableProperty] private bool _IsEditing;
         [ObservableProperty] private bool _IsImmersed;
         [ObservableProperty] private bool _WasAltered;
-        [ObservableProperty] private ObservableCollection<ActionViewModel>? _PrimaryActions;
-        [ObservableProperty] private ObservableCollection<ActionViewModel>? _SecondaryActions;
+        [ObservableProperty] private ObservableCollection<MenuItemViewModel>? _PrimaryActions;
+        [ObservableProperty] private ObservableCollection<MenuItemViewModel>? _SecondaryActions;
 
         public IDataSourceModel SourceModel { get; }
 

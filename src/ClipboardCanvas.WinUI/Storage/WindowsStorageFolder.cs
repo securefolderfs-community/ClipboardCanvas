@@ -10,7 +10,7 @@ using Windows.Storage;
 namespace ClipboardCanvas.WinUI.Storage
 {
     /// <inheritdoc cref="IFolder"/>
-    internal sealed class WindowsStorageFolder : WindowsStorable<StorageFolder>, IChildFolder, IDirectCopy, IDirectMove, IFastGetFirstByName
+    internal sealed class WindowsStorageFolder : WindowsStorable<StorageFolder>, IChildFolder, IDirectCopy, IDirectMove, IGetFirstByName
     {
         // TODO: Implement IMutableFolder
 

@@ -1,12 +1,14 @@
 ﻿using ClipboardCanvas.Sdk.Enums;
 using ClipboardCanvas.Sdk.Extensions;
+using ClipboardCanvas.Sdk.Helpers;
 using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Sdk.Services;
-using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
+using ClipboardCanvas.Sdk.ViewModels.Controls.Menu;
 using ClipboardCanvas.Shared.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using MimeTypes;
 using OwlCore.Storage;
 using System;
 using System.Threading;
@@ -37,7 +39,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
             // TODO: Move to UI
             PrimaryActions = new()
             {
-                new()
+                new MenuActionViewModel()
                 {
                     Name = "Share",
                     Icon = MediaService.GetIcon(IconType.Share),
@@ -47,13 +49,13 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
                         await Console.Out.WriteLineAsync();
                     })
                 },
-                new()
+                new MenuActionViewModel()
                 {
                     Name = "Open",
                     Icon = MediaService.GetIcon(IconType.Open),
                     Command = OpenCommand
                 },
-                new ToggleViewModel()
+                new MenuToggleViewModel()
                 {
                     Name = "Edit",
                     Icon = MediaService.GetIcon(IconType.Edit),
@@ -89,8 +91,10 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
             if (sourceModel.Source is not IModifiableFolder modifiableFolder)
                 return new(text, sourceModel);
 
-            var file = await modifiableFolder.CreateFileAsync("TODO", false, cancellationToken);
+            var extension = MimeTypeMap.GetExtension(data.Classification.MimeType, false);
+            var file = await modifiableFolder.CreateFileAsync(FormattingHelpers.GetDateFileName(extension), false, cancellationToken);
             await file.WriteAllTextAsync(text, null, cancellationToken);
+
             return new(file, sourceModel)
             {
                 Text = text,

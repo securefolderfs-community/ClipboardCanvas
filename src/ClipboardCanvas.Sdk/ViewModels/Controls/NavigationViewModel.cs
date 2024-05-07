@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Controls
 {
@@ -13,8 +14,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls
     {
         private readonly ICollectionSourceModel _collectionStoreModel;
 
-        [ObservableProperty] private IAsyncRelayCommand? _NavigateBackCommand;
-        [ObservableProperty] private IAsyncRelayCommand? _NavigateForwardCommand;
+        [ObservableProperty] private ICommand? _NavigateBackCommand;
+        [ObservableProperty] private ICommand? _NavigateForwardCommand;
         [ObservableProperty] private bool _IsNavigationVisible;
         [ObservableProperty] private bool _IsForwardEnabled;
         [ObservableProperty] private bool _IsBackEnabled;

@@ -105,6 +105,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Dialogs\" />
     <Folder Include="UserControls\Host\" />
   </ItemGroup>
 

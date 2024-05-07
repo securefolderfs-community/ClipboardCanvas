@@ -1,6 +1,5 @@
 ﻿using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Sdk.ViewModels.Controls;
-using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
 using ClipboardCanvas.Sdk.ViewModels.Widgets;
 using ClipboardCanvas.Shared.ComponentModel;
 using ClipboardCanvas.Shared.Extensions;

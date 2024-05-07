@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="MimeTypeMapOfficial" Version="1.0.17" />
-    <PackageReference Include="OwlCore.Storage" Version="0.9.3" />
+    <PackageReference Include="OwlCore.Storage" Version="0.11.0" />
   </ItemGroup>
 
   <ItemGroup>

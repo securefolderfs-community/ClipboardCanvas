@@ -1,8 +1,8 @@
-﻿using ClipboardCanvas.Sdk.Models;
+﻿using ClipboardCanvas.Sdk.Helpers;
+using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.Sdk.ViewModels.Controls;
 using ClipboardCanvas.Sdk.ViewModels.Controls.Canvases;
-using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
 using ClipboardCanvas.Shared.ComponentModel;
 using ClipboardCanvas.Shared.Enums;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -27,6 +27,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
 
         private IClipboardService ClipboardService { get; } = Ioc.Default.GetRequiredService<IClipboardService>();
 
+        private QuickOptionsViewModel QuickOptionsViewModel { get; } = Ioc.Default.GetRequiredService<QuickOptionsViewModel>();
+
         private RibbonViewModel RibbonViewModel { get; } = Ioc.Default.GetRequiredService<RibbonViewModel>();
 
         public CanvasViewModel(IDataSourceModel canvasSourceModel, NavigationViewModel navigationViewModel)
@@ -46,6 +48,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
         /// <inheritdoc/>
         public void OnAppearing()
         {
+            QuickOptionsViewModel.CreateNewDocumentCommand = CreateNewDocumentCommand;
             RibbonViewModel.IsRibbonVisible = CurrentCanvasViewModel is not null;
             NavigationViewModel.IsNavigationVisible = true;
         }
@@ -53,8 +56,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
         /// <inheritdoc/>
         public void OnDisappearing()
         {
-            // The canvas is not disposed here since we want the state to be remembered
-            // when navigating back to the canvas
+            // The canvas is not disposed here since we want the state
+            // to be remembered when navigating back to the canvas
         }
 
         public void ChangeImmersion(bool isImmersed)
@@ -79,6 +82,20 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
             CurrentCanvasViewModel?.Dispose();
             CurrentCanvasViewModel = await CanvasService.GetCanvasForStorableAsync(storable, _canvasSourceModel, cancellationToken);
             BindRibbon();
+        }
+
+        [Obsolete("This method will be replaced in the future")]
+        private void BindRibbon()
+        {
+            if (CurrentCanvasViewModel is null)
+                return;
+
+            // TODO: Find a better way to bind
+            RibbonViewModel.RibbonTitle = CurrentCanvasViewModel.Title;
+            RibbonViewModel.PrimaryActions = CurrentCanvasViewModel.PrimaryActions;
+            RibbonViewModel.SecondaryActions = CurrentCanvasViewModel.SecondaryActions;
+            RibbonViewModel.CopyPathCommand = CurrentCanvasViewModel.CopyPathCommand;
+            RibbonViewModel.ShowInExplorerCommand = CurrentCanvasViewModel.ShowInExplorerCommand;
         }
 
         [RelayCommand]
@@ -109,18 +126,14 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
             }
         }
 
-        [Obsolete("This method will be replaced in the future")]
-        private void BindRibbon()
+        [RelayCommand]
+        private async Task CreateNewDocumentAsync(CancellationToken cancellationToken)
         {
-            if (CurrentCanvasViewModel is null)
+            if (_canvasSourceModel.Source is not IModifiableFolder modifiableFolder)
                 return;
 
-            // TODO: Find a better way to bind
-            RibbonViewModel.RibbonTitle = CurrentCanvasViewModel.Title;
-            RibbonViewModel.PrimaryActions = CurrentCanvasViewModel.PrimaryActions;
-            RibbonViewModel.SecondaryActions = CurrentCanvasViewModel.SecondaryActions;
-            RibbonViewModel.CopyPathCommand = CurrentCanvasViewModel.CopyPathCommand;
-            RibbonViewModel.ShowInExplorerCommand = CurrentCanvasViewModel.ShowInExplorerCommand;
+            var file = await modifiableFolder.CreateFileAsync(FormattingHelpers.GetDateFileName(".txt"));
+            await DisplayAsync(file, cancellationToken);
         }
     }
 }

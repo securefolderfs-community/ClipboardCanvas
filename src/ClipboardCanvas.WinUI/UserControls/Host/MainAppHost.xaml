@@ -21,7 +21,7 @@
         <!--  Titlebar  -->
         <uc:TitleBarControl
             x:Name="CustomTitleBar"
-            Title="{x:Bind ViewModel.AppTitle, Mode=OneWay}"
+            Title="{x:Bind ViewModel.Title, Mode=OneWay}"
             Grid.Row="0"
             HorizontalAlignment="Left"
             x:FieldModifier="public"
@@ -36,10 +36,10 @@
             VerticalAlignment="Top"
             Canvas.ZIndex="9"
             CopyPathCommand="{x:Bind ViewModel.RibbonViewModel.CopyPathCommand, Mode=OneWay}"
-            ShowInExplorerCommand="{x:Bind ViewModel.RibbonViewModel.ShowInExplorerCommand, Mode=OneWay}"
             PrimaryActions="{x:Bind ViewModel.RibbonViewModel.PrimaryActions, Mode=OneWay}"
             RenameCommand="{x:Bind ViewModel.RibbonViewModel.RenameCommand, Mode=OneWay}"
             SecondaryActions="{x:Bind ViewModel.RibbonViewModel.SecondaryActions, Mode=OneWay}"
+            ShowInExplorerCommand="{x:Bind ViewModel.RibbonViewModel.ShowInExplorerCommand, Mode=OneWay}"
             ToolBarTitle="{x:Bind ViewModel.RibbonViewModel.RibbonTitle, Mode=OneWay}"
             Visibility="{x:Bind ViewModel.RibbonViewModel.IsRibbonVisible, Mode=OneWay}">
             <anim:Implicit.ShowAnimations>
@@ -156,7 +156,7 @@
                     <FontIcon Glyph="&#xE70E;" />
                     <Button.Flyout>
                         <MenuFlyout Placement="TopEdgeAlignedRight">
-                            <MenuFlyoutItem Text="Create text document">
+                            <MenuFlyoutItem Command="{x:Bind ViewModel.QuickOptionsViewModel.CreateNewDocumentCommand, Mode=OneWay}" Text="Create new text document">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE710;" />
                                 </MenuFlyoutItem.Icon>
@@ -165,7 +165,7 @@
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator />
-                            <MenuFlyoutItem Text="Settings">
+                            <MenuFlyoutItem Command="{x:Bind ViewModel.QuickOptionsViewModel.OpenSettingsCommand, Mode=OneWay}" Text="Settings">
                                 <MenuFlyoutItem.Icon>
                                     <AnimatedIcon>
                                         <AnimatedIcon.Source>

@@ -5,6 +5,7 @@ namespace ClipboardCanvas.WinUI.ValueConverters
 {
     internal sealed class BoolInvertConverter : IValueConverter
     {
+        /// <inheritdoc/>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value is not bool boolVal)
@@ -16,6 +17,7 @@ namespace ClipboardCanvas.WinUI.ValueConverters
             return !boolVal;
         }
 
+        /// <inheritdoc/>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();

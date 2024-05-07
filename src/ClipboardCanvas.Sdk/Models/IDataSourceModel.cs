@@ -8,7 +8,7 @@ namespace ClipboardCanvas.Sdk.Models
     /// <summary>
     /// Represents a data source where canvases reside.
     /// </summary>
-    public interface IDataSourceModel : INotifyCollectionChanged, IAsyncInitialize, IDisposable
+    public interface IDataSourceModel : INotifyCollectionChanged, IAsyncInitialize
     {
         /// <summary>
         /// Gets the source folder of the data.

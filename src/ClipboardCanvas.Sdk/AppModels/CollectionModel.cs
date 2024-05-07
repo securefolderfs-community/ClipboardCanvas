@@ -17,7 +17,19 @@ namespace ClipboardCanvas.Sdk.AppModels
         public string Name { get; }
 
         /// <inheritdoc/>
-        public event NotifyCollectionChangedEventHandler? CollectionChanged;
+        public event NotifyCollectionChangedEventHandler? CollectionChanged
+        {
+            add
+            {
+                if (_folderWatcher is not null)
+                    _folderWatcher.CollectionChanged += value;
+            }
+            remove
+            {
+                if (_folderWatcher is not null)
+                    _folderWatcher.CollectionChanged -= value;
+            }
+        }
 
         public CollectionModel(IFolder folder, string? name = null)
         {
@@ -29,31 +41,18 @@ namespace ClipboardCanvas.Sdk.AppModels
         public async Task InitAsync(CancellationToken cancellationToken = default)
         {
             if (_folderWatcher is not null)
-            {
-                _folderWatcher.CollectionChanged -= FolderWatcher_CollectionChanged;
                 await _folderWatcher.DisposeAsync();
-            }
 
             if (Source is not IMutableFolder mutableFolder)
                 return;
 
             _folderWatcher = await mutableFolder.GetFolderWatcherAsync(cancellationToken);
-            _folderWatcher.CollectionChanged += FolderWatcher_CollectionChanged;
-        }
-
-        private void FolderWatcher_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            CollectionChanged?.Invoke(this, e);
         }
 
         /// <inheritdoc/>
         public void Dispose()
         {
-            if (_folderWatcher is not null)
-            {
-                _folderWatcher.CollectionChanged -= FolderWatcher_CollectionChanged;
-                _folderWatcher.Dispose();
-            }
+            _folderWatcher?.Dispose();
         }
     }
 }

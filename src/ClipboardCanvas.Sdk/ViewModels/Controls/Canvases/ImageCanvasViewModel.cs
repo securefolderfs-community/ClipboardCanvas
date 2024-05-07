@@ -1,7 +1,8 @@
 ﻿using ClipboardCanvas.Sdk.Enums;
+using ClipboardCanvas.Sdk.Helpers;
 using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Sdk.Services;
-using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
+using ClipboardCanvas.Sdk.ViewModels.Controls.Menu;
 using ClipboardCanvas.Shared.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
@@ -34,9 +35,10 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
         /// <inheritdoc/>
         public override async Task InitAsync(CancellationToken cancellationToken = default)
         {
+            // TODO: Move to UI
             PrimaryActions = new()
             {
-                new()
+                new MenuActionViewModel()
                 {
                     Name = "Share",
                     Icon = MediaService.GetIcon(IconType.Share),
@@ -46,23 +48,17 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
                         await Console.Out.WriteLineAsync();
                     })
                 },
-                new()
+                new MenuActionViewModel()
                 {
                     Name = "Open",
                     Icon = MediaService.GetIcon(IconType.Open),
-                    Command = new AsyncRelayCommand(async () =>
-                    {
-                        await Console.Out.WriteLineAsync();
-                    })
+                    Command = OpenCommand
                 },
-                new ToggleViewModel()
+                new MenuToggleViewModel()
                 {
                     Name = "Edit",
                     Icon = MediaService.GetIcon(IconType.Edit),
-                    Command = new AsyncRelayCommand(async () =>
-                    {
-                        IsEditing = !IsEditing;
-                    })
+                    Command = EditCommand
                 }
             };
 
@@ -80,7 +76,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
                 return new(image, sourceModel);
 
             var extension = MimeTypeMap.GetExtension(data.Classification.MimeType, false);
-            var file = await modifiableFolder.CreateFileAsync("TODO" + extension, false, cancellationToken);
+            var file = await modifiableFolder.CreateFileAsync(FormattingHelpers.GetDateFileName(extension), false, cancellationToken);
+
             await mediaService.SaveImageAsync(image, file, cancellationToken);
             return new(file, sourceModel)
             {

@@ -1,11 +1,12 @@
 ﻿using ClipboardCanvas.Sdk.Services;
-using ClipboardCanvas.Sdk.ViewModels.Controls.Ribbon;
+using ClipboardCanvas.Sdk.ViewModels;
+using ClipboardCanvas.Sdk.ViewModels.Controls;
 using ClipboardCanvas.UI.Helpers;
 using ClipboardCanvas.UI.ServiceImplementation;
 using ClipboardCanvas.WinUI.ServiceImplementation;
 using Microsoft.Extensions.DependencyInjection;
 using OwlCore.Storage;
-using OwlCore.Storage.SystemIO;
+using OwlCore.Storage.System.IO;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,6 +50,7 @@ namespace ClipboardCanvas.WinUI.Helpers
 
                     // View models
                     .AddSingleton<RibbonViewModel>()
+                    .AddSingleton<QuickOptionsViewModel>()
                     
                     // Singleton services
                     .AddSingleton<ICollectionPersistenceService, CollectionPersistenceService>(_ => new(settingsFolder))
