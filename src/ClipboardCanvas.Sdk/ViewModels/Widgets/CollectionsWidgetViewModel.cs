@@ -62,7 +62,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
                     break;
 
                 case NotifyCollectionChangedAction.Remove when e.OldItems is not null && e.OldItems[0] is IDataSourceModel collectionModel:
-                    Items.RemoveMatch(x => x.Equals(collectionModel));
+                    Items.RemoveMatch(x => x.SourceModel.Source.Id == collectionModel.Source.Id);
                     break;
 
                 case NotifyCollectionChangedAction.Reset:

@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using OwlCore.Storage;
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,9 +19,10 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
     public sealed partial class CanvasViewModel : ObservableObject, IViewDesignation, IAsyncInitialize
     {
         private readonly IDataSourceModel _canvasSourceModel;
+        private readonly ISeekable? _seekable;
 
-        [ObservableProperty] NavigationViewModel _NavigationViewModel;
         [ObservableProperty] private string? _Title;
+        [ObservableProperty] private NavigationViewModel _NavigationViewModel;
         [ObservableProperty] private BaseCanvasViewModel? _CurrentCanvasViewModel;
 
         private ICanvasService CanvasService { get; } = Ioc.Default.GetRequiredService<ICanvasService>();
@@ -31,9 +33,10 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
 
         private RibbonViewModel RibbonViewModel { get; } = Ioc.Default.GetRequiredService<RibbonViewModel>();
 
-        public CanvasViewModel(IDataSourceModel canvasSourceModel, NavigationViewModel navigationViewModel)
+        public CanvasViewModel(IDataSourceModel canvasSourceModel, NavigationViewModel navigationViewModel, ISeekable? seekable)
         {
             _canvasSourceModel = canvasSourceModel;
+            _seekable = seekable;
             NavigationViewModel = navigationViewModel;
             Title = canvasSourceModel.Name;
         }
@@ -111,13 +114,15 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
                 TypeHint.Image => await ImageCanvasViewModel.ParseAsync(data, sourceModel, cancellationToken),
                 TypeHint.PlainText => await TextCanvasViewModel.ParseAsync(data, sourceModel, cancellationToken),
                 TypeHint.Storage => await StorageAsync(),
+
+                _ or TypeHint.Unclassified => null
             };
 
             CurrentCanvasViewModel?.Dispose();
             CurrentCanvasViewModel = canvasViewModel;
             BindRibbon();
 
-            async Task<BaseCanvasViewModel> StorageAsync()
+            Task<BaseCanvasViewModel> StorageAsync()
             {
                 // TODO: Maybe use infinite canvas or only allow for one item to be pasted?
                 // Perhaps prompt the user to choose what to do?
@@ -133,6 +138,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
                 return;
 
             var file = await modifiableFolder.CreateFileAsync(FormattingHelpers.GetDateFileName(".txt"));
+            _seekable?.Seek(0, SeekOrigin.End);
             await DisplayAsync(file, cancellationToken);
         }
     }
