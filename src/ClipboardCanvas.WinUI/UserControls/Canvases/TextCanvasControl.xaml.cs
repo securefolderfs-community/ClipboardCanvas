@@ -9,7 +9,7 @@ namespace ClipboardCanvas.WinUI.UserControls.Canvases
 {
     public sealed partial class TextCanvasControl : UserControl
     {
-        private bool _surpressEvents;
+        private int _surpressTextChanged;
 
         public TextCanvasControl()
         {
@@ -18,15 +18,20 @@ namespace ClipboardCanvas.WinUI.UserControls.Canvases
 
         private void EditingBox_Loaded(object sender, RoutedEventArgs e)
         {
-            _surpressEvents = true;
+            // When the RichEditBox is loaded, the TextChanged event will be fired twice
+            _surpressTextChanged = 2;
+
             EditingBox.Document.SetText(TextSetOptions.None, Text);
-            _surpressEvents = false;
+            EditingBox.Focus(FocusState.Programmatic);
         }
 
         private void EditingBox_TextChanged(object sender, RoutedEventArgs e)
         {
-            if (_surpressEvents)
+            if (_surpressTextChanged > 0)
+            {
+                _surpressTextChanged--;
                 return;
+            }
 
             WasAltered = true;
         }

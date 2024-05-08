@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System;
 using System.Windows.Input;
 
 namespace ClipboardCanvas.Sdk.ViewModels.Controls.Menu

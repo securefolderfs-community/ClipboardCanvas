@@ -37,6 +37,7 @@
 	  
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Dialogs\SaveConfirmationDialog.xaml" />
     <None Remove="ResourceDictionaries\Brushes.xaml" />
     <None Remove="ResourceDictionaries\Buttons.xaml" />
     <None Remove="ResourceDictionaries\ListViews.xaml" />
@@ -99,13 +100,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Dialogs\SaveConfirmationDialog.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
     <Page Update="UserControls\MainAppHost.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dialogs\" />
     <Folder Include="UserControls\Host\" />
   </ItemGroup>
 

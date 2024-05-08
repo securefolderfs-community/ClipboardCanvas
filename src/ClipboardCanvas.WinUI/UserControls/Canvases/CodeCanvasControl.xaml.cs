@@ -45,6 +45,8 @@ namespace ClipboardCanvas.WinUI.UserControls.Canvases
                     return;
 
                 control.CodeEditor.Editor.ReadOnly = !(bool)e.NewValue;
+                if ((bool)e.NewValue)
+                    control.CodeEditor.Focus(FocusState.Programmatic);
             }));
 
         public bool WasAltered

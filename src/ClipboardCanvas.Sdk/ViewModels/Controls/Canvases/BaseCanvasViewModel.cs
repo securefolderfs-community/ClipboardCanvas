@@ -1,6 +1,8 @@
-﻿using ClipboardCanvas.Sdk.Models;
+﻿using ClipboardCanvas.Sdk.Extensions;
+using ClipboardCanvas.Sdk.Models;
 using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.Sdk.ViewModels.Controls.Menu;
+using ClipboardCanvas.Sdk.ViewModels.Views.Overlays;
 using ClipboardCanvas.Shared.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
@@ -73,17 +75,43 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls.Canvases
         }
 
         [RelayCommand]
-        protected virtual Task EditAsync(CancellationToken cancellationToken)
+        protected virtual async Task EditAsync(MenuItemViewModel itemViewModel, CancellationToken cancellationToken)
         {
             if (IsEditing && WasAltered && this is IPersistable persistable)
             {
-                // TODO: Display a dialog asking the user if they want to save or discard the changes
-                //var result = await OverlayService.ShowAsync(...);
+                if (Storable is not null)
+                {
+                    var viewModel = new SaveConfirmationOverlayViewModel(Storable.Name);
+                    var result = await OverlayService.ShowAsync(viewModel);
+                    if (result.Positive())
+                    {
+                        await persistable.SaveAsync(cancellationToken);
+                        IsEditing = false;
+                    }
+                    else if (result.InBetween())
+                    {
+                        IsEditing = false;
+                    }
+                    else
+                    {
+                        // Aborted, do nothing
+                    }
+                }
+                else
+                {
+                    // TODO: Display a dialog asking the user if where they want to save the file
+                    //var result = await OverlayService.ShowAsync(...);
+                }
             }
             else
                 IsEditing = !IsEditing;
 
-            return Task.CompletedTask;
+            // Reset WasAltered when the item is no longer being edited
+            if (WasAltered && !IsEditing)
+                WasAltered = false;
+
+            if (itemViewModel is MenuToggleViewModel toggleViewModel)
+                toggleViewModel.IsToggled = IsEditing;
         }
 
         /// <inheritdoc/>

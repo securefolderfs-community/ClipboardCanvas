@@ -2,6 +2,7 @@ using ClipboardCanvas.Sdk.ViewModels.Controls.Menu;
 using ClipboardCanvas.WinUI.Imaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
 using OwlCore.Storage;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -19,7 +20,7 @@ namespace ClipboardCanvas.WinUI.UserControls
             InitializeComponent();
         }
 
-        private static void ParseCommands(IList<MenuItemViewModel>? items, IList<ICommandBarElement> destination)
+        private static async void ParseCommands(IList<MenuItemViewModel>? items, IList<ICommandBarElement> destination)
         {
             destination.Clear();
             if (items is null)
@@ -31,10 +32,21 @@ namespace ClipboardCanvas.WinUI.UserControls
                 {
                     case MenuToggleViewModel toggle:
                     {
-                        var element = new AppBarToggleButton();
-                        element.Icon = new FontIcon() { Glyph = (toggle.Icon as IconImage)?.IconGlyph };
-                        element.Label = toggle.Name;
-                        element.Command = toggle.Command;
+                        var element = new AppBarToggleButton
+                        {
+                            Icon = new FontIcon() { Glyph = (toggle.Icon as IconImage)?.IconGlyph },
+                            Label = toggle.Name,
+                            Command = toggle.Command,
+                            CommandParameter = toggle
+                        };
+
+                        // Binding for IsChecked property (epic fail)
+                        BindingOperations.SetBinding(element, AppBarToggleButton.IsCheckedProperty, new Binding()
+                        {
+                            Source = toggle,
+                            Mode = BindingMode.TwoWay,
+                            Path = new PropertyPath(nameof(MenuToggleViewModel.IsToggled))
+                        });
 
                         destination.Add(element);
                         break;
@@ -42,12 +54,13 @@ namespace ClipboardCanvas.WinUI.UserControls
 
                     case MenuActionViewModel action:
                     {
-                        var element = new AppBarButton();
-                        element.Icon = new FontIcon() { Glyph = (action.Icon as IconImage)?.IconGlyph };
-                        element.Label = action.Name;
-                        element.Command = action.Command;
-
-                        destination.Add(element);
+                        destination.Add(new AppBarButton()
+                        {
+                            Icon = new FontIcon() { Glyph = (action.Icon as IconImage)?.IconGlyph },
+                            Label = action.Name,
+                            Command = action.Command,
+                            CommandParameter = action
+                        });
                         break;
                     }
                 }

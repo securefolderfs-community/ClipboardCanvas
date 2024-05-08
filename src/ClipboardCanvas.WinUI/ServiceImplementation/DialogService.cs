@@ -1,7 +1,9 @@
 ﻿using ClipboardCanvas.Sdk.Services;
+using ClipboardCanvas.Sdk.ViewModels.Views.Overlays;
 using ClipboardCanvas.Shared.ComponentModel;
 using ClipboardCanvas.UI.ServiceImplementation;
 using ClipboardCanvas.UI.Utils;
+using ClipboardCanvas.WinUI.Dialogs;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using Windows.Foundation.Metadata;
@@ -16,7 +18,8 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
         {
             IOverlayControl overlay = viewable switch
             {
-                // TODO: Implement save dialog
+                SaveConfirmationOverlayViewModel => new SaveConfirmationDialog(),
+                // TODO: Implement location choosing save dialog
 
                 _ => throw new ArgumentException("Unknown viewable type.", nameof(viewable))
             };
