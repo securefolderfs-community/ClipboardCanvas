@@ -23,6 +23,7 @@
             <uc:ImageCanvasControl
                 Image="{x:Bind Image, Mode=OneWay}"
                 IsEditing="{x:Bind IsEditing, Mode=OneWay}"
+                IsZoomingEnabled="True"
                 WasAltered="{x:Bind WasAltered, Mode=TwoWay}" />
         </DataTemplate>
         <DataTemplate x:Key="VideoCanvasTemplate" x:DataType="vm:VideoCanvasViewModel">

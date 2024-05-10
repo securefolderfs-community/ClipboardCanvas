@@ -10,7 +10,7 @@
     xmlns:uc="using:ClipboardCanvas.WinUI.UserControls"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid x:Name="Root">
         <i:Interaction.Behaviors>
             <!--  If is editing  -->
             <icore:DataTriggerBehavior
@@ -21,7 +21,7 @@
                     <imedia:ControlStoryboardAction.Storyboard>
                         <Storyboard>
                             <DoubleAnimation
-                                Storyboard.TargetName="MainImage"
+                                Storyboard.TargetName="Scroller"
                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
                                 From="1"
                                 To="0.92"
@@ -31,7 +31,7 @@
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
                             <DoubleAnimation
-                                Storyboard.TargetName="MainImage"
+                                Storyboard.TargetName="Scroller"
                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
                                 From="1"
                                 To="0.92"
@@ -54,7 +54,7 @@
                     <imedia:ControlStoryboardAction.Storyboard>
                         <Storyboard>
                             <DoubleAnimation
-                                Storyboard.TargetName="MainImage"
+                                Storyboard.TargetName="Scroller"
                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
                                 From="0.92"
                                 To="1"
@@ -64,7 +64,7 @@
                                 </DoubleAnimation.EasingFunction>
                             </DoubleAnimation>
                             <DoubleAnimation
-                                Storyboard.TargetName="MainImage"
+                                Storyboard.TargetName="Scroller"
                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
                                 From="0.92"
                                 To="1"
@@ -79,14 +79,26 @@
             </icore:DataTriggerBehavior>
         </i:Interaction.Behaviors>
 
-        <uc:AnimatedCornerRadiusControl x:Name="MainImage" RenderTransformOrigin="0.5,0.5">
-            <uc:AnimatedCornerRadiusControl.RenderTransform>
+        <ScrollViewer
+            x:Name="Scroller"
+            HorizontalScrollBarVisibility="Auto"
+            HorizontalScrollMode="Enabled"
+            MinZoomFactor="1"
+            PointerCaptureLost="Scroller_PointerCaptureLost"
+            PointerMoved="Scroller_PointerMoved"
+            PointerPressed="Scroller_PointerPressed"
+            RenderTransformOrigin="0.5,0.5"
+            VerticalScrollBarVisibility="Auto"
+            VerticalScrollMode="Enabled"
+            ZoomMode="Disabled">
+            <ScrollViewer.RenderTransform>
                 <ScaleTransform />
-            </uc:AnimatedCornerRadiusControl.RenderTransform>
-
-            <uc:AnimatedCornerRadiusControl.ControlContent>
-                <uc:ImageControl Image="{x:Bind Image, Mode=OneWay}" />
-            </uc:AnimatedCornerRadiusControl.ControlContent>
-        </uc:AnimatedCornerRadiusControl>
+            </ScrollViewer.RenderTransform>
+            <uc:AnimatedCornerRadiusControl>
+                <uc:AnimatedCornerRadiusControl.ControlContent>
+                    <uc:ImageControl Image="{x:Bind Image, Mode=OneWay}" PointerReleased="Image_PointerReleased" />
+                </uc:AnimatedCornerRadiusControl.ControlContent>
+            </uc:AnimatedCornerRadiusControl>
+        </ScrollViewer>
     </Grid>
 </UserControl>
