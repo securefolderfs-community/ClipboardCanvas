@@ -9,18 +9,6 @@ namespace ClipboardCanvas.Sdk.Extensions
     public static partial class StorageExtensions
     {
         /// <summary>
-        /// Checks whether the directory exists at a given path and tries to retrieve the folder; otherwise tries to retrieve the file.
-        /// </summary>
-        /// <param name="storageService">The service.</param>
-        /// <param name="id">The unique ID of the storable to retrieve.</param>
-        /// <param name="cancellationToken">A <see cref="CancellationToken"/> that cancels this action.</param>
-        /// <returns>A <see cref="Task"/> that represents the asynchronous operation. If successful, value is <see cref="IStorableChild"/> that represents the item; otherwise null.</returns>
-        public static async Task<IStorableChild?> TryGetStorableAsync(this IStorageService storageService, string id, CancellationToken cancellationToken = default)
-        {
-            return (IStorableChild?)await storageService.TryGetFolderAsync(id, cancellationToken) ?? await storageService.TryGetFileAsync(id, cancellationToken);
-        }
-
-        /// <summary>
         /// Tries to retrieve a folder associated with <paramref name="id"/>.
         /// </summary>
         /// <param name="storageService">The service.</param>
@@ -31,7 +19,8 @@ namespace ClipboardCanvas.Sdk.Extensions
         {
             try
             {
-                return await storageService.GetFolderAsync(id, cancellationToken);
+                var item = await storageService.GetFromBookmarkAsync(id, cancellationToken);
+                return item as IChildFolder;
             }
             catch (Exception ex)
             {
@@ -51,7 +40,8 @@ namespace ClipboardCanvas.Sdk.Extensions
         {
             try
             {
-                return await storageService.GetFileAsync(id, cancellationToken);
+                var item = await storageService.GetFromBookmarkAsync(id, cancellationToken);
+                return item as IChildFile;
             }
             catch (Exception)
             {

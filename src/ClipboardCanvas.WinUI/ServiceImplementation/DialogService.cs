@@ -18,6 +18,7 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
         {
             IOverlayControl overlay = viewable switch
             {
+                SettingsOverlayViewModel => new SettingsDialog(),
                 SaveConfirmationOverlayViewModel => new SaveConfirmationDialog(),
                 // TODO: Implement location choosing save dialog
 

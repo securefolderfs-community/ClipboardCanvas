@@ -16,4 +16,10 @@
     <ProjectReference Include="..\ClipboardCanvas.Shared\ClipboardCanvas.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Update="Strings\en-US\Resources.resx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

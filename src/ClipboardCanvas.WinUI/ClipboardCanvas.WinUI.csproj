@@ -3,18 +3,20 @@
 
 	<!-- Publishing -->
     <UseWinUI>True</UseWinUI>
-	<OutputType>WinExe</OutputType>
+    <EnableMsixTooling>True</EnableMsixTooling>
+    <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+    <Platforms>x86;x64;ARM64</Platforms>
 	<TargetFramework>net7.0-windows10.0.22621.0</TargetFramework>
-	<TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
 	<PublishProfile>win10-$(Platform).pubxml</PublishProfile>
+	<OutputType>WinExe</OutputType>
     <RootNamespace>ClipboardCanvas.WinUI</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Platforms>x86;x64;ARM64</Platforms>
-    <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+
+	<TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
     <PublishProfile>win10-$(Platform).pubxml</PublishProfile>
-    <EnableMsixTooling>True</EnableMsixTooling>
 
 	<!-- Languages -->
+	<AppxDefaultResourceQualifiers>Language=en-US</AppxDefaultResourceQualifiers>
 	<DefaultLanguage>en-US</DefaultLanguage>
 
 	<!-- Bundle WinAppSDK binaries in SelfContained -->
@@ -38,6 +40,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Dialogs\SaveConfirmationDialog.xaml" />
+    <None Remove="Dialogs\SettingsDialog.xaml" />
     <None Remove="ResourceDictionaries\Brushes.xaml" />
     <None Remove="ResourceDictionaries\Buttons.xaml" />
     <None Remove="ResourceDictionaries\ListViews.xaml" />
@@ -58,6 +61,8 @@
     <None Remove="UserControls\Widgets\CollectionsWidget.xaml" />
     <None Remove="Views\CanvasView.xaml" />
     <None Remove="Views\HomeView.xaml" />
+    <None Remove="Views\Settings\AboutSettingsPage.xaml" />
+    <None Remove="Views\Settings\GeneralSettingsPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -100,6 +105,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Dialogs\SettingsDialog.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
     <Page Update="Dialogs\SaveConfirmationDialog.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
@@ -116,6 +124,12 @@
     <None Update="Images\TestImage.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\Settings\AboutSettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Settings\GeneralSettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="UserControls\Canvases\CodeCanvasControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

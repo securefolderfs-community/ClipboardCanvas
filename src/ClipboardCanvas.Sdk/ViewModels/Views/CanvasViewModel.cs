@@ -20,8 +20,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
 {
     public sealed partial class CanvasViewModel : ObservableObject, IViewDesignation, IAsyncInitialize
     {
-        private readonly IDataSourceModel _canvasSourceModel;
         private readonly ISeekable? _seekable;
+        private readonly IDataSourceModel _canvasSourceModel;
 
         [ObservableProperty] private string? _Title;
         [ObservableProperty] private NavigationViewModel _NavigationViewModel;
@@ -164,6 +164,20 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
             var item = CurrentCanvasViewModel?.PrimaryActions?.FirstOrDefault(static x => x is MenuToggleViewModel);
             if (CurrentCanvasViewModel is not null)
                 await CurrentCanvasViewModel.EditCommand.ExecuteAsync(item);
+        }
+
+        [RelayCommand]
+        private async Task DeleteAsync(BaseCanvasViewModel? canvasViewModel, CancellationToken cancellationToken)
+        {
+            canvasViewModel ??= CurrentCanvasViewModel;
+            if (canvasViewModel?.Storable is not IStorableChild storableChild)
+                return;
+
+            var sourceModel = (canvasViewModel as IDataSourceModel) ?? _canvasSourceModel;
+            if (sourceModel.Source is not IModifiableFolder modifiableFolder)
+                return;
+
+            await modifiableFolder.DeleteAsync(storableChild, cancellationToken);
         }
     }
 }

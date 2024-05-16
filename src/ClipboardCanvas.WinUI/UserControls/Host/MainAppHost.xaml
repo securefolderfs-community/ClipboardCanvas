@@ -8,7 +8,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="using:ClipboardCanvas.WinUI.UserControls"
     xmlns:ucn="using:ClipboardCanvas.WinUI.UserControls.Navigation"
+    xmlns:vc="using:ClipboardCanvas.WinUI.ValueConverters"
     mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <vc:GenericEnumConverter x:Key="GenericEnumConverter" />
+    </UserControl.Resources>
 
     <!--  Root  -->
     <Grid>
@@ -165,7 +170,11 @@
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator />
-                            <MenuFlyoutItem Command="{x:Bind ViewModel.QuickOptionsViewModel.OpenSettingsCommand, Mode=OneWay}" Text="Settings">
+                            <MenuFlyoutItem
+                                x:Name="OpenSettingsItem"
+                                Command="{x:Bind ViewModel.QuickOptionsViewModel.OpenSettingsCommand, Mode=OneWay}"
+                                KeyboardAcceleratorTextOverride="Ctrl+,"
+                                Text="Settings">
                                 <MenuFlyoutItem.Icon>
                                     <AnimatedIcon>
                                         <AnimatedIcon.Source>
@@ -176,9 +185,6 @@
                                         </AnimatedIcon.FallbackIconSource>
                                     </AnimatedIcon>
                                 </MenuFlyoutItem.Icon>
-                                <MenuFlyoutItem.KeyboardAccelerators>
-                                    <KeyboardAccelerator Key="S" Modifiers="Menu" />
-                                </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
                         </MenuFlyout>
                     </Button.Flyout>

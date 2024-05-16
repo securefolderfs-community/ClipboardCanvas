@@ -10,7 +10,7 @@ using Windows.UI.ViewManagement;
 namespace ClipboardCanvas.WinUI.Helpers
 {
     /// <inheritdoc cref="ThemeHelper"/>
-    internal sealed class UnoThemeHelper : ThemeHelper
+    internal sealed class WindowsThemeHelper : ThemeHelper
     {
         private AppWindow? _appWindow;
         private FrameworkElement? _rootContent;
@@ -18,9 +18,9 @@ namespace ClipboardCanvas.WinUI.Helpers
         private readonly DispatcherQueue _dispatcherQueue;
 
         /// <summary>
-        /// Gets the singleton instance of <see cref="UnoThemeHelper"/>.
+        /// Gets the singleton instance of <see cref="WindowsThemeHelper"/>.
         /// </summary>
-        public static UnoThemeHelper Instance { get; } = new();
+        public static WindowsThemeHelper Instance { get; } = new();
 
         /// <summary>
         /// Gets the current theme represented by <see cref="ElementTheme"/>.
@@ -38,7 +38,7 @@ namespace ClipboardCanvas.WinUI.Helpers
             }
         }
 
-        private UnoThemeHelper()
+        private WindowsThemeHelper()
         {
             _uiSettings = new();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();

@@ -1,4 +1,8 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using ClipboardCanvas.Sdk.Services;
+using ClipboardCanvas.Sdk.ViewModels.Views.Overlays;
+using ClipboardCanvas.Shared.Extensions;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -9,11 +13,15 @@ namespace ClipboardCanvas.Sdk.ViewModels
     {
         [ObservableProperty] private ICommand? _CreateNewDocumentCommand;
 
+        private IOverlayService OverlayService { get; } = Ioc.Default.GetRequiredService<IOverlayService>();
+
+        private ISettingsService SettingsService { get; } = Ioc.Default.GetRequiredService<ISettingsService>();
+
         [RelayCommand]
-        private Task OpenSettingsAsync()
+        private async Task OpenSettingsAsync()
         {
-            // TODO: Open settings dialog
-            return Task.CompletedTask;
+            await OverlayService.ShowAsync(SettingsOverlayViewModel.Instance);
+            await SettingsService.TrySaveAsync();
         }
     }
 }

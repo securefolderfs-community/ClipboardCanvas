@@ -54,7 +54,11 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             await SourceModel.InitAsync(cancellationToken);
             Icon = await MediaService.GetCollectionIconAsync(SourceModel, cancellationToken);
             _items.Clear();
-            _items.AddRange(await SourceModel.Source.GetItemsAsync(StorableType.All, cancellationToken).ToArrayAsync(cancellationToken));
+
+            // TODO: Order by creation date
+            var items = await SourceModel.Source.GetItemsAsync(StorableType.All, cancellationToken).ToArrayAsync(cancellationToken);
+            _items.AddRange(items);
+
             _indexInCollection = _items.Count; // Count is out of bounds intentionally to put the index on new (empty) canvas
         }
 
@@ -125,9 +129,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             // If on new canvas...
             if (_indexInCollection >= _items.Count)
             {
-                _canvasViewModel.CurrentCanvasViewModel?.Dispose();
-                _canvasViewModel.CurrentCanvasViewModel = null;
-                RibbonViewModel.IsRibbonVisible = false;
+                ClearCanvas();
                 return;
             }
 
@@ -141,7 +143,14 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             _navigationViewModel.IsBackEnabled = _indexInCollection > 0 && _items.Count > 0;
         }
 
-        private void DataSourceModel_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        private void ClearCanvas()
+        {
+            _canvasViewModel.CurrentCanvasViewModel?.Dispose();
+            _canvasViewModel.CurrentCanvasViewModel = null;
+            RibbonViewModel.IsRibbonVisible = false;
+        }
+
+        private async void DataSourceModel_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
@@ -160,12 +169,29 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
                 if (e.OldItems is null)
                     return;
 
+                var isCanvasInvalid = false;
                 var isNewCanvas = _indexInCollection == _items.Count;
                 foreach (IStorable item in e.OldItems)
+                {
                     _items.RemoveMatch((x) => x.Id == item.Id);
+                    if (!isNewCanvas && _canvasViewModel.CurrentCanvasViewModel?.Storable?.Id == item.Id)
+                    {
+                        isCanvasInvalid = true;
+                        _indexInCollection = Math.Max(_indexInCollection - 1, 0);
+                    }
+                }
 
                 if (isNewCanvas)
                     _indexInCollection = _items.Count;
+                
+                if (isCanvasInvalid)
+                {
+                    var storable = _items.ElementAtOrDefault(_indexInCollection);
+                    if (storable is not null)
+                        await _canvasViewModel.DisplayAsync(storable, default);
+                    else
+                        ClearCanvas();
+                }
             }
         }
 

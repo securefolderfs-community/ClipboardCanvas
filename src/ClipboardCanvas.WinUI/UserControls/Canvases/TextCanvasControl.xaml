@@ -52,10 +52,24 @@
                         x:Name="EditingBox"
                         Padding="0"
                         x:Load="{x:Bind IsEditing, Mode=OneWay}"
-                        BorderThickness="0"
+                        AcceptsReturn="True"
                         IsTextPredictionEnabled="True"
                         Loaded="EditingBox_Loaded"
-                        TextChanged="EditingBox_TextChanged" />
+                        TextChanged="EditingBox_TextChanged">
+                        <RichEditBox.Resources>
+                            <!--  Background  -->
+                            <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent" />
+                            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent" />
+
+                            <!--  Foreground  -->
+                            <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="Black" />
+                            <SolidColorBrush x:Key="TextControlForegroundFocused" Color="Black" />
+
+                            <!--  BorderBrush  -->
+                            <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Transparent" />
+                            <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent" />
+                        </RichEditBox.Resources>
+                    </RichEditBox>
                 </StackPanel>
             </Grid>
         </ScrollView>
