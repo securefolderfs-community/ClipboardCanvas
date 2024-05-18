@@ -1,6 +1,7 @@
 using ClipboardCanvas.Sdk.Services;
 using ClipboardCanvas.Sdk.ViewModels;
 using ClipboardCanvas.Shared.Extensions;
+using ClipboardCanvas.WinUI.Helpers;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
@@ -28,7 +29,7 @@ namespace ClipboardCanvas.WinUI
             EnsureEarlyWindow();
         }
 
-        private void EnsureEarlyWindow()
+        private async void EnsureEarlyWindow()
         {
             // Set persistence id
             PersistenceId = UI.Constants.Application.MAIN_WINDOW_ID;
@@ -57,6 +58,10 @@ namespace ClipboardCanvas.WinUI
 
             // Hook up event for window closing
             AppWindow.Closing += AppWindow_Closing;
+
+            // Setup ThemeHelper
+            WindowsThemeHelper.Instance.RegisterWindowInstance(Content as FrameworkElement, AppWindow);
+            await WindowsThemeHelper.Instance.InitAsync();
         }
 
         private async void AppControl_Loaded(object sender, RoutedEventArgs e)

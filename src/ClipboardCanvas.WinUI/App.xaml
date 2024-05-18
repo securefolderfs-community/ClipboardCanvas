@@ -12,6 +12,7 @@
                 <!--  Other merged dictionaries here  -->
                 <ResourceDictionary Source="ResourceDictionaries/Brushes.xaml" />
                 <ResourceDictionary Source="ResourceDictionaries/Buttons.xaml" />
+                <ResourceDictionary Source="ResourceDictionaries/Texts.xaml" />
                 <ResourceDictionary Source="ResourceDictionaries/ListViews.xaml" />
 
             </ResourceDictionary.MergedDictionaries>

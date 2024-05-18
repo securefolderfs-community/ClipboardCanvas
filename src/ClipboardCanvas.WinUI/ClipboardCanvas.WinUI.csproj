@@ -44,6 +44,7 @@
     <None Remove="ResourceDictionaries\Brushes.xaml" />
     <None Remove="ResourceDictionaries\Buttons.xaml" />
     <None Remove="ResourceDictionaries\ListViews.xaml" />
+    <None Remove="ResourceDictionaries\Texts.xaml" />
     <None Remove="UserControls\AnimatedCornerRadiusControl.xaml" />
     <None Remove="UserControls\CanvasDisplayControl.xaml" />
     <None Remove="UserControls\Canvases\CodeCanvasControl.xaml" />
@@ -77,6 +78,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.0.240109" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.0.240109" />
     <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.0.240109" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.3" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.3" />
@@ -124,6 +126,9 @@
     <None Update="Images\TestImage.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="ResourceDictionaries\Texts.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\Settings\AboutSettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

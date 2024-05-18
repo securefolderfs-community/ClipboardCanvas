@@ -120,10 +120,31 @@
   <data name="Close" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="LanguageDescription" xml:space="preserve">
+    <value>Select the display language</value>
+  </data>
   <data name="SettingsAbout" xml:space="preserve">
     <value>About</value>
   </data>
   <data name="SettingsGeneral" xml:space="preserve">
     <value>General</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="ThemeDescription" xml:space="preserve">
+    <value>Change the look and feel</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="ThemeSystemDefault" xml:space="preserve">
+    <value>System default</value>
   </data>
 </root>

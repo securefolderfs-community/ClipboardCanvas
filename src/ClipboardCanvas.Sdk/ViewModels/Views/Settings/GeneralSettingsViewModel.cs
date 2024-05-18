@@ -64,7 +64,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views.Settings
             if (value.CultureInfo.Equals(CultureInfo.InvariantCulture))
             {
                 // Wildcard
-                await ApplicationService.OpenUriAsync(new("https://github.com/securefolderfs-community/SecureFolderFS/issues/50"));
+                await ApplicationService.OpenUriAsync(new("https://github.com/d2dyno1/ClipboardCanvas"));
 
                 SelectedLanguage = Languages.FirstOrDefault(x => x.CultureInfo.Equals(LocalizationService.CurrentCulture));
                 if (SelectedLanguage is not null)
