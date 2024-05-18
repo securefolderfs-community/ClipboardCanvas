@@ -19,15 +19,15 @@ namespace ClipboardCanvas.WinUI.UserControls
 
         private async void KeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (!CanvasViewModel?.IsEditing ?? true)
-                return;
-
             var key = args.KeyboardAccelerator.Key;
             var control = args.KeyboardAccelerator.Modifiers.HasFlag(VirtualKeyModifiers.Control);
 
             switch ((key, control))
             {
                 case (VirtualKey.S, true):
+                    if (!CanvasViewModel?.IsEditing ?? true)
+                        break;
+
                     if (CanvasViewModel is IPersistable persistable)
                     {
                         args.Handled = true;

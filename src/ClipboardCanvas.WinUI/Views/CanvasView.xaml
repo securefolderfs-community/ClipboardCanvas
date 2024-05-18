@@ -12,7 +12,16 @@
         <vc:NullToBoolConverter x:Key="NullToBoolConverter" />
     </Page.Resources>
 
-    <Grid Background="Transparent" Tapped="Root_Tapped">
+    <Grid
+        Background="Transparent"
+        KeyboardAcceleratorPlacementMode="Hidden"
+        Tapped="Root_Tapped">
+        <Grid.KeyboardAccelerators>
+            <KeyboardAccelerator
+                Key="V"
+                Invoked="KeyboardAccelerator_Invoked"
+                Modifiers="Control" />
+        </Grid.KeyboardAccelerators>
         <StackPanel
             x:Name="NewCanvas"
             HorizontalAlignment="Center"

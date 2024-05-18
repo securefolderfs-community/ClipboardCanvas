@@ -24,7 +24,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         private readonly NavigationViewModel _navigationViewModel;
         private readonly CanvasViewModel _canvasViewModel;
         private readonly List<IStorableChild> _items;
-        private int _indexInCollection;
+        private int _position;
 
         [ObservableProperty] private string? _Name;
         [ObservableProperty] private IImage? _Icon;
@@ -44,7 +44,6 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             _navigationViewModel = navigationViewModel;
             _canvasViewModel = new(sourceModel, navigationViewModel, this);
             SourceModel = sourceModel;
-            SourceModel.CollectionChanged += DataSourceModel_CollectionChanged;
             Name = sourceModel.Name;
         }
 
@@ -52,6 +51,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         public async Task InitAsync(CancellationToken cancellationToken = default)
         {
             await SourceModel.InitAsync(cancellationToken);
+            SourceModel.CollectionChanged += DataSourceModel_CollectionChanged;
             Icon = await MediaService.GetCollectionIconAsync(SourceModel, cancellationToken);
             _items.Clear();
 
@@ -59,21 +59,25 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             var items = await SourceModel.Source.GetItemsAsync(StorableType.All, cancellationToken).ToArrayAsync(cancellationToken);
             _items.AddRange(items);
 
-            _indexInCollection = _items.Count; // Count is out of bounds intentionally to put the index on new (empty) canvas
+            _position = _items.Count; // Count is out of bounds intentionally to put the index on new (empty) canvas
         }
 
         /// <inheritdoc/>
         public int Seek(int offset, SeekOrigin origin)
         {
-            _indexInCollection = Math.Max(Math.Min(origin switch
+            // Return the current position only if not seeking
+            if (offset == 0 && origin == SeekOrigin.Current)
+                return _position;
+
+            _position = Math.Max(Math.Min(origin switch
             {
                 SeekOrigin.End => _items.Count + offset,
-                SeekOrigin.Current => _indexInCollection + offset,
+                SeekOrigin.Current => _position + offset,
                 _ or SeekOrigin.Begin => offset,
             }, _items.Count), 0);
 
             UpdateNavigationButtons();
-            return _indexInCollection;
+            return _position;
         }
 
         [RelayCommand]
@@ -114,11 +118,11 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
                 return;
 
             // Show ribbon if coming from new canvas
-            if (_indexInCollection == _items.Count)
+            if (_position == _items.Count)
                 RibbonViewModel.IsRibbonVisible = true;
             
             Seek(-1, SeekOrigin.Current);
-            await _canvasViewModel.DisplayAsync(_items[_indexInCollection], cancellationToken);
+            await _canvasViewModel.DisplayAsync(_items[_position], cancellationToken);
         }
 
         [RelayCommand]
@@ -127,20 +131,20 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             Seek(1, SeekOrigin.Current);
 
             // If on new canvas...
-            if (_indexInCollection >= _items.Count)
+            if (_position >= _items.Count)
             {
                 ClearCanvas();
                 return;
             }
 
             // Otherwise, display the next item
-            await _canvasViewModel.DisplayAsync(_items[_indexInCollection], cancellationToken);
+            await _canvasViewModel.DisplayAsync(_items[_position], cancellationToken);
         }
 
         private void UpdateNavigationButtons()
         {
-            _navigationViewModel.IsForwardEnabled = _indexInCollection < _items.Count;
-            _navigationViewModel.IsBackEnabled = _indexInCollection > 0 && _items.Count > 0;
+            _navigationViewModel.IsForwardEnabled = _position < _items.Count;
+            _navigationViewModel.IsBackEnabled = _position > 0 && _items.Count > 0;
         }
 
         private void ClearCanvas()
@@ -157,12 +161,13 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
                 if (e.NewItems is null)
                     return;
 
-                var isNewCanvas = _indexInCollection == _items.Count;
+                var isNewCanvas = _position == _items.Count;
                 foreach (IStorableChild item in e.NewItems)
                     _items.Add(item);
 
-                if (isNewCanvas)
-                    _indexInCollection = _items.Count;
+                // TODO: The CurrentCanvasViewModel check might result in race condition
+                if (isNewCanvas && _canvasViewModel.CurrentCanvasViewModel is null)
+                    _position = _items.Count;
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove)
             {
@@ -170,23 +175,23 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
                     return;
 
                 var isCanvasInvalid = false;
-                var isNewCanvas = _indexInCollection == _items.Count;
+                var isNewCanvas = _position == _items.Count;
                 foreach (IStorable item in e.OldItems)
                 {
                     _items.RemoveMatch((x) => x.Id == item.Id);
                     if (!isNewCanvas && _canvasViewModel.CurrentCanvasViewModel?.Storable?.Id == item.Id)
                     {
                         isCanvasInvalid = true;
-                        _indexInCollection = Math.Max(_indexInCollection - 1, 0);
+                        _position = Math.Max(_position - 1, 0);
                     }
                 }
 
                 if (isNewCanvas)
-                    _indexInCollection = _items.Count;
+                    _position = _items.Count;
                 
                 if (isCanvasInvalid)
                 {
-                    var storable = _items.ElementAtOrDefault(_indexInCollection);
+                    var storable = _items.ElementAtOrDefault(_position);
                     if (storable is not null)
                         await _canvasViewModel.DisplayAsync(storable, default);
                     else
@@ -198,6 +203,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
         /// <inheritdoc/>
         public void Dispose()
         {
+            SourceModel.CollectionChanged -= DataSourceModel_CollectionChanged;
             _canvasViewModel.CurrentCanvasViewModel?.Dispose();
         }
     }

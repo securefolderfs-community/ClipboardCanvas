@@ -3,6 +3,7 @@ using ClipboardCanvas.Shared.Extensions;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using Windows.System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -43,6 +44,23 @@ namespace ClipboardCanvas.WinUI.Views
 
             _isImmersed = !_isImmersed;
             ViewModel?.ChangeImmersion(_isImmersed);
+        }
+
+        private async void KeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            var key = args.KeyboardAccelerator.Key;
+            var control = args.KeyboardAccelerator.Modifiers.HasFlag(VirtualKeyModifiers.Control);
+
+            switch ((key, control))
+            {
+                case (VirtualKey.V, true):
+                    if (ViewModel is null)
+                        break;
+
+                    args.Handled = true;
+                    await ViewModel.PasteFromClipboardCommand.ExecuteAsync(null);
+                    break;
+            }
         }
     }
 }

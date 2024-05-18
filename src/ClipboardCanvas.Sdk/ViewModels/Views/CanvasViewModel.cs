@@ -124,7 +124,22 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
 
             CurrentCanvasViewModel?.Dispose();
             CurrentCanvasViewModel = canvasViewModel;
+
+            // The canvas was null so open on new canvas
+            if (canvasViewModel is null)
+            {
+                // TODO: Report a paste error
+                _seekable?.Seek(0, SeekOrigin.End);
+                return;
+            }
+
+            // Initialize the canvas
+            await canvasViewModel.InitAsync(cancellationToken);
             BindRibbon();
+            RibbonViewModel.IsRibbonVisible = true;
+
+            // Seek to the pasted item
+            _seekable?.Seek(-1, SeekOrigin.End);
 
             Task<BaseCanvasViewModel> StorageAsync()
             {
