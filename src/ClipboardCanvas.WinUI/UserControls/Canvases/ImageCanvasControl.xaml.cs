@@ -35,6 +35,7 @@ namespace ClipboardCanvas.WinUI.UserControls.Canvases
         private void Scroller_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
         {
             _isDragging = false;
+            Scroller.ReleasePointerCapture(e.Pointer);
         }
 
         private void Scroller_PointerMoved(object sender, PointerRoutedEventArgs e)
@@ -57,13 +58,26 @@ namespace ClipboardCanvas.WinUI.UserControls.Canvases
             _lastPoint = currentPoint;
         }
 
+        private void Scroller_Loaded(object sender, RoutedEventArgs e)
+        {
+            ControlImage.Height = Scroller.ViewportHeight;
+            ControlImage.Width = Scroller.ViewportWidth;
+        }
+
         public IImage? Image
         {
             get => (IImage?)GetValue(ImageProperty);
             set => SetValue(ImageProperty, value);
         }
         public static readonly DependencyProperty ImageProperty =
-            DependencyProperty.Register(nameof(Image), typeof(IImage), typeof(ImageCanvasControl), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(Image), typeof(IImage), typeof(ImageCanvasControl), new PropertyMetadata(null, (s, e) =>
+            {
+                if (s is not ImageCanvasControl control)
+                    return;
+
+                control.ControlImage.Height = control.Scroller.ViewportHeight;
+                control.ControlImage.Width = control.Scroller.ViewportWidth;
+            }));
 
         public bool IsEditing
         {

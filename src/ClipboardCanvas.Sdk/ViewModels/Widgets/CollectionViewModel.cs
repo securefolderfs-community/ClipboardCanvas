@@ -33,6 +33,8 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
 
         private IMediaService MediaService { get; } = Ioc.Default.GetRequiredService<IMediaService>();
 
+        private ISettingsService SettingsService { get; } = Ioc.Default.GetRequiredService<ISettingsService>();
+
         private RibbonViewModel RibbonViewModel { get; } = Ioc.Default.GetRequiredService<RibbonViewModel>();
 
         public IDataSourceModel SourceModel { get; }
@@ -111,7 +113,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             await _collectionSourceModel.SaveAsync(cancellationToken);
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task GoBackAsync(CancellationToken cancellationToken)
         {
             if (_items.IsEmpty())
@@ -122,10 +124,10 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
                 RibbonViewModel.IsRibbonVisible = true;
             
             Seek(-1, SeekOrigin.Current);
-            await _canvasViewModel.DisplayAsync(_items[_position], cancellationToken);
+            await NavigateToItemAsync(_items[_position], cancellationToken);
         }
 
-        [RelayCommand]
+        [RelayCommand(AllowConcurrentExecutions = true)]
         private async Task GoForwardAsync(CancellationToken cancellationToken)
         {
             Seek(1, SeekOrigin.Current);
@@ -138,7 +140,20 @@ namespace ClipboardCanvas.Sdk.ViewModels.Widgets
             }
 
             // Otherwise, display the next item
-            await _canvasViewModel.DisplayAsync(_items[_position], cancellationToken);
+            await NavigateToItemAsync(_items[_position], cancellationToken);
+        }
+
+        private async Task NavigateToItemAsync(IStorable source, CancellationToken cancellationToken)
+        {
+            try
+            {
+                if (SettingsService.UserSettings.UninterruptedResume)
+                    SettingsService.AppSettings.LastLocationId = source.Id;
+
+                await _canvasViewModel.DisplayAsync(source, cancellationToken);
+            }
+            catch (TaskCanceledException) { }
+            catch (OperationCanceledException) { }
         }
 
         private void UpdateNavigationButtons()

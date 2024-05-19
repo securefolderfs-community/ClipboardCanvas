@@ -41,7 +41,7 @@ namespace ClipboardCanvas.Sdk.AppModels
         public async Task InitAsync(CancellationToken cancellationToken = default)
         {
             if (_folderWatcher is not null)
-                await _folderWatcher.DisposeAsync();
+                return;
 
             if (Source is not IMutableFolder mutableFolder)
                 return;

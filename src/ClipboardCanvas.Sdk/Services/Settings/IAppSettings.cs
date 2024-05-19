@@ -22,5 +22,10 @@ namespace ClipboardCanvas.Sdk.Services.Settings
         /// Gets or sets the app language preference.
         /// </summary>
         string? AppLanguage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the location represented by ID of the last canvas navigated by the user.
+        /// </summary>
+        string? LastLocationId { get; set; }
     }
 }

@@ -30,7 +30,6 @@ namespace ClipboardCanvas.WinUI.UserControls.Host
                 return;
 
             ViewModel.NavigationService.SetupNavigation(navigationControl);
-            _ = ViewModel.InitAsync();
         }
 
         public MainAppViewModel ViewModel

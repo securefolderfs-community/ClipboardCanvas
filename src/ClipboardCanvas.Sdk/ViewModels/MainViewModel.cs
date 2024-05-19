@@ -26,9 +26,11 @@ namespace ClipboardCanvas.Sdk.ViewModels
         }
 
         /// <inheritdoc/>
-        public Task InitAsync(CancellationToken cancellationToken = default)
+        public async Task InitAsync(CancellationToken cancellationToken = default)
         {
-            return Task.WhenAll(SettingsService.TryInitAsync(cancellationToken), CollectionStoreModel.TryInitAsync(cancellationToken));
+            await Task.WhenAll(SettingsService.TryInitAsync(cancellationToken), CollectionStoreModel.TryInitAsync(cancellationToken));
+            if (AppViewModel is not null)
+                await AppViewModel.InitAsync(cancellationToken);
         }
     }
 }

@@ -37,5 +37,12 @@ namespace ClipboardCanvas.UI.ServiceImplementation.Settings
             get => GetSetting<string?>();
             set => SetSetting(value);
         }
+
+        /// <inheritdoc/>
+        public string? LastLocationId
+        {
+            get => GetSetting<string?>();
+            set => SetSetting(value);
+        }
     }
 }

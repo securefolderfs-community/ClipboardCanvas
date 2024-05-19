@@ -88,6 +88,7 @@
             PointerMoved="Scroller_PointerMoved"
             PointerPressed="Scroller_PointerPressed"
             RenderTransformOrigin="0.5,0.5"
+            Loaded="Scroller_Loaded"
             VerticalScrollBarVisibility="Auto"
             VerticalScrollMode="Enabled"
             ZoomMode="Disabled">
@@ -96,7 +97,12 @@
             </ScrollViewer.RenderTransform>
             <uc:AnimatedCornerRadiusControl>
                 <uc:AnimatedCornerRadiusControl.ControlContent>
-                    <uc:ImageControl Image="{x:Bind Image, Mode=OneWay}" PointerReleased="Image_PointerReleased" />
+                    <uc:ImageControl
+                        x:Name="ControlImage"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Image="{x:Bind Image, Mode=OneWay}"
+                        PointerReleased="Image_PointerReleased" />
                 </uc:AnimatedCornerRadiusControl.ControlContent>
             </uc:AnimatedCornerRadiusControl>
         </ScrollViewer>

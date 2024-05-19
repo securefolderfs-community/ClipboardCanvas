@@ -12,7 +12,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls
 {
     public sealed partial class NavigationViewModel : ObservableObject
     {
-        private readonly ICollectionSourceModel _collectionStoreModel;
+        private readonly ICollectionSourceModel _collectionSourceModel;
 
         [ObservableProperty] private ICommand? _NavigateBackCommand;
         [ObservableProperty] private ICommand? _NavigateForwardCommand;
@@ -22,11 +22,11 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls
 
         public INavigationService NavigationService { get; }
 
-        public NavigationViewModel(ICollectionSourceModel collectionStoreModel, INavigationService navigationService)
+        public NavigationViewModel(ICollectionSourceModel collectionSourceModel, INavigationService navigationService)
         {
-            _collectionStoreModel = collectionStoreModel;
+            _collectionSourceModel = collectionSourceModel;
             NavigationService = navigationService;
-            IsNavigationVisible = true;
+            IsNavigationVisible = false;
             IsForwardEnabled = true;
             IsBackEnabled = true;
         }
@@ -34,7 +34,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Controls
         [RelayCommand]
         private async Task NavigateHomeAsync(CancellationToken cancellationToken)
         {
-            await NavigationService.TryNavigateAsync(() => new HomeViewModel(_collectionStoreModel, this));
+            await NavigationService.TryNavigateAsync(() => new HomeViewModel(_collectionSourceModel, this));
         }
     }
 }

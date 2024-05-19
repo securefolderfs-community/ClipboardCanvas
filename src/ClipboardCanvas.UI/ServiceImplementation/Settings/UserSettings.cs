@@ -16,5 +16,11 @@ namespace ClipboardCanvas.UI.ServiceImplementation.Settings
         {
             SettingsDatabase = new SingleFileDatabaseModel(Constants.FileNames.USER_SETTINGS_FILENAME, settingsFolder, DoubleSerializedStreamSerializer.Instance);
         }
+
+        public bool UninterruptedResume
+        {
+            get => GetSetting(static () => false);
+            set => SetSetting(value);
+        }
     }
 }
