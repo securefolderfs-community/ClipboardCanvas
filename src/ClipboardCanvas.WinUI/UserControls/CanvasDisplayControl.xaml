@@ -39,6 +39,9 @@
                 Text="{x:Bind Text, Mode=TwoWay}"
                 WasAltered="{x:Bind WasAltered, Mode=TwoWay}" />
         </DataTemplate>
+        <DataTemplate x:Key="FolderCanvasTemplate" x:DataType="vm:FolderCanvasViewModel">
+            <uc:FolderCanvasControl ItemsSource="{x:Bind Items, Mode=OneWay}" />
+        </DataTemplate>
     </UserControl.Resources>
 
     <ContentControl
@@ -49,6 +52,7 @@
         <ContentControl.ContentTemplateSelector>
             <ts:CanvasTemplateSelector
                 CodeCanvasTemplate="{StaticResource CodeCanvasTemplate}"
+                FolderCanvasTemplate="{StaticResource FolderCanvasTemplate}"
                 ImageCanvasTemplate="{StaticResource ImageCanvasTemplate}"
                 PdfCanvasTemplate="{StaticResource PdfCanvasTemplate}"
                 TextCanvasTemplate="{StaticResource TextCanvasTemplate}"

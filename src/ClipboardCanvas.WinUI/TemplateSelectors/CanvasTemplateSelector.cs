@@ -15,6 +15,8 @@ namespace ClipboardCanvas.WinUI.TemplateSelectors
 
         public DataTemplate? CodeCanvasTemplate { get; set; }
 
+        public DataTemplate? FolderCanvasTemplate { get; set; }
+
         /// <inheritdoc/>
         protected override DataTemplate? SelectTemplateCore(BaseCanvasViewModel? item, DependencyObject container)
         {
@@ -25,6 +27,7 @@ namespace ClipboardCanvas.WinUI.TemplateSelectors
                 PdfCanvasViewModel => PdfCanvasTemplate,
                 VideoCanvasViewModel => VideoCanvasTemplate,
                 CodeCanvasViewModel => CodeCanvasTemplate,
+                FolderCanvasViewModel => FolderCanvasTemplate,
                 _ => base.SelectTemplateCore(item, container)
             };
         }

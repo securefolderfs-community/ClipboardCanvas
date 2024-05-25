@@ -86,6 +86,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
 
             var canvasViewModel = await CanvasService.GetCanvasForStorableAsync(storable, _canvasSourceModel, cancellationToken);
             CurrentCanvasViewModel?.Dispose();
+            CurrentCanvasViewModel = null;
             CurrentCanvasViewModel = canvasViewModel;
 
             BindRibbon();
@@ -123,6 +124,7 @@ namespace ClipboardCanvas.Sdk.ViewModels.Views
             };
 
             CurrentCanvasViewModel?.Dispose();
+            CurrentCanvasViewModel = null;
             CurrentCanvasViewModel = canvasViewModel;
 
             // The canvas was null so open on new canvas

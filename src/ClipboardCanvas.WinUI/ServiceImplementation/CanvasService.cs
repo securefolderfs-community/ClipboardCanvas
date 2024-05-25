@@ -25,10 +25,14 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
                 TypeHint.PlainText => MatchText(file, sourceModel, classification),
                 TypeHint.Media => new VideoCanvasViewModel(file, sourceModel),
                 TypeHint.Document => MatchDocument(file, sourceModel, classification),
-
                 _ => null,
-            } : null) ?? throw new ArgumentOutOfRangeException(nameof(classification.TypeHint)); // TODO: Return fallback canvas
 
+            } : MatchAlternative(storable, sourceModel, classification))
+
+                // TODO: Return fallback canvas
+                ?? throw new ArgumentOutOfRangeException(nameof(classification.TypeHint));
+
+            // Initialize and return
             await viewModel.InitAsync(cancellationToken);
             return viewModel;
         }
@@ -47,6 +51,16 @@ namespace ClipboardCanvas.WinUI.ServiceImplementation
                 return new PdfCanvasViewModel(file, sourceModel);
 
             return null;
+        }
+
+        private static BaseCanvasViewModel? MatchAlternative(IStorable storable, IDataSourceModel sourceModel, TypeClassification classification)
+        {
+            if (storable is not IFolder folder)
+                return null;
+
+            // TODO: Maybe match to Infinite Canvas as well?
+            _ = classification;
+            return new FolderCanvasViewModel(folder, sourceModel);
         }
     }
 }

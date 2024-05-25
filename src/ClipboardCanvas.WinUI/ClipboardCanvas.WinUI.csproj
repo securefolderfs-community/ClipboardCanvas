@@ -48,6 +48,7 @@
     <None Remove="UserControls\AnimatedCornerRadiusControl.xaml" />
     <None Remove="UserControls\CanvasDisplayControl.xaml" />
     <None Remove="UserControls\Canvases\CodeCanvasControl.xaml" />
+    <None Remove="UserControls\Canvases\FolderCanvasControl.xaml" />
     <None Remove="UserControls\Canvases\ImageCanvasControl.xaml" />
     <None Remove="UserControls\Canvases\PdfCanvasControl.xaml" />
     <None Remove="UserControls\Canvases\TextCanvasControl.xaml" />
@@ -82,13 +83,13 @@
     <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.0.240109" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.3" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.3" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230913002" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240428000" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
     <PackageReference Include="MimeTypeMapOfficial" Version="1.0.17" />
     <PackageReference Include="WinUIEdit" Version="0.0.3-prerelease" />
     <PackageReference Include="WinUIEx" Version="2.3.4" />
-    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.2.0" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
@@ -126,6 +127,9 @@
     <None Update="Images\TestImage.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Page Update="UserControls\Canvases\FolderCanvasControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="ResourceDictionaries\Texts.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
