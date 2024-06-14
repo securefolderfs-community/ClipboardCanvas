@@ -103,7 +103,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ClipboardCanvas.Sdk\ClipboardCanvas.Sdk.csproj" />
+    <ProjectReference Include="..\..\ClipboardCanvas.Sdk\ClipboardCanvas.Sdk.csproj" />
     <ProjectReference Include="..\ClipboardCanvas.UI\ClipboardCanvas.UI.csproj" />
   </ItemGroup>
 

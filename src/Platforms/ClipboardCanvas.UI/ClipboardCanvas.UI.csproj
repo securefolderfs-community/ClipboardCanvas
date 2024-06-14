@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ClipboardCanvas.Sdk\ClipboardCanvas.Sdk.csproj" />
-    <ProjectReference Include="..\ClipboardCanvas.Shared\ClipboardCanvas.Shared.csproj" />
+    <ProjectReference Include="..\..\ClipboardCanvas.Sdk\ClipboardCanvas.Sdk.csproj" />
+    <ProjectReference Include="..\..\ClipboardCanvas.Shared\ClipboardCanvas.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

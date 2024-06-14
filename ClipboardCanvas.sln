@@ -9,11 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sdk", "Sdk", "{595861A4-F6B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platforms", "Platforms", "{E216C759-D5F9-4DC0-B48B-A5D68394A5F4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClipboardCanvas.WinUI", "src\ClipboardCanvas.WinUI\ClipboardCanvas.WinUI.csproj", "{31DB0DD6-A5F4-4620-8AE9-5DAD218E9F76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClipboardCanvas.WinUI", "src\Platforms\ClipboardCanvas.WinUI\ClipboardCanvas.WinUI.csproj", "{31DB0DD6-A5F4-4620-8AE9-5DAD218E9F76}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipboardCanvas.Sdk", "src\ClipboardCanvas.Sdk\ClipboardCanvas.Sdk.csproj", "{0C11D681-11A3-4074-AE57-57734A138473}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipboardCanvas.UI", "src\ClipboardCanvas.UI\ClipboardCanvas.UI.csproj", "{FECB96DE-B383-4A58-92B7-6B35DDC64A66}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipboardCanvas.UI", "src\Platforms\ClipboardCanvas.UI\ClipboardCanvas.UI.csproj", "{FECB96DE-B383-4A58-92B7-6B35DDC64A66}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipboardCanvas.Shared", "src\ClipboardCanvas.Shared\ClipboardCanvas.Shared.csproj", "{8278EA42-4458-4144-9815-D2C7CE5D8183}"
 EndProject
