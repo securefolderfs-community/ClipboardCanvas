@@ -1,0 +1,68 @@
+<UserControl
+    x:Class="ClipboardCanvas.WinUI.UserControls.CanvasDisplayControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ts="using:ClipboardCanvas.WinUI.TemplateSelectors"
+    xmlns:uc="using:ClipboardCanvas.WinUI.UserControls.Canvases"
+    xmlns:vc="using:ClipboardCanvas.WinUI.ValueConverters"
+    xmlns:vm="using:ClipboardCanvas.Sdk.ViewModels.Controls.Canvases"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <vc:BoolInvertConverter x:Key="BoolInvertConverter" />
+
+        <DataTemplate x:Key="TextCanvasTemplate" x:DataType="vm:TextCanvasViewModel">
+            <uc:TextCanvasControl
+                IsEditing="{x:Bind IsEditing, Mode=OneWay}"
+                Text="{x:Bind Text, Mode=TwoWay}"
+                WasAltered="{x:Bind WasAltered, Mode=TwoWay}" />
+        </DataTemplate>
+        <DataTemplate x:Key="ImageCanvasTemplate" x:DataType="vm:ImageCanvasViewModel">
+            <uc:ImageCanvasControl
+                Image="{x:Bind Image, Mode=OneWay}"
+                IsEditing="{x:Bind IsEditing, Mode=OneWay}"
+                IsZoomingEnabled="True"
+                WasAltered="{x:Bind WasAltered, Mode=TwoWay}" />
+        </DataTemplate>
+        <DataTemplate x:Key="VideoCanvasTemplate" x:DataType="vm:VideoCanvasViewModel">
+            <uc:VideoCanvasControl IsImmersed="{x:Bind IsImmersed, Mode=OneWay}" MediaSource="{x:Bind MediaSource, Mode=OneWay}" />
+        </DataTemplate>
+        <DataTemplate x:Key="PdfCanvasTemplate" x:DataType="vm:PdfCanvasViewModel">
+            <uc:PdfCanvasControl PagesSource="{x:Bind Pages, Mode=OneWay}" />
+        </DataTemplate>
+        <DataTemplate x:Key="CodeCanvasTemplate" x:DataType="vm:CodeCanvasViewModel">
+            <uc:CodeCanvasControl
+                IsEditing="{x:Bind IsEditing, Mode=OneWay}"
+                LanguageHint="{x:Bind Language, Mode=OneWay}"
+                Text="{x:Bind Text, Mode=TwoWay}"
+                WasAltered="{x:Bind WasAltered, Mode=TwoWay}" />
+        </DataTemplate>
+        <DataTemplate x:Key="FolderCanvasTemplate" x:DataType="vm:FolderCanvasViewModel">
+            <uc:FolderCanvasControl ItemsSource="{x:Bind Items, Mode=OneWay}" />
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <ContentControl
+        HorizontalContentAlignment="Stretch"
+        VerticalContentAlignment="Stretch"
+        Content="{x:Bind CanvasViewModel, Mode=OneWay}"
+        KeyboardAcceleratorPlacementMode="Hidden">
+        <ContentControl.ContentTemplateSelector>
+            <ts:CanvasTemplateSelector
+                CodeCanvasTemplate="{StaticResource CodeCanvasTemplate}"
+                FolderCanvasTemplate="{StaticResource FolderCanvasTemplate}"
+                ImageCanvasTemplate="{StaticResource ImageCanvasTemplate}"
+                PdfCanvasTemplate="{StaticResource PdfCanvasTemplate}"
+                TextCanvasTemplate="{StaticResource TextCanvasTemplate}"
+                VideoCanvasTemplate="{StaticResource VideoCanvasTemplate}" />
+        </ContentControl.ContentTemplateSelector>
+        <ContentControl.KeyboardAccelerators>
+            <KeyboardAccelerator
+                Key="S"
+                Invoked="KeyboardAccelerator_Invoked"
+                Modifiers="Control" />
+        </ContentControl.KeyboardAccelerators>
+    </ContentControl>
+</UserControl>

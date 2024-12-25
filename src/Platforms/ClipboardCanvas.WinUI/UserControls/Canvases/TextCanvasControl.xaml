@@ -1,0 +1,77 @@
+<UserControl
+    x:Class="ClipboardCanvas.WinUI.UserControls.Canvases.TextCanvasControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ctwui="using:CommunityToolkit.WinUI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vc="using:ClipboardCanvas.WinUI.ValueConverters"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <vc:BoolInvertConverter x:Key="BoolInvertConverter" />
+    </UserControl.Resources>
+
+    <Grid>
+        <Border x:Name="ShadowTarget" />
+        <ScrollView
+            Width="728"
+            CornerRadius="0"
+            VerticalScrollBarVisibility="Hidden">
+            <Grid RowSpacing="16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <Rectangle Grid.Row="0" Height="100" />
+                <StackPanel
+                    Grid.Row="1"
+                    Padding="24"
+                    Background="White"
+                    CornerRadius="4,4,0,0"
+                    Orientation="Vertical">
+
+                    <ctwui:Effects.Shadow>
+                        <ctwui:AttachedDropShadow
+                            BlurRadius="32"
+                            CastTo="{x:Bind ShadowTarget}"
+                            CornerRadius="8"
+                            Opacity="0.3" />
+                    </ctwui:Effects.Shadow>
+
+                    <RichTextBlock
+                        x:Name="ReadOnlyBox"
+                        x:Load="{x:Bind IsEditing, Mode=OneWay, Converter={StaticResource BoolInvertConverter}}"
+                        IsTextSelectionEnabled="True">
+                        <Paragraph>
+                            <Run Foreground="Black" Text="{x:Bind Text, Mode=OneWay}" />
+                        </Paragraph>
+                    </RichTextBlock>
+                    <RichEditBox
+                        x:Name="EditingBox"
+                        Padding="0"
+                        x:Load="{x:Bind IsEditing, Mode=OneWay}"
+                        AcceptsReturn="True"
+                        IsTextPredictionEnabled="True"
+                        Loaded="EditingBox_Loaded"
+                        TextChanged="EditingBox_TextChanged">
+                        <RichEditBox.Resources>
+                            <!--  Background  -->
+                            <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent" />
+                            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent" />
+
+                            <!--  Foreground  -->
+                            <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="Black" />
+                            <SolidColorBrush x:Key="TextControlForegroundFocused" Color="Black" />
+
+                            <!--  BorderBrush  -->
+                            <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Transparent" />
+                            <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent" />
+                        </RichEditBox.Resources>
+                    </RichEditBox>
+                </StackPanel>
+            </Grid>
+        </ScrollView>
+    </Grid>
+</UserControl>

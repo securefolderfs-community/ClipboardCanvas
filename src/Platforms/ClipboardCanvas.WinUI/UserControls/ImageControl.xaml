@@ -1,0 +1,36 @@
+<UserControl
+    x:Class="ClipboardCanvas.WinUI.UserControls.ImageControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:im="using:ClipboardCanvas.WinUI.Imaging"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ts="using:ClipboardCanvas.WinUI.TemplateSelectors"
+    x:Name="RootControl"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="IconImageDataTemplate" x:DataType="im:IconImage">
+            <!--  {Binding} is required here  -->
+            <FontIcon FontSize="{Binding HeightHint, Mode=OneWay, ElementName=RootControl}" Glyph="{x:Bind IconGlyph}" />
+        </DataTemplate>
+        <DataTemplate x:Key="ImageBitmapDataTemplate" x:DataType="im:ImageBitmap">
+            <Image Source="{x:Bind Source, Mode=OneWay}" />
+        </DataTemplate>
+        <DataTemplate x:Key="PdfPageImageDataTemplate" x:DataType="im:PdfPageImage">
+            <Image Source="{x:Bind ImageSource, Mode=OneWay}" />
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <ContentControl
+        HorizontalContentAlignment="Stretch"
+        VerticalContentAlignment="Stretch"
+        Content="{x:Bind Image, Mode=OneWay}">
+        <ContentControl.ContentTemplateSelector>
+            <ts:ImageTemplateSelector
+                IconImageDataTemplate="{StaticResource IconImageDataTemplate}"
+                ImageBitmapDataTemplate="{StaticResource ImageBitmapDataTemplate}"
+                PdfPageImageDataTemplate="{StaticResource PdfPageImageDataTemplate}" />
+        </ContentControl.ContentTemplateSelector>
+    </ContentControl>
+</UserControl>

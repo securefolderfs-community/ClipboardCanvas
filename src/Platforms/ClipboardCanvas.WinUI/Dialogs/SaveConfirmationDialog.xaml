@@ -1,0 +1,18 @@
+<ContentDialog
+    x:Class="ClipboardCanvas.WinUI.Dialogs.SaveConfirmationDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:h="using:ClipboardCanvas.WinUI.Helpers"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="You have unsaved changes"
+    CloseButtonText="Cancel"
+    PrimaryButtonText="Save"
+    RequestedTheme="{x:Bind h:WindowsThemeHelper.Instance.CurrentElementTheme, Mode=OneWay}"
+    SecondaryButtonText="Discard"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    mc:Ignorable="d">
+
+    <!--  TODO  -->
+    <Grid />
+</ContentDialog>

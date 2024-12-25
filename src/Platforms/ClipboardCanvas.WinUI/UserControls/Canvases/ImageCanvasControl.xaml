@@ -1,0 +1,110 @@
+<UserControl
+    x:Class="ClipboardCanvas.WinUI.UserControls.Canvases.ImageCanvasControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:icore="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:imedia="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uc="using:ClipboardCanvas.WinUI.UserControls"
+    mc:Ignorable="d">
+
+    <Grid x:Name="Root">
+        <i:Interaction.Behaviors>
+            <!--  If is editing  -->
+            <icore:DataTriggerBehavior
+                Binding="{x:Bind IsEditing, Mode=OneWay}"
+                ComparisonCondition="Equal"
+                Value="True">
+                <imedia:ControlStoryboardAction ControlStoryboardOption="Play">
+                    <imedia:ControlStoryboardAction.Storyboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="Scroller"
+                                Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                From="1"
+                                To="0.92"
+                                Duration="0:0:0.35">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase EasingMode="EaseInOut" Power="2" />
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation
+                                Storyboard.TargetName="Scroller"
+                                Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                From="1"
+                                To="0.92"
+                                Duration="0:0:0.35">
+                                <DoubleAnimation.EasingFunction>
+                                    <PowerEase EasingMode="EaseInOut" Power="2" />
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </imedia:ControlStoryboardAction.Storyboard>
+                </imedia:ControlStoryboardAction>
+            </icore:DataTriggerBehavior>
+
+            <!--  If is not editing  -->
+            <icore:DataTriggerBehavior
+                Binding="{x:Bind IsEditing, Mode=OneWay}"
+                ComparisonCondition="Equal"
+                Value="False">
+                <imedia:ControlStoryboardAction ControlStoryboardOption="Play">
+                    <imedia:ControlStoryboardAction.Storyboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="Scroller"
+                                Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                From="0.92"
+                                To="1"
+                                Duration="0:0:0.35">
+                                <DoubleAnimation.EasingFunction>
+                                    <QuadraticEase EasingMode="EaseInOut" />
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation
+                                Storyboard.TargetName="Scroller"
+                                Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                From="0.92"
+                                To="1"
+                                Duration="0:0:0.35">
+                                <DoubleAnimation.EasingFunction>
+                                    <QuadraticEase EasingMode="EaseInOut" />
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </imedia:ControlStoryboardAction.Storyboard>
+                </imedia:ControlStoryboardAction>
+            </icore:DataTriggerBehavior>
+        </i:Interaction.Behaviors>
+
+        <ScrollViewer
+            x:Name="Scroller"
+            HorizontalScrollBarVisibility="Auto"
+            HorizontalScrollMode="Enabled"
+            MinZoomFactor="1"
+            PointerCaptureLost="Scroller_PointerCaptureLost"
+            PointerMoved="Scroller_PointerMoved"
+            PointerPressed="Scroller_PointerPressed"
+            RenderTransformOrigin="0.5,0.5"
+            Loaded="Scroller_Loaded"
+            VerticalScrollBarVisibility="Auto"
+            VerticalScrollMode="Enabled"
+            ZoomMode="Disabled">
+            <ScrollViewer.RenderTransform>
+                <ScaleTransform />
+            </ScrollViewer.RenderTransform>
+            <uc:AnimatedCornerRadiusControl>
+                <uc:AnimatedCornerRadiusControl.ControlContent>
+                    <uc:ImageControl
+                        x:Name="ControlImage"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Image="{x:Bind Image, Mode=OneWay}"
+                        PointerReleased="Image_PointerReleased" />
+                </uc:AnimatedCornerRadiusControl.ControlContent>
+            </uc:AnimatedCornerRadiusControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

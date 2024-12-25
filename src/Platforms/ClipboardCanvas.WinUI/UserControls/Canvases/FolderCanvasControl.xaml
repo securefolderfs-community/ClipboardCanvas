@@ -1,0 +1,52 @@
+<UserControl
+    x:Class="ClipboardCanvas.WinUI.UserControls.Canvases.FolderCanvasControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ts="using:ClipboardCanvas.WinUI.TemplateSelectors"
+    xmlns:uc="using:ClipboardCanvas.WinUI.UserControls"
+    xmlns:vm="using:ClipboardCanvas.Sdk.ViewModels.Views.Browser"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="FileTemplate" x:DataType="vm:FileViewModel">
+            <TreeViewItem Tapped="TreeItem_Tapped">
+                <StackPanel Orientation="Horizontal">
+                    <uc:ImageControl Image="{x:Bind Thumbnail, Mode=OneWay}" />
+                    <TextBlock Margin="0,0,10,0" />
+                    <TextBlock Text="{x:Bind Title, Mode=OneWay}" />
+                </StackPanel>
+            </TreeViewItem>
+        </DataTemplate>
+        <DataTemplate x:Key="FolderTemplate" x:DataType="vm:FolderViewModel">
+            <TreeViewItem
+                CollapsedGlyph="&#xE8B7;"
+                Content="{x:Bind Title, Mode=OneWay}"
+                ExpandedGlyph="&#xE838;"
+                IsExpanded="True"
+                ItemsSource="{x:Bind Items, Mode=OneWay}"
+                Tapped="TreeItem_Tapped" />
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid Margin="0,150,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <TreeView
+            Grid.Row="0"
+            Height="400"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            ItemsSource="{x:Bind ItemsSource, Mode=OneWay}">
+            <TreeView.ItemTemplateSelector>
+                <ts:ExplorerTemplateSelector FileTemplate="{StaticResource FileTemplate}" FolderTemplate="{StaticResource FolderTemplate}" />
+            </TreeView.ItemTemplateSelector>
+
+        </TreeView>
+
+    </Grid>
+</UserControl>

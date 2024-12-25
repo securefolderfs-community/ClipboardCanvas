@@ -1,0 +1,51 @@
+<Page
+    x:Class="ClipboardCanvas.WinUI.Views.Settings.GeneralSettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:l="using:ClipboardCanvas.WinUI.Localization"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tuc="using:CommunityToolkit.WinUI.Controls"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:vm="using:ClipboardCanvas.Sdk.ViewModels.Controls"
+    mc:Ignorable="d">
+
+    <StackPanel Spacing="16">
+        <StackPanel Spacing="4">
+            <TextBlock Style="{StaticResource SettingsSectionHeaderStyle}" Text="App settings" />
+            <tuc:SettingsCard
+                Description="{l:ResourceString Name=LanguageDescription}"
+                Header="{l:ResourceString Name=Language}"
+                HeaderIcon="{ui:FontIcon Glyph='&#xF2B7;'}">
+                <ComboBox
+                    x:Name="AppLanguageComboBox"
+                    AutomationProperties.Name="{x:Bind ViewModel.SelectedLanguage, Mode=OneWay}"
+                    ItemsSource="{x:Bind ViewModel.Languages, Mode=OneWay}"
+                    SelectedItem="{x:Bind ViewModel.SelectedLanguage, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="vm:LanguageViewModel">
+                            <TextBlock Text="{x:Bind DisplayName, Mode=OneWay}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </tuc:SettingsCard>
+            <tuc:SettingsCard
+                Description="{l:ResourceString Name=ThemeDescription}"
+                Header="{l:ResourceString Name=Theme}"
+                HeaderIcon="{ui:FontIcon Glyph='&#xE790;'}">
+                <ComboBox
+                    x:Name="AppThemeComboBox"
+                    AutomationProperties.Name="{l:ResourceString Name=Theme}"
+                    SelectedIndex="{x:Bind SelectedThemeIndex}"
+                    SelectionChanged="AppThemeComboBox_SelectionChanged">
+                    <ComboBox.Items>
+                        <ComboBoxItem Content="{l:ResourceString Name=ThemeSystemDefault}" />
+                        <ComboBoxItem Content="{l:ResourceString Name=ThemeLight}" />
+                        <ComboBoxItem Content="{l:ResourceString Name=ThemeDark}" />
+                    </ComboBox.Items>
+                </ComboBox>
+            </tuc:SettingsCard>
+        </StackPanel>
+
+    </StackPanel>
+</Page>

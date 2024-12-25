@@ -1,0 +1,227 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+
+	<!-- Publishing -->
+    <UseWinUI>True</UseWinUI>
+    <EnableMsixTooling>True</EnableMsixTooling>
+    <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+    <Platforms>x86;x64;ARM64</Platforms>
+	<TargetFramework>net7.0-windows10.0.22621.0</TargetFramework>
+	<PublishProfile>win10-$(Platform).pubxml</PublishProfile>
+	<OutputType>WinExe</OutputType>
+    <RootNamespace>ClipboardCanvas.WinUI</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+
+	<TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <PublishProfile>win10-$(Platform).pubxml</PublishProfile>
+
+	<!-- Languages -->
+	<AppxDefaultResourceQualifiers>Language=en-US</AppxDefaultResourceQualifiers>
+	<DefaultLanguage>en-US</DefaultLanguage>
+
+	<!-- Bundle WinAppSDK binaries in SelfContained -->
+	<SelfContained>True</SelfContained>
+	<WindowsAppSDKSelfContained>True</WindowsAppSDKSelfContained>
+
+	<!-- Other -->
+	<ImplicitUsings>disable</ImplicitUsings>
+	<Nullable>enable</Nullable>
+
+    <!-- Packaging -->
+	<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+	<AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+	<AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+	<GenerateTestArtifacts>False</GenerateTestArtifacts>
+	<AppxBundle>Always</AppxBundle>
+	<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+	<AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
+	<GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
+	  
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Dialogs\SaveConfirmationDialog.xaml" />
+    <None Remove="Dialogs\SettingsDialog.xaml" />
+    <None Remove="ResourceDictionaries\Brushes.xaml" />
+    <None Remove="ResourceDictionaries\Buttons.xaml" />
+    <None Remove="ResourceDictionaries\ListViews.xaml" />
+    <None Remove="ResourceDictionaries\Texts.xaml" />
+    <None Remove="UserControls\AnimatedCornerRadiusControl.xaml" />
+    <None Remove="UserControls\CanvasDisplayControl.xaml" />
+    <None Remove="UserControls\Canvases\CodeCanvasControl.xaml" />
+    <None Remove="UserControls\Canvases\FolderCanvasControl.xaml" />
+    <None Remove="UserControls\Canvases\ImageCanvasControl.xaml" />
+    <None Remove="UserControls\Canvases\PdfCanvasControl.xaml" />
+    <None Remove="UserControls\Canvases\TextCanvasControl.xaml" />
+    <None Remove="UserControls\Canvases\VideoCanvasControl.xaml" />
+    <None Remove="UserControls\DynamicRibbon.xaml" />
+    <None Remove="UserControls\FloatingCardControl.xaml" />
+    <None Remove="UserControls\ImageControl.xaml" />
+    <None Remove="UserControls\MainAppHost.xaml" />
+    <None Remove="UserControls\NavigationSurfaceControl.xaml" />
+    <None Remove="UserControls\Navigation\FrameNavigationControl.xaml" />
+    <None Remove="UserControls\TitleBarControl.xaml" />
+    <None Remove="UserControls\Widgets\CollectionsWidget.xaml" />
+    <None Remove="Views\CanvasView.xaml" />
+    <None Remove="Views\HomeView.xaml" />
+    <None Remove="Views\Settings\AboutSettingsPage.xaml" />
+    <None Remove="Views\Settings\GeneralSettingsPage.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\SplashScreen.scale-200.png" />
+    <Content Include="Assets\LockScreenLogo.scale-200.png" />
+    <Content Include="Assets\Square150x150Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.0.240109" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.0.240109" />
+    <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.0.240109" />
+    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.3" />
+    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.3" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240428000" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
+    <PackageReference Include="MimeTypeMapOfficial" Version="1.0.17" />
+    <PackageReference Include="WinUIEdit" Version="0.0.3-prerelease" />
+    <PackageReference Include="WinUIEx" Version="2.3.4" />
+    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.2.0" />
+    <Manifest Include="$(ApplicationManifest)" />
+  </ItemGroup>
+
+  <!-- 
+    Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
+    Tools extension to be activated for this project even if the Windows App SDK Nuget
+    package has not yet been restored.
+  -->
+  <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+    <ProjectCapability Include="Msix" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ClipboardCanvas.Sdk\ClipboardCanvas.Sdk.csproj" />
+    <ProjectReference Include="..\ClipboardCanvas.UI\ClipboardCanvas.UI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Dialogs\SettingsDialog.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Dialogs\SaveConfirmationDialog.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="UserControls\MainAppHost.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="UserControls\Host\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Images\TestImage.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Page Update="UserControls\Canvases\FolderCanvasControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="ResourceDictionaries\Texts.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Settings\AboutSettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\Settings\GeneralSettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UserControls\Canvases\CodeCanvasControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UserControls\AnimatedCornerRadiusControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UserControls\Canvases\VideoCanvasControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UserControls\Canvases\PdfCanvasControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UserControls\Canvases\ImageCanvasControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UserControls\Canvases\TextCanvasControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UserControls\CanvasDisplayControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UserControls\ImageControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\CanvasView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="ResourceDictionaries\ListViews.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\HomeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="UserControls\Widgets\CollectionsWidget.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="ResourceDictionaries\Brushes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UserControls\FloatingCardControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="ResouceDictionaries\ButtonStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UserControls\NavigationSurfaceControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UserControls\DynamicRibbon.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UserControls\Navigation\FrameNavigationControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UserControls\TitleBarControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <!-- 
+    Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution 
+    Explorer "Package and Publish" context menu entry to be enabled for this project even if 
+    the Windows App SDK Nuget package has not yet been restored.
+  -->
+  <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+    <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+  </PropertyGroup>
+</Project>

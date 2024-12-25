@@ -1,0 +1,21 @@
+<Application
+    x:Class="ClipboardCanvas.WinUI.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+
+                <!--  Other merged dictionaries here  -->
+                <ResourceDictionary Source="ResourceDictionaries/Brushes.xaml" />
+                <ResourceDictionary Source="ResourceDictionaries/Buttons.xaml" />
+                <ResourceDictionary Source="ResourceDictionaries/Texts.xaml" />
+                <ResourceDictionary Source="ResourceDictionaries/ListViews.xaml" />
+
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
